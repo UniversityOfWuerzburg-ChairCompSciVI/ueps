@@ -13,12 +13,10 @@
 	<description>SQL Trainer</description>
 	<developers>
 		<developer>
-			<id>mj</id>
 			<name>Michael Jedich</name>
 			<email>m.jedich@mail.de</email>
 		</developer>
 		<developer>
-			<id>cs</id>
 			<name>Christian Schneider</name>
 		</developer>
 	</developers>

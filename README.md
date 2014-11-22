@@ -1,9 +1,5 @@
-==========================================================================
- Test
-==========================================================================
+# ÜPS SQL-Trainer
+ÜPS is a web-based intelligent teaching tool for the SQL database language.
 
-### TEST
-Testing 1
-
-#### TEST2
+## Build from source
 Testing 2

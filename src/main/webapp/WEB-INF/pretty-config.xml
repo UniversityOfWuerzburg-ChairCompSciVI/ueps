@@ -1,0 +1,92 @@
+<pretty-config xmlns="http://ocpsoft.org/schema/rewrite-config-prettyfaces"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://ocpsoft.org/schema/rewrite-config-prettyfaces http://ocpsoft.org/xml/ns/prettyfaces/rewrite-config-prettyfaces.xsd">
+
+  <rewrite inbound="false" outbound="true" match="(?i)^(.*);jsessionid=w+(.*)" substitute="$1$2" />
+  <!-- http://ocpsoft.org/docs/prettyfaces/3.3.3/en-US/html/GettingStarted.html#getstarted.webxml -->
+  <url-mapping id="main">
+      <pattern value="/wuecampus/#{scenarioID}/#{userID}/#{secureValue}" />
+      <view-id value="/index.xhtml" />
+  </url-mapping>
+
+  <url-mapping>
+      <pattern value="/" />
+      <view-id value="/index.xhtml" />
+  </url-mapping>
+
+  <url-mapping>
+    <pattern value="/ex-#{exercise}" />
+    <view-id value="/task.xhtml" />
+  </url-mapping>
+
+  <url-mapping>
+    <pattern value="/edit-scenario-#{scenario}" />
+    <view-id value="/edit_scenario.xhtml" />
+  </url-mapping>
+
+  <url-mapping>
+    <pattern value="/edit-group-#{group}" />
+    <view-id value="/edit_group.xhtml" />
+  </url-mapping>
+
+  <url-mapping>
+    <pattern value="/add-group-in-scenario-#{scenario}" />
+    <view-id value="/edit_group.xhtml" />
+  </url-mapping>
+
+  <url-mapping>
+    <pattern value="/edit-exercise-#{exercise}" />
+    <view-id value="/edit_ex.xhtml" />
+  </url-mapping>
+
+  <url-mapping>
+    <pattern value="/add-exercise-in-group-#{group}" />
+    <view-id value="/edit_ex.xhtml" />
+  </url-mapping>
+
+  <url-mapping>
+    <pattern value="/edit-submission-#{exercise}-#{submission}-#{result}" />
+    <view-id value="/edit_submission.xhtml" />
+  </url-mapping>
+
+  <url-mapping>
+    <pattern value="/logout" />
+    <view-id value="/errorpages/logout.xhtml" />
+  </url-mapping>
+
+  <url-mapping>
+    <pattern value="/expired" />
+    <view-id value="/errorpages/expired.xhtml" />
+  </url-mapping>
+
+  <url-mapping>
+    <pattern value="/login" />
+    <view-id value="/misc/login.xhtml" />
+  </url-mapping>
+
+  <url-mapping>
+    <pattern value="/permission" />
+    <view-id value="/errorpages/permission_denied.xhtml" />
+  </url-mapping>
+
+  <url-mapping>
+    <pattern value="/starterror" />
+    <view-id value="/errorpages/error_page.xhtml" />
+  </url-mapping>
+
+  <url-mapping>
+    <pattern value="/admin" />
+    <view-id value="/admin.xhtml" />
+  </url-mapping>
+
+  <url-mapping>
+    <pattern value="/sub" />
+    <view-id value="/submission.xhtml" />
+  </url-mapping>
+
+  <url-mapping>
+    <pattern value="/rights" />
+    <view-id value="/user_rights.xhtml" />
+  </url-mapping>
+
+</pretty-config>

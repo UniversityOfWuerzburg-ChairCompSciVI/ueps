@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html"
+xmlns:p="http://primefaces.org/ui">
+  <body>
+    <h:link outcome="home">
+      <span class="logo">
+        <h:commandButton action="/" class="roundcorners" alt="#{txt['HEADER.LOGO_ALT']}"
+        image="#{img['CSS.LOGO']}" />
+      </span>
+    </h:link>
+    <h:dataTable class="header_elements">
+      <h:column>
+        <f:facet name="header">
+          <p class="title secondcolor lightshadow">
+            <ui:insert name="header_text">
+              <h:outputText value="#{txt['HEADER.DEFAULT']}" />
+            </ui:insert>
+          </p>
+        </f:facet>
+      </h:column>
+      <h:column>
+        <f:facet name="header">
+          <p class="links">
+            <h:link value="#{txt['HEADER.LINK1']}" outcome="home" rendered="#{rights.showExerciseLink()}"
+            class="lightshadow #{moveTo.getHeaderLinkStyle('index.xhtml')}" />
+			<!-- -->
+            <h:link value="#{txt['HEADER.LINK2']}" rendered="#{rights.isAdmin()}" outcome="rights"
+            class="lightshadow #{moveTo.getHeaderLinkStyle('user_rights.xhtml')}" />
+			<!-- -->
+            <h:link value="#{txt['HEADER.LINK3']}" rendered="#{rights.hasEditingRight()}" outcome="admin"
+            class="lightshadow #{moveTo.getHeaderLinkStyle('admin.xhtml')}" />
+			<!-- -->
+            <h:link value="#{txt['HEADER.LINK4']}" rendered="#{rights.hasRatingRight()}" outcome="submission"
+            class="lightshadow #{moveTo.getHeaderLinkStyle('submission.xhtml')}" />
+          </p>
+        </f:facet>
+      </h:column>
+    </h:dataTable>
+    <p class="userid secondcolor">
+      <h:outputText rendered="#{sessionCollector.hasUser()}" value="Angemeldet als: [" />
+      <h:outputText value="#{sessionCollector.getUserName()}" />
+      <h:outputText rendered="#{rights.isAdmin()}" value=" - " />
+      <h:outputText rendered="#{rights.isAdmin()}" style="color: red" value="Admin" />
+      <h:outputText rendered="#{sessionCollector.hasUser()}" value="]" />
+    </p>
+    <ui:include src="/errorpages/ajax.xhtml" />
+  </body>
+</html>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:h="http://java.sun.com/jsf/html" xmlns="http://www.w3.org/1999/xhtml"
+xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core"
+xmlns:p="http://primefaces.org/ui">
+  <body>
+    <ui:composition>
+      <h:dataTable>
+		<!--
+        <h:column>
+          <f:facet name="header">
+            <p:clock pattern="HH:mm:ss" mode="server"/>
+          </f:facet>
+        </h:column>
+		-->
+        <h:column>
+          <f:facet name="header">
+            <h:form>
+              <p:remoteCommand name="lazyload_online" update="studentsOnline"></p:remoteCommand>
+              <span id="online_counter">
+                <h:outputText value="ONLINE:" />
+                <h:outputText id="studentsOnline" value="#{sessionListener.getTotalActiveSession()}" />
+              </span>
+            </h:form>
+          </f:facet>
+        </h:column>
+        <h:column>
+          <f:facet name="header">
+            <h:form>
+              <p:remoteCommand name="lazyload" update="sessionTime"
+              action="#{sessionCollector.updateSessionTime()}"></p:remoteCommand>
+              <span id="session_timer">
+                <h:outputText value="SESSION:" />
+                <h:outputText id="sessionTime" value="#{sessionCollector.sessionTime}" />
+                <h:outputText value="s" />
+              </span>
+            </h:form>
+          </f:facet>
+        </h:column>
+		<!-- TODO: language-switch -->
+		<!--
+        <h:column>
+          <f:facet name="header">
+            <span class="language_box">
+              <ui:include src="/templates/common/commonLanguage.xhtml" />
+            </span>
+          </f:facet>
+        </h:column>
+		-->
+		<!--
+        <h:column>
+          <f:facet name="header">
+            <span class="user_agent">
+              <h:outputText value="#{header['user-agent']}" />
+            </span>
+          </f:facet>
+        </h:column>
+		-->
+      </h:dataTable>
+    </ui:composition>
+  </body>
+</html>

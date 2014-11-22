@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 19, 2013 8:02:38 PM by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="de.uniwue.info6.database.map.Scenario" table="scenario">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="scenario" class="de.uniwue.info6.database.map.Scenario" fetch="select">
+            <column name="copied_from_id" />
+        </many-to-one>
+        <property name="name" type="string">
+            <column name="name" length="64" not-null="true" />
+        </property>
+        <property name="lastModified" type="timestamp">
+            <column name="last_modified" length="19" not-null="true" />
+        </property>
+        <property name="startTime" type="timestamp">
+            <column name="start_time" length="19" />
+        </property>
+        <property name="endTime" type="timestamp">
+            <column name="end_time" length="19" />
+        </property>
+        <property name="description" type="string">
+            <column name="description" length="65535" not-null="true" />
+        </property>
+        <property name="createScriptPath" type="string">
+            <column name="create_script_path" not-null="true" />
+        </property>
+        <property name="imagePath" type="string">
+            <column name="image_path" />
+        </property>
+        <property name="dbHost" type="string">
+            <column name="db_host" length="64" not-null="true" />
+        </property>
+        <property name="dbUser" type="string">
+            <column name="db_user" length="64" not-null="true" />
+        </property>
+        <property name="dbPass" type="string">
+            <column name="db_pass" length="64" not-null="true" />
+        </property>
+        <property name="dbPort" type="string">
+            <column name="db_port" length="64" not-null="true" />
+        </property>
+        <property name="dbName" type="string">
+            <column name="db_name" length="64" not-null="true" />
+        </property>
+        <set name="userRights" table="user_right" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="scenario_id" />
+            </key>
+            <one-to-many class="de.uniwue.info6.database.map.UserRight" />
+        </set>
+        <set name="exerciseGroups" table="exercise_group" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="scenario_id" />
+            </key>
+            <one-to-many class="de.uniwue.info6.database.map.ExerciseGroup" />
+        </set>
+        <set name="scenarios" table="scenario" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="copied_from_id" />
+            </key>
+            <one-to-many class="de.uniwue.info6.database.map.Scenario" />
+        </set>
+    </class>
+</hibernate-mapping>

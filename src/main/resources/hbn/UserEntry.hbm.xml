@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 19, 2013 8:02:38 PM by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="de.uniwue.info6.database.map.UserEntry" table="user_entry">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="user" class="de.uniwue.info6.database.map.User" fetch="select">
+            <column name="user_id" length="64" not-null="true" />
+        </many-to-one>
+        <many-to-one name="exercise" class="de.uniwue.info6.database.map.Exercise" fetch="select">
+            <column name="exercise_id" not-null="true" />
+        </many-to-one>
+        <property name="userQuery" type="string">
+            <column name="user_query" length="65535" not-null="true" />
+        </property>
+        <property name="entryTime" type="timestamp">
+            <column name="entry_time" length="19" not-null="true" />
+        </property>
+        <property name="resultMessage" type="string">
+            <column name="result_message" length="65535" />
+        </property>
+        <set name="solutionQueries" table="solution_query" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="user_entry_id" />
+            </key>
+            <one-to-many class="de.uniwue.info6.database.map.SolutionQuery" />
+        </set>
+        <set name="userResults" table="user_result" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="user_entry_id" not-null="true" />
+            </key>
+            <one-to-many class="de.uniwue.info6.database.map.UserResult" />
+        </set>
+    </class>
+</hibernate-mapping>

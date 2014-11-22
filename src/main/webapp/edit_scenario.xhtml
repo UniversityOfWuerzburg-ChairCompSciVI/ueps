@@ -1,0 +1,500 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:a4j="http://richfaces.org/a4j"
+xmlns:rich="http://richfaces.org/rich"
+xmlns:p="http://primefaces.org/ui">
+ <META HTTP-EQUIV="refresh" CONTENT="15" />
+ <h:body>
+  <!-- main template defining header, footer and content -->
+  <ui:composition template="/templates/common/commonLayout.xhtml">
+   <ui:define name="header_text">
+    <span class="error">#{txt['SCENARIO']}
+    #{txt['ADMINTREE.MENU_EDIT']}</span>
+   </ui:define>
+   <ui:define name="content">
+    <h:graphicImage class="permission_error"
+    value="#{img['BASICS.MULTIPASS']}"
+    rendered="#{not edit_sc.userHasRights}" />
+    <script type="text/javascript">
+    <!-- ===================================== -->
+    function context_tooltip() { 
+    <!-- -->
+    jQuery(".tipsy").remove(); 
+    <!-- -->
+    jQuery(function() { 
+    <!-- -->
+    jQuery( '.save_button').tipsy( {fallback:
+    "#{txt['EDIT_SC.SAVE_TOOLTIP']}", gravity: 'w' }); 
+    <!-- -->
+    jQuery( '.interval_date').tipsy( {fallback:
+    "#{txt['EDIT_SC.TIME_TOOLTIP']}", gravity: 'w' }); 
+    <!-- -->
+    }); } 
+    <!-- ===================================== -->
+    jQuery(document).ready(function() { context_tooltip(); }); 
+    <!-- ===================================== -->
+    function enableCloseConfirmation() { 
+    <!-- -->
+    // window.onbeforeunload = function(e) { return ''; }; 
+    <!-- -->
+    } 
+    <!-- ===================================== -->
+    function disableCloseConfirmation() { window.onbeforeunload =
+    function(e) { }; setTimeout("enableCloseConfirmation()", 1000); }
+    
+    <!-- ===================================== -->
+    function disableCloseConfirmationForever() {
+    window.onbeforeunload = function(e) { };} 
+    <!-- ===================================== -->
+    enableCloseConfirmation(); 
+    <!-- -->
+    function start() { statusDialog.show(); } 
+    <!-- -->
+    function stop() { statusDialog.hide(); } 
+    <!-- ===================================== -->
+    <!-- --></script>
+    <!-- ##################################### -->
+    <!-- ##################################### -->
+    <h:form id="form" style="text-align:center"
+    enctype="multipart/form-data"
+    rendered="#{edit_sc.userHasRights}">
+     <p:panel header="#{txt['EDIT_SC.EDIT']}">
+      <p:growl id="messages_popup" showDetail="true" />
+      <p:dialog modal="true" widgetVar="statusDialog" header="Status"
+      draggable="false" closable="true" resizable="false">
+       <p:graphicImage value="#{img['ICON.LOAD']}" />
+      </p:dialog>
+      <h:panelGrid id="admin_grid" columns="2"
+      style="margin-bottom:10px;text-align:center">
+       <!-- ##################################### -->
+       <!-- box for info and error-text -->
+       <!-- ##################################### -->
+       <f:facet name="header" styleClass="info_box">
+        <p:messages id="messages" escape="false" closable="true" />
+       </f:facet>
+       <h:outputLabel for="syntax-error"
+       rendered="#{edit_sc.syntaxError()}" styleClass="boldPoints">
+       #{txt['EDIT_SC.ERROR_DETAILS']}:</h:outputLabel>
+       <h:outputText id="syntax-error"
+       rendered="#{edit_sc.syntaxError()}"
+       value="#{edit_sc.getImportSyntaxError()}" style="
+           color:#B94A48;white-space:pre-wrap; 
+           font-size:13px; border:1px dashed black; 
+           display:block; padding:5px;" />
+       <!-- ##################################### -->
+       <!--  -->
+       <!-- ##################################### -->
+       <h:outputLabel for="description" styleClass="boldPoints">
+        <h:outputText value="#{txt['EDIT_SC.RIGHTS']}:" />
+       </h:outputLabel>
+       <p:outputPanel id="description">
+        <h:outputText escape="false" style="white-space:pre-wrap"
+        value="#{txt['EDIT_SC.DESCRIPTION_TITLE']}" />
+        <h:outputText escape="false" id="add_rights_script"
+        style="white-space:pre-wrap;font-size:12px;
+                border:1px dashed black;display:block;
+                                padding:5px;margin-top:10px"
+styleClass="monospace" value="#{edit_sc.addRightsScripts}" />
+        <br />
+        <h:outputText escape="false" style="white-space:pre-wrap"
+        value="#{txt['EDIT_SC.DROP_USER_TITLE']}:" />
+        <h:outputText escape="false" id="remove_rights_script"
+        style="white-space:pre-wrap;font-size:12px;
+                border:1px dashed black;display:block;
+                                padding:5px;margin-top:10px"
+styleClass="monospace" value="#{edit_sc.removeRightsScripts}" />
+       </p:outputPanel>
+       <!-- ##################################### -->
+       <!-- scenario url -->
+       <!-- ##################################### -->
+       <h:outputLabel for="ex_link" styleClass="boldPoints">
+        <h:outputText id="ex_link"
+        value="#{txt['EDIT_SC.LINK']}: " />
+       </h:outputLabel>
+       <h:panelGroup>
+        <p:commandLink style="color:#004188 !important"
+        disabled="#{edit_sc.disableScenarioLink()}"
+        onclick="window.open('#{edit_sc.openScenario()}');return false">
+
+         <h:outputText value="#{txt['EDIT_SC.OPEN_LINK']}" />
+        </p:commandLink>
+       </h:panelGroup>
+       <!-- ##################################### -->
+       <!-- modified time -->
+       <!-- ##################################### -->
+       <h:outputLabel for="mod_time" styleClass="boldPoints">
+        <h:outputText value="#{txt['EDIT_SC.LAST_MOD']}: " />
+       </h:outputLabel>
+       <h:outputText id="mod_time"
+       value="#{edit_sc.getLastModifiedTime()}" />
+       <!-- ##################################### -->
+       <!-- copied-from-scenario -->
+       <!-- ##################################### -->
+       <h:outputLabel for="original_scenario"
+       rendered="#{edit_sc.hasOriginalScenario()}"
+       styleClass="boldPoints">
+        <h:outputText value="#{txt['EDIT_SC.ORIGIN']}: " />
+       </h:outputLabel>
+       <h:outputText id="original_scenario"
+       rendered="#{edit_sc.hasOriginalScenario()}"
+       value="#{txt['EDIT_SC.ORIGIN2']}: 
+                                [#{edit_sc.originalScenarioId}]" />
+       <!-- ##################################### -->
+       <!--  -->
+       <!-- ##################################### -->
+       <h:outputLabel for="available_tables" styleClass="boldPoints">
+        <h:outputText value="#{txt['EDIT_SC.FOUND_TABLES']}: " />
+       </h:outputLabel>
+       <h:outputText id="available_tables"
+       value="#{edit_sc.getAvailableTables()}" />
+       <!-- ##################################### -->
+       <!-- description field -->
+       <!-- ##################################### -->
+       <h:outputLabel style="width: 100px" for="scenario_name"
+       styleClass="boldPoints">
+        <h:outputText value="#{txt['EDIT_SC.DESC']}:" />
+       </h:outputLabel>
+       <h:panelGroup>
+        <h:outputText id="scenario_description_original"
+        style="padding:5px; border:1px dashed black; display:block"
+        escape="false"
+        value="#{edit_sc.hasDescription() ? edit_sc.description: '---'}" />
+        <br />
+        <p:inplace style="color:green" id="scenario_description"
+        emptyLabel="Undefined" effectSpeed="fast"
+        label="[#{txt['EDIT']}]" editor="true">
+         <p:ajax event="save"
+         update="scenario_description_original" />
+         <p:editor value="#{edit_sc.description}"
+         controls="bold italic underline strikethrough color size" />
+        </p:inplace>
+        <h:outputText value=" *" style="color:red" />
+       </h:panelGroup>
+       <!-- ##################################### -->
+       <!-- scenario name field -->
+       <!-- ##################################### -->
+       <h:outputLabel style="width: 100px" for="scenario_name"
+       styleClass="boldPoints">
+        <h:outputText value="#{txt['EDIT_SC.NAME']}:" />
+       </h:outputLabel>
+       <h:panelGroup>
+        <h:outputText id="scenario_name_original" escape="false"
+        value="#{edit_sc.hasScenarioName() ? edit_sc.scenarioName : '---'}" />
+        <br />
+        <p:inplace style="color:green" id="scenario_name"
+        emptyLabel="Undefined" effectSpeed="fast"
+        label="[#{txt['EDIT']}]" editor="true">
+         <p:ajax event="save" update="scenario_name_original" />
+         <p:inputText value="#{edit_sc.scenarioName}"
+         onkeypress="if (event.keyCode == 13) { return false; }" />
+        </p:inplace>
+        <h:outputText value=" *" style="color:red" />
+       </h:panelGroup>
+       <!-- ##################################### -->
+       <!-- database-ip field -->
+       <!-- ##################################### -->
+       <h:outputLabel style="width: 100px" for="scenario_dbhost"
+       styleClass="boldPoints">
+        <h:outputText value="#{txt['EDIT_SC.DB_HOST']}:" />
+       </h:outputLabel>
+       <h:panelGroup>
+        <h:outputText id="scenario_dbhost_original" escape="false"
+        value="#{edit_sc.hasHost() ? edit_sc.dbHost : '---'}" />
+        <br />
+        <p:inplace style="color:green" id="scenario_dbhost"
+        emptyLabel="Undefined" effectSpeed="fast"
+        label="[#{txt['EDIT']}]" editor="true">
+         <p:ajax event="save"
+         update="scenario_dbhost_original add_rights_script 
+ 			remove_rights_script auto1 auto2 auto3 auto4" />
+         <p:inputText value="#{edit_sc.dbHost}"
+         onkeypress="if (event.keyCode == 13) { return false; }" />
+        </p:inplace>
+        <h:outputText id="auto1"
+        value="#{edit_sc.autoCreationText()}" />
+       </h:panelGroup>
+       <!-- ##################################### -->
+       <!-- database-port field -->
+       <!-- ##################################### -->
+       <h:outputLabel style="width: 100px" for="scenario_dbport"
+       styleClass="boldPoints">
+        <h:outputText value="#{txt['EDIT_SC.DB_PORT']}:" />
+       </h:outputLabel>
+       <h:panelGroup>
+        <h:outputText id="scenario_dbport_original" escape="false"
+        value="#{edit_sc.hasPort() ? edit_sc.dbPort : '---'}" />
+        <br />
+        <p:inplace style="color:green" id="scenario_dbport"
+        emptyLabel="Undefined" effectSpeed="fast"
+        label="[#{txt['EDIT']}]" editor="true">
+         <p:ajax event="save"
+         update="scenario_dbport_original auto1 auto2 auto3 auto4" />
+         <p:inputText value="#{edit_sc.dbPort}"
+         onkeypress="if (event.keyCode == 13) { return false; }" />
+        </p:inplace>
+        <h:outputText id="auto2"
+        value="#{edit_sc.autoCreationText()}" />
+       </h:panelGroup>
+       <!-- ##################################### -->
+       <!-- database-name field -->
+       <!-- ##################################### -->
+       <h:outputLabel style="width: 100px" for="scenario_dbname"
+       styleClass="boldPoints">
+        <h:outputText value="#{txt['EDIT_SC.DB_NAME']}:" />
+       </h:outputLabel>
+       <h:panelGroup>
+        <h:outputText id="scenario_dbname_original" escape="false"
+        value="#{edit_sc.hasDBName() ? edit_sc.dbName : '---'}" />
+        <br />
+        <p:inplace style="color:green" id="scenario_dbname"
+        emptyLabel="Undefined" effectSpeed="fast"
+        label="[#{txt['EDIT']}]" editor="true">
+         <p:ajax event="save"
+         update="scenario_dbname_original add_rights_script 
+			remove_rights_script auto1 auto2 auto3 auto4" />
+         <p:inputText value="#{edit_sc.dbName}"
+         onkeypress="if (event.keyCode == 13) { return false; }" />
+        </p:inplace>
+        <h:outputText id="auto3"
+        value="#{edit_sc.autoCreationText()}" />
+       </h:panelGroup>
+       <!-- ##################################### -->
+       <!-- database-user field -->
+       <!-- ##################################### -->
+       <h:outputLabel style="width: 100px" for="scenario_dbuser"
+       styleClass="boldPoints">
+        <h:outputText value="#{txt['EDIT_SC.DB_USER']}:" />
+       </h:outputLabel>
+       <h:panelGroup>
+        <h:outputText id="scenario_dbuser_original" escape="false"
+        value="#{edit_sc.hasUser() ? edit_sc.dbUser : '---'}" />
+        <br />
+        <p:inplace style="color:green" id="scenario_dbuser"
+        emptyLabel="Undefined" effectSpeed="fast"
+        label="[#{txt['EDIT']}]" editor="true">
+         <p:ajax event="save"
+         update="scenario_dbuser_original add_rights_script 
+			remove_rights_script auto1 auto2 auto3 auto4" />
+         <p:inputText value="#{edit_sc.dbUser}"
+         onkeypress="if (event.keyCode == 13) { return false; }" />
+        </p:inplace>
+        <h:outputText id="auto4"
+        value="#{edit_sc.autoCreationText()}" />
+       </h:panelGroup>
+       <!-- ##################################### -->
+       <!-- database-pass field -->
+       <!-- ##################################### -->
+       <h:outputLabel style="width: 100px" for="scenario_dbpass"
+       styleClass="boldPoints">
+        <h:outputText value="#{txt['EDIT_SC.DB_PASS']}:" />
+       </h:outputLabel>
+       <h:panelGroup>
+        <h:outputText id="scenario_dbpass_original" escape="false"
+        value="#{edit_sc.getPasswortString()}" />
+        <br />
+        <p:inplace style="color:green" id="scenario_dbpass"
+        emptyLabel="Undefined" effectSpeed="fast"
+        label="[#{txt['EDIT']}]" editor="true">
+         <p:ajax event="save"
+         update="scenario_dbpass_original add_rights_script remove_rights_script" />
+         <p:inputText id="nonFeedback" value="#{edit_sc.dbPass}"
+         onkeypress="if (event.keyCode == 13) { return false; }" />
+        </p:inplace>
+       </h:panelGroup>
+       <!-- ##################################### -->
+       <!-- import script upload field -->
+       <!-- ##################################### -->
+       <h:outputLabel style="width: 100px" for="scenario_dbscript"
+       styleClass="boldPoints">
+        <h:outputText value="#{txt['EDIT_SC.SQL_SCRIPT']}:" />
+       </h:outputLabel>
+       <h:panelGroup>
+        <h:outputText id="scenario_dbscript_original" escape="false"
+        value="#{edit_sc.getScriptFilePath()}" />
+        <br />
+        <p:inplace style="color:green" id="scenario_dbscript"
+        emptyLabel="Undefined" effectSpeed="fast"
+        label="[#{txt['EDIT']}]" editor="true">
+         <br />
+         <p:ajax event="save"
+         update="script_download script_delete scenario_dbscript_original" />
+         <p:fileUpload fileUploadListener="#{edit_sc.handleSQLScriptUpload}"
+         mode="advanced" dragDropSupport="true"
+         allowTypes="/(\.|\/)(sql)$/"
+         label="#{txt['EDIT_SC.SQL_UPLOAD']} #{txt['EDIT_SC.DRAG_DROP']}"
+         sizeLimit="5000000" auto="true" locale="de"
+         update="messages_popup scenario_dbscript_original" />
+        </p:inplace>
+        <h:outputText value=" *" style="color:red" />
+        <!-- ##################################### -->
+        <!-- import script download field -->
+        <!-- ##################################### -->
+        <h:outputText value=" --- " />
+        <p:commandLink id="script_download"
+        style="text-decoration:none; color:green"
+        value="[#{txt['EDIT_SC.DOWNLOAD']}]" ajax="false"
+        onclick="disableCloseConfirmation();
+        PrimeFaces.monitorDownload(start, stop)"
+		disabled="#{edit_sc.scriptPath == null}"
+		actionListener="#{edit_sc.resetScriptFile}">
+         <p:fileDownload value="#{edit_sc.scriptStream}" />
+        </p:commandLink>
+        <h:outputText value="&#160;" />
+        <!-- ##################################### -->
+        <!-- import script delete field -->
+        <!-- ##################################### -->
+        <p:commandLink style="text-decoration:none; color:red"
+        id="script_delete" value="[#{txt['DELETE']}]"
+        disabled="#{edit_sc.scriptPath == null}"
+        onclick="script_delete_confirmation.show()" />
+        <p:confirmDialog message="#{txt['EDIT_SC.DELETE']}"
+        severity="alert" widgetVar="script_delete_confirmation">
+         <p:commandButton value="#{txt['YES']}"
+         onclick="script_delete_confirmation.hide()"
+         update="script_download script_delete scenario_dbscript_original"
+         actionListener="#{edit_sc.deleteScriptFile}" />
+         <p:commandButton value="#{txt['NO']}"
+         onclick="script_delete_confirmation.hide()" type="button" />
+        </p:confirmDialog>
+       </h:panelGroup>
+       <!-- ##################################### -->
+       <!-- image upload field -->
+       <!-- ##################################### -->
+       <h:outputLabel style="width: 100px" for="scenario_dbimage"
+       styleClass="boldPoints">
+        <h:outputText value="#{txt['EDIT_SC.DIAGRAM']}:" />
+       </h:outputLabel>
+       <h:panelGroup>
+        <h:outputText id="scenario_dbimage_original" escape="false"
+        value="#{edit_sc.getImageFilePath()}" />
+        <br />
+        <p:inplace style="color:green" id="scenario_dbimage"
+        emptyLabel="Undefined" effectSpeed="fast"
+        label="[#{txt['EDIT']}]" editor="true">
+         <br />
+         <!-- aa -->
+         <p:ajax event="save"
+         update="scenario_dbimage_original image_download image_delete" />
+         <p:fileUpload fileUploadListener="#{edit_sc.handleImageUpload}"
+         allowTypes="/(\.|\/)(gif|jpe?g|png)$/" mode="advanced"
+         dragDropSupport="true" multiple="false"
+         label="#{txt['EDIT_SC.ADD_DIA']}" sizeLimit="5000000"
+         auto="true" locale="de"
+         update="messages_popup scenario_dbimage_original" />
+        </p:inplace>
+        <!-- ##################################### -->
+        <!-- import image download field -->
+        <!-- ##################################### -->
+        <h:outputText value="&#160;&#160; --- " />
+        <p:commandLink id="image_download"
+        style="text-decoration:none; color:green"
+        value="[#{txt['EDIT_SC.DOWNLOAD']}]" ajax="false"
+        onclick="disableCloseConfirmation();
+                PrimeFaces.monitorDownload(start, stop)"
+disabled="#{edit_sc.imagePath == null}"
+actionListener="#{edit_sc.resetImageFile}">
+         <p:fileDownload value="#{edit_sc.imageStream}" />
+        </p:commandLink>
+        <!-- ##################################### -->
+        <!-- import image delete field -->
+        <!-- ##################################### -->
+        <h:outputText value="&#160;" />
+        <p:commandLink style="text-decoration:none; color:red"
+        id="image_delete" value="[#{txt['DELETE']}]"
+        disabled="#{edit_sc.imagePath == null}"
+        onclick="image_delete_confirmation.show()" />
+        <p:confirmDialog message="#{txt['EDIT_SC.DELETE']}"
+        severity="alert" widgetVar="image_delete_confirmation">
+         <p:commandButton value="#{txt['YES']}"
+         onclick="image_delete_confirmation.hide()"
+         update="image_download image_delete scenario_dbimage_original"
+         actionListener="#{edit_sc.deleteImageFile}" />
+         <p:commandButton value="#{txt['NO']}"
+         onclick="image_delete_confirmation.hide()" type="button" />
+        </p:confirmDialog>
+       </h:panelGroup>
+       <!-- ##################################### -->
+       <!-- start date field -->
+       <!-- ##################################### -->
+       <h:outputLabel style="width: 100px" for="start_date"
+       value="#{txt['EDIT_SC.START_TIME']}:"
+       styleClass="boldPoints" />
+       <h:panelGroup>
+        <h:outputText id="start_date_original"
+        value="#{edit_sc.getStartDateString()}" escape="false" />
+        <br />
+        <p:inplace style="color:green" id="start_date"
+        styleClass="interval_date" emptyLabel="Undefined"
+        effectSpeed="fast" label="[#{txt['EDIT']}]" editor="true">
+         <p:ajax event="save" update="start_date_original"
+         oncomplete="context_tooltip()" />
+         <p:ajax event="cancel" oncomplete="context_tooltip()" />
+         <p:calendar value="#{edit_sc.startDate}" locale="de"
+         showButtonPanel="true" navigator="true" effect="slideDown"
+         pattern="dd.MM.yyyy HH:mm" stepHour="1" stepMinute="10" />
+         <p:dialog header="Selected Dates" widgetVar="dialog"
+         showEffect="fold" hideEffect="fold">
+          <h:panelGrid columns="2" cellpadding="5">
+           <h:outputText value="Step: " />
+           <h:outputText value="#{edit_sc.startDate}">
+            <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+           </h:outputText>
+          </h:panelGrid>
+         </p:dialog>
+        </p:inplace>
+       </h:panelGroup>
+       <!-- ##################################### -->
+       <!-- end date field -->
+       <!-- ##################################### -->
+       <h:outputLabel style="width: 100px" for="start_date"
+       value="#{txt['EDIT_SC.END_TIME']}:" styleClass="boldPoints" />
+       <h:panelGroup>
+        <h:outputText id="end_date_original"
+        value="#{edit_sc.getEndDateString()}" escape="false" />
+        <br />
+        <p:inplace style="color:green" id="end_date"
+        styleClass="interval_date" emptyLabel="Undefined"
+        effectSpeed="fast" label="[#{txt['EDIT']}]" editor="true">
+         <p:ajax event="save" update="end_date_original"
+         oncomplete="context_tooltip()" />
+         <p:ajax event="cancel" oncomplete="context_tooltip()" />
+         <p:calendar value="#{edit_sc.endDate}" locale="de"
+         showButtonPanel="true" navigator="true" effect="slideDown"
+         pattern="dd.MM.yyyy HH:mm" stepHour="1" stepMinute="10" />
+         <p:dialog header="Selected Dates" widgetVar="dialog"
+         showEffect="fold" hideEffect="fold">
+          <h:panelGrid columns="2" cellpadding="5">
+           <h:outputText value="Step: " />
+           <h:outputText value="#{edit_sc.endDate}">
+            <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+           </h:outputText>
+          </h:panelGrid>
+         </p:dialog>
+        </p:inplace>
+        <br />
+        <br />
+        <h:outputText style="color:red"
+        value="* = #{txt['EDIT_SC.MUST_FIELD']} " />
+       </h:panelGroup>
+      </h:panelGrid>
+     </p:panel>
+     <h:panelGrid style="display:inline-table" columns="7"
+     styleClass="admin_buttons">
+      <p:commandButton value="#{txt['SAVE']}"
+      styleClass="save_button" process="@all"
+      update="admin_grid mod_time" actionListener="#{edit_sc.save}"
+      icon="ui-icon-disk"
+      onclick="disableCloseConfirmationForever();window.scrollTo(0, 0);" />
+      <p:commandButton value="#{txt['EDIT_SC.CANCEL']}" ajax="false"
+      action="admin" icon="ui-icon-trash" />
+     </h:panelGrid>
+    </h:form>
+   </ui:define>
+  </ui:composition>
+ </h:body>
+</html>

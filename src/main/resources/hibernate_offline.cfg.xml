@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory name="AdminDB">
+	<!--
+    <property name="hibernate.bytecode.use_reflection_optimizer">false</property>
+    <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+    <property name="hibernate.connection.url">jdbc:mysql://localhost:3306</property>
+    <property name="hibernate.default_catalog">admin_db</property>
+    <property name="hibernate.connection.username">root</property>
+    <property name="hibernate.dialect">org.hibernate.dialect.MySQLInnoDBDialect</property>
+    <property name="hibernate.search.autoregister_listeners">false</property>
+    <property name="hibernate.current_session_context_class">thread</property>
+	-->
+
+	<!-- DEBUG OUTPUT: -->
+	<!--
+    <property name="show_sql">true</property>
+    <property name="format_sql">true</property>
+    <property name="use_sql_comments">true</property>
+	-->
+
+    <mapping resource="hbn/User.hbm.xml" />
+    <mapping resource="hbn/SolutionQuery.hbm.xml" />
+    <mapping resource="hbn/GeneratedTag.hbm.xml" />
+    <mapping resource="hbn/UserRight.hbm.xml" />
+    <mapping resource="hbn/ExerciseGroup.hbm.xml" />
+    <mapping resource="hbn/Scenario.hbm.xml" />
+    <mapping resource="hbn/Exercise.hbm.xml" />
+    <mapping resource="hbn/UserEntry.hbm.xml" />
+    <mapping resource="hbn/UserResult.hbm.xml" />
+    <mapping resource="hbn/UserExTag.hbm.xml" />
+
+  </session-factory>
+</hibernate-configuration>

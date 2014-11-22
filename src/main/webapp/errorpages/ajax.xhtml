@@ -1,0 +1,44 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html" xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:p="http://primefaces.org/ui">
+  <p:idleMonitor timeout="#{config['SESSION_TIMEOUT'] * 500}" onidle="idleDialog.show()"
+  onactive="idleDialog.hide();syncSessionDisplay()" />
+  <p:dialog header="#{txt['AJAX.SESS_TITLE']}" resizable="false" widgetVar="idleDialog" modal="true"
+  width="400" id="dialog_box">
+    <h:graphicImage value="#{img['BASICS.MASCOT_SMALL']}" />
+    <span class="dialog_text">
+      <h:outputText value="#{txt['AJAX.SESS_WARNING']}" />
+    </span>
+  </p:dialog>
+
+  <p:dialog header="#{txt['AJAX.ERRORTITLE']}" resizable="false" widgetVar="ajax_error_dialog" modal="true" width="400"
+  id="dialog_box_ajax">
+    <h:graphicImage value="#{img['BASICS.MASCOT_SMALL']}" />
+    <span class="dialog_text">
+      <h:outputText value="#{txt['AJAX.ERRORLINE1']}" />
+      <br />
+      <h:outputText value="#{txt['AJAX.ERRORLINE2']}" />
+    </span>
+  </p:dialog>
+
+  <p:ajaxStatus id="ajaxStatusPanel">
+    <f:facet name="prestart">
+      <h:graphicImage class="load_button" value="#{img['ICON.LOAD']}" />
+    </f:facet>
+    <f:facet name="start">
+      <h:graphicImage class="load_button" value="#{img['ICON.LOAD']}" />
+    </f:facet>
+    <f:facet name="default">
+      <h:graphicImage class="load_button" value="#{img['ICON.LOAD']}" />
+    </f:facet>
+    <f:facet name="idle">
+      <h:graphicImage class="load_button" value="#{img['ICON.LOAD']}" />
+    </f:facet>
+    <f:facet name="error">
+      <h:graphicImage class="load_button" value="#{img['ICON.LOAD_IDLE']}" />
+    </f:facet>
+    <f:facet name="complete">
+      <h:outputText value="" />
+    </f:facet>
+  </p:ajaxStatus>
+</ui:composition>

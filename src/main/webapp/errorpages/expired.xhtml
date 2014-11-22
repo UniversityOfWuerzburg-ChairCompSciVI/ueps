@@ -1,0 +1,15 @@
+<ui:composition template="/templates/errorpage.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+xmlns:p="http://primefaces.org/ui">
+  <ui:define name="header_text">
+    <span class="error">#{txt['SESSION.ERRORTITLE']}</span>
+    <script type="text/javascript">synctime=false; jQuery.ajaxSetup({ error: handleXhrError }); function
+    	handleXhrError(xhr){};  setTimeout("endAjaxStatus()", 1500);</script>
+  </ui:define>
+  <ui:define name="content">
+    <p id="session_expired_button">
+      <p:commandButton onclick="window.location='#{txt['SESSION.WUECAMPUS']}'"
+      value="#{txt['SESSION.ERRORLINE']}" />
+    </p>
+  </ui:define>
+</ui:composition>

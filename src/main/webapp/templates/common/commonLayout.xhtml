@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:o="http://omnifaces.org/ui" xmlns:p="http://primefaces.org/ui"
+class="mainfont maincolor">
+ <f:view locale="#{language.localeCode}">
+  <h:head>
+   <!-- stylesheets -->
+   <h:outputStylesheet library="css" name="styles.css" />
+   <h:outputStylesheet library="css" name="tipsy.css" />
+   <h:outputScript library="js" name="jquery.waituntilexists.js" />
+   <h:outputScript library="js" name="jquery.tipsy.js" />
+   <h:outputScript library="js" name="index.js" />
+   <h:outputScript library="js" name="jquery.pulsate.min.js" />
+   <title>#{txt['BASIC.NAME']}</title>
+   <link rel="shortcut icon" href="#{img['ICON.FAVICON']}" />
+   <link rel="icon" type="image/x-icon"
+   href="#{img['ICON.FAVICON']}" />
+  </h:head>
+  <h:body>
+   <div id="page">
+    <div id="header">
+     <ui:insert name="header">
+      <ui:include src="/templates/common/commonHeader.xhtml" />
+     </ui:insert>
+    </div>
+    <div id="content" class="roundcorners2">
+     <noscript>
+      <div style="height: 50px; width:830px; text-align:center; 
+			  background-color: red; margin-bottom: 20px; padding: 10px">
+       <h3>#{txt['ERROR.JAVASCRIPT']}</h3>
+      </div>
+     </noscript>
+
+	 <!-- Internet Explorer Warning Message -->
+	 <!-- <p:panel id="shitty_internet_explorer" rendered="#{sessionListener.showIEError()}" -->
+	 <!-- style="display:none; height: 44px; width:830px; text-align:center;                 -->
+	 <!-- background-color: red; margin-bottom: 20px; padding: 10px; font-weight: bold">     -->
+	 <!-- #{txt['ERROR.IE']}                                                                 -->
+	 <!-- <p:commandButton value="verstecken" onclick="hideIEMessage()"                      -->
+	 <!-- actionListener="#{sessionListener.disableIEError()}"                               -->
+	 <!-- style="float:right; position: relative; top: 15px; z-index:99" /></p:panel>        -->
+
+	 <p:panel id="shitty_internet_explorer" rendered="#{sessionListener.showIEError()}"                     
+	 style="display:block; height: 55px; width:830px; text-align:center;                                    
+	 background-color: red; margin-bottom: 20px; padding: 10px; font-weight: bold;">                        
+	 <span style="color:white !important; font-size:18px !important">                                       
+	 Bitte beachten Sie, dass derzeit nur Zwischenergebnisse der bewerteten Übung angezeigt werden.
+	 </span>                                                                                                
+	 <p:commandButton value="verstecken" onclick="hideIEMessage()"                                          
+	 actionListener="#{sessionListener.disableIEError()}"                                                   
+	 style="float:right; position: relative; top: 15px; z-index:99" /></p:panel>                            
+
+     <ui:insert name="content">
+      <ui:include src="/templates/common/commonContent.xhtml" />
+     </ui:insert>
+    </div>
+    <div id="footer">
+     <ui:insert name="footer">
+      <ui:include src="/templates/common/commonFooter.xhtml" />
+      <script type="text/javascript">syncSessionDisplay()</script>
+     </ui:insert>
+    </div>
+   </div>
+  </h:body>
+ </f:view>
+</html>

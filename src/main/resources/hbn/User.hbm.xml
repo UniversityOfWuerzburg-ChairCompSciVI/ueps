@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 19, 2013 8:02:38 PM by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="de.uniwue.info6.database.map.User" table="user">
+        <id name="id" type="string">
+            <column name="id" length="64" />
+            <generator class="assigned" />
+        </id>
+        <property name="lastModified" type="timestamp">
+            <column name="last_modified" length="19" not-null="true" />
+        </property>
+        <property name="isAdmin" type="java.lang.Boolean">
+            <column name="is_admin" />
+        </property>
+        <property name="description" type="string">
+            <column name="description" length="100" />
+        </property>
+        <set name="userEntries" table="user_entry" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="user_id" length="64" not-null="true" />
+            </key>
+            <one-to-many class="de.uniwue.info6.database.map.UserEntry" />
+        </set>
+        <set name="userResults" table="user_result" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="corrected_by_id" length="64" />
+            </key>
+            <one-to-many class="de.uniwue.info6.database.map.UserResult" />
+        </set>
+        <set name="userExTags" table="user_ex_tag" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="user_id" length="64" not-null="true" />
+            </key>
+            <one-to-many class="de.uniwue.info6.database.map.UserExTag" />
+        </set>
+        <set name="userRights" table="user_right" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="user_id" length="64" not-null="true" />
+            </key>
+            <one-to-many class="de.uniwue.info6.database.map.UserRight" />
+        </set>
+    </class>
+</hibernate-mapping>

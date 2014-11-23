@@ -7,6 +7,8 @@
 INSTALL_DEPENDENCIES=true
 BASEDIR=$(pwd)
 RESOURCES_FOLDER="res"
+
+# modified primefaces version
 PRIMEFACES_BINARY="$RESOURCES_FOLDER""/primefaces/\
 primefaces-4.0-with-tablefix.jar"
 
@@ -15,19 +17,25 @@ primefaces-4.0-with-tablefix.jar"
 # ---------------------------------------------------- #
 
 # Check if MAVEN is installed
-if ! type "mvn" &> /dev/null; then
-  echo "[ERROR] 'mvn' WAS NOT FOUND ON YOUR SYSTEM"
+HELP_PAGES="http://maven.apache.org/download.cgi"
+COMMAND="mvn"
+
+if ! type "$COMMAND" &> /dev/null; then
+  echo "[ERROR] '$COMMAND' WAS NOT FOUND ON YOUR SYSTEM"
   echo "Instructions can be found at:"
-  echo "http://maven.apache.org/download.cgi"
+  echo "$HELP_PAGES"
   exit 1
 fi
 
 # Check if JAVA is installed
-if ! type "java" &> /dev/null; then
-  echo "[ERROR] 'java' WAS NOT FOUND ON YOUR SYSTEM"
+HELP_PAGES="http://www.oracle.com/technetwork/java/\
+javase/downloads/jdk8-downloads-2133151.html"
+COMMAND="java"
+
+if ! type "$COMMAND" &> /dev/null; then
+  echo "[ERROR] '$COMMAND' WAS NOT FOUND ON YOUR SYSTEM"
   echo "Instructions can be found at:"
-  echo "http://www.oracle.com/technetwork/java/"\
-"javase/downloads/jdk8-downloads-2133151.html"
+  echo "$HELP_PAGES"
   exit 1
 fi
 

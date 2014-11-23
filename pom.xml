@@ -147,7 +147,7 @@
 		<dependency>
 			<groupId>org.primefaces</groupId>
 			<artifactId>primefaces</artifactId>
-			<version>4.0-with-tablefix</version>
+			<version>4.0</version>
 			<!-- <version>5.1</version> -->
 		</dependency>
 		<dependency>
@@ -182,6 +182,7 @@
 			<scope>provided</scope>
 		</dependency>
 		<!-- }}} -->
+		
 
 		<!-- {{{ GNU Lesser General Public License -->
 		<dependency>

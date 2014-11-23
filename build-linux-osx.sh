@@ -10,7 +10,7 @@ RESOURCES_FOLDER="res"
 
 # modified primefaces version
 PRIMEFACES_BINARY="$RESOURCES_FOLDER""/primefaces/\
-primefaces-4.0-with-tablefix.jar"
+primefaces-4.0.jar"
 
 # ---------------------------------------------------- #
 # -- Check dependencies

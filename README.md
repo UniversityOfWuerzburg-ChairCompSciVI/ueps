@@ -9,5 +9,10 @@ Testing 2
 ### Configuration
 Testing 3
 
+## Administration
+### Assigning permissions
+### Editing scenarios
+### Review student solutions
+
 ## Build from source
 Testing

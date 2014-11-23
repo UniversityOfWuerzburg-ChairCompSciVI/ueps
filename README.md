@@ -1,5 +1,5 @@
 # ÜPS SQL-Trainer
-ÜPS is a web-based intelligent teaching tool for the SQL database language.
+ÜPS (Übungs-Programm für SQL) is a web-based intelligent teaching tool for the SQL database language.
 
 ![alt tag](https://raw.githubusercontent.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/master/res/screenshots/test.png)
 

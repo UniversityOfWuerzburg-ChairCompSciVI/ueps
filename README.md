@@ -1,5 +1,13 @@
 # ÜPS SQL-Trainer
 ÜPS is a web-based intelligent teaching tool for the SQL database language.
 
-## Build from source
+## Quick Install Guide
+### Requirements
+Testing 1
+### Download and Install
 Testing 2
+### Configuration
+Testing 3
+
+## Build from source
+Testing

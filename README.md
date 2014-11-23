@@ -12,9 +12,16 @@ Testing 2
 Testing 3
 
 ## Administration
+Testing 4
+
 ### Assigning permissions
+Testing 5
+
 ### Editing scenarios
+Testing 6
+
 ### Review student solutions
+Testing 7
 
 ## Build from source
-Testing
+Testing 8

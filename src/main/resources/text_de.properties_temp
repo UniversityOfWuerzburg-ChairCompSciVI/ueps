@@ -14,9 +14,9 @@
 # ############################################################################
 
 # header
-BASIC.NAME                  = SQL-Trainer
-HEADER.DEFAULT              = SQL-Trainer - Aufgabenliste
-HEADER.TASK_HEADER          = SQL-Trainer - Übungsbereich
+BASIC.NAME                  = ÜPS
+HEADER.DEFAULT              = ÜPS - Aufgabenliste
+HEADER.TASK_HEADER          = ÜPS - Übungsbereich
 
 HEADER.LINK1                = Übungen
 HEADER.LINK2                = Rechte

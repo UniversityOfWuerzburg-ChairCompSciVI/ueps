@@ -8,6 +8,7 @@ public enum PropBool {
   FORCE_RESET_DATABASE,
   USE_WUECAMUS_LOGIN,
   USE_FALLBACK_USER,
+  ALLOW_DB_CREATION,
   LOG_BROWSER_HISTORY
   // @formatter:on
 }

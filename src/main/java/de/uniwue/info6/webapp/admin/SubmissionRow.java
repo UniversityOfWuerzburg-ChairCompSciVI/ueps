@@ -5,7 +5,7 @@ import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Locale;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import de.uniwue.info6.database.map.Exercise;
 import de.uniwue.info6.database.map.ExerciseGroup;
@@ -17,210 +17,212 @@ import de.uniwue.info6.database.map.daos.UserRightDao;
 import de.uniwue.info6.misc.StringTools;
 
 /**
- * 
+ *
  * @author Christian
  *
  */
 public class SubmissionRow {
-	
-	private boolean isEntry=false;
-	private boolean isExercise=false;
-	private boolean isExGroup=false;
-	private boolean isScenario;
-	
-	private String text;
-	private String styleClass = "";
-	
-	private UserEntry userEntry = null;
-	private UserResult userResult = null;
-	private Exercise exercise = null;
-	private ExerciseGroup exGroup = null;
-	private Scenario scenario;
-	private String avgCredits;
-	private boolean canBeRemoved = false;
-	
-	public SubmissionRow(UserEntry ue, UserResult ur, Exercise ex){
-		this.userResult = ur;
-		this.userEntry = ue;
-		this.exercise = ex;
-		this.isEntry = true;
-		this.text = ue.getUser().getId();
-		this.styleClass = "user_class";
-		
-		UserRightDao userRightDao = new UserRightDao();
-		UserRights rights = new UserRights().initialize();
 
-		List<UserRight> tmp = null;
-		tmp = userRightDao.getByUser(ue.getUser());
-		this.setCanBeRemoved(tmp.size() > 0 || rights.isAdmin(ue.getUser()) ? true : false);
-	}
-	
-	public SubmissionRow(String text){
-		this.text = text;
-	}
-	
-	public SubmissionRow(Exercise e, Scenario scenario){
-		this.exercise = e;
-		this.isExercise = true;
-		this.text = System.getProperty("EXERCISE_SHORT") +  ": [" + StringTools.zeroPad(e.getId(), 2) + "]";
-		this.styleClass = "exercise_class";
-		this.scenario = scenario;
-	}
-	
-	public SubmissionRow(ExerciseGroup eg){
-		this.exGroup = eg;
-		this.isExGroup = true;
-		this.text = "[" + StringTools.zeroPad(eg.getId(), 2) + "]: " + StringTools.trimToLengthIndicator(eg.getName(), 30);
-		this.styleClass = "exercise_group_class";
-	}
-	
-	public SubmissionRow(Scenario sc){
-		this.scenario = sc;
-		this.isScenario = true;
-		this.text = "[" + StringTools.zeroPad(sc.getId(), 2) + "]: " + StringTools.trimToLengthIndicator(sc.getName(), 30);
-		this.styleClass = "scenario_class";
-	}
+  private boolean isEntry = false;
+  private boolean isExercise = false;
+  private boolean isExGroup = false;
+  private boolean isScenario;
 
+  private String text;
+  private String styleClass = "";
 
-	public String getEntryDate() {
-		if (userEntry != null) {
-			DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.FULL, new Locale("de", "DE"));
-			return df.format(userEntry.getEntryTime());
-		}
-		return "---";
-	}
+  private UserEntry userEntry = null;
+  private UserResult userResult = null;
+  private Exercise exercise = null;
+  private ExerciseGroup exGroup = null;
+  private Scenario scenario;
+  private String avgCredits;
+  private boolean canBeRemoved = false;
 
-	
-	public boolean getIsExercise() {
-		return isExercise;
-	}
+  public SubmissionRow(UserEntry ue, UserResult ur, Exercise ex) {
+    this.userResult = ur;
+    this.userEntry = ue;
+    this.exercise = ex;
+    this.isEntry = true;
+    this.text = ue.getUser().getId();
+    this.styleClass = "user_class";
 
-	public void setIsExercise(boolean isExercise) {
-		this.isExercise = isExercise;
-	}
+    UserRightDao userRightDao = new UserRightDao();
+    UserRights rights = new UserRights().initialize();
 
-	public boolean getIsEntry() {
-		return isEntry;
-	}
+    List<UserRight> tmp = null;
+    tmp = userRightDao.getByUser(ue.getUser());
+    this.setCanBeRemoved(tmp.size() > 0 || rights.isAdmin(ue.getUser()) ? true : false);
+  }
 
-	public void setIsEntry(boolean isEntry) {
-		this.isEntry = isEntry;
-	}
+  public SubmissionRow(String text) {
+    this.text = text;
+  }
 
-	public String getText() {
-		return text;
-	}
+  public SubmissionRow(Exercise e, Scenario scenario) {
+    this.exercise = e;
+    this.isExercise = true;
+    this.text = System.getProperty("EXERCISE_SHORT") + ": [" + StringTools.zeroPad(e.getId(), 2)
+        + "]";
+    this.styleClass = "exercise_class";
+    this.scenario = scenario;
+  }
 
-	public void setText(String text) {
-		this.text = text;
-	}
-	
-	public boolean getIsExGroup() {
-		return isExGroup;
-	}
+  public SubmissionRow(ExerciseGroup eg) {
+    this.exGroup = eg;
+    this.isExGroup = true;
+    this.text = "[" + StringTools.zeroPad(eg.getId(), 2) + "]: "
+        + StringTools.trimToLengthIndicator(eg.getName(), 30);
+    this.styleClass = "exercise_group_class";
+  }
 
-	public void setIsExGroup(boolean isExGroup) {
-		this.isExGroup = isExGroup;
-	}
+  public SubmissionRow(Scenario sc) {
+    this.scenario = sc;
+    this.isScenario = true;
+    this.text = "[" + StringTools.zeroPad(sc.getId(), 2) + "]: "
+        + StringTools.trimToLengthIndicator(sc.getName(), 30);
+    this.styleClass = "scenario_class";
+  }
 
-	public boolean getIsScenario() {
-		return isScenario;
-	}
+  public String getEntryDate() {
+    if (userEntry != null) {
+      DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.FULL, new Locale(
+          "de", "DE"));
+      return df.format(userEntry.getEntryTime());
+    }
+    return "---";
+  }
 
-	public void setIsScenario(boolean isScenario) {
-		this.isScenario = isScenario;
-	}
+  public boolean getIsExercise() {
+    return isExercise;
+  }
 
-	public UserEntry getUserEntry() {
-		return userEntry;
-	}
+  public void setIsExercise(boolean isExercise) {
+    this.isExercise = isExercise;
+  }
 
-	public void setUserEntry(UserEntry userEntry) {
-		this.userEntry = userEntry;
-	}
+  public boolean getIsEntry() {
+    return isEntry;
+  }
 
-	public Exercise getExercise() {
-		return exercise;
-	}
+  public void setIsEntry(boolean isEntry) {
+    this.isEntry = isEntry;
+  }
 
-	public void setExercise(Exercise exercise) {
-		this.exercise = exercise;
-	}
+  public String getText() {
+    return text;
+  }
 
-	public String getExerciseText() {
-		return StringTools.stripHtmlTags(exercise.getQuestion());
-	}
+  public void setText(String text) {
+    this.text = text;
+  }
 
-	public ExerciseGroup getExGroup() {
-		return exGroup;
-	}
+  public boolean getIsExGroup() {
+    return isExGroup;
+  }
 
-	public void setExGroup(ExerciseGroup exGroup) {
-		this.exGroup = exGroup;
-	}
+  public void setIsExGroup(boolean isExGroup) {
+    this.isExGroup = isExGroup;
+  }
 
-	public Scenario getScenario() {
-		return scenario;
-	}
+  public boolean getIsScenario() {
+    return isScenario;
+  }
 
-	public void setScenario(Scenario scenario) {
-		this.scenario = scenario;
-	}
+  public void setIsScenario(boolean isScenario) {
+    this.isScenario = isScenario;
+  }
 
-	public UserResult getUserResult() {
-		return userResult;
-	}
+  public UserEntry getUserEntry() {
+    return userEntry;
+  }
 
-	public void setUserResult(UserResult userResult) {
-		this.userResult = userResult;
-	}
+  public void setUserEntry(UserEntry userEntry) {
+    this.userEntry = userEntry;
+  }
 
-	/**
-	 *
-	 *
-	 * @param d
-	 * @param group
-	 */
-	public void setAvgCredits(double d, Exercise ex) {
-		if (ex != null) {
-			if (ex.getCredits() != null && !Double.isNaN(d)) {
-				this.avgCredits = formatDouble(d, 1).replace(".0", "").replace(",0", "") +  " / " + String.valueOf(ex.getCredits());
-			}
-			else {
-				this.avgCredits = "- / " + String.valueOf(ex.getCredits());
-			}
-		}
-	}
+  public Exercise getExercise() {
+    return exercise;
+  }
 
-    /**
-     *
-     *
-     * @param d
-     * @return
-     */
-	private static String formatDouble(double d, int places) {
-		DecimalFormat f = new DecimalFormat("#0." + StringUtils.repeat("0", places)); 
-		return f.format(d);
-	}
+  public void setExercise(Exercise exercise) {
+    this.exercise = exercise;
+  }
 
-	public String getAvgCredits() {
-		return avgCredits;
-	}
+  public String getExerciseText() {
+    return StringTools.stripHtmlTags(exercise.getQuestion());
+  }
 
-	public String getStyleClass() {
-		return styleClass;
-	}
+  public ExerciseGroup getExGroup() {
+    return exGroup;
+  }
 
-	public void setStyleClass(String styleClass) {
-		this.styleClass = styleClass;
-	}
+  public void setExGroup(ExerciseGroup exGroup) {
+    this.exGroup = exGroup;
+  }
 
-	public boolean getCanBeRemoved() {
-		return canBeRemoved;
-	}
+  public Scenario getScenario() {
+    return scenario;
+  }
 
-	public void setCanBeRemoved(boolean isDeletable) {
-		this.canBeRemoved = isDeletable;
-	}
+  public void setScenario(Scenario scenario) {
+    this.scenario = scenario;
+  }
+
+  public UserResult getUserResult() {
+    return userResult;
+  }
+
+  public void setUserResult(UserResult userResult) {
+    this.userResult = userResult;
+  }
+
+  /**
+   *
+   *
+   * @param d
+   * @param group
+   */
+  public void setAvgCredits(double d, Exercise ex) {
+    if (ex != null) {
+      if (ex.getCredits() != null && !Double.isNaN(d)) {
+        this.avgCredits = formatDouble(d, 1).replace(".0", "").replace(",0", "") + " / "
+            + String.valueOf(ex.getCredits());
+      } else {
+        this.avgCredits = "- / " + String.valueOf(ex.getCredits());
+      }
+    }
+  }
+
+  /**
+   *
+   *
+   * @param d
+   * @return
+   */
+  private static String formatDouble(double d, int places) {
+    DecimalFormat f = new DecimalFormat("#0." + StringUtils.repeat("0", places));
+    return f.format(d);
+  }
+
+  public String getAvgCredits() {
+    return avgCredits;
+  }
+
+  public String getStyleClass() {
+    return styleClass;
+  }
+
+  public void setStyleClass(String styleClass) {
+    this.styleClass = styleClass;
+  }
+
+  public boolean getCanBeRemoved() {
+    return canBeRemoved;
+  }
+
+  public void setCanBeRemoved(boolean isDeletable) {
+    this.canBeRemoved = isDeletable;
+  }
 
 }

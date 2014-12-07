@@ -90,6 +90,9 @@ public class AuthorizationFilter implements Filter, Serializable {
    *
    */
   public AuthorizationFilter() {
+    System.out.println("foo: " + new java.util.Date());
+    System.out.println(new File("config.properties").exists());
+
     this.rights = new UserRights().initialize();
     this.userDao = new UserDao();
     this.fatalError = false;

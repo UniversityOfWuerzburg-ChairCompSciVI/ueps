@@ -7,6 +7,10 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
+import de.uniwue.info6.misc.properties.PropString;
+import de.uniwue.info6.misc.properties.PropertiesFile;
+import de.uniwue.info6.misc.properties.PropertiesManager;
+
 /**
  *
  *
@@ -24,28 +28,31 @@ public class HibernateUtil {
    */
   private static SessionFactory buildSessionFactory() {
     try {
-      Configuration config = new Configuration().configure("hibernate.cfg.xml");
+      PropertiesManager prop = PropertiesManager.inst();
 
-      config.setProperty("hibernate.bytecode.use_reflection_optimizer", "false");
-      config.setProperty("hibernate.search.autoregister_listeners", "false");
-      config.setProperty("hibernate.current_session_context_class", "thread");
-      // config.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
-      // config.setProperty("hibernate.connection.driver_class", "org.drizzle.jdbc.DrizzleDriver");
-      config.setProperty("hibernate.connection.driver_class", "org.mariadb.jdbc.Driver");
-      config.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLInnoDBDialect");
-      // config.setProperty("hibernate.connection.url", "jdbc:mysql://" + System.getProperty("MAIN_DBHOST") + ":"
-      // config.setProperty("hibernate.connection.url", "jdbc:mysql:thin://" + System.getProperty("MAIN_DBHOST") + ":"
-      config.setProperty("hibernate.connection.url", "jdbc:mariadb://" + System.getProperty("MAIN_DBHOST") + ":"
-          + System.getProperty("MAIN_DBPORT") + "?autoReconnect=true");
-      config.setProperty("hibernate.default_catalog", System.getProperty("MAIN_DBNAME"));
-      config.setProperty("hibernate.connection.username", System.getProperty("MAIN_DBUSER"));
-      config.setProperty("hibernate.connection.password", System.getProperty("MAIN_DBPASS"));
+      Configuration hibernate = new Configuration().configure("hibernate.cfg.xml");
+      hibernate.setProperty("hibernate.bytecode.use_reflection_optimizer", "false");
+      hibernate.setProperty("hibernate.search.autoregister_listeners", "false");
+      hibernate.setProperty("hibernate.current_session_context_class", "thread");
+      hibernate.setProperty("hibernate.connection.driver_class", "org.mariadb.jdbc.Driver");
+      hibernate.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLInnoDBDialect");
+
+      hibernate.setProperty("hibernate.connection.url", "jdbc:mariadb://"
+          + prop.getProp(PropertiesFile.MAIN_CONFIG, PropString.MAIN_DBHOST) + ":"
+          + prop.getProp(PropertiesFile.MAIN_CONFIG, PropString.MAIN_DBPORT)
+          + "?autoReconnect=true");
+
+      hibernate.setProperty("hibernate.default_catalog", prop.getProp(PropertiesFile.MAIN_CONFIG,
+          PropString.MAIN_DBNAME));
+      hibernate.setProperty("hibernate.connection.username", prop.getProp(
+          PropertiesFile.MAIN_CONFIG, PropString.MAIN_DBUSER));
+      hibernate.setProperty("hibernate.connection.password", prop.getProp(
+          PropertiesFile.MAIN_CONFIG, PropString.MAIN_DBPASS));
 
       StandardServiceRegistryBuilder serviceRegistryBuilder = new StandardServiceRegistryBuilder();
-
-      serviceRegistryBuilder.applySettings(config.getProperties());
+      serviceRegistryBuilder.applySettings(hibernate.getProperties());
       ServiceRegistry serviceRegistry = serviceRegistryBuilder.build();
-      SessionFactory sessionFactory = config.buildSessionFactory(serviceRegistry);
+      SessionFactory sessionFactory = hibernate.buildSessionFactory(serviceRegistry);
 
       return sessionFactory;
     } catch (Exception ex) {

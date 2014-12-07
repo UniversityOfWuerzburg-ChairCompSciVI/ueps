@@ -20,7 +20,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -30,8 +30,12 @@ import de.uniwue.info6.database.gen.ScriptRunner;
 import de.uniwue.info6.database.map.Scenario;
 import de.uniwue.info6.database.map.User;
 import de.uniwue.info6.database.map.daos.ScenarioDao;
-import de.uniwue.info6.misc.PropertiesManager;
+import de.uniwue.info6.misc.OldPropertiesManager;
 import de.uniwue.info6.misc.StringTools;
+import de.uniwue.info6.misc.properties.PropBool;
+import de.uniwue.info6.misc.properties.PropString;
+import de.uniwue.info6.misc.properties.PropertiesFile;
+import de.uniwue.info6.misc.properties.PropertiesManager;
 import de.uniwue.info6.webapp.session.SessionCollector;
 import de.uniwue.info6.webapp.session.SessionObject;
 
@@ -47,26 +51,31 @@ public class ConnectionManager implements Serializable {
   private static final long serialVersionUID = 1L;
 
   private static final Log LOGGER = LogFactory.getLog(ConnectionManager.class);
-  // private static final String RESOURCE_PATH = "/scn/", DRIVER = "com.mysql.jdbc.Driver",
-  //     URL_PREFIX = "jdbc:mysql://", DUMMY = "DEBUG_SCENARIO_1211243";
-  // private static final String RESOURCE_PATH = "/scn/", DRIVER = "org.drizzle.jdbc.DrizzleDriver",
-  //     URL_PREFIX = "jdbc:mysql:thin://", DUMMY = "DEBUG_SCENARIO_1211243";
-  private static final String RESOURCE_PATH = "/scn/", DRIVER = "org.mariadb.jdbc.Driver",
-      URL_PREFIX = "jdbc:mariadb://", DUMMY = "DEBUG_SCENARIO_1211243";
-  private static String scriptPath;
 
-  private static ConnectionManager pool;
-  private static ScenarioDao scenarioDao;
+  // @formatter:off
+  private static final String
+    RESOURCE_PATH     = "/scn/",
+    DRIVER            = "org.mariadb.jdbc.Driver",
+    URL_PREFIX        = "jdbc:mariadb://";
+  // @formatter:on
 
-  private HashMap<Scenario, ArrayList<String>> scenarioScripts, scenarioTables, scenarioTablesWithHash;
+  private String scriptPath;
+
+  private HashMap<Scenario, ArrayList<String>> scenarioScripts, scenarioTables,
+      scenarioTablesWithHash;
   private HashMap<Scenario, JdbcTemplate> pools;
   private HashMap<Scenario, String> errors;
   private ArrayList<Scenario> hasForeignKeys, originalTableDeleted;
 
   private String resourcePath;
   private SessionObject ac;
+  private ScenarioDao scenarioDao;
 
   private DriverManagerDataSource adminDataSource;
+
+  private PropertiesManager config;
+
+  private static ConnectionManager instance;
 
   // -----------------------------------------------------------------------
   // initialize
@@ -82,15 +91,15 @@ public class ConnectionManager implements Serializable {
    * @throws IOException
    */
   public static synchronized ConnectionManager instance() {
-    if (pool == null) {
-      pool = new ConnectionManager();
+    if (instance == null) {
+      instance = new ConnectionManager();
       try {
-        pool.updateScenarios();
+        instance.updateScenarios();
       } catch (Exception e) {
         LOGGER.error("UPDATING SCENARIOS FAILED", e);
       }
     }
-    return pool;
+    return instance;
   }
 
   /**
@@ -103,15 +112,15 @@ public class ConnectionManager implements Serializable {
    * @throws IOException
    */
   public static synchronized ConnectionManager offline_instance() {
-    if (pool == null) {
-      if (scriptPath == null) {
-        // System.out.println("OFFLINE ZUGRIFF AUF DIE DATENBANK FUER TEMPORAERE TABELLEN...\n\n");
-        PropertiesManager pr = PropertiesManager.instance();
-        pr.loadProperties("config.properties").loadProperties("text_de.properties");
-      }
-      pool = new ConnectionManager();
+    if (instance == null) {
+      // if (scriptPath == null) {
+      // System.out.println("OFFLINE ZUGRIFF AUF DIE DATENBANK FUER TEMPORAERE TABELLEN...\n\n");
+      OldPropertiesManager pr = OldPropertiesManager.instance();
+      pr.loadProperties("config.properties").loadProperties("text_de.properties");
+      // }
+      instance = new ConnectionManager();
     }
-    return pool;
+    return instance;
   }
 
   /**
@@ -120,18 +129,22 @@ public class ConnectionManager implements Serializable {
    * @see Object#SystemProperties()
    */
   private ConnectionManager() {
-    pools = new HashMap<Scenario, JdbcTemplate>();
-    errors = new HashMap<Scenario, String>();
-    ac = new SessionCollector().getSessionObject();
-    scriptPath = System.getProperty("SCENARIO_RESOURCES");
 
-    scenarioScripts = new HashMap<Scenario, ArrayList<String>>();
-    scenarioTablesWithHash = new HashMap<Scenario, ArrayList<String>>();
-    scenarioTables = new HashMap<Scenario, ArrayList<String>>();
-    hasForeignKeys = new ArrayList<Scenario>();
-    originalTableDeleted = new ArrayList<Scenario>();
+    this.config = PropertiesManager.inst();
+    this.scriptPath = this.config
+        .getProp(PropertiesFile.MAIN_CONFIG, PropString.SCENARIO_RESOURCES);
+    this.scriptPath = StringTools.shortenUnixHomePathReverse(this.scriptPath);
 
-    scenarioDao = new ScenarioDao();
+    this.pools = new HashMap<Scenario, JdbcTemplate>();
+    this.errors = new HashMap<Scenario, String>();
+    this.ac = new SessionCollector().getSessionObject();
+
+    this.scenarioScripts = new HashMap<Scenario, ArrayList<String>>();
+    this.scenarioTablesWithHash = new HashMap<Scenario, ArrayList<String>>();
+    this.scenarioTables = new HashMap<Scenario, ArrayList<String>>();
+    this.hasForeignKeys = new ArrayList<Scenario>();
+    this.originalTableDeleted = new ArrayList<Scenario>();
+    this.scenarioDao = new ScenarioDao();
 
     // getting resource path
     File rootPath = new File(scriptPath);
@@ -194,7 +207,7 @@ public class ConnectionManager implements Serializable {
 
     if (scenario != null) {
       try {
-        JdbcTemplate template = pool.getTemplate(scenario);
+        JdbcTemplate template = instance.getTemplate(scenario);
         String dbName = scenario.getDbName();
 
         List<String> tables = new LinkedList<String>();
@@ -237,7 +250,8 @@ public class ConnectionManager implements Serializable {
           for (String table : tables) {
             statement = connection.createStatement();
 
-            if (tablesToDelete != null && !tablesToDelete.isEmpty() && !hasForeignKeys.contains(scenario)) {
+            if (tablesToDelete != null && !tablesToDelete.isEmpty()
+                && !hasForeignKeys.contains(scenario)) {
               for (String tableToDelete : tablesToDelete) {
                 if ((user != null && table.equalsIgnoreCase(user.getId() + "_" + tableToDelete))
                     || table.equalsIgnoreCase(tableToDelete)) {
@@ -249,7 +263,8 @@ public class ConnectionManager implements Serializable {
             } else {
               statement.execute("UNLOCK TABLES;");
               statement.execute("DROP TABLE IF EXISTS `" + table + "`;");
-              // System.err.println("INFO: DROPPING TABLE AT STARTUP: \"" + table + "\"");
+              // System.err.println("INFO: DROPPING TABLE AT STARTUP: \"" +
+              // table + "\"");
             }
           }
           statement.executeUpdate("SET FOREIGN_KEY_CHECKS = 1;");
@@ -305,8 +320,8 @@ public class ConnectionManager implements Serializable {
           throw new SQLException("CAN'T GRANT USER RIGHTS, DATABASE NOT FOUND");
         }
       } catch (Exception e) {
-        throw new SQLException("COULD NOT CONNECT TO ADMIN DATABASE: \n" + "[" + script + "]" + "\n\n"
-            + ExceptionUtils.getStackTrace(e));
+        throw new SQLException("COULD NOT CONNECT TO ADMIN DATABASE: \n" + "[" + script + "]"
+            + "\n\n" + ExceptionUtils.getStackTrace(e));
       }
     }
     return false;
@@ -319,23 +334,23 @@ public class ConnectionManager implements Serializable {
   public boolean createAdminDataSource() throws Exception {
     String dbHost = "", dbUser = "", dbPass = "", dbPort = "", url = "";
 
-    dbHost = System.getProperty("MAIN_DBHOST");
-    dbUser = System.getProperty("MAIN_DBUSER");
-    dbPass = System.getProperty("MAIN_DBPASS");
-    dbPort = System.getProperty("MAIN_DBPORT");
+    dbHost = this.config.getProp(PropertiesFile.MAIN_CONFIG, PropString.MAIN_DBHOST);
+    dbUser = this.config.getProp(PropertiesFile.MAIN_CONFIG, PropString.MAIN_DBUSER);
+    dbPass = this.config.getProp(PropertiesFile.MAIN_CONFIG, PropString.MAIN_DBPASS);
+    dbPort = this.config.getProp(PropertiesFile.MAIN_CONFIG, PropString.MAIN_DBPORT);
 
-    String allowCreation = System.getProperty("ALLOW_DB_CREATION");
+    Boolean allowCreation = this.config.getProp(PropertiesFile.MAIN_CONFIG,
+        PropBool.ALLOW_DB_CREATION);
 
-    if (allowCreation != null && !StringTools.parseBoolean(allowCreation)) {
+    if (!allowCreation) {
       return false;
     }
 
     // admin-database
     adminDataSource = new DriverManagerDataSource();
 
-    url = url + URL_PREFIX + dbHost + ":" + dbPort;
-    // TODO:
-    // url = url + "?useUnicode=true&characterEncoding=UTF8&autoReconnect=true";
+    url = url + URL_PREFIX + dbHost + ":" + dbPort
+        + "?useUnicode=true&characterEncoding=UTF8&autoReconnect=true";
 
     adminDataSource.setDriverClassName(DRIVER);
     adminDataSource.setUrl(url);
@@ -403,8 +418,8 @@ public class ConnectionManager implements Serializable {
           throw new SQLException();
         }
       } catch (Exception e) {
-        throw new SQLException("could not connect to admin database: " + "[" + dbHost + "]" + "[" + dbUser
-            + "]" + "[" + dbPass + "]" + "[" + dbPort + "]" + "[" + url + "]", e);
+        throw new SQLException("could not connect to admin database: " + "[" + dbHost + "]" + "["
+            + dbUser + "]" + "[" + dbPass + "]" + "[" + dbPort + "]" + "[" + url + "]", e);
       } finally {
         try {
           if (resultSet != null) {
@@ -466,12 +481,15 @@ public class ConnectionManager implements Serializable {
     if (dbScript != null) {
       File sqlScript = new File(resourcePath + File.separator + scenario.getId(), dbScript);
       if (!sqlScript.exists()) {
-        String er = ExceptionUtils.getFullStackTrace(new FileNotFoundException(sqlScript.getAbsolutePath()));
+        String er = ExceptionUtils.getStackTrace(new FileNotFoundException(sqlScript
+            .getAbsolutePath()));
+
         if (er.length() > 500) {
           return er.substring(0, 500) + " [...]";
         } else {
           return er;
         }
+
       }
     }
     return null;
@@ -486,8 +504,8 @@ public class ConnectionManager implements Serializable {
    * @throws IOException
    * @throws FileNotFoundException
    */
-  public synchronized String addDB(Scenario scenario, boolean resetDB) throws SQLException, FileNotFoundException,
-      IOException {
+  public synchronized String addDB(Scenario scenario, boolean resetDB) throws SQLException,
+      FileNotFoundException, IOException {
     if (scenario == null) {
       LOGGER.error("ADDED SCENARIO IS NULL");
     } else {
@@ -530,7 +548,7 @@ public class ConnectionManager implements Serializable {
 
         try {
 
-          connection = pool.getConnection(scenario);
+          connection = instance.getConnection(scenario);
           String dbScript = scenario.getCreateScriptPath();
           ScriptRunner sc = new ScriptRunner(connection, false, true);
 
@@ -564,9 +582,10 @@ public class ConnectionManager implements Serializable {
         } catch (Exception e) {
           error = swError.toString();
           if (error.isEmpty()) {
-            String er = ExceptionUtils.getFullStackTrace(e);
+            String er = ExceptionUtils.getStackTrace(e);
             if (er.length() > 500) {
-              error = System.getProperty("ERROR.UNEXPECTED") + ": \n" + er.substring(0, 500) + " [...]";
+              error = System.getProperty("ERROR.UNEXPECTED") + ": \n" + er.substring(0, 500)
+                  + " [...]";
             } else {
               error = System.getProperty("ERROR.UNEXPECTED") + ": \n" + er;
             }
@@ -595,7 +614,8 @@ public class ConnectionManager implements Serializable {
    * @throws SQLException
    * @throws FileNotFoundException
    */
-  public synchronized void updateScenarios() throws FileNotFoundException, SQLException, IOException {
+  public synchronized void updateScenarios() throws FileNotFoundException, SQLException,
+      IOException {
     List<Scenario> scenarios = scenarioDao.findAll();
     errors = new HashMap<Scenario, String>();
 
@@ -609,7 +629,7 @@ public class ConnectionManager implements Serializable {
         }
 
         if (!pools.containsKey(sc)) {
-          pool.addDB(sc, false);
+          instance.addDB(sc, false);
         }
       }
 
@@ -745,19 +765,21 @@ public class ConnectionManager implements Serializable {
    *
    * @throws SQLException
    */
-  public synchronized String getTableChecksum(Scenario scenario, User user, String table) throws SQLException {
+  public synchronized String getTableChecksum(Scenario scenario, User user, String table)
+      throws SQLException {
     if (scenario != null) {
       Connection connection = null;
       ResultSet resultSet = null;
       Statement statement = null;
       try {
-        connection = pool.getConnection(scenario);
+        connection = instance.getConnection(scenario);
         statement = connection.createStatement();
 
         if (user == null) {
           statement.execute("CHECKSUM TABLE " + table);
         } else {
-          statement.execute("CHECKSUM TABLE `" + user.getId().toLowerCase().trim() + "_" + table + "`");
+          statement.execute("CHECKSUM TABLE `" + user.getId().toLowerCase().trim() + "_" + table
+              + "`");
         }
         resultSet = statement.getResultSet();
 
@@ -793,8 +815,8 @@ public class ConnectionManager implements Serializable {
    *
    *
    */
-  public synchronized void resetTables(Scenario scenario, User user) throws SQLException, FileNotFoundException,
-      IOException {
+  public synchronized void resetTables(Scenario scenario, User user) throws SQLException,
+      FileNotFoundException, IOException {
     long starttime = System.currentTimeMillis();
 
     if (!originalTableDeleted.contains(scenario)) {
@@ -891,7 +913,7 @@ public class ConnectionManager implements Serializable {
       }
     }
 
-    long elapsedTime = System.currentTimeMillis() - starttime;
+    // long elapsedTime = System.currentTimeMillis() - starttime;
     // 150-190ms
     // System.out.println("Import-Script: " + elapsedTime + " ms");
   }
@@ -947,7 +969,9 @@ public class ConnectionManager implements Serializable {
     // String regex_table = "[\\s]+([a-zA-Z0-9-_]+)[\\s]*";
 
     String regex_table = "[\\`\\'\"\\s]+([a-zA-Z0-9-_]+)[\\`\\'\"\\s]*[,]?";
-    // String REGEX_FIELD = "(?:create|drop|lock|alter)[\\s]+table[s]?(?:[\\s]*if[\\s]*exists)?" + regex_table;
+    // String REGEX_FIELD =
+    // "(?:create|drop|lock|alter)[\\s]+table[s]?(?:[\\s]*if[\\s]*exists)?" +
+    // regex_table;
     String REGEX_FIELD = "(?:create|drop|lock|alter)[\\s]+table[s]?(?:[\\s]*if[\\s]*not?[\\s]*exists)?"
         + regex_table;
     Matcher matcher = Pattern.compile(REGEX_FIELD, Pattern.CASE_INSENSITIVE).matcher(query);
@@ -1000,16 +1024,16 @@ public class ConnectionManager implements Serializable {
       }
     }
 
-    String tempQuery = query.replaceAll("\\s+", "").toLowerCase();
-
-    // if (tempQuery.contains("foreignkey") && tempQuery.contains("createtable")) {
-    //     if (!hasForeignKeys.contains(scenario)) {
-    //         hasForeignKeys.add(scenario);
-    //     }
+    // String tempQuery = query.replaceAll("\\s+", "").toLowerCase();
+    // if (tempQuery.contains("foreignkey") &&
+    // tempQuery.contains("createtable")) {
+    // if (!hasForeignKeys.contains(scenario)) {
+    // hasForeignKeys.add(scenario);
+    // }
     // }
 
     if (!tablesToReplace.isEmpty()) {
-      //  System.out.println(tablesToReplace);
+      // System.out.println(tablesToReplace);
       ArrayList<String> tables = null;
       ArrayList<String> tablesWithHash = null;
 
@@ -1061,7 +1085,7 @@ public class ConnectionManager implements Serializable {
     if (scenario != null) {
       try {
         System.err.println("INFO: FORCE DROP AND CREATE DATABASE");
-        JdbcTemplate template = pool.getTemplate(scenario);
+        JdbcTemplate template = instance.getTemplate(scenario);
         String dbName = scenario.getDbName();
         template.execute("DROP DATABASE IF EXISTS `" + dbName + "`;");
         Thread.sleep(100);
@@ -1126,7 +1150,7 @@ public class ConnectionManager implements Serializable {
 
   /**
    * @param resourcePath
-   *            the resourcePath to set
+   *          the resourcePath to set
    */
   public void setResourcePath(String resourcePath) {
     this.resourcePath = resourcePath;

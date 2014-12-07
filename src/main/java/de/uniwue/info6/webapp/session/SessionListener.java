@@ -42,6 +42,8 @@ public class SessionListener implements HttpSessionListener, Serializable {
   private static final Log LOGGER = LogFactory.getLog(SessionListener.class);
   private static final long serialVersionUID = 1L;
 
+
+
   /**
    *
    * @param session

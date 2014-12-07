@@ -3,6 +3,18 @@
 
 ![alt tag](res/screenshots/ueps_01.png)
 
+![alt tag](res/screenshots/ueps_02.png)
+
+![alt tag](res/screenshots/ueps_03.png)
+
+![alt tag](res/screenshots/ueps_04.png)
+
+![alt tag](res/screenshots/ueps_05.png)
+
+![alt tag](res/screenshots/ueps_06.png)
+
+![alt tag](res/screenshots/ueps_07.png)
+
 ## Quick Install Guide
 
 ### Requirements

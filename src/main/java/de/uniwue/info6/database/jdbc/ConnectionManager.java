@@ -35,9 +35,12 @@ import de.uniwue.info6.misc.StringTools;
 import de.uniwue.info6.misc.properties.PropBool;
 import de.uniwue.info6.misc.properties.PropString;
 import de.uniwue.info6.misc.properties.PropertiesFile;
-import de.uniwue.info6.misc.properties.PropertiesManager;
+import de.uniwue.info6.misc.properties.Cfg;
 import de.uniwue.info6.webapp.session.SessionCollector;
 import de.uniwue.info6.webapp.session.SessionObject;
+
+import static de.uniwue.info6.misc.properties.PropertiesFile.DEF_LANGUAGE;
+import de.uniwue.info6.misc.properties.Cfg;
 
 /**
  *
@@ -73,7 +76,7 @@ public class ConnectionManager implements Serializable {
 
   private DriverManagerDataSource adminDataSource;
 
-  private PropertiesManager config;
+  private Cfg config;
 
   private static ConnectionManager instance;
 
@@ -130,7 +133,7 @@ public class ConnectionManager implements Serializable {
    */
   private ConnectionManager() {
 
-    this.config = PropertiesManager.inst();
+    this.config = Cfg.inst();
     this.scriptPath = this.config
         .getProp(PropertiesFile.MAIN_CONFIG, PropString.SCENARIO_RESOURCES);
     this.scriptPath = StringTools.shortenUnixHomePathReverse(this.scriptPath);
@@ -584,10 +587,10 @@ public class ConnectionManager implements Serializable {
           if (error.isEmpty()) {
             String er = ExceptionUtils.getStackTrace(e);
             if (er.length() > 500) {
-              error = System.getProperty("ERROR.UNEXPECTED") + ": \n" + er.substring(0, 500)
+              error = Cfg.inst().getProp(DEF_LANGUAGE, "ERROR.UNEXPECTED") + ": \n" + er.substring(0, 500)
                   + " [...]";
             } else {
-              error = System.getProperty("ERROR.UNEXPECTED") + ": \n" + er;
+              error = Cfg.inst().getProp(DEF_LANGUAGE, "ERROR.UNEXPECTED") + ": \n" + er;
             }
           }
           LOGGER.error(error, e);

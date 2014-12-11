@@ -1,5 +1,7 @@
 package de.uniwue.info6.webapp.admin;
 
+import static de.uniwue.info6.misc.properties.PropertiesFile.DEF_LANGUAGE;
+
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -24,6 +26,7 @@ import de.uniwue.info6.database.map.User;
 import de.uniwue.info6.database.map.daos.ExerciseGroupDao;
 import de.uniwue.info6.database.map.daos.ScenarioDao;
 import de.uniwue.info6.misc.DateFormatTools;
+import de.uniwue.info6.misc.properties.Cfg;
 import de.uniwue.info6.webapp.session.SessionCollector;
 import de.uniwue.info6.webapp.session.SessionObject;
 
@@ -92,19 +95,19 @@ public class AdminEditGroup implements Serializable {
       }
 
       if (groupName == null || groupName.trim().isEmpty()) {
-        message = System.getProperty("EDIT_GROUP.EMPTY_GROUP");
+        message = Cfg.inst().getProp(DEF_LANGUAGE, "EDIT_GROUP.EMPTY_GROUP");
         sev = FacesMessage.SEVERITY_ERROR;
       } else if (startDate != null && endDate != null && startDate.after(endDate)) {
-        message = System.getProperty("EDIT_GROUP.TIME_CONFLICT1");
+        message = Cfg.inst().getProp(DEF_LANGUAGE, "EDIT_GROUP.TIME_CONFLICT1");
         sev = FacesMessage.SEVERITY_ERROR;
       } else if (scenario.getStartTime() != null && startDate != null
           && startDate.before(scenario.getStartTime())) {
-        message = System.getProperty("EDIT_GROUP.TIME_CONFLICT2") + ": ["
+        message = Cfg.inst().getProp(DEF_LANGUAGE, "EDIT_GROUP.TIME_CONFLICT2") + ": ["
             + DateFormatTools.getGermanFormat(scenario.getStartTime()) + "]";
         sev = FacesMessage.SEVERITY_ERROR;
       } else if (scenario.getEndTime() != null && endDate != null
           && endDate.after(scenario.getEndTime())) {
-        message = System.getProperty("EDIT_GROUP.TIME_CONFLICT3") + ": ["
+        message = Cfg.inst().getProp(DEF_LANGUAGE, "EDIT_GROUP.TIME_CONFLICT3") + ": ["
             + DateFormatTools.getGermanFormat(scenario.getEndTime()) + "]";
         sev = FacesMessage.SEVERITY_ERROR;
       }
@@ -142,11 +145,11 @@ public class AdminEditGroup implements Serializable {
           sev = FacesMessage.SEVERITY_INFO;
           DateFormat df = new SimpleDateFormat("HH:mm:ss");
 
-          message = System.getProperty("SUCCESS") + " (" + df.format(new Date()) + ")";
+          message = Cfg.inst().getProp(DEF_LANGUAGE, "SUCCESS") + " (" + df.format(new Date()) + ")";
         } catch (Exception e) {
           LOGGER.error("failed saving exercise-group:" + exerciseGroup, e);
           sev = FacesMessage.SEVERITY_ERROR;
-          message = System.getProperty("ERROR");
+          message = Cfg.inst().getProp(DEF_LANGUAGE, "ERROR");
         }
       }
       msg = new FacesMessage(sev, message, details);
@@ -229,12 +232,12 @@ public class AdminEditGroup implements Serializable {
    */
   public String getType() {
     if (rated == null || rated == 1) {
-      return System.getProperty("UNRATED");
+      return Cfg.inst().getProp(DEF_LANGUAGE, "UNRATED");
     }
     if (rated == 2) {
-      return System.getProperty("RATED");
+      return Cfg.inst().getProp(DEF_LANGUAGE, "RATED");
     }
-    return System.getProperty("EDIT_GROUP.RATED_NO_FEED");
+    return Cfg.inst().getProp(DEF_LANGUAGE, "EDIT_GROUP.RATED_NO_FEED");
   }
 
   /**

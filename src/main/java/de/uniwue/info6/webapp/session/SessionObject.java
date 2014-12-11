@@ -16,6 +16,12 @@ import de.uniwue.info6.database.map.daos.ScenarioDao;
 import de.uniwue.info6.database.map.daos.UserDao;
 import de.uniwue.info6.misc.Crypt;
 
+import static de.uniwue.info6.misc.properties.PropBool.*;
+import static de.uniwue.info6.misc.properties.PropString.*;
+import static de.uniwue.info6.misc.properties.PropInteger.*;
+import static de.uniwue.info6.misc.properties.PropertiesFile.*;
+import de.uniwue.info6.misc.properties.Cfg;
+
 /**
  *
  *
@@ -76,7 +82,7 @@ public class SessionObject {
    * @return
    */
   private static boolean isValid(String userIP, String userID, String secureValue) {
-    return Crypt.md5(userIP + System.getProperty("SECRET_ID_STRING") + userID).equals(secureValue);
+    return Crypt.md5(userIP + Cfg.inst().getProp(MAIN_CONFIG,SECRET_ID_STRING) + userID).equals(secureValue);
   }
 
   /**
@@ -96,7 +102,7 @@ public class SessionObject {
 
     if (userID != null && secureValue != null && userIP != null && !userID.isEmpty()
         && !secureValue.isEmpty()) {
-      if (parseBoolean(System.getProperty("USE_WUECAMUS_LOGIN"))) {
+      if (Cfg.inst().getProp(MAIN_CONFIG,USE_WUECAMUS_LOGIN)) {
         return isValid(userIP, userID, secureValue);
       } else {
         return true;

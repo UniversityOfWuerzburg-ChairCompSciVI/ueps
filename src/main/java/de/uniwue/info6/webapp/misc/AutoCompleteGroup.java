@@ -17,6 +17,9 @@ import de.uniwue.info6.webapp.admin.UserRights;
 import de.uniwue.info6.webapp.session.SessionCollector;
 import de.uniwue.info6.webapp.session.SessionObject;
 
+import static de.uniwue.info6.misc.properties.PropertiesFile.DEF_LANGUAGE;
+import de.uniwue.info6.misc.properties.Cfg;
+
 /**
  *
  *
@@ -26,108 +29,108 @@ import de.uniwue.info6.webapp.session.SessionObject;
 @ViewScoped
 public class AutoCompleteGroup {
 
-	private ExerciseGroupDao groupDao;
-	private ScenarioDao scenarioDao;
-	private List<ExerciseGroup> groups;
-	private String notFound;
-	private String scenarioID;
-	private UserRights rights;
-	private User user;
+  private ExerciseGroupDao groupDao;
+  private ScenarioDao scenarioDao;
+  private List<ExerciseGroup> groups;
+  private String notFound;
+  private String scenarioID;
+  private UserRights rights;
+  private User user;
 
-	/**
-	 *
-	 */
-	public AutoCompleteGroup() {
-	}
+  /**
+   *
+   */
+  public AutoCompleteGroup() {
+  }
 
-	/**
-	 *
-	 *
-	 */
-	@PostConstruct
-	public void init() {
-		this.groupDao = new ExerciseGroupDao();
-		this.scenarioDao = new ScenarioDao();
-		this.notFound = System.getProperty("ASSERTION.NO_GROUP");
-		this.rights = new UserRights().initialize();
+  /**
+   *
+   *
+   */
+  @PostConstruct
+  public void init() {
+    this.groupDao = new ExerciseGroupDao();
+    this.scenarioDao = new ScenarioDao();
+    this.notFound = Cfg.inst().getProp(DEF_LANGUAGE, "ASSERTION.NO_GROUP");
+    this.rights = new UserRights().initialize();
 
-		SessionObject ac = new SessionCollector().getSessionObject();
-		if (ac != null) {
-			user = ac.getUser();
-		}
-	}
+    SessionObject ac = new SessionCollector().getSessionObject();
+    if (ac != null) {
+      user = ac.getUser();
+    }
+  }
 
-	/**
-	 *
-	 *
-	 * @param scenarioID
-	 * @return
-	 */
-	public AutoCompleteGroup scenarioInit(String scenarioID) {
-		if (user != null) {
-			if (scenarioID != null && !scenarioID.isEmpty()
-					&& (this.scenarioID == null || !this.scenarioID.equals(scenarioID))) {
-				this.scenarioID = StringTools.extractIDFromAutoComplete(scenarioID);
-				if (this.scenarioID != null) {
-					Scenario sc = scenarioDao.getById(Integer.parseInt(this.scenarioID));
-					if (sc != null && rights.hasRatingRight(user, sc)) {
-						ExerciseGroup ratedExample = new ExerciseGroup();
-						ratedExample.setScenario(sc);
-						ratedExample.setIsRated(true);
-						groups = groupDao.findByExample(ratedExample);
-					}
-				}
-			}
+  /**
+   *
+   *
+   * @param scenarioID
+   * @return
+   */
+  public AutoCompleteGroup scenarioInit(String scenarioID) {
+    if (user != null) {
+      if (scenarioID != null && !scenarioID.isEmpty()
+          && (this.scenarioID == null || !this.scenarioID.equals(scenarioID))) {
+        this.scenarioID = StringTools.extractIDFromAutoComplete(scenarioID);
+        if (this.scenarioID != null) {
+          Scenario sc = scenarioDao.getById(Integer.parseInt(this.scenarioID));
+          if (sc != null && rights.hasRatingRight(user, sc)) {
+            ExerciseGroup ratedExample = new ExerciseGroup();
+            ratedExample.setScenario(sc);
+            ratedExample.setIsRated(true);
+            groups = groupDao.findByExample(ratedExample);
+          }
+        }
+      }
 
-			if (groups == null) {
-				ExerciseGroup ratedExample = new ExerciseGroup();
-				ratedExample.setIsRated(true);
-				groups = new ArrayList<ExerciseGroup>();
-				List<ExerciseGroup> temp = groupDao.findByExample(ratedExample);
-				if (temp != null) {
-					for (ExerciseGroup gr : temp) {
-						if (rights.hasRatingRight(user, gr)) {
-							groups.add(gr);
-						}
-					}
-				}
-			}
-		}
+      if (groups == null) {
+        ExerciseGroup ratedExample = new ExerciseGroup();
+        ratedExample.setIsRated(true);
+        groups = new ArrayList<ExerciseGroup>();
+        List<ExerciseGroup> temp = groupDao.findByExample(ratedExample);
+        if (temp != null) {
+          for (ExerciseGroup gr : temp) {
+            if (rights.hasRatingRight(user, gr)) {
+              groups.add(gr);
+            }
+          }
+        }
+      }
+    }
 
-		return this;
-	}
+    return this;
+  }
 
-	/**
-	 *
-	 *
-	 * @param query
-	 * @return
-	 */
-	public List<String> complete(String query) {
-		if (query.startsWith("0")) {
-			query = query.replaceFirst("[0]+", "");
-		}
+  /**
+   *
+   *
+   * @param query
+   * @return
+   */
+  public List<String> complete(String query) {
+    if (query.startsWith("0")) {
+      query = query.replaceFirst("[0]+", "");
+    }
 
-		List<String> results = new ArrayList<String>();
-		results.add("[" + System.getProperty("ASSERTION.EMPTY_FIELD") + "]");
+    List<String> results = new ArrayList<String>();
+    results.add("[" + Cfg.inst().getProp(DEF_LANGUAGE, "ASSERTION.EMPTY_FIELD") + "]");
 
-		if (groups != null) {
-			for (ExerciseGroup group : groups) {
-				if (group.getName() != null) {
-					String id = String.valueOf(group.getId());
-					if (id.contains(query.trim())
-							|| group.getName().toLowerCase().contains(query.toLowerCase().trim())) {
-						results.add("[" + id + "]: " + StringTools.findSnippet(group.getName(), query, 70));
-					}
-				}
-			}
-		}
+    if (groups != null) {
+      for (ExerciseGroup group : groups) {
+        if (group.getName() != null) {
+          String id = String.valueOf(group.getId());
+          if (id.contains(query.trim())
+              || group.getName().toLowerCase().contains(query.toLowerCase().trim())) {
+            results.add("[" + id + "]: " + StringTools.findSnippet(group.getName(), query, 70));
+          }
+        }
+      }
+    }
 
-		if (results.size() <= 1 && notFound != null) {
-			results = new ArrayList<String>();
-			results.add(notFound);
-		}
+    if (results.size() <= 1 && notFound != null) {
+      results = new ArrayList<String>();
+      results.add(notFound);
+    }
 
-		return results;
-	}
+    return results;
+  }
 }

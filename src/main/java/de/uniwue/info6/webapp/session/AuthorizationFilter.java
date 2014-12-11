@@ -1,5 +1,14 @@
 package de.uniwue.info6.webapp.session;
 
+import static de.uniwue.info6.misc.properties.PropBool.FORCE_RESET_DATABASE;
+import static de.uniwue.info6.misc.properties.PropBool.IMPORT_DB_IF_EMPTY;
+import static de.uniwue.info6.misc.properties.PropBool.IMPORT_EXAMPLE_SCENARIO;
+import static de.uniwue.info6.misc.properties.PropBool.LOG_BROWSER_HISTORY;
+import static de.uniwue.info6.misc.properties.PropBool.USE_FALLBACK_USER;
+import static de.uniwue.info6.misc.properties.PropInteger.SESSION_TIMEOUT;
+import static de.uniwue.info6.misc.properties.PropString.SCENARIO_RESOURCES;
+import static de.uniwue.info6.misc.properties.PropertiesFile.MAIN_CONFIG;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -42,6 +51,8 @@ import de.uniwue.info6.database.map.User;
 import de.uniwue.info6.database.map.daos.ScenarioDao;
 import de.uniwue.info6.database.map.daos.UserDao;
 import de.uniwue.info6.misc.StringTools;
+import de.uniwue.info6.misc.properties.Cfg;
+import de.uniwue.info6.misc.properties.PropString;
 import de.uniwue.info6.webapp.admin.UserRights;
 
 /**
@@ -55,15 +66,20 @@ public class AuthorizationFilter implements Filter, Serializable {
   private static final long serialVersionUID = 1L;
   private static final Log LOGGER = LogFactory.getLog(AuthorizationFilter.class);
 
-  private final static String logoutPage = "logout", permissionPage = "permission", loginPage = "index.xhtml",
-      sessionPosition = "auth_controller", errorPage = "starterror";
-  private final static String userID = "userID", secureValue = "secureValue", scenarioID = "scenarioID";
+  private final static String logoutPage = "logout", permissionPage = "permission",
+      loginPage = "index.xhtml", sessionPosition = "auth_controller", errorPage = "starterror";
+  private final static String userID = "userID", secureValue = "secureValue",
+      scenarioID = "scenarioID";
   private final static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd-HH_mm_ss");
 
-  private final static String SCRIPT_PATH = System.getProperty("SCENARIO_RESOURCES");
-  private final static String FALLBACK_USER = System.getProperty("FALLBACK_USER");
-  private final static String FALLBACK_SECUREVALUE = System.getProperty("FALLBACK_SECUREVALUE");
-  private final static String FALLBACK_SCENARIO = System.getProperty("FALLBACK_SCENARIO");
+  private final static String SCRIPT_PATH = StringTools.shortenUnixHomePathReverse(Cfg.inst()
+      .getProp(MAIN_CONFIG, SCENARIO_RESOURCES));
+  private final static String FALLBACK_USER = Cfg.inst().getProp(MAIN_CONFIG,
+      PropString.FALLBACK_USER);
+  private final static String FALLBACK_SECUREVALUE = Cfg.inst().getProp(MAIN_CONFIG,
+      PropString.FALLBACK_SECUREVALUE);
+  private final static String FALLBACK_SCENARIO = Cfg.inst().getProp(MAIN_CONFIG,
+      PropString.FALLBACK_SCENARIO);
 
   private static final String RESOURCE_PATH = "scn";
   private final static String SUB_DIR = "0";
@@ -90,9 +106,6 @@ public class AuthorizationFilter implements Filter, Serializable {
    *
    */
   public AuthorizationFilter() {
-    System.out.println("foo: " + new java.util.Date());
-    System.out.println(new File("config.properties").exists());
-
     this.rights = new UserRights().initialize();
     this.userDao = new UserDao();
     this.fatalError = false;
@@ -139,13 +152,12 @@ public class AuthorizationFilter implements Filter, Serializable {
    *
    */
   private void initBrowserLog() {
-    if (StringTools.parseBoolean(System.getProperty("LOG_BROWSER_HISTORY"))) {
+    if (Cfg.inst().getProp(MAIN_CONFIG, LOG_BROWSER_HISTORY)) {
       this.browserLogFile = SCRIPT_PATH + File.separator + RESOURCE_PATH + File.separator + SUB_DIR
           + File.separator + BROWSER_LOG_DIR + File.separator + "browser_log_"
           + dateFormat.format(new Date()) + ".csv";
       logBrowser("User-ID\tUser-Agent");
     }
-
   }
 
   /**
@@ -166,12 +178,12 @@ public class AuthorizationFilter implements Filter, Serializable {
    */
   private boolean checkDBConnection() {
     try {
-      if (StringTools.parseBoolean(System.getProperty("FORCE_RESET_DATABASE"))) {
+      if (Cfg.inst().getProp(MAIN_CONFIG, FORCE_RESET_DATABASE)) {
         return generateNewDB(true);
       } else {
-        if (StringTools.parseBoolean(System.getProperty("IMPORT_DB_IF_EMPTY"))) {
+        if (Cfg.inst().getProp(MAIN_CONFIG, IMPORT_DB_IF_EMPTY)) {
           if (!dBDataExists()) {
-            if (StringTools.parseBoolean(System.getProperty("FORCE_RESET_DATABASE"))) {
+            if (Cfg.inst().getProp(MAIN_CONFIG, FORCE_RESET_DATABASE)) {
               return generateNewDB(true);
             } else {
               return generateNewDB(false);
@@ -201,7 +213,7 @@ public class AuthorizationFilter implements Filter, Serializable {
   private boolean generateNewDB(boolean forceReset) {
     GenerateData gen = new GenerateData();
 
-    if (StringTools.parseBoolean(System.getProperty("IMPORT_EXAMPLE_SCENARIO"))) {
+    if (Cfg.inst().getProp(MAIN_CONFIG, IMPORT_EXAMPLE_SCENARIO)) {
       gen.resetDB(true, forceReset);
     } else {
       gen.resetDB(false, forceReset);
@@ -231,13 +243,15 @@ public class AuthorizationFilter implements Filter, Serializable {
 
     try {
       File mainDir = new File(SCRIPT_PATH);
+
       if (SCRIPT_PATH.trim().isEmpty()) {
         logMessage = "SCENARIO RESOURCES PATH IS EMPTY!";
       } else if (!mainDir.exists()) {
-        logMessage = "ERROR: \"" + mainDir.getAbsolutePath() + "\" SCENARIO RESOURCES DIRECTORY NOT FOUND!";
+        logMessage = "ERROR: \"" + mainDir.getAbsolutePath()
+            + "\" SCENARIO RESOURCES DIRECTORY NOT FOUND!";
       } else if (!mainDir.canWrite()) {
-        logMessage = "ERROR: NO WRITING-PERMISSIONS FOR SCENARIO RESOURCES: \"" + mainDir.getAbsolutePath()
-            + "\"!";
+        logMessage = "ERROR: NO WRITING-PERMISSIONS FOR SCENARIO RESOURCES: \""
+            + mainDir.getAbsolutePath() + "\"!";
       } else {
         File subFolder = new File(mainDir, RESOURCE_PATH);
         if (!subFolder.exists()) {
@@ -250,23 +264,25 @@ public class AuthorizationFilter implements Filter, Serializable {
         }
 
         File browserLogFolder = new File(subSubFolder, BROWSER_LOG_DIR);
-        if (StringTools.parseBoolean(System.getProperty("LOG_BROWSER_HISTORY")) && !browserLogFolder.exists()) {
+
+        if (Cfg.inst().getProp(MAIN_CONFIG, LOG_BROWSER_HISTORY) && !browserLogFolder.exists()) {
           browserLogFolder.mkdir();
         }
 
-        if (StringTools.parseBoolean(System.getProperty("FORCE_RESET_DATABASE"))
-            || StringTools.parseBoolean(System.getProperty("IMPORT_DB_IF_EMPTY"))) {
+        if (Cfg.inst().getProp(MAIN_CONFIG, FORCE_RESET_DATABASE)
+            || Cfg.inst().getProp(MAIN_CONFIG, IMPORT_DB_IF_EMPTY)) {
 
           File databaseFolder = new File(subSubFolder, MAIN_DB_DIR);
           if (!databaseFolder.exists()) {
             logMessage = "ERROR: MAIN DATABASE-FOLDER NOT FOUND: \"" + databaseFolder + "\"";
           } else {
             File createScriptFile = new File(databaseFolder, CREATE_SCRIPT_FILE);
-            File createScriptFileWithExample = new File(databaseFolder, CREATE_SCRIPT_FILE_WITH_EXAMPLE);
+            File createScriptFileWithExample = new File(databaseFolder,
+                CREATE_SCRIPT_FILE_WITH_EXAMPLE);
             if (!createScriptFile.exists()) {
               logMessage = "ERROR: MAIN SQL-SCRIPT NOT FOUND: \"" + createScriptFile + "\"";
             }
-            if (StringTools.parseBoolean(System.getProperty("IMPORT_EXAMPLE_SCENARIO"))
+            if (Cfg.inst().getProp(MAIN_CONFIG, IMPORT_EXAMPLE_SCENARIO)
                 && !createScriptFileWithExample.exists()) {
               logMessage = "ERROR: SQL-SCRIPT NOT FOUND: \"" + createScriptFileWithExample + "\"";
             }
@@ -299,7 +315,8 @@ public class AuthorizationFilter implements Filter, Serializable {
 
     try {
       String dbUser = "", dbPass = "", dbName = "";
-      SessionFactoryImpl sessionFactoryImpl = (SessionFactoryImpl) new ScenarioDao().getSessionFactory();
+      SessionFactoryImpl sessionFactoryImpl = (SessionFactoryImpl) new ScenarioDao()
+          .getSessionFactory();
       Properties props = sessionFactoryImpl.getProperties();
 
       String url = props.get("hibernate.connection.url").toString();
@@ -312,8 +329,9 @@ public class AuthorizationFilter implements Filter, Serializable {
 
       // Class.forName("com.mysql.jdbc.Driver"); //Register JDBC Driver
       // Class.forName("org.drizzle.jdbc.DrizzleDriver"); //Register JDBC Driver
-      Class.forName("org.mariadb.jdbc.Driver"); //Register JDBC Driver
-      connection = DriverManager.getConnection(url, dbUser, dbPass); //Open a connection
+      Class.forName("org.mariadb.jdbc.Driver"); // Register JDBC Driver
+      connection = DriverManager.getConnection(url, dbUser, dbPass); // Open a
+                                                                     // connection
 
       resultSet = connection.getMetaData().getCatalogs();
       while (resultSet.next()) {
@@ -379,8 +397,8 @@ public class AuthorizationFilter implements Filter, Serializable {
    * @throws IOException
    */
   @Override
-  public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException,
-      IOException {
+  public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+      throws ServletException, IOException {
     try {
       HttpServletRequest req = (HttpServletRequest) request;
       HttpServletResponse res = (HttpServletResponse) response;
@@ -430,7 +448,8 @@ public class AuthorizationFilter implements Filter, Serializable {
                 if (!rights.hasEditingRight(user, scenario)) {
                   throwPermissionError(res, req);
                 }
-              } else if ((path.contains("/submission.xhtml") || path.contains("/edit_submission.xhtml"))
+              } else if ((path.contains("/submission.xhtml") || path
+                  .contains("/edit_submission.xhtml"))
                   && !rights.hasRatingRight(user, scenario)) {
                 throwPermissionError(res, req);
               } else if (path.contains("/user_rights.xhtml") && !rights.isAdmin(user)) {
@@ -467,12 +486,12 @@ public class AuthorizationFilter implements Filter, Serializable {
             if (user != null) {
               HttpServletRequest req = (HttpServletRequest) request;
               String userAgent = req.getHeader("User-Agent");
-              if (StringTools.parseBoolean(System.getProperty("LOG_BROWSER_HISTORY"))
+              if (Cfg.inst().getProp(MAIN_CONFIG, LOG_BROWSER_HISTORY)
                   && !SessionListener.userExists(user) && !user.getId().equals(FALLBACK_USER)) {
                 logBrowser(user.getId() + "\t" + userAgent);
               }
               SessionListener.addUser(session, user, scenario);
-              session.setMaxInactiveInterval(Integer.parseInt(System.getProperty("SESSION_TIMEOUT")));
+              session.setMaxInactiveInterval(Cfg.inst().getProp(MAIN_CONFIG, SESSION_TIMEOUT));
             }
             return true;
           }
@@ -512,12 +531,12 @@ public class AuthorizationFilter implements Filter, Serializable {
       sv = requestParams.get(secureValue);
       sc = requestParams.get(scenarioID);
 
-      if (StringTools.parseBoolean(System.getProperty("USE_FALLBACK_USER"))) {
+      if (Cfg.inst().getProp(MAIN_CONFIG, USE_FALLBACK_USER)) {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpSession session = req.getSession(false);
         if (!SessionListener.sessionExists(session)) {
-          if (id == null || sv == null || sc == null || id.length == 0 || sv.length == 0 || sc.length == 0
-              || id[0] == null || sv[0] == null || sc[0] == null) {
+          if (id == null || sv == null || sc == null || id.length == 0 || sv.length == 0
+              || sc.length == 0 || id[0] == null || sv[0] == null || sc[0] == null) {
             id = new String[] { FALLBACK_USER };
             sv = new String[] { FALLBACK_SECUREVALUE };
             sc = new String[] { FALLBACK_SCENARIO };
@@ -528,8 +547,9 @@ public class AuthorizationFilter implements Filter, Serializable {
       UserDao userDao = new UserDao();
       ScenarioDao scenarioDao = new ScenarioDao();
 
-      if (userDao != null && scenarioDao != null && id != null && sv != null && sc != null && id.length > 0
-          && sv.length > 0 && sc.length > 0 && id[0] != null && sv[0] != null && sc[0] != null) {
+      if (userDao != null && scenarioDao != null && id != null && sv != null && sc != null
+          && id.length > 0 && sv.length > 0 && sc.length > 0 && id[0] != null && sv[0] != null
+          && sc[0] != null) {
 
         scenario = scenarioDao.getById(Integer.parseInt(sc[0]));
         return new String[] { String.valueOf(id[0]), String.valueOf(sv[0]), String.valueOf(sc[0]) };
@@ -563,7 +583,8 @@ public class AuthorizationFilter implements Filter, Serializable {
    *
    * @throws IOException
    */
-  private void throwPermissionError(HttpServletResponse res, HttpServletRequest req) throws IOException {
+  private void throwPermissionError(HttpServletResponse res, HttpServletRequest req)
+      throws IOException {
     if (!isPublicURL(req)) {
       if (!res.isCommitted()) {
         res.sendRedirect(req.getContextPath() + "/" + permissionPage);

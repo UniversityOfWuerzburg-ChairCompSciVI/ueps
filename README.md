@@ -1,5 +1,5 @@
 # ÜPS
-ÜPS (**Ü**bungs-**P**rogramm für **S**QL) ist ein webbasiertes Trainingssystem zum Erlernen der Datenbanksprache SQL.
+**ÜPS** (**Ü**bungs-**P**rogramm für **S**QL) ist ein webbasiertes Trainingssystem zum Erlernen der Datenbanksprache SQL.
 
 ## Kurzanleitung zur Installation
 TODO :: TODO :: TODO :: TODO

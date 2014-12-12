@@ -17,6 +17,9 @@ import de.uniwue.info6.webapp.admin.UserRights;
 import de.uniwue.info6.webapp.session.SessionCollector;
 import de.uniwue.info6.webapp.session.SessionObject;
 
+import static de.uniwue.info6.misc.properties.PropertiesFile.DEF_LANGUAGE;
+import de.uniwue.info6.misc.properties.Cfg;
+
 /**
  *
  *
@@ -26,106 +29,106 @@ import de.uniwue.info6.webapp.session.SessionObject;
 @ViewScoped
 public class AutoCompleteExercise {
 
-	private ExerciseDao exerciseDao;
-	private ExerciseGroupDao groupDao;
-	private List<Exercise> exercises;
-	private String notFound;
-	private String groupID;
-	private UserRights rights;
-	private User user;
+  private ExerciseDao exerciseDao;
+  private ExerciseGroupDao groupDao;
+  private List<Exercise> exercises;
+  private String notFound;
+  private String groupID;
+  private UserRights rights;
+  private User user;
 
-	/**
-	 *
-	 */
-	public AutoCompleteExercise() {
-	}
+  /**
+   *
+   */
+  public AutoCompleteExercise() {
+  }
 
-	/**
-	 *
-	 *
-	 */
-	@PostConstruct
-	public void init() {
-		this.exerciseDao = new ExerciseDao();
-		this.groupDao = new ExerciseGroupDao();
-		this.notFound = System.getProperty("ASSERTION.NO_EX");
-		this.rights = new UserRights().initialize();
+  /**
+   *
+   *
+   */
+  @PostConstruct
+  public void init() {
+    this.exerciseDao = new ExerciseDao();
+    this.groupDao = new ExerciseGroupDao();
+    this.notFound = Cfg.inst().getProp(DEF_LANGUAGE, "ASSERTION.NO_EX");
+    this.rights = new UserRights().initialize();
 
-		SessionObject ac = new SessionCollector().getSessionObject();
-		if (ac != null) {
-			user = ac.getUser();
-		}
-	}
+    SessionObject ac = new SessionCollector().getSessionObject();
+    if (ac != null) {
+      user = ac.getUser();
+    }
+  }
 
-	/**
-	 *
-	 *
-	 * @param groupID
-	 * @return
-	 */
-	public AutoCompleteExercise groupInit(String groupID) {
-		if (user != null) {
-			if (groupID != null && !groupID.isEmpty() && (this.groupID == null || !this.groupID.equals(groupID))) {
-				this.groupID = StringTools.extractIDFromAutoComplete(groupID);
-				if (this.groupID != null) {
-					ExerciseGroup gr = groupDao.getById(Integer.parseInt(this.groupID));
-					if (gr != null && rights.hasRatingRight(user, gr)) {
-						exercises = exerciseDao.findByExGroup(gr);
-					}
-				}
-			}
+  /**
+   *
+   *
+   * @param groupID
+   * @return
+   */
+  public AutoCompleteExercise groupInit(String groupID) {
+    if (user != null) {
+      if (groupID != null && !groupID.isEmpty() && (this.groupID == null || !this.groupID.equals(groupID))) {
+        this.groupID = StringTools.extractIDFromAutoComplete(groupID);
+        if (this.groupID != null) {
+          ExerciseGroup gr = groupDao.getById(Integer.parseInt(this.groupID));
+          if (gr != null && rights.hasRatingRight(user, gr)) {
+            exercises = exerciseDao.findByExGroup(gr);
+          }
+        }
+      }
 
-			if (exercises == null) {
-				ExerciseGroup ratedExample = new ExerciseGroup();
-				ratedExample.setIsRated(true);
-				List<ExerciseGroup> groups = groupDao.findByExample(ratedExample);
-				exercises = new ArrayList<Exercise>();
-				for (ExerciseGroup group : groups) {
-					if (rights.hasRatingRight(user, group)) {
-						List<Exercise> temp = exerciseDao.findByExGroup(group);
-						if (temp != null) {
-							exercises.addAll(temp);
-						}
-					}
-				}
-			}
-		}
-		return this;
-	}
+      if (exercises == null) {
+        ExerciseGroup ratedExample = new ExerciseGroup();
+        ratedExample.setIsRated(true);
+        List<ExerciseGroup> groups = groupDao.findByExample(ratedExample);
+        exercises = new ArrayList<Exercise>();
+        for (ExerciseGroup group : groups) {
+          if (rights.hasRatingRight(user, group)) {
+            List<Exercise> temp = exerciseDao.findByExGroup(group);
+            if (temp != null) {
+              exercises.addAll(temp);
+            }
+          }
+        }
+      }
+    }
+    return this;
+  }
 
-	/**
-	 *
-	 *
-	 * @param query
-	 * @return
-	 */
-	public List<String> complete(String query) {
-		if (query.startsWith("0")) {
-			query = query.replaceFirst("[0]+", "");
-		}
+  /**
+   *
+   *
+   * @param query
+   * @return
+   */
+  public List<String> complete(String query) {
+    if (query.startsWith("0")) {
+      query = query.replaceFirst("[0]+", "");
+    }
 
-		List<String> results = new ArrayList<String>();
-		results.add("[" + System.getProperty("ASSERTION.EMPTY_FIELD") + "]");
+    List<String> results = new ArrayList<String>();
+    results.add("[" + Cfg.inst().getProp(DEF_LANGUAGE, "ASSERTION.EMPTY_FIELD") + "]");
 
-		if (exercises != null) {
-			for (Exercise exercise : exercises) {
-				String question = StringTools.stripHtmlTags(exercise.getQuestion());
+    if (exercises != null) {
+      for (Exercise exercise : exercises) {
+        String question = StringTools.stripHtmlTags(exercise.getQuestion());
 
-				if (question != null) {
-					String id = String.valueOf(exercise.getId());
-					if (id.contains(query.trim())
-							|| question.toLowerCase().contains(query.toLowerCase().trim())) {
-						results.add("[" + id + "]: " + StringTools.findSnippet(question, query, 70));
-					}
-				}
-			}
-		}
+        if (question != null) {
+          String id = String.valueOf(exercise.getId());
+          if (id.contains(query.trim())
+              || question.toLowerCase().contains(query.toLowerCase().trim())) {
+            results.add("[" + id + "]: " + StringTools.findSnippet(question, query, 70));
+          }
+        }
+      }
+    }
 
-		if (results.size() <= 1 && notFound != null) {
-			results = new ArrayList<String>();
-			results.add(notFound);
-		}
+    if (results.size() <= 1 && notFound != null) {
+      results = new ArrayList<String>();
+      results.add(notFound);
+    }
 
-		return results;
-	}
+    return results;
+  }
 }

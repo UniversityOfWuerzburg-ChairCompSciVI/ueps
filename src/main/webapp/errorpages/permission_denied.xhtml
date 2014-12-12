@@ -8,7 +8,9 @@ xmlns:p="http://primefaces.org/ui">
   </ui:define>
   <ui:define name="content">
     <p id="session_expired_button">
-	  <h:graphicImage value="#{img['BASICS.MULTIPASS']}" />
+	  <h:graphicImage class="multi-pass-required" value="/resources/img/#{config['IMG.MULTIPASS']}" />
+    <br/>
+    <span class="multi-pass-required-text">#{txt['SESSION.PERMISSION_DETAILS']}</span>
     </p>
   </ui:define>
 </ui:composition>

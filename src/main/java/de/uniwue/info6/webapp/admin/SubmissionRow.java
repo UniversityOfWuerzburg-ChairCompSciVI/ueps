@@ -1,5 +1,7 @@
 package de.uniwue.info6.webapp.admin;
 
+import static de.uniwue.info6.misc.properties.PropertiesFile.DEF_LANGUAGE;
+
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.util.List;
@@ -15,6 +17,7 @@ import de.uniwue.info6.database.map.UserResult;
 import de.uniwue.info6.database.map.UserRight;
 import de.uniwue.info6.database.map.daos.UserRightDao;
 import de.uniwue.info6.misc.StringTools;
+import de.uniwue.info6.misc.properties.Cfg;
 
 /**
  *
@@ -62,7 +65,7 @@ public class SubmissionRow {
   public SubmissionRow(Exercise e, Scenario scenario) {
     this.exercise = e;
     this.isExercise = true;
-    this.text = System.getProperty("EXERCISE_SHORT") + ": [" + StringTools.zeroPad(e.getId(), 2)
+    this.text = Cfg.inst().getProp(DEF_LANGUAGE, "EXERCISE_SHORT") + ": [" + StringTools.zeroPad(e.getId(), 2)
         + "]";
     this.styleClass = "exercise_class";
     this.scenario = scenario;

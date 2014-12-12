@@ -1,5 +1,7 @@
 package de.uniwue.info6.webapp.lists;
 
+import static de.uniwue.info6.misc.properties.PropertiesFile.DEF_LANGUAGE;
+
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -35,6 +37,7 @@ import de.uniwue.info6.database.map.daos.UserEntryDao;
 import de.uniwue.info6.database.map.daos.UserResultDao;
 import de.uniwue.info6.misc.DateFormatTools;
 import de.uniwue.info6.misc.StringTools;
+import de.uniwue.info6.misc.properties.Cfg;
 
 /**
  *
@@ -227,7 +230,7 @@ public class ExGroupTableBean implements Serializable {
   private String resultFeedback(ExerciseGroup group) {
     if (group != null && group.getIsRated() != null && group.getIsRated()) {
       if (showResults(group)) {
-        return " - [" + System.getProperty("EX.ITS_RATED") + "]";
+        return " - [" + Cfg.inst().getProp(DEF_LANGUAGE, "EX.ITS_RATED") + "]";
       } else {
         Date end = group.getEndTime();
         if (end != null) {
@@ -269,7 +272,7 @@ public class ExGroupTableBean implements Serializable {
    */
   public String getGroupName(ExerciseGroup group) {
     if (group != null && group.getIsRated() != null) {
-      return (group.getIsRated() ? System.getProperty("AC.EX_RA") : System.getProperty("AC.EX"))
+      return (group.getIsRated() ? Cfg.inst().getProp(DEF_LANGUAGE, "AC.EX_RA") : Cfg.inst().getProp(DEF_LANGUAGE, "AC.EX"))
           + "-&#8195;" + StringTools.trimToLengthIndicator(group.getName(), 45)
           + resultFeedback(group);
     }

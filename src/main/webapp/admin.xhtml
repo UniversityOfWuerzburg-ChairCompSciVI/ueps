@@ -19,33 +19,33 @@ xmlns:p="http://primefaces.org/ui">
      <!-- -->
      <script type="text/javascript">
      <!-- -->
-     jQuery(function() { 
+     jQuery(function() {
      <!-- -->
      jQuery( ".scenario_class" ).tipsy({fallback:
-     "#{txt['ADMINTREE.SCENARIO']}", gravity: 'w' }); 
+     "#{txt['ADMINTREE.SCENARIO']}", gravity: 'w' });
      <!-- -->
      jQuery( ".group_class").tipsy({fallback:
-     "#{txt['ADMINTREE.EX_NOT_RATED']}", gravity: 'w' }); 
+     "#{txt['ADMINTREE.EX_NOT_RATED']}", gravity: 'w' });
      <!-- -->
      jQuery( ".rated_group_class").tipsy({fallback:
-     "#{txt['ADMINTREE.EX_RATED']}", gravity: 'w' }); 
+     "#{txt['ADMINTREE.EX_RATED']}", gravity: 'w' });
      <!-- -->
-     }); 
+     });
      <!-- -->
-     function context_tooltip() { 
+     function context_tooltip() {
      <!-- -->
      jQuery( ".menu_export").tipsy({fallback:
-     "#{txt['ADMINTREE.EXPORT']}", gravity: 'w' }); 
+     "#{txt['ADMINTREE.EXPORT']}", gravity: 'w' });
      <!-- -->
      jQuery( ".menu_cut_copy").tipsy({fallback:
-     "#{txt['ADMINTREE.CUT_COPY']}", gravity: 'w' }); 
+     "#{txt['ADMINTREE.CUT_COPY']}", gravity: 'w' });
      <!-- -->
      jQuery( ".menu_delete").tipsy({fallback:
-     "#{txt['ADMINTREE.DELETE']}", gravity: 'w' }); } 
+     "#{txt['ADMINTREE.DELETE']}", gravity: 'w' }); }
      <!-- -->
-     function start() { statusDialog.show(); } 
+     function start() { statusDialog.show(); }
      <!-- -->
-     function stop() { statusDialog.hide(); } 
+     function stop() { statusDialog.hide(); }
      <!-- --></script>
      <!-- ##################################### -->
      <!-- download loading popup -->
@@ -53,7 +53,7 @@ xmlns:p="http://primefaces.org/ui">
      <p:dialog modal="true" widgetVar="statusDialog"
      header="#{txt['ADMINTREE.STATUS']}" draggable="false"
      closable="true" resizable="false">
-      <p:graphicImage value="#{img['ICON.LOAD']}" />
+      <p:graphicImage value="/resources/img/#{config['IMG.LOAD']}" />
      </p:dialog>
      <!-- ##################################### -->
      <!-- delete confirm dialog -->
@@ -135,7 +135,7 @@ xmlns:p="http://primefaces.org/ui">
 	   <p:commandButton value="#{txt['ADMINTREE.COLLAPSE']}"
 	   styleClass="tree_button" onclick="collapse_tree()" />
        <!-- TODO: Help-Button -->
-       <!--    
+       <!--
               <p:commandButton value="#{txt['HELP']}" styleClass="tree_button"
               onclick="result_table_widget.show();return false;" />
        -->
@@ -225,7 +225,7 @@ xmlns:p="http://primefaces.org/ui">
      <p:outputPanel style="text-align:center;
 			 position:relative;top:20px"
      styleClass="tree_description">
-      <p style="display:inline;color:#004188; 
+      <p style="display:inline;color:#004188;
                 font-size:15px;font-weight:bold">
       <!-- -->
       #{txt['ADMINTREE.RIGHTCLICK']}
@@ -236,12 +236,12 @@ xmlns:p="http://primefaces.org/ui">
     <!-- ##################################### -->
     <!-- help-dialog -->
     <!-- ##################################### -->
-    <p:dialog header="#{txt['HELP']}" position="center,top"
-    showEffect="scale" hideEffect="scale" maximizable="true"
-    minimizable="true" widgetVar="result_table_widget">
-     <h:graphicImage value="#{img['BASICS.HELP_DEA']}"
-     id="gif_image" />
-    </p:dialog>
+    <!-- <p:dialog header="#{txt['HELP']}" position="center,top"  -->
+    <!-- showEffect="scale" hideEffect="scale" maximizable="true" -->
+    <!-- minimizable="true" widgetVar="result_table_widget">      -->
+    <!--  <h:graphicImage value="#{img['BASICS.HELP_DEA']}"       -->
+    <!--  id="gif_image" />                                       -->
+    <!-- </p:dialog>                                              -->
    </ui:define>
   </ui:composition>
  </h:body>

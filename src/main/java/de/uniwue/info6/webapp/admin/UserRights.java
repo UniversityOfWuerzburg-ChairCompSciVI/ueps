@@ -24,7 +24,7 @@ import de.uniwue.info6.database.map.daos.UserEntryDao;
 import de.uniwue.info6.database.map.daos.UserRightDao;
 import de.uniwue.info6.misc.properties.PropString;
 import de.uniwue.info6.misc.properties.PropertiesFile;
-import de.uniwue.info6.misc.properties.PropertiesManager;
+import de.uniwue.info6.misc.properties.Cfg;
 import de.uniwue.info6.webapp.session.SessionCollector;
 import de.uniwue.info6.webapp.session.SessionObject;
 
@@ -228,7 +228,7 @@ public class UserRights implements Serializable {
     boolean admin = false;
     try {
       user = userDao.getById(user.getId());
-      String admins = PropertiesManager.inst().getProp(PropertiesFile.MAIN_CONFIG,
+      String admins = Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG,
           PropString.ADMINS);
       String[] adminArray = null;
 

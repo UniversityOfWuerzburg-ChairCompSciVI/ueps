@@ -14,9 +14,9 @@
 # ############################################################################
 
 # header
-BASIC.NAME                  = SQL-Trainer
-HEADER.DEFAULT              = SQL-Trainer - Aufgabenliste
-HEADER.TASK_HEADER          = SQL-Trainer - Übungsbereich
+BASIC.NAME                  = ÜPS
+HEADER.DEFAULT              = ÜPS - Aufgabenliste
+HEADER.TASK_HEADER          = ÜPS - Übungsbereich
 
 HEADER.LINK1                = Übungen
 HEADER.LINK2                = Rechte
@@ -61,8 +61,9 @@ AJAX.ERRORLINE2             = Überprüfen Sie bitte ihre \
                               Internetverbindung
 
 # checking if session should be renewed
-AJAX.SESS_TITLE             = ???
-AJAX.SESS_WARNING           = War das schon alles?
+AJAX.SESS_TITLE             = Session-Zeit zur Hälfte abgelaufen
+AJAX.SESS_WARNING           = Bewegen Sie den Mauszeiger, um die Session \
+                              zu erneuern.
 
 # session fields
 SESSION.USER                = Angemeldet als:
@@ -71,7 +72,8 @@ SESSION.USER                = Angemeldet als:
 SESSION.ERRORTITLE          = Die Session ist abgelaufen!
 SESSION.ERRORLINE           = Loggen Sie sich über WueCampus2 ein.
 SESSION.FALSE               = Session ungültig.
-SESSION.PERMISSION          = Fehlende Rechte.
+SESSION.PERMISSION          = Fehlende Rechte
+SESSION.PERMISSION_DETAILS  = Fehlende Rechte. Wenden Sie sich an den Admin.
 
 # runtime errors
 ERROR.UNEXPECTED            = Unerwarteter Fehler
@@ -532,6 +534,7 @@ RIGHTS.INFO                 = Rechte können nur den Nutzern zugewiesen \
 RIGHTS.NOTFOUND             = Keine Privilegien vergeben.
 RIGHTS.USER                 = Benutzer
 RIGHTS.ISADMIN              = ist Admin?
+RIGHTS.ADMIN                = Admin
 RIGHTS.ADMIN_LIST           = Admins
 RIGHTS.CAN_EDIT             = darf editieren?
 RIGHTS.CAN_ASSERT           = darf bewerten?

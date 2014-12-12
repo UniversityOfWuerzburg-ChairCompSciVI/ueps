@@ -1,5 +1,7 @@
 package de.uniwue.info6.webapp.lists;
 
+import static de.uniwue.info6.misc.properties.PropertiesFile.DEF_LANGUAGE;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +19,9 @@ import de.uniwue.info6.database.map.UserRight;
 import de.uniwue.info6.database.map.daos.ScenarioDao;
 import de.uniwue.info6.database.map.daos.UserDao;
 import de.uniwue.info6.database.map.daos.UserRightDao;
+import de.uniwue.info6.misc.properties.Cfg;
 import de.uniwue.info6.misc.properties.PropString;
 import de.uniwue.info6.misc.properties.PropertiesFile;
-import de.uniwue.info6.misc.properties.PropertiesManager;
 import de.uniwue.info6.webapp.admin.UserRights;
 import de.uniwue.info6.webapp.session.SessionCollector;
 import de.uniwue.info6.webapp.session.SessionObject;
@@ -70,7 +72,7 @@ public class UserRightsBean implements Serializable {
     rights = userRightDao.findAll();
 
     this.adminList = new ArrayList<User>();
-    String admins = PropertiesManager.inst().getProp(PropertiesFile.MAIN_CONFIG, PropString.ADMINS);
+    String admins = Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG, PropString.ADMINS);
 
     String[] adminArray = null;
     userRights = new UserRights().initialize();
@@ -158,10 +160,10 @@ public class UserRightsBean implements Serializable {
       if (saved) {
         rights.add(tmp);
         sev = FacesMessage.SEVERITY_INFO;
-        message = System.getProperty("SAVED.SUCCESS") + ".";
+        message = Cfg.inst().getProp(DEF_LANGUAGE, "SAVED.SUCCESS") + ".";
       } else if (!noneed) {
         sev = FacesMessage.SEVERITY_ERROR;
-        message = System.getProperty("SAVED.FAIL") + ".";
+        message = Cfg.inst().getProp(DEF_LANGUAGE, "SAVED.FAIL") + ".";
       }
 
     } else {

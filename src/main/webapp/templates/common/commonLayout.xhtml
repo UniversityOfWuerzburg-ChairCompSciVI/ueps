@@ -17,9 +17,9 @@ class="mainfont maincolor">
    <h:outputScript library="js" name="index.js" />
    <h:outputScript library="js" name="jquery.pulsate.min.js" />
    <title>#{txt['BASIC.NAME']}</title>
-   <link rel="shortcut icon" href="#{img['ICON.FAVICON']}" />
+   <link rel="shortcut icon" href="resources/img/#{config['IMG.FAVICON']}" />
    <link rel="icon" type="image/x-icon"
-   href="#{img['ICON.FAVICON']}" />
+   href="resources/img/#{config['IMG.FAVICON']}" />
   </h:head>
   <h:body>
    <div id="page">
@@ -30,7 +30,7 @@ class="mainfont maincolor">
     </div>
     <div id="content" class="roundcorners2">
      <noscript>
-      <div style="height: 50px; width:830px; text-align:center; 
+      <div style="height: 50px; width:830px; text-align:center;
 			  background-color: red; margin-bottom: 20px; padding: 10px">
        <h3>#{txt['ERROR.JAVASCRIPT']}</h3>
       </div>
@@ -45,15 +45,16 @@ class="mainfont maincolor">
 	 <!-- actionListener="#{sessionListener.disableIEError()}"                               -->
 	 <!-- style="float:right; position: relative; top: 15px; z-index:99" /></p:panel>        -->
 
-	 <p:panel id="shitty_internet_explorer" rendered="#{sessionListener.showIEError()}"                     
-	 style="display:block; height: 55px; width:830px; text-align:center;                                    
-	 background-color: red; margin-bottom: 20px; padding: 10px; font-weight: bold;">                        
-	 <span style="color:white !important; font-size:18px !important">                                       
-	 Bitte beachten Sie, dass derzeit nur Zwischenergebnisse der bewerteten Übung angezeigt werden.
-	 </span>                                                                                                
-	 <p:commandButton value="verstecken" onclick="hideIEMessage()"                                          
-	 actionListener="#{sessionListener.disableIEError()}"                                                   
-	 style="float:right; position: relative; top: 15px; z-index:99" /></p:panel>                            
+
+	 <!-- <p:panel id="shitty_internet_explorer" rendered="#{sessionListener.showIEError()}"              -->
+	 <!-- style="display:block; height: 55px; width:830px; text-align:center;                             -->
+	 <!-- background-color: red; margin-bottom: 20px; padding: 10px; font-weight: bold;">                 -->
+	 <!-- <span style="color:white !important; font-size:18px !important">                                -->
+	 <!-- Bitte beachten Sie, dass derzeit nur Zwischenergebnisse der bewerteten Übung angezeigt werden. -->
+	 <!-- </span>                                                                                         -->
+	 <!-- <p:commandButton value="verstecken" onclick="hideIEMessage()"                                   -->
+	 <!-- actionListener="#{sessionListener.disableIEError()}"                                            -->
+	 <!-- style="float:right; position: relative; top: 15px; z-index:99" /></p:panel>                     -->
 
      <ui:insert name="content">
       <ui:include src="/templates/common/commonContent.xhtml" />

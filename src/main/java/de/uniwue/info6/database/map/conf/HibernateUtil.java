@@ -9,7 +9,7 @@ import org.hibernate.service.ServiceRegistry;
 
 import de.uniwue.info6.misc.properties.PropString;
 import de.uniwue.info6.misc.properties.PropertiesFile;
-import de.uniwue.info6.misc.properties.PropertiesManager;
+import de.uniwue.info6.misc.properties.Cfg;
 
 /**
  *
@@ -28,7 +28,7 @@ public class HibernateUtil {
    */
   private static SessionFactory buildSessionFactory() {
     try {
-      PropertiesManager prop = PropertiesManager.inst();
+      Cfg prop = Cfg.inst();
 
       Configuration hibernate = new Configuration().configure("hibernate.cfg.xml");
       hibernate.setProperty("hibernate.bytecode.use_reflection_optimizer", "false");

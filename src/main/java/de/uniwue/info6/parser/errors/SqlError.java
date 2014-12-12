@@ -3,6 +3,9 @@ package de.uniwue.info6.parser.errors;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import static de.uniwue.info6.misc.properties.PropertiesFile.DEF_LANGUAGE;
+import de.uniwue.info6.misc.properties.Cfg;
+
 /**
  *
  * @author Christian
@@ -10,121 +13,121 @@ import org.apache.commons.logging.LogFactory;
  */
 public class SqlError extends Error {
 
-	private String origText;
+  private String origText;
 
-	private static final Log LOGGER = LogFactory.getLog(SqlError.class);
+  private static final Log LOGGER = LogFactory.getLog(SqlError.class);
 
-	public SqlError(String title, String text, String origText, String user) {
+  public SqlError(String title, String text, String origText, String user) {
 
-		super(title, translateSqlOutput(text, user));
+    super(title, translateSqlOutput(text, user));
 
-		try {
+    try {
 
-			if (origText.matches("Table '[\\S]*' doesn't exist")) {
-				String tmp = origText.substring(origText.indexOf("'") + 1,
-						origText.indexOf("'", origText.indexOf("'") + 1));
-				origText = origText.replace(tmp, cleanTableFromPrefix(tmp, user));
-			} else if (origText.matches("Unknown column '[\\S]*'[\\S\\s]*")) {
+      if (origText.matches("Table '[\\S]*' doesn't exist")) {
+        String tmp = origText.substring(origText.indexOf("'") + 1,
+            origText.indexOf("'", origText.indexOf("'") + 1));
+        origText = origText.replace(tmp, cleanTableFromPrefix(tmp, user));
+      } else if (origText.matches("Unknown column '[\\S]*'[\\S\\s]*")) {
 
-				String tmp = origText.substring(origText.indexOf("'") + 1,
-						origText.indexOf("'", origText.indexOf("'") + 1));
+        String tmp = origText.substring(origText.indexOf("'") + 1,
+            origText.indexOf("'", origText.indexOf("'") + 1));
 
-				if (tmp.contains(user + "_")) {
-					origText = origText.replace(user + "_", "");
-				}
+        if (tmp.contains(user + "_")) {
+          origText = origText.replace(user + "_", "");
+        }
 
-			} else {
-				if (origText.contains(user + "_")) {
-					origText = origText.replace(user + "_", "");
-				}
-			}
-		} catch (Exception e) {
-			LOGGER.error("PROBLEM WITH TRANSLATING SQL ERROR MESSAGE:\n" + title + "\n" + text + "\n" + origText + "\n"
-					+ user, e);
-		}
+      } else {
+        if (origText.contains(user + "_")) {
+          origText = origText.replace(user + "_", "");
+        }
+      }
+    } catch (Exception e) {
+      LOGGER.error("PROBLEM WITH TRANSLATING SQL ERROR MESSAGE:\n" + title + "\n" + text + "\n" + origText + "\n"
+          + user, e);
+    }
 
-		this.origText = origText;
-	}
+    this.origText = origText;
+  }
 
-	public String getOrigText() {
-		return origText;
-	}
+  public String getOrigText() {
+    return origText;
+  }
 
-	public void setOrigText(String origText) {
-		this.origText = origText;
-	}
+  public void setOrigText(String origText) {
+    this.origText = origText;
+  }
 
-	public static String translateSqlOutput(String origText, String user) {
+  public static String translateSqlOutput(String origText, String user) {
 
-		if (origText == null) {
-			return "";
-		}
+    if (origText == null) {
+      return "";
+    }
 
-		if (origText.matches("Table '[\\S]*' doesn't exist")) {
-			String tmp = origText
-					.substring(origText.indexOf("'") + 1, origText.indexOf("'", origText.indexOf("'") + 1));
-			return fillPropertyString(System.getProperty("EXECUTER.TABLE_NOTFOUND"),
-					new String[] { cleanTableFromPrefix(tmp, user) });
-		} else if (origText.matches("Unknown column '[\\S]*'[\\S\\s]*")) {
+    if (origText.matches("Table '[\\S]*' doesn't exist")) {
+      String tmp = origText
+          .substring(origText.indexOf("'") + 1, origText.indexOf("'", origText.indexOf("'") + 1));
+      return fillPropertyString(Cfg.inst().getProp(DEF_LANGUAGE, "EXECUTER.TABLE_NOTFOUND"),
+          new String[] { cleanTableFromPrefix(tmp, user) });
+    } else if (origText.matches("Unknown column '[\\S]*'[\\S\\s]*")) {
 
-			String tmp = origText
-					.substring(origText.indexOf("'") + 1, origText.indexOf("'", origText.indexOf("'") + 1));
+      String tmp = origText
+          .substring(origText.indexOf("'") + 1, origText.indexOf("'", origText.indexOf("'") + 1));
 
-			if (tmp.contains(user + "_")) {
-				tmp = tmp.replace(user + "_", "");
-			}
+      if (tmp.contains(user + "_")) {
+        tmp = tmp.replace(user + "_", "");
+      }
 
-			return fillPropertyString(System.getProperty("EXECUTER.COLUMN_NOTFOUND"), new String[] { tmp });
+      return fillPropertyString(Cfg.inst().getProp(DEF_LANGUAGE, "EXECUTER.COLUMN_NOTFOUND"), new String[] { tmp });
 
-		} else if (origText.contains("to use near")) {
-			String tmp = origText
-					.substring(origText.indexOf("'") + 1, origText.indexOf("'", origText.indexOf("'") + 1));
+    } else if (origText.contains("to use near")) {
+      String tmp = origText
+          .substring(origText.indexOf("'") + 1, origText.indexOf("'", origText.indexOf("'") + 1));
 
-			if (tmp.contains(user + "_")) {
-				tmp = tmp.replace(user + "_", "");
-			}
+      if (tmp.contains(user + "_")) {
+        tmp = tmp.replace(user + "_", "");
+      }
 
-			return fillPropertyString(System.getProperty("EXECUTER.SYNTAX_ERROR"), new String[] { tmp });
+      return fillPropertyString(Cfg.inst().getProp(DEF_LANGUAGE, "EXECUTER.SYNTAX_ERROR"), new String[] { tmp });
 
-		} else if (origText.contains("Access denied")) {
-			return System.getProperty("EXECUTER.SECURITY_ISSUE");
+    } else if (origText.contains("Access denied")) {
+      return Cfg.inst().getProp(DEF_LANGUAGE, "EXECUTER.SECURITY_ISSUE");
 
-		} else {
-			if (origText.contains(user + "_")) {
-				origText = origText.replace(user + "_", "");
-			}
-		}
+    } else {
+      if (origText.contains(user + "_")) {
+        origText = origText.replace(user + "_", "");
+      }
+    }
 
-		return origText;
+    return origText;
 
-	}
+  }
 
-	private static String cleanTableFromPrefix(String tmp, String user) {
+  private static String cleanTableFromPrefix(String tmp, String user) {
 
-		if (tmp.contains(".")) {
-			tmp = tmp.substring(tmp.indexOf(".") + 1, tmp.length());
-		}
+    if (tmp.contains(".")) {
+      tmp = tmp.substring(tmp.indexOf(".") + 1, tmp.length());
+    }
 
-		if (tmp.contains(user + "_")) {
-			tmp = tmp.replace(user + "_", "");
-		}
+    if (tmp.contains(user + "_")) {
+      tmp = tmp.replace(user + "_", "");
+    }
 
-		return tmp;
+    return tmp;
 
-	}
+  }
 
-	public static String fillPropertyString(String varStr, String[] data) {
+  public static String fillPropertyString(String varStr, String[] data) {
 
-		String tmp = /*System.getProperty(*/varStr/*)*/;
+    String tmp = /*System.getProperty(*/varStr/*)*/;
 
-		if (data != null) {
-			for (String tmpStr : data) {
-				tmp = tmp.replaceFirst("%", tmpStr);
-			}
-		}
+    if (data != null) {
+      for (String tmpStr : data) {
+        tmp = tmp.replaceFirst("%", tmpStr);
+      }
+    }
 
-		return tmp;
+    return tmp;
 
-	}
+  }
 
 }

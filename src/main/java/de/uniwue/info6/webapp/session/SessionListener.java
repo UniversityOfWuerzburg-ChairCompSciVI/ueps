@@ -1,5 +1,8 @@
 package de.uniwue.info6.webapp.session;
 
+import static de.uniwue.info6.misc.properties.PropInteger.SESSION_TIMEOUT;
+import static de.uniwue.info6.misc.properties.PropertiesFile.MAIN_CONFIG;
+
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -23,6 +26,7 @@ import org.apache.commons.logging.LogFactory;
 import de.uniwue.info6.database.jdbc.ConnectionManager;
 import de.uniwue.info6.database.map.Scenario;
 import de.uniwue.info6.database.map.User;
+import de.uniwue.info6.misc.properties.Cfg;
 
 /**
  *
@@ -41,8 +45,6 @@ public class SessionListener implements HttpSessionListener, Serializable {
 
   private static final Log LOGGER = LogFactory.getLog(SessionListener.class);
   private static final long serialVersionUID = 1L;
-
-
 
   /**
    *
@@ -282,8 +284,7 @@ public class SessionListener implements HttpSessionListener, Serializable {
 
   @Override
   public void sessionCreated(HttpSessionEvent arg0) {
-    arg0.getSession().setMaxInactiveInterval(
-        Integer.parseInt(System.getProperty("SESSION_TIMEOUT")));
+    arg0.getSession().setMaxInactiveInterval(Cfg.inst().getProp(MAIN_CONFIG, SESSION_TIMEOUT));
   }
 
   @Override

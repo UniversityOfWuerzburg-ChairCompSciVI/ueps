@@ -22,40 +22,40 @@ xmlns:p="http://primefaces.org/ui">
     rendered="#{not edit_sc.userHasRights}" />
     <script type="text/javascript">
     <!-- ===================================== -->
-    function context_tooltip() { 
+    function context_tooltip() {
     <!-- -->
-    jQuery(".tipsy").remove(); 
+    jQuery(".tipsy").remove();
     <!-- -->
-    jQuery(function() { 
+    jQuery(function() {
     <!-- -->
     jQuery( '.save_button').tipsy( {fallback:
-    "#{txt['EDIT_SC.SAVE_TOOLTIP']}", gravity: 'w' }); 
+    "#{txt['EDIT_SC.SAVE_TOOLTIP']}", gravity: 'w' });
     <!-- -->
     jQuery( '.interval_date').tipsy( {fallback:
-    "#{txt['EDIT_SC.TIME_TOOLTIP']}", gravity: 'w' }); 
+    "#{txt['EDIT_SC.TIME_TOOLTIP']}", gravity: 'w' });
     <!-- -->
-    }); } 
+    }); }
     <!-- ===================================== -->
-    jQuery(document).ready(function() { context_tooltip(); }); 
+    jQuery(document).ready(function() { context_tooltip(); });
     <!-- ===================================== -->
-    function enableCloseConfirmation() { 
+    function enableCloseConfirmation() {
     <!-- -->
-    // window.onbeforeunload = function(e) { return ''; }; 
+    // window.onbeforeunload = function(e) { return ''; };
     <!-- -->
-    } 
+    }
     <!-- ===================================== -->
     function disableCloseConfirmation() { window.onbeforeunload =
     function(e) { }; setTimeout("enableCloseConfirmation()", 1000); }
-    
+
     <!-- ===================================== -->
     function disableCloseConfirmationForever() {
-    window.onbeforeunload = function(e) { };} 
+    window.onbeforeunload = function(e) { };}
     <!-- ===================================== -->
-    enableCloseConfirmation(); 
+    enableCloseConfirmation();
     <!-- -->
-    function start() { statusDialog.show(); } 
+    function start() { statusDialog.show(); }
     <!-- -->
-    function stop() { statusDialog.hide(); } 
+    function stop() { statusDialog.hide(); }
     <!-- ===================================== -->
     <!-- --></script>
     <!-- ##################################### -->
@@ -67,7 +67,7 @@ xmlns:p="http://primefaces.org/ui">
       <p:growl id="messages_popup" showDetail="true" />
       <p:dialog modal="true" widgetVar="statusDialog" header="Status"
       draggable="false" closable="true" resizable="false">
-       <p:graphicImage value="#{img['ICON.LOAD']}" />
+       <p:graphicImage value="/resources/img/#{config['IMG.LOAD']}" />
       </p:dialog>
       <h:panelGrid id="admin_grid" columns="2"
       style="margin-bottom:10px;text-align:center">
@@ -83,8 +83,8 @@ xmlns:p="http://primefaces.org/ui">
        <h:outputText id="syntax-error"
        rendered="#{edit_sc.syntaxError()}"
        value="#{edit_sc.getImportSyntaxError()}" style="
-           color:#B94A48;white-space:pre-wrap; 
-           font-size:13px; border:1px dashed black; 
+           color:#B94A48;white-space:pre-wrap;
+           font-size:13px; border:1px dashed black;
            display:block; padding:5px;" />
        <!-- ##################################### -->
        <!--  -->
@@ -142,7 +142,7 @@ styleClass="monospace" value="#{edit_sc.removeRightsScripts}" />
        </h:outputLabel>
        <h:outputText id="original_scenario"
        rendered="#{edit_sc.hasOriginalScenario()}"
-       value="#{txt['EDIT_SC.ORIGIN2']}: 
+       value="#{txt['EDIT_SC.ORIGIN2']}:
                                 [#{edit_sc.originalScenarioId}]" />
        <!-- ##################################### -->
        <!--  -->
@@ -210,7 +210,7 @@ styleClass="monospace" value="#{edit_sc.removeRightsScripts}" />
         emptyLabel="Undefined" effectSpeed="fast"
         label="[#{txt['EDIT']}]" editor="true">
          <p:ajax event="save"
-         update="scenario_dbhost_original add_rights_script 
+         update="scenario_dbhost_original add_rights_script
  			remove_rights_script auto1 auto2 auto3 auto4" />
          <p:inputText value="#{edit_sc.dbHost}"
          onkeypress="if (event.keyCode == 13) { return false; }" />
@@ -255,7 +255,7 @@ styleClass="monospace" value="#{edit_sc.removeRightsScripts}" />
         emptyLabel="Undefined" effectSpeed="fast"
         label="[#{txt['EDIT']}]" editor="true">
          <p:ajax event="save"
-         update="scenario_dbname_original add_rights_script 
+         update="scenario_dbname_original add_rights_script
 			remove_rights_script auto1 auto2 auto3 auto4" />
          <p:inputText value="#{edit_sc.dbName}"
          onkeypress="if (event.keyCode == 13) { return false; }" />
@@ -278,7 +278,7 @@ styleClass="monospace" value="#{edit_sc.removeRightsScripts}" />
         emptyLabel="Undefined" effectSpeed="fast"
         label="[#{txt['EDIT']}]" editor="true">
          <p:ajax event="save"
-         update="scenario_dbuser_original add_rights_script 
+         update="scenario_dbuser_original add_rights_script
 			remove_rights_script auto1 auto2 auto3 auto4" />
          <p:inputText value="#{edit_sc.dbUser}"
          onkeypress="if (event.keyCode == 13) { return false; }" />

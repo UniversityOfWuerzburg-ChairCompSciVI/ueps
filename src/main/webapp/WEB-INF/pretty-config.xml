@@ -5,7 +5,7 @@ xsi:schemaLocation="http://ocpsoft.org/schema/rewrite-config-prettyfaces http://
   <rewrite inbound="false" outbound="true" match="(?i)^(.*);jsessionid=w+(.*)" substitute="$1$2" />
   <!-- http://ocpsoft.org/docs/prettyfaces/3.3.3/en-US/html/GettingStarted.html#getstarted.webxml -->
   <url-mapping id="main">
-      <pattern value="/wuecampus/#{scenarioID}/#{userID}/#{secureValue}" />
+      <pattern value="/moodle/#{scenarioID}/#{userID}/#{secureValue}" />
       <view-id value="/index.xhtml" />
   </url-mapping>
 

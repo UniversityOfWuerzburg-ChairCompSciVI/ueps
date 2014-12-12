@@ -1,5 +1,7 @@
 package de.uniwue.info6.webapp.lists;
 
+import static de.uniwue.info6.misc.properties.PropertiesFile.DEF_LANGUAGE;
+
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.ResultSetMetaData;
@@ -44,9 +46,9 @@ import de.uniwue.info6.database.map.daos.SolutionQueryDao;
 import de.uniwue.info6.database.map.daos.UserEntryDao;
 import de.uniwue.info6.database.map.daos.UserResultDao;
 import de.uniwue.info6.misc.StringTools;
+import de.uniwue.info6.misc.properties.Cfg;
 import de.uniwue.info6.misc.properties.PropBool;
 import de.uniwue.info6.misc.properties.PropertiesFile;
-import de.uniwue.info6.misc.properties.PropertiesManager;
 import de.uniwue.info6.parser.errors.Error;
 import de.uniwue.info6.webapp.admin.UserRights;
 import de.uniwue.info6.webapp.session.SessionCollector;
@@ -528,7 +530,7 @@ public class ExerciseController implements Serializable {
    * @return
    */
   public boolean adminSolutionVisible() {
-    Boolean prop = PropertiesManager.inst().getProp(PropertiesFile.MAIN_CONFIG,
+    Boolean prop = Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG,
         PropBool.SHOW_SOLUTIONS_TO_ADMINS);
     if (prop && hasEditingRights()) {
       return true;
@@ -597,8 +599,8 @@ public class ExerciseController implements Serializable {
 
       if (usedSolutionQuery == null || usedSolutionQuery.getResult() == null) {
         ArrayList<UserFeedback> newFeedbackList = new ArrayList<UserFeedback>();
-        newFeedbackList.add(new UserFeedback(System.getProperty("QUE.UNEXPECTED_ERROR"), System
-            .getProperty("QUE.UNEXPECTED_ERROR2"), user));
+        newFeedbackList.add(new UserFeedback(Cfg.inst().getProp(DEF_LANGUAGE, "QUE.UNEXPECTED_ERROR"),
+              Cfg.inst().getProp(DEF_LANGUAGE, "QUE.UNEXPECTED_ERROR2"), user));
         newFeedbackList.addAll(feedbackList);
         feedbackList = newFeedbackList;
         this.feedbackVisible = true;
@@ -666,7 +668,7 @@ public class ExerciseController implements Serializable {
         if (!userString.trim().isEmpty() && (!isRated() || !showResults())) {
           entry = userEntryDao.getLastEntry(exercise, user);
 
-          // String msg = System.getProperty("ASSERTION.FILTER5");
+          // String msg = Cfg.inst().getProp(DEF_LANGUAGE, "ASSERTION.FILTER5");
           String msg = "Ihre Abgabe wurde erfolgreich gespeichert.";
           if (entry != null) {
             entry.setUserQuery(userString);
@@ -769,8 +771,8 @@ public class ExerciseController implements Serializable {
 
         if (userEntrySuccess) {
           feedbackList.clear();
-          UserFeedback feedback = new UserFeedback(System.getProperty("COMPARATOR.DYN_RESULT"),
-              System.getProperty("COMPARATOR.DYN_RESULT.SUC"), user);
+          UserFeedback feedback = new UserFeedback(Cfg.inst().getProp(DEF_LANGUAGE, "COMPARATOR.DYN_RESULT"),
+              Cfg.inst().getProp(DEF_LANGUAGE, "COMPARATOR.DYN_RESULT.SUC"), user);
           feedback.setSuccess(true);
           feedback.setMainError(true);
           feedbackList.add(feedback);

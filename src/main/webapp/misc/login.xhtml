@@ -8,7 +8,8 @@ xmlns:p="http://primefaces.org/ui">
   </ui:define>
   <ui:define name="content">
     <p id="session_expired_button">
-	  	<h:graphicImage value="#{img['BASICS.LOADING']}" />
+      <span class="login-loading-text">Loading...</span><br/>
+	  	<h:graphicImage class="login-loading" value="/resources/img/#{config['IMG.PROGRESSBAR']}" />
     </p>
   </ui:define>
 </ui:composition>

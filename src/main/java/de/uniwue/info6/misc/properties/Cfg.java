@@ -10,15 +10,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import com.google.common.collect.ImmutableMap;
-
 /**
  *
  *
  * @author
  */
-public class PropertiesManager {
-  private static PropertiesManager instance;
+public class Cfg {
+  private static Cfg instance;
 
   private Map<PropertiesFile, String> properties;
   private Map<PropertiesFile, Properties> cachedProperties;
@@ -28,25 +26,25 @@ public class PropertiesManager {
   /**
    * Let's test some shit!
    */
-  public static void main(String[] args) {
-    // @formatter:off
-    Map<PropertiesFile, String> configFiles = ImmutableMap.of(
-        PropertiesFile.MAIN_CONFIG,     "src/main/resources/config.properties",
-        PropertiesFile.GERMAN_LANGUAGE, "src/main/resources/text_de.properties"
-    );
-    // @formatter:on
+  // public static void main(String[] args) {
+  //   // @formatter:off
+  //   Map<PropertiesFile, String> configFiles = ImmutableMap.of(
+  //       PropertiesFile.MAIN_CONFIG,     "src/main/resources/config.properties",
+  //       PropertiesFile.GERMAN_LANGUAGE, "src/main/resources/text_de.properties"
+  //   );
+  //   // @formatter:on
 
-    PropertiesManager manager = PropertiesManager.inst(configFiles);
-    String admins = manager.getProp(PropertiesFile.MAIN_CONFIG, PropString.ADMINS);
-    manager.setProp(PropertiesFile.MAIN_CONFIG, PropString.ADMINS, admins + "_additional_string");
-  }
+  //   PropertiesManager manager = PropertiesManager.inst(configFiles);
+  //   String admins = manager.getProp(PropertiesFile.MAIN_CONFIG, PropString.ADMINS);
+  //   manager.setProp(PropertiesFile.MAIN_CONFIG, PropString.ADMINS, admins + "_additional_string");
+  // }
 
   /**
    *
    *
    * @return
    */
-  public static PropertiesManager inst() {
+  public static Cfg inst() {
     if (instance == null) {
       throw new NullPointerException("Not initialized!");
     }
@@ -59,9 +57,9 @@ public class PropertiesManager {
    * @param mainPropertiesFilePath
    * @return
    */
-  public static PropertiesManager inst(Map<PropertiesFile, String> properties) {
+  public static Cfg inst(Map<PropertiesFile, String> properties) {
     if (instance == null) {
-      instance = new PropertiesManager(properties);
+      instance = new Cfg(properties);
     }
     return instance;
   }
@@ -70,7 +68,7 @@ public class PropertiesManager {
    * @param mainPropertiesFilePath
    *
    */
-  private PropertiesManager(Map<PropertiesFile, String> properties) {
+  private Cfg(Map<PropertiesFile, String> properties) {
     this.cachedProperties = new HashMap<PropertiesFile, Properties>();
     this.properties = properties;
     this.updateFileProperties();

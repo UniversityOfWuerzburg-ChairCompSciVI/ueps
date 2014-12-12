@@ -7,7 +7,9 @@
 TODO :: TODO :: TODO :: TODO
 
 ## Systemanforderungen
-TODO :: TODO :: TODO :: TODO
+* Tomcat 7/8
+* Maven (zum Kompilieren)
+* MySQL
 
 ## Konfiguration
 TODO :: TODO :: TODO :: TODO

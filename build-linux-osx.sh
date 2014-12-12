@@ -58,4 +58,4 @@ fi
 # -- Build from source
 # ---------------------------------------------------- #
 
-mvn tomcat:deploy
+mvn tomcat7:redeploy

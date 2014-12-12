@@ -22,22 +22,22 @@ xmlns:p="http://primefaces.org/ui">
     <!-- -->
     <script type="text/javascript">
     <!-- -->
-    jQuery(function() { 
+    jQuery(function() {
     <!-- -->
     jQuery( ".mysql_help_button" ).tipsy({fallback:
-    "#{txt['QUE.MYSQL_DOC']}", gravity: 'n' }); 
+    "#{txt['QUE.MYSQL_DOC']}", gravity: 'n' });
     <!-- -->
     jQuery( ".dia_button" ).tipsy({fallback:
-    "#{txt['QUE.DIA_HELP']}", gravity: 'n' }); 
+    "#{txt['QUE.DIA_HELP']}", gravity: 'n' });
     <!-- -->
-    }); 
+    });
     <!-- -->
-    function mysql_tooltip() { 
+    function mysql_tooltip() {
     <!-- -->
     jQuery( ".custom_mysql").tipsy({fallback:
-    "#{txt['QUE.CUSTOM_MYSQL']}", gravity: 'n' }); 
+    "#{txt['QUE.CUSTOM_MYSQL']}", gravity: 'n' });
     <!-- -->
-    } 
+    }
     <!-- --></script>
     <h:form id="usertask" rendered="#{e.userHasRights}">
      <p:growl id="messages" showDetail="true" life="8000" />
@@ -105,8 +105,8 @@ xmlns:p="http://primefaces.org/ui">
         oncomplete="mysql_tooltip();pulsateButton();"
         icon="ui-icon-circle-triangle-e" style="width:100%;"
         value="#{txt['QUE.VALIDATE']}"
-        update="feedback_box feedback result_panel result_table user_result_table 
-                refLinks solution_carousel user_result_widget result_table_widget 
+        update="feedback_box feedback result_panel result_table user_result_table
+                refLinks solution_carousel user_result_widget result_table_widget
 				messages"
         onclick="startAjaxStatus()" />
        </p:column>
@@ -158,7 +158,7 @@ xmlns:p="http://primefaces.org/ui">
          onclick="result_table_widget.show();return false;" />
          <p:commandButton value="#{txt['QUE.USER_QUERY']}"
          icon="ui-icon-circle-zoomin"
-         style="#{e.resultVisible ? 'width:49%' : 'width:100%' }; 
+         style="#{e.resultVisible ? 'width:49%' : 'width:100%' };
                  background-color:#EDEFFF !important; margin-top:-10px;position:relative;top:13px"
          id="user_result_button" rendered="#{e.userResultVisible}"
          styleClass="user_result_button"
@@ -191,14 +191,14 @@ xmlns:p="http://primefaces.org/ui">
          widgetVar="relevent_tables_dialog_wid_#{table}">
           <script type="text/javascript">
           <!-- -->
-          function filter_tooltip() { 
+          function filter_tooltip() {
           <!-- -->
-          jQuery(".tipsy").remove(); 
+          jQuery(".tipsy").remove();
           <!-- -->
           jQuery( ".filter_textfield" ).tipsy({fallback:
-          "#{txt['FILTER.DESCRIPTION']}", gravity: 's' }); 
+          "#{txt['FILTER.DESCRIPTION']}", gravity: 's' });
           <!-- -->
-          } 
+          }
           <!-- -->
           filter_tooltip();</script>
           <p:inputText placeholder=" Filter (z.B.: 'Spaltenname=Suchstring')"
@@ -274,12 +274,12 @@ xmlns:p="http://primefaces.org/ui">
        <p:column colspan="2">
         <h:commandButton rendered="#{moveTo.deadEndPrevious(e.getExercise())}"
         action="#{moveTo.previousExercise(e.getExercise())}"
-        onclick="startAjaxStatus()" image="#{img['NAVI.LEFT']}"
-        style="float:left" />
+        onclick="startAjaxStatus()" image="/resources/img/#{config['IMG.NAV_LEFT']}"
+        class="leftButton" />
         <h:commandButton rendered="#{moveTo.deadEndNext(e.getExercise())}"
         action="#{moveTo.nextExercise(e.getExercise())}"
-        onclick="startAjaxStatus()" image="#{img['NAVI.RIGHT']}"
-        style="float:right" />
+        onclick="startAjaxStatus()" image="/resources/img/#{config['IMG.NAV_RIGHT']}"
+        class="rightButton" />
        </p:column>
       </p:row>
      </p:panelGrid>

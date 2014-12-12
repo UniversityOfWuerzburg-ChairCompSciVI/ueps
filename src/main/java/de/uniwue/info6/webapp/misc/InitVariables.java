@@ -1,6 +1,10 @@
 package de.uniwue.info6.webapp.misc;
 
 import java.io.Serializable;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Enumeration;
 import java.util.Map;
 
 import javax.servlet.ServletContextEvent;
@@ -18,6 +22,8 @@ import de.uniwue.info6.misc.properties.PropertiesFile;
  */
 public class InitVariables implements ServletContextListener, Serializable {
 
+  private final org.slf4j.Logger LOG = org.slf4j.LoggerFactory.getLogger(getClass());
+
   /**
    *
    */
@@ -28,7 +34,16 @@ public class InitVariables implements ServletContextListener, Serializable {
    */
   @Override
   public void contextDestroyed(final ServletContextEvent event) {
-    //
+    Enumeration<Driver> drivers = DriverManager.getDrivers();
+    while (drivers.hasMoreElements()) {
+        Driver driver = drivers.nextElement();
+        try {
+            DriverManager.deregisterDriver(driver);
+            LOG.info(String.format("deregistering jdbc driver: %s", driver));
+        } catch (SQLException e) {
+            LOG.error(String.format("Error deregistering driver %s", driver), e);
+        }
+    }
   }
 
   /**

@@ -19,52 +19,52 @@ xmlns:p="http://primefaces.org/ui">
     <!-- -->
     <script type="text/javascript">
     <!-- -->
-    function context_tooltip() { 
+    function context_tooltip() {
     <!-- -->
-    jQuery(".tipsy").remove(); 
+    jQuery(".tipsy").remove();
     <!-- -->
     jQuery( "th.fn_class").tipsy({fallback:
-    "#{txt['FN']}", gravity: 's' }); 
+    "#{txt['FN']}", gravity: 's' });
     <!-- -->
     jQuery( ".scenario_class" ).tipsy({fallback:
-    "#{txt['ASSERTION.SC']}", gravity: 'w' }); 
+    "#{txt['ASSERTION.SC']}", gravity: 'w' });
     <!-- -->
     jQuery( ".exercise_group_class" ).tipsy({fallback:
-    "#{txt['ASSERTION.EXG']}", gravity: 'w' }); 
+    "#{txt['ASSERTION.EXG']}", gravity: 'w' });
     <!-- -->
     jQuery( ".exercise_class" ).tipsy({fallback:
-    "#{txt['ASSERTION.EX']}", gravity: 'w' }); 
+    "#{txt['ASSERTION.EX']}", gravity: 'w' });
     <!-- -->
     jQuery( ".user_class" ).tipsy({fallback:
-    "#{txt['ASSERTION.USER']}", gravity: 'w' }); 
+    "#{txt['ASSERTION.USER']}", gravity: 'w' });
     <!-- -->
     jQuery( "#form\\:exID_input" ).tipsy({fallback:
-    "#{txt['ASSERTION.FILTER7']}", gravity: 'n' }); 
+    "#{txt['ASSERTION.FILTER7']}", gravity: 'n' });
     <!-- -->
     jQuery( ".show_details" ).tipsy({fallback:
-    "#{txt['ASSERTION.EDIT']}. #{txt['ASSERTION.TAB']}", gravity: 'e' }); 
+    "#{txt['ASSERTION.EDIT']}. #{txt['ASSERTION.TAB']}", gravity: 'e' });
     <!-- -->
     jQuery( ".downloader" ).tipsy({fallback:
-    "#{txt['ASSERTION.EXPORT_RESULTS']}", gravity: 'e' }); 
+    "#{txt['ASSERTION.EXPORT_RESULTS']}", gravity: 'e' });
     <!-- -->
     jQuery( ".recalc2" ).tipsy({fallback:
-    "#{txt['ASSERTION.ASK_RECALC_TITLE']}", gravity: 'e' }); 
+    "#{txt['ASSERTION.ASK_RECALC_TITLE']}", gravity: 'e' });
     <!-- -->
     jQuery( ".remove_rating" ).tipsy({fallback:
-    "#{txt['ASSERTION.DELETE']}", gravity: 'e' }); 
+    "#{txt['ASSERTION.DELETE']}", gravity: 'e' });
     <!-- -->
     jQuery( ".unknown_solution" ).tipsy({fallback:
-    "#{txt['ASSERTION.NEW_SOLUTION']}", gravity: 'n' }); } 
+    "#{txt['ASSERTION.NEW_SOLUTION']}", gravity: 'n' }); }
     <!-- -->
-    jQuery(document).ready(function() { 
+    jQuery(document).ready(function() {
     <!-- -->
-    context_tooltip(); 
+    context_tooltip();
     <!-- -->
-    }); 
+    });
     <!-- -->
-    function start() { statusDialog.show(); } 
+    function start() { statusDialog.show(); }
     <!-- -->
-    function stop() { statusDialog.hide(); } 
+    function stop() { statusDialog.hide(); }
     <!-- --></script>
     <p:outputPanel style="text-align:center">
      <h:form id="form">
@@ -72,10 +72,10 @@ xmlns:p="http://primefaces.org/ui">
       <p:growl id="messages" showDetail="true" life="6000" />
       <p:dialog modal="true" widgetVar="statusDialog" header="Status"
       draggable="false" closable="true" resizable="false">
-      #{txt['ASSERTION.DIALOG_LOADING']} 
+      #{txt['ASSERTION.DIALOG_LOADING']}
       <br />
       <br />
-      <p:graphicImage value="#{img['ICON.LOAD']}" />
+      <p:graphicImage value="/resources/img/#{config['IMG.LOAD']}" />
       <br /></p:dialog>
       <h:panelGrid columns="5" cellpadding="2" id="filter_fields">
        <!-- -->
@@ -138,14 +138,14 @@ xmlns:p="http://primefaces.org/ui">
        <p:column style="width:48%">
         <!-- (row.isExercise ? row.exercise.solutionQueries : '') -->
         <f:facet name="header">#{txt['ASSERTION.QUERY']}</f:facet>
-        <h:outputText value="#{row.isEntry ? row.userEntry.userQuery : 
+        <h:outputText value="#{row.isEntry ? row.userEntry.userQuery :
                            (row.isExercise ? row.getExerciseText() : '')}"
         style="white-space:normal;#{sub.getStyle(row)}"
         class="#{sub.getStyleClass(row)}" />
        </p:column>
        <p:column style="width:10%; text-align:center;">
         <f:facet name="header">#{txt['ASSERTION.POINTS']}</f:facet>
-        <h:outputText value="#{row.isEntry ? row.userResult.credits : 
+        <h:outputText value="#{row.isEntry ? row.userResult.credits :
                            (row.isExercise ? row.avgCredits : '')}" />
        </p:column>
        <p:column style="width:17%">
@@ -210,7 +210,7 @@ xmlns:p="http://primefaces.org/ui">
        </p:column>
       </p:treeTable>
      </h:form>
-     <h:outputText escape="false" style="display:block; 
+     <h:outputText escape="false" style="display:block;
         font-size:15px;font-weight:bold;margin-top:20px" value="#{txt['ASSERTION.FILTER4']}"/>
     </p:outputPanel>
    </ui:define>

@@ -14,47 +14,47 @@ xmlns:p="http://primefaces.org/ui">
     <!-- tooltips -->
     <script type="text/javascript">
     <!-- -->
-    function show_tooltip() { 
+    function show_tooltip() {
     <!-- -->
-    jQuery(function() { 
+    jQuery(function() {
     <!-- -->
     jQuery( ".toggler_empty div" ).tipsy({fallback:
-    "#{txt['TOOLTIP.SOLUTION1']}", gravity: 'e' }); 
+    "#{txt['TOOLTIP.SOLUTION1']}", gravity: 'e' });
     <!-- -->
     jQuery( ".toggler_correct div" ).tipsy({fallback:
-    "#{txt['TOOLTIP.SOLUTION2']}", gravity: 'e' }); 
+    "#{txt['TOOLTIP.SOLUTION2']}", gravity: 'e' });
     <!-- -->
     jQuery( ".toggler_false div" ).tipsy({fallback:
-    "#{txt['TOOLTIP.SOLUTION3']}", gravity: 'e' }); 
+    "#{txt['TOOLTIP.SOLUTION3']}", gravity: 'e' });
     <!-- -->
     jQuery( ".toggler_info div" ).tipsy({fallback:
-    "#{txt['TOOLTIP.SOLUTION4']}", gravity: 'e' }); 
+    "#{txt['TOOLTIP.SOLUTION4']}", gravity: 'e' });
     <!-- -->
     jQuery( ".user_entry_text" ).tipsy({fallback:
-    "#{txt['TOOLTIP.SOLUTION_LINK']}" }); 
+    "#{txt['TOOLTIP.SOLUTION_LINK']}" });
     <!-- -->
     jQuery( ".filtered_exercises" ).tipsy({fallback:
-    "#{txt['TOOLTIP.FILTER']}", gravity: 'n' }); 
+    "#{txt['TOOLTIP.FILTER']}", gravity: 'n' });
     <!-- -->
     jQuery( ".selected_exercises" ).tipsy({fallback:
-    "#{txt['TOOLTIP.SHIFT']}", gravity: 'n' }); 
+    "#{txt['TOOLTIP.SHIFT']}", gravity: 'n' });
     <!-- -->
-    }); } 
+    }); }
     <!-- --></script>
     <!-- -->
     <style type="text/css">
     <!-- -->
     .toggler_empty div { background:
-    url(#{resource['img/empty_set.png']}) !important; } 
+    url(#{resource['img/ex-empty.png']}) !important; }
     <!-- -->
     .toggler_correct div { background:
-    url(#{resource['img/dialog-apply.png']}) !important; } 
+    url(#{resource['img/ex-correct.png']}) !important; }
     <!-- -->
     .toggler_false div { background:
-    url(#{resource['img/cross.png']}) !important; } 
+    url(#{resource['img/ex-false.png']}) !important; }
     <!-- -->
-    .toggler_info div { background: url(#{resource['img/info.png']})
-    !important; } 
+    .toggler_info div { background: url(#{resource['img/ex-info.png']})
+    !important; }
     <!-- --></style>
     <!-- ######################################################################### -->
     <!-- box for scenario introduction text -->
@@ -247,7 +247,7 @@ xmlns:p="http://primefaces.org/ui">
           onclick="startAjaxStatus()" />
           <p:commandButton styleClass="selected_exercises"
           disabled="#{overview.selectionSize(exerciseGroup) eq 0}"
-          value="#{overview.selectionSize(exerciseGroup) eq 1 ? 
+          value="#{overview.selectionSize(exerciseGroup) eq 1 ?
 		  txt['AC.SEL_SING']:txt['AC.SEL_PLUR']} [#{overview.selectionSize(exerciseGroup)}]"
           id="selected_exercises" icon="ui-icon-arrowreturnthick-1-e"
           ajax="false"

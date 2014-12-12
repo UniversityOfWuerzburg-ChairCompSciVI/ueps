@@ -4,7 +4,7 @@ xmlns="http://java.sun.com/xml/ns/javaee"
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
 
- <display-name>SQL Trainer</display-name>
+ <display-name>ÜPS</display-name>
  <!-- Change to "Production" when ready to deploy -->
  <!-- Dev. gives debug-messages like ajax-timeout -->
  <context-param>
@@ -128,7 +128,7 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns
   </init-param>
   <init-param>
    <param-name>uploadDirectory</param-name>
-   <param-value>/home/mischka/test</param-value>
+   <param-value>TODO:</param-value>
   </init-param>
  </filter>
  <filter>

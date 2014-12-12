@@ -179,11 +179,13 @@ public class AuthorizationFilter implements Filter, Serializable {
   private boolean checkDBConnection() {
     try {
       if (Cfg.inst().getProp(MAIN_CONFIG, FORCE_RESET_DATABASE)) {
+        Cfg.inst().setProp(MAIN_CONFIG, FORCE_RESET_DATABASE, false);
         return generateNewDB(true);
       } else {
         if (Cfg.inst().getProp(MAIN_CONFIG, IMPORT_DB_IF_EMPTY)) {
           if (!dBDataExists()) {
             if (Cfg.inst().getProp(MAIN_CONFIG, FORCE_RESET_DATABASE)) {
+              Cfg.inst().setProp(MAIN_CONFIG, FORCE_RESET_DATABASE, false);
               return generateNewDB(true);
             } else {
               return generateNewDB(false);

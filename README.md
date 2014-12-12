@@ -1,6 +1,35 @@
 # ÜPS
-ÜPS (Übungs-Programm für SQL) is a web-based intelligent teaching tool for the SQL database language.
+ÜPS (**Ü**bungs-**P**rogramm für **S**QL) ist ein webbasiertes Trainingssystem zum Erlernen der Datenbanksprache SQL.
 
+## Kurzanleitung zur Installation
+TODO :: TODO :: TODO :: TODO
+
+## Systemanforderungen
+TODO :: TODO :: TODO :: TODO
+
+## Konfiguration
+TODO :: TODO :: TODO :: TODO
+
+## Kompilieren
+TODO :: TODO :: TODO :: TODO
+
+## Neues Szenario erstellen
+TODO :: TODO :: TODO :: TODO
+
+### Aufgabengruppe erstellen
+TODO :: TODO :: TODO :: TODO
+
+### Aufgabe erstellen
+TODO :: TODO :: TODO :: TODO
+
+## Benutzerrechte hinzufügen/bearbeiten
+TODO :: TODO :: TODO :: TODO
+
+## Abgaben bewerten
+TODO :: TODO :: TODO :: TODO
+
+
+## Screenshots
 ![](res/screenshots/ueps_01.png)
 
 ![](res/screenshots/ueps_02.png)
@@ -20,29 +49,3 @@
 ![](res/screenshots/ueps_09.png)
 
 ![](res/screenshots/ueps_10.png)
-
-## Quick Install Guide
-
-### Requirements
-Testing 1
-
-### Download and Install
-Testing 2
-
-### Configuration
-Testing 3
-
-## Administration
-Testing 4
-
-### Assigning permissions
-Testing 5
-
-### Editing scenarios
-Testing 6
-
-### Review student solutions
-Testing 7
-
-## Build from source
-Testing 8

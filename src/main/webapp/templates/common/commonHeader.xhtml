@@ -7,7 +7,8 @@ xmlns:p="http://primefaces.org/ui">
  <body>
   <h:link outcome="home">
    <span class="logo">
-    <h:commandButton action="/" alt="#{config['IMG.LOGO_ALT_TEXT']}" image="/resources/img/#{config['IMG.LOGO']}" />
+    <h:commandButton action="/" alt="#{config['IMG.LOGO_ALT_TEXT']}"
+    image="/resources/img/#{config['IMG.LOGO']}" />
    </span>
   </h:link>
   <table class="header_elements">
@@ -34,11 +35,13 @@ xmlns:p="http://primefaces.org/ui">
       <ui:insert name="header_text">
        <h:outputText value="#{txt['HEADER.DEFAULT']}" />
       </ui:insert>
-      <h:outputText rendered="#{sessionCollector.hasUser()}" value=" - #{txt['SESSION.USER']} [" />
+      <h:outputText class="maincolor" rendered="#{sessionCollector.hasUser()}"
+      value="   (#{txt['SESSION.USER']} '" />
       <h:outputText value="#{sessionCollector.getUserName()}" />
+      <h:outputText class="maincolor" value="'" />
       <h:outputText rendered="#{rights.isAdmin()}" value=" - " />
       <h:outputText rendered="#{rights.isAdmin()}" class="admin-text" value="#{txt['RIGHTS.ADMIN']}" />
-      <h:outputText rendered="#{sessionCollector.hasUser()}" value="]" />
+      <h:outputText class="maincolor" rendered="#{sessionCollector.hasUser()}" value=")" />
      </p>
     </td>
    </tr>

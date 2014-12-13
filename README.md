@@ -1,13 +1,14 @@
 # ÜPS
 **ÜPS** (**Ü**bungs-**P**rogramm für **S**QL) ist ein webbasiertes Trainingssystem zum Erlernen der Datenbanksprache SQL.
 
-![](res/screenshots/ueps_neu_01.png)
+![](res/screenshots/ueps_neu_02.png)
+![](res/screenshots/ueps_neu_03.png)
 
 ## Kurzanleitung zur Installation
 TODO :: TODO :: TODO :: TODO
 
 ## Systemanforderungen
-* Tomcat 7/8
+* Tomcat 7 oder 8
 * Maven (zum Kompilieren)
 * MySQL
 

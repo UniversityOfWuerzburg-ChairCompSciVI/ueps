@@ -14,6 +14,11 @@
   height: calc(#{config['IMG.LOGO_HEIGHT']} + 20px);
 }
 
+#header .page-title {
+  font-size: 13px;
+  color: #5A5757 !important;
+}
+
 #header .logo {
   float: left;
   margin-top: 16px;

@@ -144,7 +144,7 @@ public class UserRightsBean implements Serializable {
     if (tmpUser != null) {
 
       Scenario tmpSce = scenarioDao.getById(scenarioId);
-      UserRight tmp = new UserRight(tmpUser, tmpSce, canAssert, canEdit);
+      UserRight tmp = new UserRight(tmpUser, null, tmpSce, canAssert, canEdit, false, false, false);
       List<UserRight> rightData = userRightDao.getByUser(tmpUser);
       for (UserRight item : rightData) {
         if (item.getScenario().getId().equals(scenarioId)) {
@@ -179,7 +179,7 @@ public class UserRightsBean implements Serializable {
   public void toggleSelectedRight(String what) {
 
     if (what.equals("edit")) {
-      selectedRight.setHasEditingRights(!selectedRight.getHasEditingRights());
+      selectedRight.setHasGroupEditingRights(!selectedRight.getHasGroupEditingRights());
     } else if (what.equals("assert")) {
       selectedRight.setHasRatingRights(!selectedRight.getHasRatingRights());
     }

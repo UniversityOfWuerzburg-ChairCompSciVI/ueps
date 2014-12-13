@@ -24,115 +24,115 @@ import de.uniwue.info6.database.map.UserRight;
 @ViewScoped
 public class UserRightDao extends DaoTools<UserRight> {
 
-	private static final long serialVersionUID = 1L;
-	private static final Log log = LogFactory.getLog(UserRightDao.class);
+  private static final long serialVersionUID = 1L;
+  private static final Log log = LogFactory.getLog(UserRightDao.class);
 
-	// ******************************************************************
-	// custom (not generated methods)
-	// ******************************************************************
+  // ******************************************************************
+  // custom (not generated methods)
+  // ******************************************************************
 
-	/**
-	 * @param typeClass
-	 */
-	public UserRightDao() {
-		super(UserRight.class);
-	}
+  /**
+   * @param typeClass
+   */
+  public UserRightDao() {
+    super(UserRight.class);
+  }
 
-	/**
-	 *
-	 *
-	 * @param id
-	 * @return
-	 */
-	public List<UserRight> getByUser(User user) {
-		UserRight example = new UserRight();
-		example.setUser(user);
-		List<UserRight> rights = findByExample(example);
-		return rights;
-	}
+  /**
+   *
+   *
+   * @param id
+   * @return
+   */
+  public List<UserRight> getByUser(User user) {
+    UserRight example = new UserRight();
+    example.setUser(user);
+    List<UserRight> rights = findByExample(example);
+    return rights;
+  }
 
-	/**
-	 *
-	 *
-	 * @param id
-	 * @return
-	 */
-	public UserRight getById(int id) {
-		boolean success = true;
-		Session session = null;
-		try {
-			session = startTransaction();
-			return findById(id, session);
-		} catch (Exception e) {
-			log.error("custom hibernate operation failed", e);
-			return null;
-		} finally {
-			endTransaction(session, success);
-		}
-	}
+  /**
+   *
+   *
+   * @param id
+   * @return
+   */
+  public UserRight getById(int id) {
+    boolean success = true;
+    Session session = null;
+    try {
+      session = startTransaction();
+      return findById(id, session);
+    } catch (Exception e) {
+      log.error("custom hibernate operation failed", e);
+      return null;
+    } finally {
+      endTransaction(session, success);
+    }
+  }
 
-	/**
-	 *
-	 *
-	 * @param instance
-	 * @return
-	 */
-	public List<UserRight> findByExample(UserRight instance) {
-		boolean success = true;
+  /**
+   *
+   *
+   * @param instance
+   * @return
+   */
+  public List<UserRight> findByExample(UserRight instance) {
+    boolean success = true;
 
-		Session session = null;
-		try {
-			session = startTransaction();
-			return (List<UserRight>) findByExampleHbn(instance, session);
-		} catch (Exception e) {
-			log.error("custom hibernate operation failed", e);
-			success = false;
-			return null;
-		} finally {
-			endTransaction(session, success);
-		}
-	}
+    Session session = null;
+    try {
+      session = startTransaction();
+      return (List<UserRight>) findByExampleHbn(instance, session);
+    } catch (Exception e) {
+      log.error("custom hibernate operation failed", e);
+      success = false;
+      return null;
+    } finally {
+      endTransaction(session, success);
+    }
+  }
 
-	// ******************************************************************
-	// generated methods of hibernate
-	// ******************************************************************
+  // ******************************************************************
+  // generated methods of hibernate
+  // ******************************************************************
 
-	public UserRight findById(java.lang.Integer id, Session session) {
-		log.debug("getting UserRight instance with id: " + id);
-		try {
-			UserRight instance = (UserRight) session.get("de.uniwue.info6.database.map.UserRight", id);
-			if (instance == null) {
-				log.debug("get successful, no instance found");
-			} else {
-				log.debug("get successful, instance found");
-			}
-			return instance;
-		} catch (RuntimeException re) {
-			log.error("get failed", re);
-			throw re;
-		}
-	}
+  public UserRight findById(java.lang.Integer id, Session session) {
+    log.debug("getting UserRight instance with id: " + id);
+    try {
+      UserRight instance = (UserRight) session.get("de.uniwue.info6.database.map.UserRight", id);
+      if (instance == null) {
+        log.debug("get successful, no instance found");
+      } else {
+        log.debug("get successful, instance found");
+      }
+      return instance;
+    } catch (RuntimeException re) {
+      log.error("get failed", re);
+      throw re;
+    }
+  }
 
-	public List<UserRight> findByExampleHbn(UserRight instance, Session session) {
-		log.debug("finding UserRight instance by example");
-		try {
-			Criteria criteria = session.createCriteria("de.uniwue.info6.database.map.UserRight");
-			criteria.add(Example.create(instance));
-			if (instance.getUser() != null) {
-				criteria.createAlias("user", "u").add(Restrictions.eq("u.id", instance.getUser().getId()));
-			}
+  public List<UserRight> findByExampleHbn(UserRight instance, Session session) {
+    log.debug("finding UserRight instance by example");
+    try {
+      Criteria criteria = session.createCriteria("de.uniwue.info6.database.map.UserRight");
+      criteria.add(Example.create(instance));
+      if (instance.getUser() != null) {
+        criteria.createAlias("user", "u").add(Restrictions.eq("u.id", instance.getUser().getId()));
+      }
 
-			if (instance.getScenario() != null) {
-				criteria.createAlias("scenario", "s").add(Restrictions.eq("s.id", instance.getScenario().getId()));
-			}
+      if (instance.getScenario() != null) {
+        criteria.createAlias("scenario", "s").add(Restrictions.eq("s.id", instance.getScenario().getId()));
+      }
 
-			@SuppressWarnings("unchecked")
-			List<UserRight> results = criteria.list();
-			log.debug("find by example successful, result size: " + results.size());
-			return results;
-		} catch (RuntimeException re) {
-			log.error("find by example failed", re);
-			throw re;
-		}
-	}
+      @SuppressWarnings("unchecked")
+      List<UserRight> results = criteria.list();
+      log.debug("find by example successful, result size: " + results.size());
+      return results;
+    } catch (RuntimeException re) {
+      log.error("find by example failed", re);
+      throw re;
+    }
+  }
 }

@@ -162,7 +162,7 @@ public class UserRights implements Serializable {
       if (rights != null) {
         for (UserRight right : rights) {
           Scenario sc = right.getScenario();
-          if (right.getHasEditingRights() && scenario.getId() == sc.getId()) {
+          if (right.getHasGroupEditingRights() && scenario.getId() == sc.getId()) {
             return true;
           }
         }

@@ -447,8 +447,13 @@ CREATE TABLE `user_right` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
   `scenario_id` int(10) unsigned DEFAULT NULL,
-  `has_rating_rights` tinyint(1) unsigned DEFAULT '0',
-  `has_editing_rights` tinyint(1) unsigned DEFAULT '0',
+  `rating_rights` tinyint(1) unsigned DEFAULT '0',
+  `group_editing_rights` tinyint(1) unsigned DEFAULT '0',
+  --  new
+  --  `scenario_add_delete_rights` tinyint(1) unsigned DEFAULT '0',
+  --  `scenario_editing_rights` tinyint(1) unsigned DEFAULT '0',
+  --  `user_management_rights` tinyint(1) unsigned DEFAULT '0',
+  -- new
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `scenario_id` (`scenario_id`),

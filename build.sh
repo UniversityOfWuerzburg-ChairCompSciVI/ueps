@@ -47,7 +47,7 @@ if $INSTALL_DEPENDENCIES ; then
   mvn install:install-file -Dfile="$PRIMEFACES_BINARY" \
          -DgroupId=org.primefaces \
          -DartifactId=primefaces \
-         -Dversion=4.0-with-tablefix \
+         -Dversion=4.0 \
          -Dpackaging=jar | egrep -v "(^\[WARNING\])"
 
   # check if errors occured

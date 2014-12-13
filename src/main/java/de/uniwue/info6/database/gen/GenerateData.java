@@ -288,21 +288,21 @@ public class GenerateData {
 
         if (i == 6) {
           // has rating and editing rights
-          UserRight right = new UserRight(user, scenario, true, true);
+          UserRight right = new UserRight(user, null, scenario, true, true, true, true, true);
           userRightDao.insertNewInstance(right);
           Set<UserRight> rights = new HashSet<UserRight>();
           rights.add(right);
           user.setUserRights(rights);
         } else if (i == 7) {
           // has rating
-          UserRight right = new UserRight(user, scenario, true, false);
+          UserRight right = new UserRight(user, null, scenario, true, false, false, false, false);
           userRightDao.insertNewInstance(right);
           Set<UserRight> rights = new HashSet<UserRight>();
           rights.add(right);
           user.setUserRights(rights);
         } else if (i == 8) {
           // has editing rights
-          UserRight right = new UserRight(user, scenario, false, true);
+          UserRight right = new UserRight(user, null, scenario, false, true, true, true, true);
           userRightDao.insertNewInstance(right);
           Set<UserRight> rights = new HashSet<UserRight>();
           rights.add(right);

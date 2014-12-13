@@ -1,130 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-xmlns:f="http://java.sun.com/jsf/core"
-xmlns:h="http://java.sun.com/jsf/html"
-xmlns:ui="http://java.sun.com/jsf/facelets"
-xmlns:a4j="http://richfaces.org/a4j"
-xmlns:rich="http://richfaces.org/rich"
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html" xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich"
 xmlns:p="http://primefaces.org/ui">
  <META HTTP-EQUIV="refresh" CONTENT="15" />
  <h:body>
   <!-- main template defining header, footer and content -->
   <ui:composition template="/templates/common/commonLayout.xhtml">
-  <ui:define name="header_text">
+   <ui:define name="header_text">
     <span>#{txt['RIGHTS.USER']} #{txt['ADMINTREE.MENU_EDIT']}</span>
-  </ui:define>
+   </ui:define>
    <ui:define name="content">
     <f:facet name="header" styleClass="info_box"></f:facet>
-    <h:graphicImage style="position:relative;left:220px;top:20px"
-    value="#{img['BASICS.MULTIPASS']}"
+    <h:graphicImage style="position:relative;left:220px;top:20px" value="#{img['BASICS.MULTIPASS']}"
     rendered="#{r.userNotHasRights()}" />
     <h:form rendered="#{r.userHasRights()}">
      <!-- -->
      <script type="text/javascript">
      <!-- -->
-     function context_tooltip() { 
+     function context_tooltip() {
      <!-- -->
-     jQuery(".tipsy").remove(); 
+     jQuery(".tipsy").remove();
      <!-- -->
-     jQuery( ".give_right_button").tipsy({fallback:
-     "#{txt['RIGHTS.GIVE_RIGHT']}", gravity: 'n' }); 
+     jQuery( ".give_right_button").tipsy({fallback: "#{txt['RIGHTS.GIVE_RIGHT']}", gravity: 'n' });
      <!-- -->
-     jQuery( "th.fn_class").tipsy({fallback:
-     "#{txt['FN']}", gravity: 's' }); 
+     jQuery( "th.fn_class").tipsy({fallback: "#{txt['FN']}", gravity: 's' });
      <!-- -->
-     jQuery( ".remove_right_button").tipsy({fallback:
-     "#{txt['RIGHTS.REMOVE_RIGHT']}", gravity: 'n' }); 
+     jQuery( ".remove_right_button").tipsy({fallback: "#{txt['RIGHTS.REMOVE_RIGHT']}", gravity: 'n' });
      <!-- -->
-     jQuery( ".remove_all_rights").tipsy({fallback:
-     "#{txt['RIGHTS.REMOVE_ALL_RIGHTS']}", gravity: 'n' }); 
+     jQuery( ".remove_all_rights").tipsy({fallback: "#{txt['RIGHTS.REMOVE_ALL_RIGHTS']}", gravity: 'n' });
      <!-- -->
-     } 
+     }
      <!-- -->
-     jQuery(document).ready(function() { 
+     jQuery(document).ready(function() {
      <!-- -->
-     context_tooltip(); 
+     context_tooltip();
      <!-- -->
-     }); 
+     });
      <!-- --></script>
      <p:dataTable id="rights" var="right" styleClass="rights_table" widgetVar="rightsTable"
-     value="#{r.rights}" sortBy="#{right.user.id}"
-     emptyMessage="#{txt['RIGHTS.NOTFOUND']}" cache="false"
-     filteredValue="#{r.filteredRights}" paginator="true"
-     paginatorAlwaysVisible="false" rows="10">
+     value="#{r.rights}" sortBy="#{right.user.id}" emptyMessage="#{txt['RIGHTS.NOTFOUND']}" cache="false"
+     filteredValue="#{r.filteredRights}" paginator="true" paginatorAlwaysVisible="false" rows="10">
       <f:facet name="header">#{txt['RIGHTS']}</f:facet>
-      <p:column headerText="#{txt['RIGHTS.USER']}"
-      filterBy="#{right.user.id}" sortBy="#{right.user.id}"
+      <p:column headerText="#{txt['RIGHTS.USER']}" filterBy="#{right.user.id}" sortBy="#{right.user.id}"
       style="width:25%;text-align:center;">
        <h:outputText value="#{right.user.id}" />
       </p:column>
-      <p:column headerText="#{txt['ASSERTION.SC']}"
-      filterBy="#{right.scenario.name}"
-      sortBy="#{right.scenario.name}"
-      style="width:25%;text-align:center;">
+      <p:column headerText="#{txt['ASSERTION.SC']}" filterBy="#{right.scenario.name}"
+      sortBy="#{right.scenario.name}" style="width:25%;text-align:center;">
        <h:outputText value="#{right.scenario.name}" />
       </p:column>
-      <p:column headerText="#{txt['RIGHTS.CAN_EDIT']}"
-      sortBy="#{right.hasEditingRights}"
+      <p:column headerText="#{txt['RIGHTS.CAN_EDIT']}" sortBy="#{right.hasGroupEditingRights}"
       style="width:20%;text-align:center;">
-       <p:commandButton rendered="#{!right.hasEditingRights}"
-       update="rights" action="#{r.toggleSelectedRight('edit')}"
-       icon="ui-icon-circle-close" styleClass="give_right_button"
-       title="#{txt['RIGHTS.GIVE_RIGHT']}"
-       oncomplete="context_tooltip()">
-        <f:setPropertyActionListener value="#{right}"
-        target="#{r.selectedRight}" />
+       <p:commandButton rendered="#{!right.hasGroupEditingRights}" update="rights"
+       action="#{r.toggleSelectedRight('edit')}" icon="ui-icon-circle-close" styleClass="give_right_button"
+       title="#{txt['RIGHTS.GIVE_RIGHT']}" oncomplete="context_tooltip()">
+        <f:setPropertyActionListener value="#{right}" target="#{r.selectedRight}" />
        </p:commandButton>
-       <p:commandButton rendered="#{right.hasEditingRights}"
-       update="rights" action="#{r.toggleSelectedRight('edit')}"
-       icon="ui-icon-circle-check" styleClass="remove_right_button"
-       title="#{txt['RIGHTS.REMOVE_RIGHT']}"
-       oncomplete="context_tooltip()">
-        <f:setPropertyActionListener value="#{right}"
-        target="#{r.selectedRight}" />
+       <p:commandButton rendered="#{right.hasGroupEditingRights}" update="rights"
+       action="#{r.toggleSelectedRight('edit')}" icon="ui-icon-circle-check" styleClass="remove_right_button"
+       title="#{txt['RIGHTS.REMOVE_RIGHT']}" oncomplete="context_tooltip()">
+        <f:setPropertyActionListener value="#{right}" target="#{r.selectedRight}" />
        </p:commandButton>
       </p:column>
-      <p:column headerText="#{txt['RIGHTS.CAN_ASSERT']}"
-      sortBy="#{right.hasRatingRights}"
+      <p:column headerText="#{txt['RIGHTS.CAN_ASSERT']}" sortBy="#{right.hasRatingRights}"
       style="width:20%;text-align:center;">
-       <p:commandButton rendered="#{!right.hasRatingRights}"
-       update="rights" action="#{r.toggleSelectedRight('assert')}"
-       icon="ui-icon-circle-close" styleClass="give_right_button"
-       title="#{txt['RIGHTS.GIVE_RIGHT']}"
-       oncomplete="context_tooltip()">
-        <f:setPropertyActionListener value="#{right}"
-        target="#{r.selectedRight}" />
+       <p:commandButton rendered="#{!right.hasRatingRights}" update="rights"
+       action="#{r.toggleSelectedRight('assert')}" icon="ui-icon-circle-close" styleClass="give_right_button"
+       title="#{txt['RIGHTS.GIVE_RIGHT']}" oncomplete="context_tooltip()">
+        <f:setPropertyActionListener value="#{right}" target="#{r.selectedRight}" />
        </p:commandButton>
-       <p:commandButton rendered="#{right.hasRatingRights}"
-       update="rights" action="#{r.toggleSelectedRight('assert')}"
-       icon="ui-icon-circle-check" styleClass="remove_right_button"
-       title="#{txt['RIGHTS.REMOVE_RIGHT']}"
-       oncomplete="context_tooltip()">
-        <f:setPropertyActionListener value="#{right}"
-        target="#{r.selectedRight}" />
+       <p:commandButton rendered="#{right.hasRatingRights}" update="rights"
+       action="#{r.toggleSelectedRight('assert')}" icon="ui-icon-circle-check"
+       styleClass="remove_right_button" title="#{txt['RIGHTS.REMOVE_RIGHT']}" oncomplete="context_tooltip()">
+        <f:setPropertyActionListener value="#{right}" target="#{r.selectedRight}" />
        </p:commandButton>
       </p:column>
       <p:column headerText="Fn" styleClass="fn_class" style="width:6%;text-align:center;">
-       <p:commandButton id="deleteButton" update="rights"
-       action="#{r.deleteSelectedRight()}"
-       styleClass="remove_all_rights" icon="ui-icon-trash"
-       title="#{txt['RIGHTS.REMOVE_ALL_RIGHTS']}"
+       <p:commandButton id="deleteButton" update="rights" action="#{r.deleteSelectedRight()}"
+       styleClass="remove_all_rights" icon="ui-icon-trash" title="#{txt['RIGHTS.REMOVE_ALL_RIGHTS']}"
        oncomplete="context_tooltip()">
-        <f:setPropertyActionListener value="#{right}"
-        target="#{r.selectedRight}" />
+        <f:setPropertyActionListener value="#{right}" target="#{r.selectedRight}" />
        </p:commandButton>
       </p:column>
       <f:facet name="footer">
        <p:messages id="messages" escape="false" closable="true" />
-       <p:commandButton id="showDialogButton2" type="button"
-       value="#{txt['RIGHTS.INSERT_RIGHTS']}" icon="ui-icon-plus"
-       onclick="dlg.show()" />
+       <p:commandButton id="showDialogButton2" type="button" value="#{txt['RIGHTS.INSERT_RIGHTS']}"
+       icon="ui-icon-plus" onclick="dlg.show()" />
       </f:facet>
      </p:dataTable>
      <p:outputPanel style="text-align:center;
                          position:relative;top:20px">
-      <p style="display:inline;color:#004188; 
+      <p style="display:inline;color:#004188;
                 font-size:15px;font-weight:bold">
       <!-- -->
       #{txt['RIGHTS.ADMIN_LIST']}: #{r.getAdmins()}</p>
@@ -132,36 +101,27 @@ xmlns:p="http://primefaces.org/ui">
      </p:outputPanel>
      <p:outputPanel style="text-align:center;
                          position:relative;top:20px">
-      <p style="display:inline; 
-              font-size:15px;font-weight:bold">
-	 #{txt['RIGHTS.INFO']}</p>
+      <p style="display:inline;
+              font-size:15px;font-weight:bold">#{txt['RIGHTS.INFO']}</p>
      </p:outputPanel>
-     <p:dialog header="#{txt['RIGHTS.INSERT_RIGHTS']}"
-     widgetVar="dlg" resizable="false">
-      <h:panelGrid columns="2" class="add_id_panel"
-      style="margin-bottom:10px;text-align:left">
-	   <h:outputLabel for="userId" style="display:block;min-width:120px" value="#{txt['RIGHTS.USER']}:" />
-       <p:autoComplete id="userId" value="#{r.userId}" dropdown="true"
-	   maxResults="15" completeMethod="#{user_names.rightsInit().complete}" />
+     <p:dialog header="#{txt['RIGHTS.INSERT_RIGHTS']}" widgetVar="dlg" resizable="false">
+      <h:panelGrid columns="2" class="add_id_panel" style="margin-bottom:10px;text-align:left">
+       <h:outputLabel for="userId" style="display:block;min-width:120px" value="#{txt['RIGHTS.USER']}:" />
+       <p:autoComplete id="userId" value="#{r.userId}" dropdown="true" maxResults="15"
+       completeMethod="#{user_names.rightsInit().complete}" />
        <!--<p:inputText id="userId" value="#{r.userId}" /> -->
-       <h:outputLabel for="scenarioId"
-       value="#{txt['ASSERTION.SC']}:" />
+       <h:outputLabel for="scenarioId" value="#{txt['ASSERTION.SC']}:" />
        <h:selectOneMenu id="scenarioId" value="#{r.scenarioId}" style="width:229px">
-        <f:selectItems var="sce" value="#{r.scenarios}"
-        itemLabel="#{sce.name}" itemValue="#{sce.id}"
+        <f:selectItems var="sce" value="#{r.scenarios}" itemLabel="#{sce.name}" itemValue="#{sce.id}"
         itemLabelEscaped="true" />
        </h:selectOneMenu>
-       <h:outputText for="canEdit"
-       value="#{txt['RIGHTS.CAN_EDIT']}" />
+       <h:outputText for="canEdit" value="#{txt['RIGHTS.CAN_EDIT']}" />
        <p:selectBooleanCheckbox id="canEdit" value="#{r.canEdit}" />
-       <h:outputText for="canAssert"
-       value="#{txt['RIGHTS.CAN_ASSERT']}" />
-       <p:selectBooleanCheckbox id="canAssert"
-       value="#{r.canAssert}" />
+       <h:outputText for="canAssert" value="#{txt['RIGHTS.CAN_ASSERT']}" />
+       <p:selectBooleanCheckbox id="canAssert" value="#{r.canAssert}" />
       </h:panelGrid>
-      <p:commandButton id="insertBut" value="#{txt['RIGHTS.INSERT']}"
-      update="rights" actionListener="#{r.insert}"
-	  oncomplete="dlg.hide(); context_tooltip()" />
+      <p:commandButton id="insertBut" value="#{txt['RIGHTS.INSERT']}" update="rights"
+      actionListener="#{r.insert}" oncomplete="dlg.hide(); context_tooltip()" />
      </p:dialog>
     </h:form>
    </ui:define>

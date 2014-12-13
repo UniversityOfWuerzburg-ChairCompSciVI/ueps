@@ -226,19 +226,19 @@ DROP TABLE IF EXISTS `user_right`;
 CREATE TABLE `user_right` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
+  `created_by_user_id` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
   `scenario_id` int(10) unsigned DEFAULT NULL,
   `rating_rights` tinyint(1) unsigned DEFAULT '0',
   `group_editing_rights` tinyint(1) unsigned DEFAULT '0',
-  --  new
-  --  `scenario_add_delete_rights` tinyint(1) unsigned DEFAULT '0',
-  --  `scenario_editing_rights` tinyint(1) unsigned DEFAULT '0',
-  --  `user_management_rights` tinyint(1) unsigned DEFAULT '0',
-  -- new
+  `scenario_editing_rights` tinyint(1) unsigned DEFAULT '0',
+  `scenario_add_delete_rights` tinyint(1) unsigned DEFAULT '0',
+  `user_management_rights` tinyint(1) unsigned DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `scenario_id` (`scenario_id`),
   CONSTRAINT `tutor_to_scenario_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `tutor_to_scenario_ibfk_2` FOREIGN KEY (`scenario_id`) REFERENCES `scenario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `tutor_to_scenario_ibfk_2` FOREIGN KEY (`created_by_user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `tutor_to_scenario_ibfk_3` FOREIGN KEY (`scenario_id`) REFERENCES `scenario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

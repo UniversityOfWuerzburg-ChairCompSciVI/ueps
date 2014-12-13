@@ -33,24 +33,4 @@ TODO :: TODO :: TODO :: TODO
 ## Abgaben bewerten
 TODO :: TODO :: TODO :: TODO
 
-
 ## Screenshots
-![](res/screenshots/ueps_01.png)
-
-![](res/screenshots/ueps_02.png)
-
-![](res/screenshots/ueps_03.png)
-
-![](res/screenshots/ueps_04.png)
-
-![](res/screenshots/ueps_05.png)
-
-![](res/screenshots/ueps_06.png)
-
-![](res/screenshots/ueps_07.png)
-
-![](res/screenshots/ueps_08.png)
-
-![](res/screenshots/ueps_09.png)
-
-![](res/screenshots/ueps_10.png)

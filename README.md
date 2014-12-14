@@ -28,6 +28,8 @@ TODO :: TODO :: TODO :: TODO
 TODO :: TODO :: TODO :: TODO
 
 ## Benutzerrechte hinzufügen/bearbeiten
+### Rolle 'Admin'
+### Rolle 'Dozent'
 TODO :: TODO :: TODO :: TODO
 
 ## Abgaben bewerten

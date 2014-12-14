@@ -165,6 +165,18 @@
   text-align:left;
 }
 
+.add_id_panel input {
+  width: 198px;
+}
+
+.add_id_panel .ui-button .ui-button-text {
+  line-height:1.15;
+}
+
+.add_id_panel .ui-button {
+  width:23px;
+}
+
 
 /*
  * -------------------------------------------------------------
@@ -189,10 +201,6 @@
 
 #form\:filter_fields input {
   width: 138px;
-  height: 20px;
-}
-
-.add_id_panel input {
   height: 20px;
 }
 

@@ -108,13 +108,13 @@ xmlns:p="http://primefaces.org/ui">
       <h:panelGrid columns="2" class="add_id_panel" style="margin-bottom:10px;text-align:left">
        <h:outputLabel for="userId" style="display:block;min-width:120px" value="#{txt['RIGHTS.USER']}:" />
        <p:autoComplete id="userId" value="#{r.userId}" dropdown="true" maxResults="15"
-       completeMethod="#{user_names.rightsInit().complete}" />
+       completeMethod="#{user_names.rightsInit().complete}"  style="width:229px" />
        <!--<p:inputText id="userId" value="#{r.userId}" /> -->
        <h:outputLabel for="scenarioId" value="#{txt['ASSERTION.SC']}:" />
-       <h:selectOneMenu id="scenarioId" value="#{r.scenarioId}" style="width:229px">
+       <p:selectOneMenu id="scenarioId" value="#{r.scenarioId}" style="width:229px">
         <f:selectItems var="sce" value="#{r.scenarios}" itemLabel="#{sce.name}" itemValue="#{sce.id}"
         itemLabelEscaped="true" />
-       </h:selectOneMenu>
+       </p:selectOneMenu>
        <h:outputText for="canEdit" value="#{txt['RIGHTS.CAN_EDIT']}" />
        <p:selectBooleanCheckbox id="canEdit" value="#{r.canEdit}" />
        <h:outputText for="canAssert" value="#{txt['RIGHTS.CAN_ASSERT']}" />

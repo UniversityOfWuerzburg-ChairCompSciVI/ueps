@@ -28,7 +28,9 @@ TODO :: TODO :: TODO :: TODO
 TODO :: TODO :: TODO :: TODO
 
 ## Benutzerrechte hinzufügen/bearbeiten
+TODO :: TODO :: TODO :: TODO
 ### Rolle 'Admin'
+TODO :: TODO :: TODO :: TODO
 ### Rolle 'Dozent'
 TODO :: TODO :: TODO :: TODO
 

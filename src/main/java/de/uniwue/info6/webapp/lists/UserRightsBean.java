@@ -31,7 +31,7 @@ import de.uniwue.info6.webapp.session.SessionObject;
  * @author Christian
  *
  */
-@ManagedBean(name = "r")
+@ManagedBean(name = "rights_bean")
 @ViewScoped
 public class UserRightsBean implements Serializable {
 
@@ -50,7 +50,7 @@ public class UserRightsBean implements Serializable {
 
   private String userId;
   private int scenarioId;
-  private boolean canEdit;
+  private boolean canEditGroups;
   private boolean canAssert;
 
   private List<Scenario> scenarios;
@@ -144,7 +144,7 @@ public class UserRightsBean implements Serializable {
     if (tmpUser != null) {
 
       Scenario tmpSce = scenarioDao.getById(scenarioId);
-      UserRight tmp = new UserRight(tmpUser, null, tmpSce, canAssert, canEdit, false, false, false);
+      UserRight tmp = new UserRight(tmpUser, null, tmpSce, canAssert, canEditGroups, false, false, false);
       List<UserRight> rightData = userRightDao.getByUser(tmpUser);
       for (UserRight item : rightData) {
         if (item.getScenario().getId().equals(scenarioId)) {
@@ -205,12 +205,12 @@ public class UserRightsBean implements Serializable {
     this.scenarioId = scenarioId;
   }
 
-  public boolean getCanEdit() {
-    return canEdit;
+  public boolean getCanEditGroups() {
+    return canEditGroups;
   }
 
-  public void setCanEdit(boolean canEdit) {
-    this.canEdit = canEdit;
+  public void setCanEditGroups(boolean canEdit) {
+    this.canEditGroups = canEdit;
   }
 
   public boolean getCanAssert() {

@@ -1,5 +1,8 @@
 package de.uniwue.info6.database.jdbc;
 
+import static de.uniwue.info6.misc.properties.PropString.SCENARIO_RESOURCES;
+import static de.uniwue.info6.misc.properties.PropertiesFile.MAIN_CONFIG;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -13,14 +16,8 @@ import org.apache.commons.logging.LogFactory;
 
 import de.uniwue.info6.database.map.User;
 import de.uniwue.info6.database.map.daos.UserDao;
-import de.uniwue.info6.webapp.session.SessionListener;
-
-
-import static de.uniwue.info6.misc.properties.PropBool.*;
-import static de.uniwue.info6.misc.properties.PropString.*;
-import static de.uniwue.info6.misc.properties.PropInteger.*;
-import static de.uniwue.info6.misc.properties.PropertiesFile.*;
 import de.uniwue.info6.misc.properties.Cfg;
+import de.uniwue.info6.webapp.session.SessionListener;
 
 public class ConnectionTools extends Thread {
 
@@ -45,12 +42,29 @@ public class ConnectionTools extends Thread {
   private String sessionStatsFile;
   private String oldvalue = "";
 
+  private static ConnectionTools instance;
+
+  private Thread currentThread;
+
+  /**
+   *
+   *
+   * @return
+   */
+  public static ConnectionTools inst() {
+    if (instance == null) {
+      instance = new ConnectionTools();
+    }
+    return instance;
+  }
+
+
   /**
    *
    */
-  public ConnectionTools() {
+  private ConnectionTools() {
     super();
-    dao = new UserDao();
+    this.dao = new UserDao();
   }
 
   /**
@@ -59,7 +73,8 @@ public class ConnectionTools extends Thread {
    * @see Runnable#run()
    */
   public void run() {
-    while (true) {
+    this.currentThread = Thread.currentThread();
+    while (!currentThread.isInterrupted()) {
       try {
         User user = dao.getById(dummyUser);
         if (user == null) {
@@ -90,6 +105,10 @@ public class ConnectionTools extends Thread {
         LOGGER.info("AUTO RECONNECT TO DATABASE: " + new Date());
 
         Thread.sleep(1000 * 60 * 60);
+      } catch (InterruptedException e) {
+        break;
+      } catch (NullPointerException e) {
+        break;
       } catch (Exception e) {
         LOGGER.error("PROBLEM WITH RECONNECTING TO DATABASE", e);
       }
@@ -183,4 +202,11 @@ public class ConnectionTools extends Thread {
     return buffer.toString();
   }
 
+  /**
+   *
+   *
+   */
+  public void cleanUp() {
+    this.currentThread.interrupt();
+  }
 }

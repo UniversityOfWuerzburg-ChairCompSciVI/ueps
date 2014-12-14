@@ -142,7 +142,7 @@ public class AuthorizationFilter implements Filter, Serializable {
       }
       LOGGER.error("NOT ALL RESOURCES FOUND, GOING TO SHOW ERRORPAGE");
     } else {
-      new ConnectionTools().start();
+      ConnectionTools.inst().start();
       initBrowserLog();
     }
   }

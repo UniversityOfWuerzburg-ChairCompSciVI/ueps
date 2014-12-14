@@ -12,6 +12,8 @@ import javax.servlet.ServletContextListener;
 
 import com.google.common.collect.ImmutableMap;
 
+import de.uniwue.info6.database.jdbc.ConnectionTools;
+import de.uniwue.info6.database.map.conf.HibernateUtil;
 import de.uniwue.info6.misc.properties.Cfg;
 import de.uniwue.info6.misc.properties.PropertiesFile;
 
@@ -34,6 +36,9 @@ public class InitVariables implements ServletContextListener, Serializable {
    */
   @Override
   public void contextDestroyed(final ServletContextEvent event) {
+    HibernateUtil.shutdown();
+    ConnectionTools.inst().cleanUp();
+
     Enumeration<Driver> drivers = DriverManager.getDrivers();
     while (drivers.hasMoreElements()) {
         Driver driver = drivers.nextElement();

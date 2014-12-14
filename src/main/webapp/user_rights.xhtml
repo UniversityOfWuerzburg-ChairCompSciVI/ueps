@@ -44,10 +44,17 @@ xmlns:p="http://primefaces.org/ui">
      value="#{rights_bean.rights}" sortBy="#{right.user.id}" emptyMessage="#{txt['RIGHTS.NOTFOUND']}" cache="false"
      filteredValue="#{rights_bean.filteredRights}" paginator="true" paginatorAlwaysVisible="false" rows="10">
       <f:facet name="header">#{txt['RIGHTS']}</f:facet>
+
       <p:column headerText="#{txt['RIGHTS.USER']}" filterBy="#{right.user.id}" sortBy="#{right.user.id}"
       style="width:25%;text-align:center;">
        <h:outputText value="#{right.user.id}" />
       </p:column>
+
+      <p:column headerText="Vergeben von" filterBy="#{right.user.id}" sortBy="#{right.user.id}"
+      style="width:25%;text-align:center;">
+       <h:outputText value="user_1" style="color:darkred" />
+      </p:column>
+
       <p:column headerText="#{txt['ASSERTION.SC']}" filterBy="#{right.scenario.name}"
       sortBy="#{right.scenario.name}" style="width:25%;text-align:center;">
        <h:outputText value="#{right.scenario.name}" />
@@ -65,6 +72,21 @@ xmlns:p="http://primefaces.org/ui">
         <f:setPropertyActionListener value="#{right}" target="#{rights_bean.selectedRight}" />
        </p:commandButton>
       </p:column>
+
+      <p:column headerText="#{txt['RIGHTS.CAN_EDIT_SCENARIO']}" sortBy="#{right.hasGroupEditingRights}"
+      style="width:20%;text-align:center;">
+       <p:commandButton rendered="#{!right.hasGroupEditingRights}" update="rights"
+       action="#{rights_bean.toggleSelectedRight('edit')}" icon="ui-icon-circle-close" styleClass="give_right_button"
+       title="#{txt['RIGHTS.GIVE_RIGHT']}" oncomplete="context_tooltip()">
+        <f:setPropertyActionListener value="#{right}" target="#{rights_bean.selectedRight}" />
+       </p:commandButton>
+       <p:commandButton rendered="#{right.hasGroupEditingRights}" update="rights"
+       action="#{rights_bean.toggleSelectedRight('edit')}" icon="ui-icon-circle-check" styleClass="remove_right_button"
+       title="#{txt['RIGHTS.REMOVE_RIGHT']}" oncomplete="context_tooltip()">
+        <f:setPropertyActionListener value="#{right}" target="#{rights_bean.selectedRight}" />
+       </p:commandButton>
+      </p:column>
+
       <p:column headerText="#{txt['RIGHTS.CAN_ASSERT']}" sortBy="#{right.hasRatingRights}"
       style="width:20%;text-align:center;">
        <p:commandButton rendered="#{!right.hasRatingRights}" update="rights"
@@ -90,12 +112,20 @@ xmlns:p="http://primefaces.org/ui">
        <p:commandButton id="showDialogButton2" type="button" value="#{txt['RIGHTS.INSERT_RIGHTS']}"
        icon="ui-icon-plus" onclick="dlg.show()" />
        <p:commandButton id="showDialogButton3" type="button" value="#{txt['RIGHTS.INSERT_INSTRUCTOR']}"
-       icon="ui-icon-plus" onclick="dlg.show()" />
+       icon="ui-icon-plus" onclick="dlg2.show()" />
       </f:facet>
      </p:dataTable>
      <p:outputPanel style="text-align:center;
                          position:relative;top:20px">
       <p style="display:inline;color:#004188;
+                font-size:15px;font-weight:bold">
+      <!-- -->
+      #{txt['RIGHTS.INSTRUCTOR_LIST']}: [user_2]</p>
+      <!-- -->
+     </p:outputPanel>
+     <p:outputPanel style="text-align:center;
+                         position:relative;top:20px">
+      <p style="display:inline;color:darkred;
                 font-size:15px;font-weight:bold">
       <!-- -->
       #{txt['RIGHTS.ADMIN_LIST']}: #{rights_bean.getAdmins()}</p>
@@ -119,16 +149,33 @@ xmlns:p="http://primefaces.org/ui">
         itemLabelEscaped="true" />
        </p:selectOneMenu>
 
-       <h:outputText for="canAssert" value="#{txt['RIGHTS.CAN_ASSERT']}" />
-       <p:selectBooleanCheckbox id="canAssert" value="#{rights_bean.canAssert}" />
+       <!-- <h:outputText for="canAssert" value="#{txt['RIGHTS.CAN_ASSERT']}"/>                 -->
+       <!-- <p:selectBooleanCheckbox id="canAssert" value="#{rights_bean.canAssert}"/>          -->
+       <!-- <h:outputText for="canEditGroups" value="#{txt['RIGHTS.CAN_EDIT_GROUPS']}" />       -->
+       <!-- <p:selectBooleanCheckbox id="canEditGroups" value="#{rights_bean.canEditGroups}" /> -->
+       <!-- <h:outputText for="canEditScenario" value="#{txt['RIGHTS.CAN_EDIT_SCENARIO']}" />   -->
+       <!-- <p:selectBooleanCheckbox id="canEdit" value="#{rights_bean.canEditGroups}" />       -->
+
+       <h:outputText for="canAssert" value="#{txt['RIGHTS.CAN_ASSERT']}"/>
+       <p:selectBooleanCheckbox id="canAssert" disabled="true" value="#{true}"/>
        <h:outputText for="canEditGroups" value="#{txt['RIGHTS.CAN_EDIT_GROUPS']}" />
-       <p:selectBooleanCheckbox id="canEditGroups" value="#{rights_bean.canEditGroups}" />
-       <h:outputText for="canEditScenario" value="#{txt['RIGHTS.CAN_EDIT_GROUPS']}" />
-       <p:selectBooleanCheckbox id="canEdit" value="#{rights_bean.canEditGroups}" />
+       <p:selectBooleanCheckbox id="canEditGroups" disabled="true" value="#{true}"/>
+       <h:outputText for="canEditScenario" value="#{txt['RIGHTS.CAN_EDIT_SCENARIO']}" />
+       <p:selectBooleanCheckbox id="canEdit" disabled="false" value="#{true}"/>
 
       </h:panelGrid>
       <p:commandButton id="insertBut" value="#{txt['RIGHTS.INSERT']}" update="rights"
       actionListener="#{rights_bean.insert}" oncomplete="dlg.hide(); context_tooltip()" />
+     </p:dialog>
+
+     <p:dialog header="#{txt['RIGHTS.INSERT_INSTRUCTOR']}" widgetVar="dlg2" resizable="false">
+      <h:panelGrid columns="2" class="add_id_panel" style="margin-bottom:10px;text-align:left">
+       <h:outputLabel for="userId2" style="display:block;min-width:120px" value="#{txt['RIGHTS.USER']}:" />
+       <p:autoComplete id="userId2" value="#{rights_bean.userId}" dropdown="true" maxResults="15"
+       completeMethod="#{user_names.rightsInit().complete}"  style="width:229px" />
+      </h:panelGrid>
+      <p:commandButton id="insertBut2" value="#{txt['RIGHTS.INSERT']}" update="rights"
+      actionListener="#{rights_bean.insert}" oncomplete="dlg2.hide(); context_tooltip()" />
      </p:dialog>
     </h:form>
    </ui:define>

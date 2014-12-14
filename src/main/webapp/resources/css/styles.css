@@ -157,6 +157,10 @@
 
 /* }}} */
 
+.rights_table .ui-datatable-footer .ui-button-icon-left {
+  margin-top:-10px !important;
+}
+
 .ui-accordion-content {
   text-align:justify;
 }

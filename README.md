@@ -39,11 +39,11 @@
   <!--- ` -->
 
 5. Kompilieren:
-   1. Linux
-      ``chmod +x *.sh``<br/>
-      ``./build-package.sh``
-   2. Windows
-      ``./build-package.bat``
+   * Linux
+     ``chmod +x *.sh``<br/>
+     ``./build-package.sh``
+   * Windows
+     ``./build-package.bat``
 
 TODO :: TODO :: TODO :: TODO
 

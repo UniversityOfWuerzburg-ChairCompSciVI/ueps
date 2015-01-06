@@ -72,7 +72,7 @@ Für die ``slave``-Datenbanken werden jeweils folgende Datenbanknutzer mit besch
 
 ## Konfiguration und Deploy
 
-### config.properties-Optionen
+### Konfiguration mit 'config.properties'
 TODO :: TODO :: TODO :: TODO
 
 #### Datenbankangaben

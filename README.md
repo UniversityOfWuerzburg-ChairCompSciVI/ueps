@@ -55,8 +55,7 @@
 Mit der Standard-Konfiguration werden beim Start der Anwendungen folgenden Datenbanken erstellt:
 * ``ueps_master`` (festgelegt durch ``MASTER_DBNAME``)
 * ``ueps_slave_001`` (Datenbank für das erste Beispielszenario)
-* ``ueps_slave_002``
-
+* ``ueps_slave_002`` (Datenbank für das zweite Beispielszenario)
 
 ## Systemanforderungen
 * Tomcat 7 oder höher

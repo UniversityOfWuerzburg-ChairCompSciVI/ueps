@@ -50,7 +50,7 @@
      Dann einfach foldendes Skript ausführen<br/>
      ``./build-package.sh``<br/>
 
-   * Unter Windows<br/>
+   * *Unter Windows*<br/>
      Einfach folgendes Skript auführen (Doppelklick genügt):<br/>
      ``build-package.bat``
 

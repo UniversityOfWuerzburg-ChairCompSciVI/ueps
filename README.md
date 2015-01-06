@@ -8,7 +8,6 @@
 
 ``git clone --depth=1 https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps``
 
-> ``tomcat-users.xml``
 
 TODO :: TODO :: TODO :: TODO
 
@@ -18,7 +17,30 @@ TODO :: TODO :: TODO :: TODO
 * MySQL
 
 ## Konfiguration und Deploy
-TODO :: TODO :: TODO :: TODO
+
+### Deploy mit Maven
+tomcat-users.xml
+``<role rolename="manager-script"/>``
+``<user username="admin" password="testing" roles="manager-script"/>``
+
+pom.xml
+``tomcat7-maven-plugin``
+```
+<plugin>
+  <groupId>org.apache.tomcat.maven</groupId>
+  <artifactId>tomcat7-maven-plugin</artifactId>
+  ...
+  <configuration>
+    <url>http://127.0.0.1:8080/manager/text</url>
+    <mode>war</mode>
+    <warFile>ueps.war</warFile>
+    <server>TomcatServer</server>
+    <username>admin</username>
+    <password>testing</password>
+    <path>/ueps</path>
+  </configuration>
+</plugin>
+```
 
 ### Dokumentation
 <!--- TODO: -->

@@ -44,7 +44,7 @@
   <!--- ` -->
 
 5. Anschließend kann die Anwendung kompiliert werden:
-   * _Unter Linux_<br/>
+   * *Unter Linux*<br/>
      Zuerst müssen einigen Build-Skripte im Wurzelverzeichnis ausführbar gemacht werden:<br/>
      ``chmod +x *.sh``<br/>
      Dann einfach foldendes Skript ausführen<br/>

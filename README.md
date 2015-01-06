@@ -6,26 +6,27 @@
 ## Kurzanleitung zur Installation
 
 1. Quellcode herunterladen:<br/>
-  ``git clone --depth=1 https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps``<br/>
-  Alternativ auch als [direkter Download](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/archive/master.zip)
+   ``git clone --depth=1 https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps``<br/>
+   Alternativ auch als [direkter Download](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/archive/master.zip)
 
 2. In das ``ueps``-Verzeichnis wechseln.
 
 3. Konfigurationsdatei in einem Editor öffnen: ``src/main/resources/config.properties``
 
 4. Den Datenbank-Server und einen Nutzer festlegen:
-  ```
-  MASTER_DBHOST               = 127.0.0.1
-  MASTER_DBPORT               = 3306
-  MASTER_DBNAME               = ueps_master
-  MASTER_DBUSER               = test_user
-  MASTER_DBPASS               = 3ti4k4tm270kg
-  ```
+   ```
+   MASTER_DBHOST = 127.0.0.1
+   MASTER_DBPORT = 3306
+   MASTER_DBNAME = ueps_master
+   MASTER_DBUSER = test_user
+   MASTER_DBPASS = 3ti4k4tm270kg
+   ```
 
-```
-GRANT SELECT, INSERT, UPDATE, DELETE, ALTER,
-CREATE, DROP, GRANT OPTION, LOCK TABLES
-```
+   Der unter ``MASTER_DBUSER`` festgelegte Nutzer sollte folgende Rechte besitzen:
+  ```
+  GRANT SELECT, INSERT, UPDATE, DELETE, ALTER,
+  CREATE, DROP, GRANT OPTION, LOCK TABLES
+  ```
 
 ```
 GRANT SELECT, INSERT, UPDATE, DELETE, ALTER, CREATE, DROP, GRANT OPTION,

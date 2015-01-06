@@ -42,10 +42,10 @@ public class User implements java.io.Serializable {
   private String id;
   private Date lastModified;
   private Boolean isAdmin;
+  private Boolean isLecturer;
   private String description;
   private Set userEntries = new HashSet(0);
   private Set userResults = new HashSet(0);
-  private Set userExTags = new HashSet(0);
   private Set userRights = new HashSet(0);
 
   public User() {
@@ -56,15 +56,15 @@ public class User implements java.io.Serializable {
     this.lastModified = lastModified;
   }
 
-  public User(String id, Date lastModified, Boolean isAdmin, String description, Set userEntries,
-      Set userResults, Set userExTags, Set userRights) {
+  public User(String id, Date lastModified, Boolean isAdmin, Boolean isLecturer, String description, Set userEntries,
+              Set userResults, Set userRights) {
     this.id = id;
     this.lastModified = lastModified;
     this.isAdmin = isAdmin;
+    this.isLecturer = isLecturer;
     this.description = description;
     this.userEntries = userEntries;
     this.userResults = userResults;
-    this.userExTags = userExTags;
     this.userRights = userRights;
   }
 
@@ -92,6 +92,14 @@ public class User implements java.io.Serializable {
     this.isAdmin = isAdmin;
   }
 
+  public Boolean getIsLecturer() {
+    return this.isLecturer;
+  }
+
+  public void setIsLecturer(Boolean isLecturer) {
+    this.isLecturer = isLecturer;
+  }
+
   public String getDescription() {
     return this.description;
   }
@@ -114,14 +122,6 @@ public class User implements java.io.Serializable {
 
   public void setUserResults(Set userResults) {
     this.userResults = userResults;
-  }
-
-  public Set getUserExTags() {
-    return this.userExTags;
-  }
-
-  public void setUserExTags(Set userExTags) {
-    this.userExTags = userExTags;
   }
 
   public Set getUserRights() {

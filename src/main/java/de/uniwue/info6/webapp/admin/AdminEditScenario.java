@@ -1,8 +1,9 @@
 package de.uniwue.info6.webapp.admin;
 
-import static de.uniwue.info6.misc.properties.PropBool.ALLOW_DB_CREATION;
-import static de.uniwue.info6.misc.properties.PropString.MAIN_DBHOST;
-import static de.uniwue.info6.misc.properties.PropString.MAIN_DBPORT;
+import static de.uniwue.info6.misc.properties.PropString.MASTER_DBHOST;
+import static de.uniwue.info6.misc.properties.PropString.MASTER_DBPORT;
+import static de.uniwue.info6.misc.properties.PropString.SCENARIO_RESOURCES_PATH;
+import static de.uniwue.info6.misc.properties.PropertiesFile.DEF_LANGUAGE;
 import static de.uniwue.info6.misc.properties.PropertiesFile.MAIN_CONFIG;
 
 import java.io.File;
@@ -43,11 +44,6 @@ import de.uniwue.info6.misc.properties.Cfg;
 import de.uniwue.info6.webapp.session.SessionCollector;
 import de.uniwue.info6.webapp.session.SessionObject;
 
-import static de.uniwue.info6.misc.properties.PropBool.*;
-import static de.uniwue.info6.misc.properties.PropString.*;
-import static de.uniwue.info6.misc.properties.PropInteger.*;
-import static de.uniwue.info6.misc.properties.PropertiesFile.*;
-
 /**
  *
  *
@@ -67,7 +63,7 @@ public class AdminEditScenario implements Serializable {
   private static final String EMPTY_FIELD = "---";
 
 
-  private static String scriptSystemPath = Cfg.inst().getProp(MAIN_CONFIG,SCENARIO_RESOURCES);
+  private static String scriptSystemPath = Cfg.inst().getProp(MAIN_CONFIG, SCENARIO_RESOURCES_PATH);
   private static final String RESOURCE_PATH = "scn";
 
   private ScenarioDao scenarioDao;
@@ -110,9 +106,7 @@ public class AdminEditScenario implements Serializable {
    * @return
    */
   public String autoCreationText() {
-    boolean hasCreateRights = Cfg.inst().getProp(MAIN_CONFIG, ALLOW_DB_CREATION);
-
-    if (hasHost() || hasPort() || hasDBName() || hasUser() || !hasCreateRights) {
+    if (hasHost() || hasPort() || hasDBName() || hasUser()) {
       return "";
     }
 
@@ -130,27 +124,27 @@ public class AdminEditScenario implements Serializable {
 
     if (dbHost != null && !dbHost.isEmpty()) {
       addRightsScripts = addRightsScripts.replace("db_host", "<span style=\"color:" + color + "\">"
-          + dbHost + "</span>");
+                         + dbHost + "</span>");
       removeRightsScripts = removeRightsScripts.replace("db_host", "<span style=\"color:" + color
-          + "\">" + dbHost + "</span>");
+                            + "\">" + dbHost + "</span>");
     }
     if (dbUser != null && !dbUser.isEmpty()) {
       addRightsScripts = addRightsScripts.replace("user_name", "<span style=\"color:" + color
-          + "\">" + dbUser + "</span>");
+                         + "\">" + dbUser + "</span>");
       removeRightsScripts = removeRightsScripts.replace("user_name", "<span style=\"color:" + color
-          + "\">" + dbUser + "</span>");
+                            + "\">" + dbUser + "</span>");
     }
     if (dbName != null && !dbName.isEmpty()) {
       addRightsScripts = addRightsScripts.replace("db_name", "<span style=\"color:" + color + "\">"
-          + dbName + "</span>");
+                         + dbName + "</span>");
       removeRightsScripts = removeRightsScripts.replace("db_name", "<span style=\"color:" + color
-          + "\">" + dbName + "</span>");
+                            + "\">" + dbName + "</span>");
     }
     if (dbPass != null) {
       addRightsScripts = addRightsScripts.replace("password", "<span style=\"color:" + color
-          + "\">" + dbPass + "</span>");
+                         + "\">" + dbPass + "</span>");
       removeRightsScripts = removeRightsScripts.replace("password", "<span style=\"color:" + color
-          + "\">" + dbPass + "</span>");
+                            + "\">" + dbPass + "</span>");
     }
   }
 
@@ -248,7 +242,7 @@ public class AdminEditScenario implements Serializable {
    */
   public File getSourceFile(String fileName) {
     File file = new File(scriptSystemPath + File.separator + RESOURCE_PATH + File.separator
-        + scenario.getId() + File.separator + fileName);
+                         + scenario.getId() + File.separator + fileName);
     return file;
   }
 
@@ -394,7 +388,7 @@ public class AdminEditScenario implements Serializable {
     Scenario tempScenario = null;
     databaseChanged = false;
 
-    boolean hasCreateRights = Cfg.inst().getProp(MAIN_CONFIG, ALLOW_DB_CREATION);
+    boolean hasCreateRights = true;
 
     try {
       if (!hasHost()) {
@@ -447,7 +441,7 @@ public class AdminEditScenario implements Serializable {
           if (groupStart != null && startDate != null) {
             if (startDate.after(groupStart)) {
               message = Cfg.inst().getProp(DEF_LANGUAGE, "EDIT_SC.TIME_CONFLICT2") + ": ID[" + group.getId()
-                  + "]";
+                        + "]";
               sev = FacesMessage.SEVERITY_ERROR;
             }
           }
@@ -455,7 +449,7 @@ public class AdminEditScenario implements Serializable {
           if (groupEnd != null && endDate != null) {
             if (groupEnd.after(endDate)) {
               message = Cfg.inst().getProp(DEF_LANGUAGE, "EDIT_SC.TIME_CONFLICT3") + ": ID[" + group.getId()
-                  + "]";
+                        + "]";
               sev = FacesMessage.SEVERITY_ERROR;
             }
           }
@@ -524,11 +518,12 @@ public class AdminEditScenario implements Serializable {
             dbName = connectionPool.addScenarioDatabase(tempScenario);
 
             Cfg config = Cfg.inst();
-            dbHost = config.getProp(MAIN_CONFIG, MAIN_DBHOST);
-            dbPort = config.getProp(MAIN_CONFIG, MAIN_DBPORT);
+            dbHost = config.getProp(MAIN_CONFIG, MASTER_DBHOST);
+            dbPort = config.getProp(MAIN_CONFIG, MASTER_DBPORT);
 
             if (!hasUser()) {
-              dbUser = "usr_" + dbName.replace("sqltsdb_", "");
+              // TODO: Nutzernamen-Generierung ueberarbeiten
+              dbUser = dbName.replace("slave_", "");
               dbPass = StringTools.generatePassword(64, 32);
               tempScenario.setDbPass(dbPass);
               tempScenario.setDbUser(dbUser);
@@ -543,7 +538,7 @@ public class AdminEditScenario implements Serializable {
               // boolean success1 = connectionPool.editUserRights(StringTools
               // .stripHtmlTags(removeRightsScripts));
               boolean success2 = connectionPool.editUserRights(StringTools
-                  .stripHtmlTags(addRightsScripts));
+                                 .stripHtmlTags(addRightsScripts));
 
               if (!success2) {
                 message = Cfg.inst().getProp(DEF_LANGUAGE, "EDIT_SC.RIGHTS_ERROR");
@@ -558,7 +553,7 @@ public class AdminEditScenario implements Serializable {
             message = Cfg.inst().getProp(DEF_LANGUAGE, "EDIT_SC.RIGHTS_ERROR");
             sev = FacesMessage.SEVERITY_ERROR;
             importSyntaxError = StringTools.trimToLengthIndicator(ExceptionUtils.getStackTrace(e),
-                600);
+                                600);
           }
         }
 
@@ -582,7 +577,7 @@ public class AdminEditScenario implements Serializable {
               }
             } else {
               message = Cfg.inst().getProp(DEF_LANGUAGE, "ERROR") + ". \n"
-                  + Cfg.inst().getProp(DEF_LANGUAGE, "EDIT_SC.SC_NOT_FOUND");
+                        + Cfg.inst().getProp(DEF_LANGUAGE, "EDIT_SC.SC_NOT_FOUND");
               sev = FacesMessage.SEVERITY_ERROR;
             }
           }
@@ -680,8 +675,8 @@ public class AdminEditScenario implements Serializable {
 
     Severity sev = FacesMessage.SEVERITY_INFO;
     FacesMessage msg = new FacesMessage(sev, Cfg.inst().getProp(DEF_LANGUAGE, "EDIT_SC.UPLOAD_SUCCESS"), System
-        .getProperty("EDIT_SC.NEW_NAME")
-        + ": " + scriptPath);
+                                        .getProperty("EDIT_SC.NEW_NAME")
+                                        + ": " + scriptPath);
     FacesContext.getCurrentInstance().addMessage(null, msg);
     scriptStream = uploader.getFileToDownload(scriptFile);
   }
@@ -702,8 +697,8 @@ public class AdminEditScenario implements Serializable {
 
     Severity sev = FacesMessage.SEVERITY_INFO;
     FacesMessage msg = new FacesMessage(sev, Cfg.inst().getProp(DEF_LANGUAGE, "EDIT_SC.UPLOAD_SUCCESS"), System
-        .getProperty("EDIT_SC.NEW_NAME")
-        + ": " + scriptPath);
+                                        .getProperty("EDIT_SC.NEW_NAME")
+                                        + ": " + scriptPath);
     FacesContext.getCurrentInstance().addMessage(null, msg);
     imageStream = uploader.getFileToDownload(imageFile);
   }

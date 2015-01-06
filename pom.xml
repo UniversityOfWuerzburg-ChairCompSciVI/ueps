@@ -11,12 +11,22 @@
 	<artifactId>ueps</artifactId>
 	<version>0.9.1</version>
 	<description>A web-based intelligent teaching tool for the SQL database language.</description>
+	<inceptionYear>2014</inceptionYear>
+	<name>UEPS - Uebungs-Programm fuer SQL</name>
+
+	<!-- ... -->
+	<organization>
+		<name>Institute of Computer Science, University of Wuerzburg</name>
+		<url>https://github.com/UniversityOfWuerzburg-ChairCompSciVI</url>
+	</organization>
 
 	<!-- ... -->
 	<properties>
-		<jdk.version>1.8</jdk.version>
+		<jdk.version>1.7</jdk.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<target>target</target>
+		<resourcesDir>res</resourcesDir>
 	</properties>
 
 	<!-- ... -->
@@ -50,10 +60,48 @@
 		</repository>
 	</repositories>
 
+	<pluginRepositories>
+		<!-- DOXYGEN-Repository -->
+		<pluginRepository>
+			<id>doodleproject-repo</id>
+			<name>DoodleProject Maven 2 Repository</name>
+			<url>http://doodleproject.sourceforge.net/maven2/release</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</pluginRepository>
+	</pluginRepositories>
+
 	<!-- ... -->
 	<build>
 		<finalName>ueps</finalName>
 		<plugins>
+			<!-- Doxygen documentation-->
+			<plugin>
+				<groupId>com.soebes.maven.plugins.dmg</groupId>
+				<artifactId>doxygen-maven-plugin</artifactId>
+				<version>1.0.1</version>
+				<!-- http://khmarbaise.github.io/doxygen-maven-plugin/report-mojo.html -->
+				<configuration>
+					<projectName>ueps</projectName>
+					<projectNumber>0.9.1</projectNumber>
+					<optimizeOutputJava>true</optimizeOutputJava>
+					<extractAll>true</extractAll>
+					<extractStatic>true</extractStatic>
+					<recursive>true</recursive>
+					<exclude>.git</exclude>
+					<input>${basedir}/src/main/java ${resourcesDir}/introduction.dox</input>
+					<recursive>true</recursive>
+					<umlLook>true</umlLook>
+					<haveGraph>true</haveGraph>
+					<generateLatex>false</generateLatex>
+					<generateHtml>true</generateHtml>
+					<usePdflatex>false</usePdflatex>
+					<pdfHyperlinks>true</pdfHyperlinks>
+					<outputDirectory>${basedir}/doc</outputDirectory>
+				</configuration>
+			</plugin>
+			<!-- -->
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.0</version>
@@ -65,20 +113,93 @@
 					<encoding>${project.build.sourceEncoding}</encoding>
 				</configuration>
 			</plugin>
+			<!-- Deploy with the Tomcat-Manager -->
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat7-maven-plugin</artifactId>
-				<version>2.1</version>
+				<version>2.2</version>
+				<executions>
+					<execution>
+						<id>tomcat-run</id>
+						<goals>
+							<goal>exec-war-only</goal>
+						</goals>
+						<phase>package</phase>
+					</execution>
+				</executions>
 				<configuration>
 					<url>http://127.0.0.1:8080/manager/text</url>
 					<mode>war</mode>
-					<!-- <warFile>test.war</warFile> -->
+					<warFile>ueps.war</warFile>
 					<server>TomcatServer</server>
-					<!-- <username>admin</username> <password>testing</password> -->
+					<username>admin</username>
+					<password>testing</password>
 					<path>/ueps</path>
 				</configuration>
 			</plugin>
+
+
+			<!-- -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.7</version>
+				<executions>
+					<execution>
+						<id>create-empty-directory</id>
+						<phase>package</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<delete file="ueps.war" failonerror="false" />
+								<copy file="${target}/ueps.war" tofile="ueps.war" />
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
+
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>license-maven-plugin</artifactId>
+					<version>1.7</version>
+
+					<!-- http://mojo.codehaus.org/license-maven-plugin/update-file-header-mojo.html -->
+					<configuration>
+						<verbose>false</verbose>
+						<includes>
+							<!-- <includes>**/*.java</includes> -->
+							<includes>**/UserRights.java</includes>
+							<!-- <includes>**/user_rights.xhtml</includes> -->
+						</includes>
+						<descriptionTemplate>${basedir}/res/license-header.ftl</descriptionTemplate>
+						<canUpdateCopyright>true</canUpdateCopyright>
+						<canUpdateDescription>true</canUpdateDescription>
+						<canUpdateLicense>true</canUpdateLicense>
+						<roots>
+							<root>src</root>
+						</roots>
+						<licenseName>apache_v2</licenseName>
+					</configuration>
+
+					<executions>
+						<execution>
+							<id>generate-license-headers</id>
+							<goals>
+								<goal>update-file-header</goal>
+							</goals>
+							<phase>process-sources</phase>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
 	</build>
 
 	<!-- ... -->

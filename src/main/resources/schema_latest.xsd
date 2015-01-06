@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="scenario" type="scenario"/>
+
+  <xs:complexType name="scenario">
+    <xs:sequence>
+      <xs:element name="createScriptPath" type="xs:string" minOccurs="0"/>
+      <xs:element name="dbHost" type="xs:string" minOccurs="0"/>
+      <xs:element name="dbName" type="xs:string" minOccurs="0"/>
+      <xs:element name="dbPass" type="xs:string" minOccurs="0"/>
+      <xs:element name="dbPort" type="xs:string" minOccurs="0"/>
+      <xs:element name="dbUser" type="xs:string" minOccurs="0"/>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:element name="endTime" type="xs:dateTime" minOccurs="0"/>
+      <xs:element name="exerciseGroup" type="exerciseGroup" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="id" type="xs:int" minOccurs="0"/>
+      <xs:element name="imagePath" type="xs:string" minOccurs="0"/>
+      <xs:element name="lastModified" type="xs:dateTime" minOccurs="0"/>
+      <xs:element name="name" type="xs:string" minOccurs="0"/>
+      <xs:element name="startTime" type="xs:dateTime" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="exerciseGroup">
+    <xs:sequence>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:element name="endTime" type="xs:dateTime" minOccurs="0"/>
+      <xs:element name="exercise" type="exercise" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="id" type="xs:int" minOccurs="0"/>
+      <xs:element name="isRated" type="xs:boolean" minOccurs="0"/>
+      <xs:element name="lastModified" type="xs:dateTime" minOccurs="0"/>
+      <xs:element name="name" type="xs:string" minOccurs="0"/>
+      <xs:element name="startTime" type="xs:dateTime" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="exercise">
+    <xs:sequence>
+      <xs:element name="credits" type="xs:byte" minOccurs="0"/>
+      <xs:element name="id" type="xs:int" minOccurs="0"/>
+      <xs:element name="lastModified" type="xs:dateTime" minOccurs="0"/>
+      <xs:element name="name" type="xs:string" minOccurs="0"/>
+      <xs:element name="question" type="xs:string" minOccurs="0"/>
+      <xs:element name="solution" type="solutionQuery" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="solutionQuery">
+    <xs:sequence>
+      <xs:element name="explanation" type="xs:string" minOccurs="0"/>
+      <xs:element name="id" type="xs:int" minOccurs="0"/>
+      <xs:element name="query" type="xs:string" minOccurs="0"/>
+      <xs:element name="status" type="xs:byte" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+

@@ -35,7 +35,6 @@ import de.uniwue.info6.database.map.daos.ScenarioDao;
 import de.uniwue.info6.database.map.daos.SolutionQueryDao;
 import de.uniwue.info6.database.map.daos.UserDao;
 import de.uniwue.info6.database.map.daos.UserEntryDao;
-import de.uniwue.info6.database.map.daos.UserExTagDao;
 import de.uniwue.info6.misc.FileTransfer;
 import de.uniwue.info6.misc.properties.Cfg;
 import de.uniwue.info6.webapp.session.SessionCollector;
@@ -63,7 +62,6 @@ public class AdminTreeBean implements Serializable {
   private ExerciseGroupDao exgroupDao;
   private ExerciseDao exerciseDao;
   private SolutionQueryDao solutionDao;
-  private UserExTagDao userTagDao;
   private UserDao userDao;
   private UserEntryDao userEntryDao;
   private List<Scenario> scenarios;
@@ -96,7 +94,6 @@ public class AdminTreeBean implements Serializable {
     exgroupDao = new ExerciseGroupDao();
     exerciseDao = new ExerciseDao();
     solutionDao = new SolutionQueryDao();
-    userTagDao = new UserExTagDao();
     userDao = new UserDao();
     userEntryDao = new UserEntryDao();
     rights = new UserRights().initialize();
@@ -334,7 +331,7 @@ public class AdminTreeBean implements Serializable {
   public void displaySelectedSingle() {
     if (selectedNode != null) {
       FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Selected", selectedNode.getData()
-          .toString());
+                                              .toString());
 
       FacesContext.getCurrentInstance().addMessage(null, message);
     }
@@ -357,19 +354,19 @@ public class AdminTreeBean implements Serializable {
       if (exerciseNode.isExercise()) {
         copiedExercise = exerciseNode.getExercise();
         context.addMessage(
-            null,
-            new FacesMessage(Cfg.inst().getProp(DEF_LANGUAGE, "ADMINTREE.CLIPBOARD") + ":", Cfg.inst().getProp(DEF_LANGUAGE,
-                "EXERCISE_GROUP") + ": [" + copiedExercise.getId() + "]"));
+          null,
+          new FacesMessage(Cfg.inst().getProp(DEF_LANGUAGE, "ADMINTREE.CLIPBOARD") + ":", Cfg.inst().getProp(DEF_LANGUAGE,
+                           "EXERCISE_GROUP") + ": [" + copiedExercise.getId() + "]"));
       } else if (exerciseNode.isExerciseGroup()) {
         copiedExerciseGroup = exerciseNode.getGroup();
         context.addMessage(
-            null,
-            new FacesMessage(Cfg.inst().getProp(DEF_LANGUAGE, "ADMINTREE.CLIPBOARD") + ":", Cfg.inst().getProp(DEF_LANGUAGE,
-                "EXERCISE")
-                + ": ["
-                + copiedExerciseGroup.getId()
-                + "] "
-                + copiedExerciseGroup.getName()));
+          null,
+          new FacesMessage(Cfg.inst().getProp(DEF_LANGUAGE, "ADMINTREE.CLIPBOARD") + ":", Cfg.inst().getProp(DEF_LANGUAGE,
+                           "EXERCISE")
+                           + ": ["
+                           + copiedExerciseGroup.getId()
+                           + "] "
+                           + copiedExerciseGroup.getName()));
       }
     }
   }

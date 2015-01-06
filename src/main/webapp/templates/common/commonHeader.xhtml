@@ -38,7 +38,7 @@ xmlns:p="http://primefaces.org/ui">
       <h:outputText class="maincolor" rendered="#{sessionCollector.hasUser()}"
       value="   (#{txt['SESSION.USER']} '" />
       <h:outputText value="#{sessionCollector.getUserName()}" />
-      <h:outputText class="maincolor" value="'" />
+      <h:outputText class="maincolor" value="'" rendered="#{sessionCollector.hasUser()}" />
       <h:outputText rendered="#{rights.isAdmin()}" value=" - " />
       <h:outputText rendered="#{rights.isAdmin()}" class="admin-text" value="#{txt['RIGHTS.ADMIN']}" />
       <h:outputText class="maincolor" rendered="#{sessionCollector.hasUser()}" value=")" />

@@ -20,8 +20,6 @@ import de.uniwue.info6.database.map.daos.ScenarioDao;
 import de.uniwue.info6.database.map.daos.UserDao;
 import de.uniwue.info6.database.map.daos.UserRightDao;
 import de.uniwue.info6.misc.properties.Cfg;
-import de.uniwue.info6.misc.properties.PropString;
-import de.uniwue.info6.misc.properties.PropertiesFile;
 import de.uniwue.info6.webapp.admin.UserRights;
 import de.uniwue.info6.webapp.session.SessionCollector;
 import de.uniwue.info6.webapp.session.SessionObject;
@@ -48,127 +46,387 @@ public class UserRightsBean implements Serializable {
   private ScenarioDao scenarioDao;
   private UserDao userDao;
 
-  private String userId;
-  private int scenarioId;
-  private boolean canEditGroups;
-  private boolean canAssert;
-
   private List<Scenario> scenarios;
   private SessionObject ac;
-  private User user;
+  private User loggedInUser;
   private UserRights userRights;
   private List<User> adminList;
+  private List<User> lecturerList;
+  private User selectedLecturer;
 
+  // ------------------------------------------------ //
+
+  private boolean canAssert;
+  private boolean canEditGroups;
+  private boolean canEditScenario;
+
+  private boolean disableAssert;
+  private boolean disableEditGroups;
+  private boolean disableEditScenario;
+
+  private boolean disableSave;
+
+  // ------------------------------------------------ //
+
+  private String userId;
+  private String createdByUserId;
+  private int scenarioId;
+  private String userStatus;
+  private String userStatusClass;
+  private User userToSave;
+
+  // ------------------------------------------------ //
+
+  /**
+   *
+   *
+   */
   @PostConstruct
   public void init() {
 
-    ac = new SessionCollector().getSessionObject();
-    user = ac.getUser();
+    this.ac = new SessionCollector().getSessionObject();
+    this.loggedInUser = ac.getUser();
 
-    userRightDao = new UserRightDao();
-    scenarioDao = new ScenarioDao();
-    userDao = new UserDao();
+    this.userRightDao = new UserRightDao();
+    this.scenarioDao = new ScenarioDao();
+    this.userDao = new UserDao();
+    this.userRights = new UserRights().initialize();
+    this.rights = userRightDao.findAll();
 
-    rights = userRightDao.findAll();
+    this.lecturerList = new ArrayList<User>();
+    this.adminList = userRights.getAdmins();
 
-    this.adminList = new ArrayList<User>();
-    String admins = Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG, PropString.ADMINS);
+    this.lecturerList = userRights.getLecturers();
+    this.scenarios = scenarioDao.findAll();
 
-    String[] adminArray = null;
-    userRights = new UserRights().initialize();
-    scenarios = scenarioDao.findAll();
-
-    if (admins != null) {
-      adminArray = admins.split(";");
-    }
-
-    if (adminArray != null) {
-      for (String ad : adminArray) {
-        User user = userDao.getById(ad);
-        if (user != null) {
-          if (userRights.isAdmin(user)) {
-            adminList.add(user);
-          }
-        }
+    for (UserRight userRight : rights) {
+      if (userRight.getScenario() != null ) {
+        userRight.setScenario(scenarioDao.getById(userRight.getScenario().getId()));
+        userRight.setUser(userDao.getById(userRight.getUser().getId()));
       }
     }
 
-    User adminExample = new User();
-    adminExample.setIsAdmin(true);
-    List<User> adList = userDao.findByExample(adminExample);
-    if (adList != null) {
-      for (User us : adList) {
-        if (!adminList.contains(us)) {
-          adminList.add(us);
-        }
-      }
-    }
+    this.validateUser();
+  }
 
-    for (UserRight ur : rights) {
-      ur.setScenario(scenarioDao.getById(ur.getScenario().getId()));
-      ur.setUser(userDao.getById(ur.getUser().getId()));
+  /**
+   *
+   *
+   * @return
+   */
+  public boolean hasUserStatus() {
+    if (userId != null && userStatus != null) {
+      return true;
+    } else {
+      return false;
     }
   }
 
+
+  /**
+   *
+   *
+   * @return
+   */
+  public String getUserStatus() {
+    return this.userStatus;
+  }
+
+  /**
+   *
+   *
+   * @param userStatus
+   */
+  public void setUserStatus(String userStatus) {
+    this.userStatus = userStatus;
+  }
+
+  /**
+   *
+   *
+   * @return
+   */
+  public String getUserStatusClass() {
+    return this.userStatusClass;
+  }
+
+  /**
+   *
+   *
+   * @param userStatus
+   */
+  public void setUserStatusClass(String userStatusClass) {
+    this.userStatusClass = userStatusClass;
+  }
+
+  /**
+   *
+   *
+   * @return
+   */
+  public List<User> getLecturerList() {
+    return this.lecturerList;
+  }
+
+  /**
+   *
+   *
+   * @param lecturerList
+   */
+  public void setLecturerList(List<User> lecturerList) {
+    this.lecturerList = lecturerList;
+  }
+
+  /**
+   *
+   *
+   * @param lecturer
+   */
+  public void setSelectedLecturer(User lecturer) {
+    this.selectedLecturer = lecturer;
+  }
+
+
+  /**
+   *
+   *
+   * @param selectedUser
+   * @return
+   */
+  public String getUserStatusFontClass(String selectedUser) {
+    if (selectedUser != null) {
+      return getUserStatusFontClass(userDao.getById(selectedUser));
+    }
+    return "";
+  }
+
+  /**
+   *
+   *
+   * @param selectedUser
+   * @return
+   */
+  private String getUserStatusFontClass(User selectedUser) {
+    if (selectedUser != null) {
+      if (userRights.isAdmin(selectedUser)) {
+        return "adminFont";
+      } else if (userRights.isLecturer(selectedUser)) {
+        return "lecturerFont";
+      } else {
+        return "studentFont";
+      }
+    }
+    return "";
+  }
+
+
+  /**
+   *
+   *
+   * @param event
+   */
+  public void validateUser() {
+    this.userStatus = "---";
+    this.userStatusClass = null;
+
+    this.disableSave = true;
+    this.disableAssert = true;
+    this.disableEditGroups = true;
+    this.disableEditScenario = true;
+
+    this.canAssert = false;
+    this.canEditGroups = false;
+    this.canEditScenario = false;
+
+    if (this.userId != null) {
+      this.userToSave = userDao.getById(userId);
+      if (userToSave != null) {
+        if (userRights.isAdmin(userToSave)) {
+          this.userStatus = Cfg.inst().getProp(DEF_LANGUAGE, "RIGHTS.ADMIN");
+          this.disableSave = true;
+          this.canAssert = true;
+          this.canEditGroups = true;
+          this.canEditScenario = true;
+        } else if (userRights.isLecturer(userToSave)) {
+          this.userStatus = Cfg.inst().getProp(DEF_LANGUAGE, "RIGHTS.INSTRUCTOR");
+          this.disableSave = false;
+          this.canAssert = true;
+          this.canEditGroups = true;
+          this.disableEditScenario = false;
+        } else {
+          this.userStatus = Cfg.inst().getProp(DEF_LANGUAGE, "RIGHTS.STUDENT");
+          this.disableSave = false;
+          this.disableAssert = false;
+          this.disableEditGroups = false;
+          this.disableEditScenario = false;
+        }
+
+        this.userStatusClass = getUserStatusFontClass(userToSave);
+      }
+    }
+  }
+
+  /**
+   *
+   *
+   * @param lecturer
+   */
+  public void deleteSelectedLecturer() {
+    String message = null;
+    Severity sev = null;
+    FacesMessage msg = null;
+    boolean error = false;
+
+    if (this.selectedLecturer != null) {
+      this.selectedLecturer.setIsLecturer(false);
+
+      if (userDao.updateInstance(this.selectedLecturer)) {
+        sev = FacesMessage.SEVERITY_INFO;
+        message = Cfg.inst().getProp(DEF_LANGUAGE, "RIGHTS.LECTURER_REMOVED");
+      } else {
+        error = true;
+      }
+      this.lecturerList = userRights.getLecturers();
+    }
+
+    if (error) {
+      message = Cfg.inst().getProp(DEF_LANGUAGE, "ERROR");
+      sev = FacesMessage.SEVERITY_ERROR;
+    }
+
+    msg = new FacesMessage(sev, message, null);
+    FacesContext.getCurrentInstance().addMessage(null, msg);
+  }
+
+  /**
+   *
+   *
+   */
   public void deleteSelectedRight() {
-    userRightDao.deleteInstance(selectedRight);
-    rights.remove(selectedRight);
-    selectedRight = null;
+    String message = null;
+    Severity sev = null;
+    FacesMessage msg = null;
+    boolean error = false;
+
+    if (selectedRight != null) {
+      if (userRightDao.deleteInstance(selectedRight)) {
+        rights.remove(selectedRight);
+        selectedRight = null;
+
+        sev = FacesMessage.SEVERITY_INFO;
+        message = Cfg.inst().getProp(DEF_LANGUAGE, "RIGHTS.RIGHTS_REMOVED");
+      } else {
+        error = true;
+      }
+    } else {
+      error = true;
+    }
+
+    if (error) {
+      message = Cfg.inst().getProp(DEF_LANGUAGE, "ERROR");
+      sev = FacesMessage.SEVERITY_ERROR;
+    }
+    msg = new FacesMessage(sev, message, null);
+    FacesContext.getCurrentInstance().addMessage(null, msg);
   }
 
+  /**
+   *
+   *
+   * @return
+   */
   public String getAdmins() {
     String admins = "";
     if (adminList != null && !adminList.isEmpty()) {
       for (User a : adminList) {
-        admins += "[" + a.getId() + "] ";
+        admins +=  a.getId() + ", ";
       }
+    }
+
+    if (!admins.isEmpty()) {
+      admins = admins.substring(0, admins.length() - 2);
     }
     return admins;
   }
 
-  public boolean userHasRights() {
-    return userRights.isAdmin(user);
+  /**
+   *
+   *
+   * @param right
+   */
+  public boolean disableToggleButtons(UserRight right) {
+    if (right != null) {
+      if (userRights.isAdmin(right.getUser()) || userRights.isLecturer(right.getUser())) {
+        return true;
+      }
+    }
+    return false;
   }
 
-  public void insert() {
+  /**
+   *
+   *
+   * @return
+   */
+  public boolean userHasRights() {
+    return userRights.isAdmin(loggedInUser);
+  }
 
-    User tmpUser = userDao.getById(userId);
+  /**
+   *
+   *
+   */
+  public void insertScenarioRights() {
+    // User userToSave = userDao.getById(userId);
 
     String message = null;
     String details = null;
     Severity sev = null;
     FacesMessage msg = null;
-    boolean saved = false;
-    boolean noneed = false;
 
-    if (tmpUser != null) {
+    if (userToSave != null) {
 
-      Scenario tmpSce = scenarioDao.getById(scenarioId);
-      UserRight tmp = new UserRight(tmpUser, null, tmpSce, canAssert, canEditGroups, false, false, false);
-      List<UserRight> rightData = userRightDao.getByUser(tmpUser);
-      for (UserRight item : rightData) {
-        if (item.getScenario().getId().equals(scenarioId)) {
+      Scenario selectedScenario = scenarioDao.getById(scenarioId);
+
+      // you can't add scenario rights to an admin {{{
+      if (userRights.isAdmin(userToSave)) {
+        sev = FacesMessage.SEVERITY_ERROR;
+        message = Cfg.inst().getProp(DEF_LANGUAGE, "ERROR");
+      }
+      // }}}
+
+      if (selectedScenario == null) {
+        sev = FacesMessage.SEVERITY_ERROR;
+        message = Cfg.inst().getProp(DEF_LANGUAGE, "RIGHTS.SCENARIO_NOT_FOUND");
+      }
+
+      UserRight rightsToSave = null;
+      if (message == null) {
+        rightsToSave = new UserRight(userToSave, loggedInUser, selectedScenario, canAssert, canEditGroups, canEditScenario);
+        // check if scenario rights already exist {{{
+        List<UserRight> rightData = userRightDao.getByUser(userToSave);
+        for (UserRight item : rightData) {
+          if (item.getScenario().getId().equals(scenarioId)) {
+            sev = FacesMessage.SEVERITY_ERROR;
+            message = Cfg.inst().getProp(DEF_LANGUAGE, "RIGHTS.USER_EXISTS");
+          }
+        }
+        // }}}
+      }
+
+      if (message == null) {
+        if (userRightDao.insertNewInstance(rightsToSave)) {
+          rights.add(rightsToSave);
+          sev = FacesMessage.SEVERITY_INFO;
+          message = Cfg.inst().getProp(DEF_LANGUAGE, "SAVED.SUCCESS") + ".";
+        } else {
           sev = FacesMessage.SEVERITY_ERROR;
-          message = "Schon vorhanden.";
-          noneed = true;
+          message = Cfg.inst().getProp(DEF_LANGUAGE, "SAVED.FAIL") + ".";
         }
       }
-
-      if (!noneed)
-        saved = userRightDao.insertNewInstance(tmp);
-
-      if (saved) {
-        rights.add(tmp);
-        sev = FacesMessage.SEVERITY_INFO;
-        message = Cfg.inst().getProp(DEF_LANGUAGE, "SAVED.SUCCESS") + ".";
-      } else if (!noneed) {
-        sev = FacesMessage.SEVERITY_ERROR;
-        message = Cfg.inst().getProp(DEF_LANGUAGE, "SAVED.FAIL") + ".";
-      }
-
     } else {
       sev = FacesMessage.SEVERITY_ERROR;
-      message = "User nicht gefunden";
+      message = Cfg.inst().getProp(DEF_LANGUAGE, "RIGHTS.USER_NOT_FOUND");
     }
 
     msg = new FacesMessage(sev, message, details);
@@ -176,7 +434,94 @@ public class UserRightsBean implements Serializable {
 
   }
 
-  public void toggleSelectedRight(String what) {
+  /**
+   *
+   *
+   */
+  public void insertLecturer() {
+    String message = null;
+    String details = null;
+    Severity sev = null;
+    FacesMessage msg = null;
+
+    User userToInsert = userDao.getById(userId);
+
+    if (userToInsert != null) {
+
+      if (userRights.isAdmin(userToInsert)) {
+        sev = FacesMessage.SEVERITY_ERROR;
+        // message = Cfg.inst().getProp(DEF_LANGUAGE, "SAVED.FAIL") + ".";
+        message = "Nutzer besitzt bereits Admin-Rechte";
+      }
+
+      if (message == null) {
+        if ( userToInsert.getIsLecturer() == null || !userToInsert.getIsLecturer()) {
+          userToInsert.setIsLecturer(true);
+
+          if (userDao.updateInstance(userToInsert)) {
+            sev = FacesMessage.SEVERITY_INFO;
+            message = Cfg.inst().getProp(DEF_LANGUAGE, "SAVED.SUCCESS") + ".";
+            this.lecturerList = userRights.getLecturers();
+          }
+        } else {
+          sev = FacesMessage.SEVERITY_ERROR;
+          message = Cfg.inst().getProp(DEF_LANGUAGE, "RIGHTS.ALREADY_INSERTED", userToInsert.getId());
+        }
+      }
+    }
+
+    if (message == null) {
+      sev = FacesMessage.SEVERITY_ERROR;
+      message = Cfg.inst().getProp(DEF_LANGUAGE, "SAVED.FAIL") + ".";
+    }
+
+    msg = new FacesMessage(sev, message, details);
+    FacesContext.getCurrentInstance().addMessage(null, msg);
+  }
+
+
+  /**
+   *
+   *
+   * @param rightToModify
+   */
+  public void toggleGroupEditingRight(UserRight rightToModify) {
+    if (rightToModify != null && !userRights.isAdmin(rightToModify.getUser()) && !userRights.isLecturer(rightToModify.getUser())) {
+      rightToModify.setHasGroupEditingRights(!rightToModify.getHasGroupEditingRights());
+      userRightDao.updateInstance(rightToModify);
+    }
+  }
+
+  /**
+   *
+   *
+   * @param rightToModify
+   */
+  public void toggleAssertRight(UserRight rightToModify) {
+    if (rightToModify != null && !userRights.isAdmin(rightToModify.getUser()) && !userRights.isLecturer(rightToModify.getUser())) {
+      rightToModify.setHasRatingRights(!rightToModify.getHasRatingRights());
+      userRightDao.updateInstance(rightToModify);
+    }
+  }
+
+  /**
+   *
+   *
+   * @param rightToModify
+   */
+  public void toggleScenarioEditingRight(UserRight rightToModify) {
+    if (rightToModify != null) {
+      rightToModify.setHasScenarioEditingRights(!rightToModify.getHasScenarioEditingRights());
+      userRightDao.updateInstance(rightToModify);
+    }
+  }
+
+  /**
+   *
+   *
+   * @param what
+   */
+  public void toggleSelectedRight(UserRight selectedRight, String what) {
 
     if (what.equals("edit")) {
       selectedRight.setHasGroupEditingRights(!selectedRight.getHasGroupEditingRights());
@@ -197,6 +542,14 @@ public class UserRightsBean implements Serializable {
     this.userId = userId;
   }
 
+  public String getCreatedByUserId() {
+    return createdByUserId;
+  }
+
+  public void setCreatedByUserId(String createdByUserId) {
+    this.createdByUserId = createdByUserId;
+  }
+
   public int getScenarioId() {
     return scenarioId;
   }
@@ -213,20 +566,62 @@ public class UserRightsBean implements Serializable {
     this.canEditGroups = canEdit;
   }
 
-  public boolean getCanAssert() {
-    return canAssert;
+  public boolean getCanEditScenario() {
+    return canEditScenario;
   }
 
-  public boolean userNotHasRights() {
-    return !userHasRights();
+  public void setCanEditScenario(boolean canEdit) {
+    this.canEditScenario = canEdit;
+  }
+
+  public boolean getCanAssert() {
+    return canAssert;
   }
 
   public void setCanAssert(boolean canAssert) {
     this.canAssert = canAssert;
   }
 
-  public UserRightsBean() {
+
+
+
+  public boolean getDisableEditGroups() {
+    return disableEditGroups;
   }
+
+  public void setDisableEditGroups(boolean disableEdit) {
+    this.disableEditGroups = disableEdit;
+  }
+
+  public boolean getDisableEditScenario() {
+    return disableEditScenario;
+  }
+
+  public void setDisableEditScenario(boolean disableEdit) {
+    this.disableEditScenario = disableEdit;
+  }
+
+  public boolean getDisableAssert() {
+    return disableAssert;
+  }
+
+  public void setDisableAssert(boolean disableAssert) {
+    this.disableAssert = disableAssert;
+  }
+
+  public boolean getDisableSave() {
+    return disableSave;
+  }
+
+  public void setDisableSave(boolean disableSave) {
+    this.disableSave = disableSave;
+  }
+
+  public boolean userNotHasRights() {
+    return !userHasRights();
+  }
+
+  public UserRightsBean() {}
 
   /**
    * @return the rights

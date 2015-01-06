@@ -1,9 +1,5 @@
 #!/bin/bash
 
-# ---------------------------------------------------- #
-# --
-# ---------------------------------------------------- #
-
 INSTALL_DEPENDENCIES=true
 BASEDIR=$(pwd)
 RESOURCES_FOLDER="res"
@@ -53,9 +49,3 @@ if $INSTALL_DEPENDENCIES ; then
   # check if errors occured
   if [ ${PIPESTATUS[0]} -ne "0" ]; then exit 1; fi
 fi
-
-# ---------------------------------------------------- #
-# -- Build from source
-# ---------------------------------------------------- #
-
-mvn tomcat7:redeploy

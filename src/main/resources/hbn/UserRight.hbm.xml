@@ -26,11 +26,5 @@
         <property name="hasScenarioEditingRights" type="java.lang.Boolean">
             <column name="scenario_editing_rights" />
         </property>
-        <property name="hasAddDeleteScenarioRights" type="java.lang.Boolean">
-            <column name="scenario_add_delete_rights" />
-        </property>
-        <property name="hasUserManagementRights" type="java.lang.Boolean">
-            <column name="user_management_rights" />
-        </property>
     </class>
 </hibernate-mapping>

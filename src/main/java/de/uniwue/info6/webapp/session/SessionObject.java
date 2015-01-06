@@ -102,7 +102,7 @@ public class SessionObject {
 
     if (userID != null && secureValue != null && userIP != null && !userID.isEmpty()
         && !secureValue.isEmpty()) {
-      if (Cfg.inst().getProp(MAIN_CONFIG,USE_WUECAMUS_LOGIN)) {
+      if (Cfg.inst().getProp(MAIN_CONFIG,USE_MOODLE_LOGIN)) {
         return isValid(userIP, userID, secureValue);
       } else {
         return true;

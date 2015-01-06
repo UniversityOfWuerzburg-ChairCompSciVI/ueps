@@ -61,7 +61,7 @@ xsi:schemaLocation="http://ocpsoft.org/schema/rewrite-config-prettyfaces http://
 
   <url-mapping>
     <pattern value="/login" />
-    <view-id value="/misc/login.xhtml" />
+    <view-id value="/login.xhtml" />
   </url-mapping>
 
   <url-mapping>

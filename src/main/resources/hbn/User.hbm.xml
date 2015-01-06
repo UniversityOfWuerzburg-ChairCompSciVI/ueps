@@ -14,6 +14,9 @@
         <property name="isAdmin" type="java.lang.Boolean">
             <column name="is_admin" />
         </property>
+        <property name="isLecturer" type="java.lang.Boolean">
+            <column name="is_lecturer" />
+        </property>
         <property name="description" type="string">
             <column name="description" length="100" />
         </property>
@@ -28,12 +31,6 @@
                 <column name="corrected_by_id" length="64" />
             </key>
             <one-to-many class="de.uniwue.info6.database.map.UserResult" />
-        </set>
-        <set name="userExTags" table="user_ex_tag" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="user_id" length="64" not-null="true" />
-            </key>
-            <one-to-many class="de.uniwue.info6.database.map.UserExTag" />
         </set>
         <set name="userRights" table="user_right" inverse="true" lazy="true" fetch="select">
             <key>

@@ -18,240 +18,240 @@ import de.uniwue.info6.misc.StringTools;
 @XmlRootElement
 public class Scenario implements java.io.Serializable {
 
-	// ******************************************************************
-	// custom (not generated methods)
-	// ******************************************************************
-	
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		return result;
-	}
+  // ******************************************************************
+  // custom (not generated methods)
+  // ******************************************************************
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (!(obj instanceof Scenario)) {
-			return false;
-		}
-		Scenario other = (Scenario) obj;
-		if (id == null) {
-			if (other.id != null) {
-				return false;
-			}
-		} else if (!id.equals(other.id)) {
-			return false;
-		}
-		return true;
-	}
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((id == null) ? 0 : id.hashCode());
+    return result;
+  }
 
-	// ******************************************************************
-	// generated methods of hibernate
-	// ******************************************************************
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null) {
+      return false;
+    }
+    if (!(obj instanceof Scenario)) {
+      return false;
+    }
+    Scenario other = (Scenario) obj;
+    if (id == null) {
+      if (other.id != null) {
+        return false;
+      }
+    } else if (!id.equals(other.id)) {
+      return false;
+    }
+    return true;
+  }
 
-	private Integer id;
-	private Scenario scenario;
-	private String name;
-	private Date lastModified;
-	private Date startTime;
-	private Date endTime;
-	private String description;
-	private String createScriptPath;
-	private String imagePath;
-	private String dbHost;
-	private String dbUser;
-	private String dbPass;
-	private String dbPort;
-	private String dbName;
-	private Set userRights = new HashSet(0);
-	private Set exerciseGroups = new HashSet(0);
-	private Set scenarios = new HashSet(0);
+  // ******************************************************************
+  // generated methods of hibernate
+  // ******************************************************************
 
-	public Scenario() {
-	}
+  private Integer id;
+  private Scenario scenario;
+  private String name;
+  private Date lastModified;
+  private Date startTime;
+  private Date endTime;
+  private String description;
+  private String createScriptPath;
+  private String imagePath;
+  private String dbHost;
+  private String dbUser;
+  private String dbPass;
+  private String dbPort;
+  private String dbName;
+  private Set userRights = new HashSet(0);
+  private Set exerciseGroups = new HashSet(0);
+  private Set scenarios = new HashSet(0);
 
-	public Scenario(String name, Date lastModified, Date startTime, Date endTime, String description,
-			String createScriptPath, String imagePath, String dbHost, String dbUser, String dbPass, String dbPort,
-			String dbName) {
-		this.name = name;
-		this.lastModified = lastModified;
-		this.startTime = startTime;
-		this.endTime = endTime;
-		this.description = description;
-		this.createScriptPath = createScriptPath;
-		this.imagePath = imagePath;
-		this.dbHost = dbHost;
-		this.dbUser = dbUser;
-		this.dbPass = dbPass;
-		this.dbPort = dbPort;
-		this.dbName = dbName;
-	}
+  public Scenario() {
+  }
 
-	public Scenario(Scenario scenario, String name, Date lastModified, Date startTime, Date endTime,
-			String description, String createScriptPath, String imagePath, String dbHost, String dbUser, String dbPass,
-			String dbPort, String dbName, Set userRights, Set exerciseGroups, Set scenarios) {
-		this.scenario = scenario;
-		this.name = name;
-		this.lastModified = lastModified;
-		this.startTime = startTime;
-		this.endTime = endTime;
-		this.description = description;
-		this.createScriptPath = createScriptPath;
-		this.imagePath = imagePath;
-		this.dbHost = dbHost;
-		this.dbUser = dbUser;
-		this.dbPass = dbPass;
-		this.dbPort = dbPort;
-		this.dbName = dbName;
-		this.userRights = userRights;
-		this.exerciseGroups = exerciseGroups;
-		this.scenarios = scenarios;
-	}
+  public Scenario(String name, Date lastModified, Date startTime, Date endTime, String description,
+                  String createScriptPath, String imagePath, String dbHost, String dbUser, String dbPass, String dbPort,
+                  String dbName) {
+    this.name = name;
+    this.lastModified = lastModified;
+    this.startTime = startTime;
+    this.endTime = endTime;
+    this.description = description;
+    this.createScriptPath = createScriptPath;
+    this.imagePath = imagePath;
+    this.dbHost = dbHost;
+    this.dbUser = dbUser;
+    this.dbPass = dbPass;
+    this.dbPort = dbPort;
+    this.dbName = dbName;
+  }
 
-	public Integer getId() {
-		return this.id;
-	}
+  public Scenario(Scenario scenario, String name, Date lastModified, Date startTime, Date endTime,
+                  String description, String createScriptPath, String imagePath, String dbHost, String dbUser, String dbPass,
+                  String dbPort, String dbName, Set userRights, Set exerciseGroups, Set scenarios) {
+    this.scenario = scenario;
+    this.name = name;
+    this.lastModified = lastModified;
+    this.startTime = startTime;
+    this.endTime = endTime;
+    this.description = description;
+    this.createScriptPath = createScriptPath;
+    this.imagePath = imagePath;
+    this.dbHost = dbHost;
+    this.dbUser = dbUser;
+    this.dbPass = dbPass;
+    this.dbPort = dbPort;
+    this.dbName = dbName;
+    this.userRights = userRights;
+    this.exerciseGroups = exerciseGroups;
+    this.scenarios = scenarios;
+  }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+  public Integer getId() {
+    return this.id;
+  }
 
-	public Scenario getScenario() {
-		return this.scenario;
-	}
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-	@XmlTransient
-	public void setScenario(Scenario scenario) {
-		this.scenario = scenario;
-	}
+  public Scenario getScenario() {
+    return this.scenario;
+  }
 
-	public String getName() {
-		return this.name;
-	}
+  @XmlTransient
+  public void setScenario(Scenario scenario) {
+    this.scenario = scenario;
+  }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+  public String getName() {
+    return this.name;
+  }
 
-	public Date getLastModified() {
-		return this.lastModified;
-	}
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	public void setLastModified(Date lastModified) {
-		this.lastModified = lastModified;
-	}
+  public Date getLastModified() {
+    return this.lastModified;
+  }
 
-	public Date getStartTime() {
-		return this.startTime;
-	}
+  public void setLastModified(Date lastModified) {
+    this.lastModified = lastModified;
+  }
 
-	public void setStartTime(Date startTime) {
-		this.startTime = startTime;
-	}
+  public Date getStartTime() {
+    return this.startTime;
+  }
 
-	public Date getEndTime() {
-		return this.endTime;
-	}
+  public void setStartTime(Date startTime) {
+    this.startTime = startTime;
+  }
 
-	public void setEndTime(Date endTime) {
-		this.endTime = endTime;
-	}
+  public Date getEndTime() {
+    return this.endTime;
+  }
 
-	public String getDescription() {
-		return this.description;
-	}
+  public void setEndTime(Date endTime) {
+    this.endTime = endTime;
+  }
 
-	public void setDescription(String description) {
-		this.description = StringTools.stripHtmlTagsForScenario(description);
-	}
+  public String getDescription() {
+    return this.description;
+  }
 
-	public String getCreateScriptPath() {
-		return this.createScriptPath;
-	}
+  public void setDescription(String description) {
+    this.description = StringTools.stripHtmlTagsForScenario(description);
+  }
 
-	public void setCreateScriptPath(String createScriptPath) {
-		this.createScriptPath = createScriptPath;
-	}
+  public String getCreateScriptPath() {
+    return this.createScriptPath;
+  }
 
-	public String getImagePath() {
-		return this.imagePath;
-	}
+  public void setCreateScriptPath(String createScriptPath) {
+    this.createScriptPath = createScriptPath;
+  }
 
-	public void setImagePath(String imagePath) {
-		this.imagePath = imagePath;
-	}
+  public String getImagePath() {
+    return this.imagePath;
+  }
 
-	public String getDbHost() {
-		return this.dbHost;
-	}
+  public void setImagePath(String imagePath) {
+    this.imagePath = imagePath;
+  }
 
-	public void setDbHost(String dbHost) {
-		this.dbHost = dbHost;
-	}
+  public String getDbHost() {
+    return this.dbHost;
+  }
 
-	public String getDbUser() {
-		return this.dbUser;
-	}
+  public void setDbHost(String dbHost) {
+    this.dbHost = dbHost;
+  }
 
-	public void setDbUser(String dbUser) {
-		this.dbUser = dbUser;
-	}
+  public String getDbUser() {
+    return this.dbUser;
+  }
 
-	public String getDbPass() {
-		return this.dbPass;
-	}
+  public void setDbUser(String dbUser) {
+    this.dbUser = dbUser;
+  }
 
-	public void setDbPass(String dbPass) {
-		this.dbPass = dbPass;
-	}
+  public String getDbPass() {
+    return this.dbPass;
+  }
 
-	public String getDbPort() {
-		return this.dbPort;
-	}
+  public void setDbPass(String dbPass) {
+    this.dbPass = dbPass;
+  }
 
-	public void setDbPort(String dbPort) {
-		this.dbPort = dbPort;
-	}
+  public String getDbPort() {
+    return this.dbPort;
+  }
 
-	public String getDbName() {
-		return this.dbName;
-	}
+  public void setDbPort(String dbPort) {
+    this.dbPort = dbPort;
+  }
 
-	public void setDbName(String dbName) {
-		this.dbName = dbName;
-	}
+  public String getDbName() {
+    return this.dbName;
+  }
 
-	public Set getUserRights() {
-		return this.userRights;
-	}
+  public void setDbName(String dbName) {
+    this.dbName = dbName;
+  }
 
-	@XmlTransient
-	public void setUserRights(Set userRights) {
-		this.userRights = userRights;
-	}
+  public Set getUserRights() {
+    return this.userRights;
+  }
 
-	public Set getExerciseGroups() {
-		return this.exerciseGroups;
-	}
+  @XmlTransient
+  public void setUserRights(Set userRights) {
+    this.userRights = userRights;
+  }
 
- 	@XmlElement(name="exerciseGroup", type=ExerciseGroup.class)
-	public void setExerciseGroups(Set exerciseGroups) {
-		this.exerciseGroups = exerciseGroups;
-	}
+  public Set getExerciseGroups() {
+    return this.exerciseGroups;
+  }
 
-	public Set getScenarios() {
-		return this.scenarios;
-	}
+  @XmlElement(name = "exerciseGroup", type = ExerciseGroup.class)
+  public void setExerciseGroups(Set exerciseGroups) {
+    this.exerciseGroups = exerciseGroups;
+  }
 
-	@XmlTransient
-	public void setScenarios(Set scenarios) {
-		this.scenarios = scenarios;
-	}
+  public Set getScenarios() {
+    return this.scenarios;
+  }
+
+  @XmlTransient
+  public void setScenarios(Set scenarios) {
+    this.scenarios = scenarios;
+  }
 }

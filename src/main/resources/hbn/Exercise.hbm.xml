@@ -32,18 +32,6 @@
             </key>
             <one-to-many class="de.uniwue.info6.database.map.UserEntry" />
         </set>
-        <set name="userExTags" table="user_ex_tag" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="exercise_id" not-null="true" />
-            </key>
-            <one-to-many class="de.uniwue.info6.database.map.UserExTag" />
-        </set>
-        <set name="generatedTags" table="generated_tag" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="exercise_id" not-null="true" />
-            </key>
-            <one-to-many class="de.uniwue.info6.database.map.GeneratedTag" />
-        </set>
         <set name="exercises" table="exercise" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="copied_from_id" />

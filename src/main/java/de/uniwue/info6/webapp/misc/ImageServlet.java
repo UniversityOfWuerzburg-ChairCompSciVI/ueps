@@ -1,6 +1,6 @@
 package de.uniwue.info6.webapp.misc;
 
-import static de.uniwue.info6.misc.properties.PropString.SCENARIO_RESOURCES;
+import static de.uniwue.info6.misc.properties.PropString.SCENARIO_RESOURCES_PATH;
 import static de.uniwue.info6.misc.properties.PropertiesFile.MAIN_CONFIG;
 
 import java.io.File;
@@ -41,7 +41,7 @@ public class ImageServlet extends HttpServlet {
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     String filename = request.getPathInfo();
-    File file = new File(Cfg.inst().getProp(MAIN_CONFIG, SCENARIO_RESOURCES), RESOURCE_PATH + "/"
+    File file = new File(Cfg.inst().getProp(MAIN_CONFIG, SCENARIO_RESOURCES_PATH), RESOURCE_PATH + "/"
         + filename);
     response.setHeader("Content-Type", getServletContext().getMimeType(filename));
     response.setHeader("Content-Length", String.valueOf(file.length()));

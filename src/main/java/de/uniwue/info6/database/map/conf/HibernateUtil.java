@@ -1,7 +1,5 @@
 package de.uniwue.info6.database.map.conf;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.c3p0.internal.C3P0ConnectionProvider;
@@ -22,7 +20,7 @@ import de.uniwue.info6.misc.properties.PropertiesFile;
 public class HibernateUtil {
 
   private static final SessionFactory sessionFactory = buildSessionFactory();
-  private static final Log LOGGER = LogFactory.getLog(HibernateUtil.class);
+  private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(HibernateUtil.class);
 
   /**
    *
@@ -41,16 +39,16 @@ public class HibernateUtil {
       hibernate.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLInnoDBDialect");
 
       hibernate.setProperty("hibernate.connection.url", "jdbc:mariadb://"
-          + prop.getProp(PropertiesFile.MAIN_CONFIG, PropString.MAIN_DBHOST) + ":"
-          + prop.getProp(PropertiesFile.MAIN_CONFIG, PropString.MAIN_DBPORT)
-          + "?autoReconnect=true");
+                            + prop.getProp(PropertiesFile.MAIN_CONFIG, PropString.MASTER_DBHOST) + ":"
+                            + prop.getProp(PropertiesFile.MAIN_CONFIG, PropString.MASTER_DBPORT)
+                            + "?autoReconnect=true");
 
       hibernate.setProperty("hibernate.default_catalog", prop.getProp(PropertiesFile.MAIN_CONFIG,
-          PropString.MAIN_DBNAME));
+                            PropString.MASTER_DBNAME));
       hibernate.setProperty("hibernate.connection.username", prop.getProp(
-          PropertiesFile.MAIN_CONFIG, PropString.MAIN_DBUSER));
+                              PropertiesFile.MAIN_CONFIG, PropString.MASTER_DBUSER));
       hibernate.setProperty("hibernate.connection.password", prop.getProp(
-          PropertiesFile.MAIN_CONFIG, PropString.MAIN_DBPASS));
+                              PropertiesFile.MAIN_CONFIG, PropString.MASTER_DBPASS));
 
       StandardServiceRegistryBuilder serviceRegistryBuilder = new StandardServiceRegistryBuilder();
       serviceRegistryBuilder.applySettings(hibernate.getProperties());
@@ -59,7 +57,9 @@ public class HibernateUtil {
 
       return sessionFactory;
     } catch (Exception ex) {
-      LOGGER.error("Initial SessionFactory creation failed.", ex);
+      if (LOGGER != null) {
+        LOGGER.error("Initial SessionFactory creation failed.", ex);
+      }
       throw new ExceptionInInitializerError(ex);
     }
   }
@@ -95,18 +95,14 @@ public class HibernateUtil {
    * @param sessionFactory
    */
   @SuppressWarnings("deprecation")
-  private static boolean closeSessionFactoryIfC3P0ConnectionProvider(SessionFactory factory)
-        {
+  private static boolean closeSessionFactoryIfC3P0ConnectionProvider(SessionFactory factory) {
     boolean done = false;
-    if(factory instanceof SessionFactoryImpl)
-               {
+    if (factory instanceof SessionFactoryImpl) {
       SessionFactoryImpl sf = (SessionFactoryImpl)factory;
       ConnectionProvider conn = sf.getConnectionProvider();
-      if(conn instanceof C3P0ConnectionProvider)
-                        {
+      if (conn instanceof C3P0ConnectionProvider) {
         ((C3P0ConnectionProvider)conn).close();
-        try
-                                {
+        try {
           Thread.sleep(2000);
         } catch (InterruptedException e) {
           e.printStackTrace();
@@ -114,7 +110,7 @@ public class HibernateUtil {
         done = true;
       }
     }
-                factory.close();
+    factory.close();
     return done;
   }
 

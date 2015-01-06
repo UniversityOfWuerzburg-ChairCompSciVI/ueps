@@ -18,43 +18,43 @@ import org.apache.commons.logging.LogFactory;
 @ViewScoped
 public class StartupError implements Serializable {
 
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = 1L;
-	@SuppressWarnings("unused")
-	private static final Log LOGGER = LogFactory.getLog(StartupError.class);
-	private String error;
+  /**
+   *
+   */
+  private static final long serialVersionUID = 1L;
+  @SuppressWarnings("unused")
+  private static final Log LOGGER = LogFactory.getLog(StartupError.class);
+  private String error;
 
 
 
-	/**
-	 *
-	 */
-	public StartupError() {
-	}
+  /**
+   *
+   */
+  public StartupError() {
+  }
 
-	/**
-	 *
-	 *
-	 */
-	@PostConstruct
-	public void init() {
-		error = "Server start error:<br/>" + AuthorizationFilter.errorDescription;
-	}
+  /**
+   *
+   *
+   */
+  @PostConstruct
+  public void init() {
+    error = "<span style='font-size:20px;font-weight:bold'>Server start error:</span><br/>" + AuthorizationFilter.errorDescription;
+  }
 
-	/**
-	 * @return the error
-	 */
-	public String getError() {
-		return error;
-	}
+  /**
+   * @return the error
+   */
+  public String getError() {
+    return error;
+  }
 
-	/**
-	 * @param error the error to set
-	 */
-	public void setError(String error) {
-		this.error = error;
-	}
+  /**
+   * @param error the error to set
+   */
+  public void setError(String error) {
+    this.error = error;
+  }
 
 }

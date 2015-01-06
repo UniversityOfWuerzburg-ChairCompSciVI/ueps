@@ -1,6 +1,6 @@
 package de.uniwue.info6.database.jdbc;
 
-import static de.uniwue.info6.misc.properties.PropString.SCENARIO_RESOURCES;
+import static de.uniwue.info6.misc.properties.PropString.SCENARIO_RESOURCES_PATH;
 import static de.uniwue.info6.misc.properties.PropertiesFile.MAIN_CONFIG;
 
 import java.io.BufferedWriter;
@@ -17,12 +17,16 @@ import org.apache.commons.logging.LogFactory;
 import de.uniwue.info6.database.map.User;
 import de.uniwue.info6.database.map.daos.UserDao;
 import de.uniwue.info6.misc.properties.Cfg;
+import de.uniwue.info6.misc.properties.PropBool;
+import de.uniwue.info6.misc.properties.PropertiesFile;
+import de.uniwue.info6.webapp.admin.UserRights;
 import de.uniwue.info6.webapp.session.SessionListener;
 
 public class ConnectionTools extends Thread {
 
   private UserDao dao;
-  private final static String SCRIPT_PATH = Cfg.inst().getProp(MAIN_CONFIG,SCENARIO_RESOURCES);
+  private final static String SCRIPT_PATH = Cfg.inst().getProp(MAIN_CONFIG,
+      SCENARIO_RESOURCES_PATH);
   private static final Log LOGGER = LogFactory.getLog(ConnectionTools.class);
 
   private static final String dummyUser = "DEBUG_USER";
@@ -30,13 +34,15 @@ public class ConnectionTools extends Thread {
   private static final String RESOURCE_PATH = "scn";
   private static final String SUB_DIR = "0";
 
-  private static final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
-  private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+  private static final SimpleDateFormat timeFormat = new SimpleDateFormat(
+    "HH:mm:ss");
+  private static final SimpleDateFormat dateFormat = new SimpleDateFormat(
+    "dd.MM.yyyy");
 
-  private static final SimpleDateFormat dateFileSession = new SimpleDateFormat("yyyy_MM_dd");
-  private static final SimpleDateFormat dateFileExecuter = new SimpleDateFormat("yyyy_MM_dd-HH");
-
-  private static boolean LOG_STATS = true;
+  private static final SimpleDateFormat dateFileSession = new SimpleDateFormat(
+    "yyyy_MM_dd");
+  private static final SimpleDateFormat dateFileExecuter = new SimpleDateFormat(
+    "yyyy_MM_dd-HH");
 
   private String executerStatsFile;
   private String sessionStatsFile;
@@ -58,7 +64,6 @@ public class ConnectionTools extends Thread {
     return instance;
   }
 
-
   /**
    *
    */
@@ -72,6 +77,7 @@ public class ConnectionTools extends Thread {
    *
    * @see Runnable#run()
    */
+  @Override
   public void run() {
     this.currentThread = Thread.currentThread();
     while (!currentThread.isInterrupted()) {
@@ -84,22 +90,60 @@ public class ConnectionTools extends Thread {
           dao.insertNewInstance(user);
         }
 
-        if (LOG_STATS) {
-          initStatsLog();
-
-          Map<Date, String> executerMap = SessionListener.getExecuterStats();
-          if (executerMap != null) {
-            String executerOutput = hashMapToOutput(executerMap);
-            logExecuterStats(executerOutput);
-            executerMap.clear();
+        // add admin users if not found in database {{{
+        String[] admins = new UserRights().initialize().getAdminsFromConfigFile();
+        for (String adminId : admins) {
+          User adminUser = dao.getById(adminId.trim());
+          if (adminUser == null) {
+            adminUser = new User();
+            adminUser.setId(adminId);
+            adminUser.setIsAdmin(true);
+            dao.insertNewInstance(adminUser);
+            System.err.println("INFO (ueps): Admin user with id: \"" + adminId + "\" added");
           }
+        }
+        // }}}
 
-          Map<Date, String> sessionMap = SessionListener.getSessionStats();
-          if (sessionMap != null) {
-            String sessionOutput = hashMapToOutput(sessionMap);
-            logSessionStats(sessionOutput);
-            sessionMap.clear();
+
+        // TODO: DEBUG
+        boolean debugMode = Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG, PropBool.DEBUG_MODE);
+        if (debugMode) {
+          String[] test = new String[] {"dozent_1", "dozent_2", "student_1", "student_2"};
+          for (String testUserId : test) {
+            User testUser = dao.getById(testUserId.trim());
+            if (testUser == null) {
+              testUser = new User();
+              testUser.setId(testUserId);
+              if (testUserId.startsWith("dozent")) {
+                testUser.setIsLecturer(true);
+              }
+              dao.insertNewInstance(testUser);
+              System.err.println("INFO (ueps): Test user with id: \"" + testUserId + "\" added");
+            }
           }
+        }
+
+        // log performance stats
+        // quick and dirty log, do not use in a productive environment
+        boolean logPerformance = Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG, PropBool.LOG_PERFORMANCE);
+        if (logPerformance) {
+          // initStatsLog();
+
+          // Map<Date, String> executerMap = SessionListener
+          //                                 .getExecuterStats();
+          // if (executerMap != null) {
+          //   String executerOutput = hashMapToOutput(executerMap);
+          //   logExecuterStats(executerOutput);
+          //   executerMap.clear();
+          // }
+
+          // Map<Date, String> sessionMap = SessionListener
+          //                                .getSessionStats();
+          // if (sessionMap != null) {
+          //   String sessionOutput = hashMapToOutput(sessionMap);
+          //   logSessionStats(sessionOutput);
+          //   sessionMap.clear();
+          // }
         }
 
         LOGGER.info("AUTO RECONNECT TO DATABASE: " + new Date());
@@ -123,13 +167,14 @@ public class ConnectionTools extends Thread {
 
     String date = dateFileExecuter.format(new Date());
 
-    this.executerStatsFile = SCRIPT_PATH + File.separator + RESOURCE_PATH + File.separator
-        + SUB_DIR + File.separator + STATS_DIR + File.separator + "executer_log_" + date
-        + "_00.csv";
+    this.executerStatsFile = SCRIPT_PATH + File.separator + RESOURCE_PATH
+                             + File.separator + SUB_DIR + File.separator + STATS_DIR
+                             + File.separator + "executer_log_" + date + "_00.csv";
 
     date = dateFileSession.format(new Date());
-    this.sessionStatsFile = SCRIPT_PATH + File.separator + RESOURCE_PATH + File.separator + SUB_DIR
-        + File.separator + STATS_DIR + File.separator + "session_log_" + date + ".csv";
+    this.sessionStatsFile = SCRIPT_PATH + File.separator + RESOURCE_PATH
+                            + File.separator + SUB_DIR + File.separator + STATS_DIR
+                            + File.separator + "session_log_" + date + ".csv";
 
     File parent = new File(this.executerStatsFile).getParentFile();
 
@@ -153,8 +198,8 @@ public class ConnectionTools extends Thread {
    */
   private synchronized void logExecuterStats(String string) {
     if (string != null && !string.replaceAll("\\s", "").isEmpty()) {
-      try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(executerStatsFile,
-          true)))) {
+      try (PrintWriter out = new PrintWriter(new BufferedWriter(
+            new FileWriter(executerStatsFile, true)))) {
         out.println(string);
       } catch (Exception e) {
         LOGGER.error("COULD NOT LOG EXECUTER STATS.", e);
@@ -169,8 +214,8 @@ public class ConnectionTools extends Thread {
    */
   private synchronized void logSessionStats(String string) {
     if (string != null && !string.replaceAll("\\s", "").isEmpty()) {
-      try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(sessionStatsFile,
-          true)))) {
+      try (PrintWriter out = new PrintWriter(new BufferedWriter(
+            new FileWriter(sessionStatsFile, true)))) {
         out.println(string);
       } catch (Exception e) {
         LOGGER.error("COULD NOT LOG SESSION STATS.", e);
@@ -190,8 +235,8 @@ public class ConnectionTools extends Thread {
       for (Date date : map.keySet()) {
         String value = map.get(date).trim();
         if (!value.equals(oldvalue)) {
-          buffer.append(dateFormat.format(date) + "\t" + timeFormat.format(date) + "\t" + value
-              + "\n");
+          buffer.append(dateFormat.format(date) + "\t"
+                        + timeFormat.format(date) + "\t" + value + "\n");
           oldvalue = value;
         }
       }
@@ -207,6 +252,7 @@ public class ConnectionTools extends Thread {
    *
    */
   public void cleanUp() {
-    this.currentThread.interrupt();
+    if (this.currentThread != null)
+      this.currentThread.interrupt();
   }
 }

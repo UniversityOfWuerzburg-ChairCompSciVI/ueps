@@ -5,191 +5,205 @@ var synctime = true;
 var edit_url = "";
 
 function setEditUrl(url) {
-	this.edit_url = url;
-	jQuery( ".exercise_class" ).dblclick(function() {
-	  window.location.href = url;
-	});
+  this.edit_url = url;
+  jQuery( ".exercise_class" ).dblclick(function() {
+    window.location.href = url;
+  });
 }
 
 // jQuery('.relevant_table_popup').dialog({
-// 	modal: true,
-// 	height: 'auto',
-// 	width: 'auto'
+//  modal: true,
+//  height: 'auto',
+//  width: 'auto'
 // });
 
 jQuery(document).ready(function() {
-	var delay = parseInt(jQuery("[id*=sessionTime]").html());
-	function countdown() {
-		delay = parseInt(jQuery("[id*=sessionTime]").html());
-		setTimeout(countdown, 1000);
-		delay--;
-		if (delay < 0) {
-			delay = 0;
-		} else {
-			jQuery('[id*=sessionTime]').html(delay);
-		}
-	}
-	countdown();
+  var delay = parseInt(jQuery("[id*=sessionTime]").html());
+  function countdown() {
+    delay = parseInt(jQuery("[id*=sessionTime]").html());
+    setTimeout(countdown, 1000);
+    delay--;
+    if (delay < 0) {
+      delay = 0;
+    } else {
+      jQuery('[id*=sessionTime]').html(delay);
+    }
+  }
+  countdown();
 });
 
 
 jQuery.ajaxSetup({
-	error : handleXhrError,
-	success : handleSuccess
+  error : handleXhrError,
+  success : handleSuccess
 });
 
 function handleXhrError(xhr) {
-	startAjaxStatus();
-	setTimeout("ajax_error_dialog.show()", 3000);
+  startAjaxStatus();
+  setTimeout("ajax_error_dialog.show()", 3000);
 }
 
 function handleSuccess(xhr) {
-	if (!block) {
-		blockUpdate();
-		syncSessionDisplay();
-		setTimeout("unblockUpdate()", 2000);
-	}
+  if (!block) {
+    blockUpdate();
+    syncSessionDisplay();
+    setTimeout("unblockUpdate()", 2000);
+  }
 }
 
 function syncSessionDisplay() {
-	if (synctime) {
-		lazyload();
-		lazyload_online();
-	}
+  if (synctime) {
+    lazyload();
+    lazyload_online();
+  }
 }
 
 function blockUpdate() {
-	block = true;
+  block = true;
 }
 
 function unblockUpdate() {
-	block = false;
+  block = false;
 }
 
 function startAjaxStatus() {
-	jQuery("#ajaxStatusPanel_prestart").css({
-		display : "block"
-	});
-	setTimeout("endAjaxStatus()", 1500);
+  jQuery("#ajaxStatusPanel_prestart").css({
+    display : "block"
+  });
+  setTimeout("endAjaxStatus()", 1500);
 }
 
 function endAjaxStatus() {
-	jQuery("#ajaxStatusPanel_prestart").css({
-		display : "none"
-	});
+  jQuery("#ajaxStatusPanel_prestart").css({
+    display : "none"
+  });
 
-	jQuery("#ajaxStatusPanel_default").css({
-		display : "none"
-	});
+  jQuery("#ajaxStatusPanel_default").css({
+    display : "none"
+  });
 }
 
 function collapseIntroduction() {
-	startAjaxStatus();
-	intro.unselect(0);
+  startAjaxStatus();
+  intro.unselect(0);
 }
 
 function editLastDatatableRow() {
-	jQuery('.ui-datatable-tablewrapper tr').last().find('span.ui-icon-pencil')
-			.each(function() {
-				jQuery(this).click()
-			});
+  jQuery('.ui-datatable-tablewrapper tr').last().find('span.ui-icon-pencil')
+      .each(function() {
+        jQuery(this).click()
+      });
 }
 
 jQuery(document).ready(function() {
 
-	if (detectIE()) {
-  	jQuery("#shitty_internet_explorer").css({
-  		display : "block"
-  	});
-	}
+  if (detectIE()) {
+    jQuery("#shitty_internet_explorer").css({
+      display : "block"
+    });
+  }
 
-	jQuery('.tree_description').pulsate({
-	 color: '#DCE0FF',
-  	 repeat: 3  
-	});
+  jQuery('.tree_description').pulsate({
+   color: '#DCE0FF',
+     repeat: 3
+  });
 
-	jQuery('.admin_help_text').pulsate({
-	 color: '#FFE5E5',
-  	 repeat: 2  
-	});
+  jQuery('.admin_help_text').pulsate({
+   color: '#FFE5E5',
+     repeat: 2
+  });
 
-//	jQuery('.unrated_tab').click(function() {
-//		startAjaxStatus();
-//		setTimeout("startAjaxStatus()", 500);
-//	});
-//	jQuery('.rated_tab').click(function() {
-//		startAjaxStatus();
-//		setTimeout("startAjaxStatus()", 500);
-//	});
-	jQuery( ".tree_doubleclick" ).dblclick(function() {
-	 	this.parentNode.parentNode.firstChild.click();
-	});
+//  jQuery('.unrated_tab').click(function() {
+//    startAjaxStatus();
+//    setTimeout("startAjaxStatus()", 500);
+//  });
+//  jQuery('.rated_tab').click(function() {
+//    startAjaxStatus();
+//    setTimeout("startAjaxStatus()", 500);
+//  });
+
+  jQuery( ".tree_doubleclick" ).dblclick(function() {
+    // this.parentNode.parentNode.firstChild.click();
+  });
+
+  jQuery( ".tree_doubleclick" ).click(function() {
+    // jQuery("#form\\:exerciseTree\\:0_0 .tree_doubleclick").trigger({
+    //   type: 'mousedown',
+    //   which: 3
+    // }).trigger({
+    //   type: 'mouseup',
+    //   which: 3
+    // });
+
+      // tableMenu.show();
+      // alert ('fuck');
+  });
 });
 
 
 function pulsateButton() {
-	jQuery('#usertask\\:user_result_button').pulsate({
-	 color: '#D3D8FF',
-  	 repeat: 2  
-	});
+  jQuery('#usertask\\:user_result_button').pulsate({
+   color: '#D3D8FF',
+     repeat: 2
+  });
 
-	jQuery('#usertask\\:result_button').pulsate({
-	 color: '#D3D8FF',
-  	 repeat: 2  
-	});
+  jQuery('#usertask\\:result_button').pulsate({
+   color: '#D3D8FF',
+     repeat: 2
+  });
 
-	jQuery('#usertask\\:feedback_accordion').pulsate({
-	 color: '#D3D8FF',
-  	 repeat: 2  
-	});
+  jQuery('#usertask\\:feedback_accordion').pulsate({
+   color: '#D3D8FF',
+     repeat: 2
+  });
 
-	jQuery('#saved_query_box').pulsate({
-	 color: '#D3D8FF',
-  	 repeat: 2  
-	});
+  jQuery('#saved_query_box').pulsate({
+   color: '#D3D8FF',
+     repeat: 2
+  });
 }
 
 var siteFunctions = {
-	// patch to fix a problem that the context menu disappears after update
-	// delay the show to occure after the update
-	patchContextMenuShow : function() {
-		'use strict';
-		var protShow = PrimeFaces.widget.ContextMenu.prototype.show;
-		siteFunctions.patchContextMenuShow.lastEvent = null;
-		PrimeFaces.widget.ContextMenu.prototype.show = function(e) {
-			var ret;
-			if (e) {
-				siteFunctions.patchContextMenuShow.lastEvent = e;
-				siteFunctions.patchContextMenuShow.lastEventArg = arguments;
-				siteFunctions.patchContextMenuShow.lastEventContext = this;
-			} else if (siteFunctions.patchContextMenuShow.lastEvent) {
-				ret = protShow.apply(
-						siteFunctions.patchContextMenuShow.lastEventContext,
-						siteFunctions.patchContextMenuShow.lastEventArg);
-				siteFunctions.patchContextMenuShow.lastEvent = null;
-			}
-			return ret;
-		};
-	}
+  // patch to fix a problem that the context menu disappears after update
+  // delay the show to occure after the update
+  patchContextMenuShow : function() {
+    'use strict';
+    var protShow = PrimeFaces.widget.ContextMenu.prototype.show;
+    siteFunctions.patchContextMenuShow.lastEvent = null;
+    PrimeFaces.widget.ContextMenu.prototype.show = function(e) {
+      var ret;
+      if (e) {
+        siteFunctions.patchContextMenuShow.lastEvent = e;
+        siteFunctions.patchContextMenuShow.lastEventArg = arguments;
+        siteFunctions.patchContextMenuShow.lastEventContext = this;
+      } else if (siteFunctions.patchContextMenuShow.lastEvent) {
+        ret = protShow.apply(
+            siteFunctions.patchContextMenuShow.lastEventContext,
+            siteFunctions.patchContextMenuShow.lastEventArg);
+        siteFunctions.patchContextMenuShow.lastEvent = null;
+      }
+      return ret;
+    };
+  }
 };
 
 jQuery(document).ready(function() {
-	'use strict';
-	try {
-		siteFunctions.patchContextMenuShow();
-	} catch (e) {
-		console.error(e);
-	}
+  'use strict';
+  try {
+    siteFunctions.patchContextMenuShow();
+  } catch (e) {
+    console.error(e);
+  }
 });
 
 function expand_tree() {
-	var treeExcludingRoot = jQuery(".ui-treenode-children").first();
-	jQuery(".ui-tree-toggler.ui-icon-triangle-1-e", treeExcludingRoot).click();
+  var treeExcludingRoot = jQuery(".ui-treenode-children").first();
+  jQuery(".ui-tree-toggler.ui-icon-triangle-1-e", treeExcludingRoot).click();
 }
 
 function collapse_tree() {
-	var treeExcludingRoot = jQuery(".ui-treenode-children").first();
-	jQuery(".ui-tree-toggler.ui-icon-triangle-1-s", treeExcludingRoot).click();
+  var treeExcludingRoot = jQuery(".ui-treenode-children").first();
+  jQuery(".ui-tree-toggler.ui-icon-triangle-1-s", treeExcludingRoot).click();
 }
 
 
@@ -209,11 +223,11 @@ function collapse_tree() {
 // });
 
 jQuery(document).ready(function() {
-	jQuery("#gif_image").hover(function() {
-		jQuery(this).attr("src", "/sql/resources/img/help.gif");
-	}, function() {
-		jQuery(this).attr("src", "/sql/resources/img/help_dea.gif");
-	});
+  jQuery("#gif_image").hover(function() {
+    jQuery(this).attr("src", "/sql/resources/img/help.gif");
+  }, function() {
+    jQuery(this).attr("src", "/sql/resources/img/help_dea.gif");
+  });
 });
 
 
@@ -254,14 +268,14 @@ function detectIE() {
     if (msie > 0) {
         // IE 10 or older => return version number
         // return parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);
-		return true;
+    return true;
     }
 
     if (trident > 0) {
         // IE 11 (or newer) => return version number
         var rv = ua.indexOf('rv:');
         //return parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10);
-		return true;
+    return true;
     }
 
     // other browser
@@ -269,7 +283,79 @@ function detectIE() {
 }
 
 function hideIEMessage() {
-	jQuery("#shitty_internet_explorer").css({
-		display : "none"
-	});
+  jQuery("#shitty_internet_explorer").css({
+    display : "none"
+  });
 }
+
+// var siteFunctions = {
+//     //patch to fix a problem that the context menu disappears after update
+//     //delay the show to occure after the update
+//     patchContextMenuShow: function() {
+//         'use strict';
+//         var protShow = PrimeFaces.widget.ContextMenu.prototype.show;
+//         siteFunctions.patchContextMenuShow.lastEvent = null;
+//         PrimeFaces.widget.ContextMenu.prototype.show = function(e) {
+//             var ret;
+//             if (e) {
+// //                console.log('saving last event');
+//                 siteFunctions.patchContextMenuShow.lastEvent = e;
+//                 siteFunctions.patchContextMenuShow.lastEventArg = arguments;
+//                 siteFunctions.patchContextMenuShow.lastEventContext = this;
+//             } else if (siteFunctions.patchContextMenuShow.lastEvent) {
+// //                console.log('executing last event');
+//                 ret = protShow.apply(siteFunctions.patchContextMenuShow.lastEventContext, siteFunctions.patchContextMenuShow.lastEventArg);
+// //                console.log('clearing last event');
+//                 siteFunctions.patchContextMenuShow.lastEvent = null;
+//             }
+//             return ret;
+//         };
+//     }
+// };
+
+// jQuery(document).ready(function() {
+//     'use strict';
+//     try {
+//         siteFunctions.patchContextMenuShow();
+//     } catch (e) {
+//         console.error(e);
+//     }
+// });
+
+// var currentEvent;
+// jQuery(document).ready(function() {
+//   PrimeFaces.widget.ContextMenu.prototype.show = function(e) {
+//      //hide other contextmenus if any
+//      jQuery(document.body).children('.ui-contextmenu:visible').hide();
+
+//      if(e) {
+//         currentEvent = e;
+//      }
+
+//      var win = jQuery(window),
+//      left = e.pageX,
+//      top = e.pageY,
+//      width = this.jq.outerWidth(),
+//      height = this.jq.outerHeight();
+
+//      //collision detection for window boundaries
+//      if((left + width) > (win.width())+ win.scrollLeft()) {
+//         left = left - width;
+//      }
+//      if((top + height ) > (win.height() + win.scrollTop())) {
+//         top = top - height;
+//      }
+
+//      if(this.cfg.beforeShow) {
+//         this.cfg.beforeShow.call(this);
+//      }
+
+//      this.jq.css({
+//         'left': left,
+//         'top': top,
+//         'z-index': ++PrimeFaces.zindex
+//      }).show();
+
+//      e.preventDefault();
+//   };
+// });

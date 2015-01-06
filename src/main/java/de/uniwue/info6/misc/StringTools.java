@@ -154,7 +154,7 @@ public class StringTools {
     for (int i = substrings.size() - 1; i >= 0; i--) {
       Integer sub = substrings.get(i);
       queryText = queryText.substring(0, sub) + user.getId() + "_"
-          + queryText.substring(sub, queryText.length());
+                  + queryText.substring(sub, queryText.length());
     }
 
     return queryText;
@@ -400,7 +400,7 @@ public class StringTools {
         String newName = path.toLowerCase();
         // delete date-field
         newName = newName.replaceAll("[ü}]", "ue").replaceAll("[ä]", "ae").replaceAll("[ö]", "oe")
-            .replaceAll("[ß]", "ss").replaceAll("[^a-z0-9&-]", "_").replaceAll("[_]{2,}", "_");
+                  .replaceAll("[ß]", "ss").replaceAll("[^a-z0-9&]", "_").replaceAll("[_]{2,}", "_");
 
         while (newName.endsWith("_")) {
           newName = newName.substring(0, newName.length() - 1);

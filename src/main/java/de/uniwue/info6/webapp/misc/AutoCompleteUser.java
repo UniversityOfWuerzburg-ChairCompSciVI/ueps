@@ -133,18 +133,21 @@ public class AutoCompleteUser {
     if (!rightsMode) {
       results.add("[" + Cfg.inst().getProp(DEF_LANGUAGE, "ASSERTION.EMPTY_FIELD") + "]");
     }
+
     if (users != null && rights != null) {
       for (User user : users) {
         if (user.getId().contains(query.trim())) {
+          // System.out.println(user.getId() + " " + query.trim());
           results.add(user.getId());
         }
       }
     }
 
-    if (results.size() <= 1 && notFound != null) {
+    if (results.size() < 1 && notFound != null) {
       results = new ArrayList<String>();
       results.add(notFound);
     }
+
     return results;
   }
 }

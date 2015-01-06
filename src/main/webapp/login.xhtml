@@ -1,0 +1,18 @@
+<ui:composition template="/templates/errorpage.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+xmlns:p="http://primefaces.org/ui">
+ <ui:define name="header_text">
+  <span class="error"></span>
+  <script type="text/javascript">synctime=false; jQuery.ajaxSetup({ error: handleXhrError }); function
+  handleXhrError(xhr){}; setTimeout("endAjaxStatus()", 200);</script>
+ </ui:define>
+ <ui:define name="content">
+  <p id="session_expired_button">
+   <span class="login-loading-text">Loading...</span>
+   <br />
+   <br />
+   <br />
+   <h:graphicImage class="login-loading" value="/resources/img/#{config['IMG.PROGRESSBAR']}" />
+  </p>
+ </ui:define>
+</ui:composition>

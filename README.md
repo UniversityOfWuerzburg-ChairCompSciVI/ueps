@@ -6,6 +6,7 @@
 ## Kurzanleitung zur Installation
 
 ``git clone --depth=1 https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps``<br/>
+[Direkter Download](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/archive/master.zip)
 
 ``src/main/resources/config.properties``<br/>
 

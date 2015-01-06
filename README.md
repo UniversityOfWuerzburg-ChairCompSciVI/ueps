@@ -129,7 +129,7 @@ pom.xml
 
 ## Neues Szenario erstellen
 TODO :: TODO :: TODO :: TODO
-![](http://kolbasa.github.io/ueps/screenshots/ueps_neu_10.png)
+![](http://kolbasa.github.io/ueps/screenshots/ueps_10.png)
 
 ### Aufgabengruppe erstellen
 TODO :: TODO :: TODO :: TODO

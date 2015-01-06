@@ -21,12 +21,13 @@
    MASTER_DBUSER = test_user
    MASTER_DBPASS = 3ti4k4tm270kg
    ```
-
+  <!--- ` -->
    Der unter ``MASTER_DBUSER`` festgelegte Nutzer sollte folgende Rechte besitzen:
   ```
   GRANT SELECT, INSERT, UPDATE, DELETE, ALTER,
   CREATE, DROP, GRANT OPTION, LOCK TABLES
   ```
+  <!--- ` -->
   Die aufgelisteten Rechte müssen für die unter ``MASTER_DBNAME`` angegebene
   Datenbank sowie für neu erstellte Datenbanken gelten. Eine Rechteskript könnte
   beispielsweise folgendermaßen aussehen:
@@ -35,9 +36,14 @@
   LOCK TABLES, ON *.* TO '$MASTER_DBUSER$'@'$MASTER_DBHOST$'
   IDENTIFIED BY '$MASTER_DBPASS$';
   ```
+  <!--- ` -->
 
-``chmod +x *.sh``<br/>
-``./build-package.sh``<br/>
+5. Kompilieren:
+   1. Linux
+      ``chmod +x *.sh``<br/>
+      ``./build-package.sh``
+   2. Windows
+      ``./build-package.bat``
 
 TODO :: TODO :: TODO :: TODO
 

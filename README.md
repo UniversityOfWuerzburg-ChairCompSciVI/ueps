@@ -49,6 +49,8 @@ tomcat-users.xml<br/>
 <user username="admin" password="testing" roles="manager-script"/>
 ```
 
+<!--- ` -->
+
 pom.xml
 ```
 <plugin>
@@ -64,8 +66,10 @@ pom.xml
   <password>testing</password>
   <path>/ueps</path>
 </configuration>
-</plugin>```
+</plugin>
+```
 
+<!--- ` -->
 
 ### Dokumentation
 <!--- TODO: -->

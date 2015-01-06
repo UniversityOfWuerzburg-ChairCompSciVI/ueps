@@ -51,6 +51,8 @@
 
 6. Die kompilierte ``ueps.war``-Datei sollte jetzt im Wurzelverzeichnis zu finden sein.
 
+7. ÜPS lässt sich alternativ auch [direkt mit Maven deployen](#DeployMaven).
+
 TODO :: TODO :: TODO :: TODO
 
 ## Systemanforderungen
@@ -60,6 +62,7 @@ TODO :: TODO :: TODO :: TODO
 
 ## Konfiguration und Deploy
 
+<a name="DeployMaven"></a>
 ### Deploy mit Maven
 tomcat-users.xml<br/>
 ```

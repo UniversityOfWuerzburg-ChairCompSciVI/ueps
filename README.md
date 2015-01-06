@@ -46,8 +46,8 @@
      ``./build-package.sh``<br/>
 
    * Unter Windows<br/>
-     Einfach folgendes Skript auführen:<br/>
-     ``./build-package.bat``
+     Einfach folgendes Skript auführen (Doppelklick genügt):<br/>
+     ``build-package.bat``
 
 6. Die kompilierte ``ueps.war``-Datei sollte jetzt im Wurzelverzeichnis zu finden sein.
 

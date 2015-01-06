@@ -54,9 +54,11 @@
      Einfach folgendes Skript auführen (Doppelklick genügt):<br/>
      ``build-package.bat``
 
-6. Die kompilierte ``ueps.war``-Datei sollte jetzt im Wurzelverzeichnis zu finden sein.
+6. Die kompilierte ``ueps.war``-Datei sollte jetzt deploy-fertig im Wurzelverzeichnis zu finden sein.
 
 7. ÜPS lässt sich alternativ auch [direkt mit Maven deployen](#DeployMaven).
+
+<br/><br/>
 
 Mit der Standard-Konfiguration werden beim Start der Anwendungen folgenden Datenbanken erstellt:
 * ``ueps_master`` (festgelegt durch ``MASTER_DBNAME``)

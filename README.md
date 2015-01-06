@@ -24,21 +24,19 @@ TODO :: TODO :: TODO :: TODO
     ``<user username="admin" password="testing" roles="manager-script"/>``
 
     pom.xml<br/>
-					tomcat7-maven-plugin
-
     ```
     <plugin>
     <groupId>org.apache.tomcat.maven</groupId>
     <artifactId>tomcat7-maven-plugin</artifactId>
     ...
     <configuration>
-    <url>http://127.0.0.1:8080/manager/text</url>
-    <mode>war</mode>
-    <warFile>ueps.war</warFile>
-    <server>TomcatServer</server>
-    <username>admin</username>
-    <password>testing</password>
-    <path>/ueps</path>
+      <url>http://127.0.0.1:8080/manager/text</url>
+      <mode>war</mode>
+      <warFile>ueps.war</warFile>
+      <server>TomcatServer</server>
+      <username>admin</username>
+      <password>testing</password>
+      <path>/ueps</path>
     </configuration>
     </plugin>
     ```

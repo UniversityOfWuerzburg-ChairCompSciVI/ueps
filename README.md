@@ -38,8 +38,9 @@
   ```
   <!--- ` -->
 
-5. Kompilieren:
+5. Anschließend kann die Anwendung kompiliert werden:
    * Unter Linux<br/>
+     Zuerst müssen einigen Build-Skripte im ``ueps``-Wurzelverzeichnis ausführbar gemacht werden:<br/>
      ``chmod +x *.sh``<br/>
      ``./build-package.sh``
    * Unter Windows<br/>

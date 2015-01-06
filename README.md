@@ -24,7 +24,7 @@ TODO :: TODO :: TODO :: TODO
     ``<user username="admin" password="testing" roles="manager-script"/>``
 
     pom.xml<br/>
-				tomcat7-maven-plugin
+					tomcat7-maven-plugin
 
     ```
     <plugin>

@@ -27,12 +27,14 @@
   GRANT SELECT, INSERT, UPDATE, DELETE, ALTER,
   CREATE, DROP, GRANT OPTION, LOCK TABLES
   ```
-
-```
-GRANT SELECT, INSERT, UPDATE, DELETE, ALTER, CREATE, DROP, GRANT OPTION,
-LOCK TABLES, ON *.* TO '$MASTER_DBUSER$'@'$MASTER_DBHOST$'
-IDENTIFIED BY '$MASTER_DBPASS$';
-```
+  Die aufgelisteten Rechte müssen für die unter ``MASTER_DBNAME`` angegebene
+  Datenbank sowie für neu erstellte Datenbanken gelten. Eine Rechteskript könnte
+  beispielsweise folgendermaßen aussehen:
+  ```
+  GRANT SELECT, INSERT, UPDATE, DELETE, ALTER, CREATE, DROP, GRANT OPTION,
+  LOCK TABLES, ON *.* TO '$MASTER_DBUSER$'@'$MASTER_DBHOST$'
+  IDENTIFIED BY '$MASTER_DBPASS$';
+  ```
 
 ``chmod +x *.sh``<br/>
 ``./build-package.sh``<br/>

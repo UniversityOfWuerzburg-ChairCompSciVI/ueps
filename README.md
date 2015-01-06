@@ -2,15 +2,14 @@
 **ÜPS** (**Ü**bungs-**P**rogramm für **S**QL) ist ein webbasiertes Trainingssystem zum Erlernen der Datenbanksprache SQL.
 
 ![](res/screenshots/ueps_neu_02.png)
-![](res/screenshots/ueps_neu_03.png)
 
 ## Kurzanleitung zur Installation
 
-``git clone --depth=1 https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps``
-``cd ueps``
-``chmod +x *.sh``
+``git clone --depth=1 https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps``<br/>
+``cd ueps``<br/>
+``chmod +x *.sh``<br/>
 
-``src/main/resources/config.properties``
+``src/main/resources/config.properties``<br/>
 
 ```
 MASTER_DBHOST               = 127.0.0.1
@@ -27,7 +26,7 @@ TO '$MASTER_DBUSER$'@'$MASTER_DBHOST$'
 IDENTIFIED BY '$MASTER_DBPASS$';
 ```
 
-``./build-package.sh``
+``./build-package.sh``<br/>
 
 TODO :: TODO :: TODO :: TODO
 

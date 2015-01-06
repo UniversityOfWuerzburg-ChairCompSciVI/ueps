@@ -55,8 +55,8 @@
 
 Mit der Standard-Konfiguration werden beim Start der Anwendungen folgenden Datenbanken erstellt:
 * ``ueps_master`` (von ``MASTER_DBNAME``)
-* ueps_slave_001
-* ueps_slave_002
+* ``ueps_slave_001``
+* ``ueps_slave_002``
 
 
 ## Systemanforderungen

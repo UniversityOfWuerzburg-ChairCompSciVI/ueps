@@ -42,9 +42,14 @@
    * Unter Linux<br/>
      Zuerst müssen einigen Build-Skripte im Wurzelverzeichnis ausführbar gemacht werden:<br/>
      ``chmod +x *.sh``<br/>
-     ``./build-package.sh``
+     Dann einfach foldendes Skript ausführen
+     ``./build-package.sh``<br/>
+
    * Unter Windows<br/>
+     Einfach folgendes Skript auführen:<br/>
      ``./build-package.bat``
+
+6. Die kompilierte ``ueps.war``-Datei sollte jetzt im Wurzelverzeichnis zu finden sein.
 
 TODO :: TODO :: TODO :: TODO
 

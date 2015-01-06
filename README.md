@@ -72,6 +72,10 @@ Für die ``slave``-Datenbanken werden jeweils folgende Datenbanknutzer mit besch
 
 ## Konfiguration und Deploy
 
+### config.properties-Optionen
+#### Datenbankangaben
+TODO :: TODO :: TODO :: TODO
+
 <a name="DeployMaven"></a>
 ### Deploy mit Maven
 tomcat-users.xml<br/>
@@ -102,7 +106,7 @@ pom.xml
 
 <!--- ` -->
 
-### Dokumentation
+### Quellcodedokumentation
 <!--- TODO: -->
 [Doxygen Dokumentation](http://kolbasa.github.io/ueps/doxygen/)
 

@@ -75,22 +75,22 @@ Für die ``slave``-Datenbanken werden jeweils folgende Datenbanknutzer mit besch
 ### config.properties-Optionen
 TODO :: TODO :: TODO :: TODO
 
-### Datenbankangaben
+#### Datenbankangaben
 TODO :: TODO :: TODO :: TODO
 
-### Automatisierung der Installation
+#### Automatisierung der Installation
 TODO :: TODO :: TODO :: TODO
 
-### Nutzer-Authentifizierung
+#### Nutzer-Authentifizierung
 TODO :: TODO :: TODO :: TODO
 
-### Pfadangaben
+#### Pfadangaben
 TODO :: TODO :: TODO :: TODO
 
-### Aussehen anpassen
+#### Aussehen anpassen
 TODO :: TODO :: TODO :: TODO
 
-### Verschiedenes
+#### Verschiedenes
 TODO :: TODO :: TODO :: TODO
 
 <a name="DeployMaven"></a>

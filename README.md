@@ -23,7 +23,7 @@ TODO :: TODO :: TODO :: TODO
     ``<role rolename="manager-script"/>``<br/>
     ``<user username="admin" password="testing" roles="manager-script"/>``
 
-    pom.xml<br/>
+    pom.xml
     ```
     <plugin>
     <groupId>org.apache.tomcat.maven</groupId>

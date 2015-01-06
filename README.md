@@ -54,7 +54,7 @@
 7. ÜPS lässt sich alternativ auch [direkt mit Maven deployen](#DeployMaven).
 
 Mit der Standard-Konfiguration werden beim Start der Anwendungen folgenden Datenbanken erstellt:
-* ueps_master (von ``MASTER_DBNAME``)
+* ``ueps_master`` (von ``MASTER_DBNAME``)
 * ueps_slave_001
 * ueps_slave_002
 

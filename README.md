@@ -42,7 +42,7 @@
    * Unter Linux<br/>
      Zuerst müssen einigen Build-Skripte im Wurzelverzeichnis ausführbar gemacht werden:<br/>
      ``chmod +x *.sh``<br/>
-     Dann einfach foldendes Skript ausführen
+     Dann einfach foldendes Skript ausführen<br/>
      ``./build-package.sh``<br/>
 
    * Unter Windows<br/>

@@ -9,7 +9,10 @@
   ``git clone --depth=1 https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps``<br/>
   Alternativ auch als [direkter Download](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/archive/master.zip)
 
-``src/main/resources/config.properties``<br/>
+2. In das ``ueps``-Verzeichnis wechseln.
+
+3. Konfigurationsdatei in einem Editor öffnen: ``src/main/resources/config.properties``
+
 
 ```
 MASTER_DBHOST               = 127.0.0.1
@@ -30,7 +33,6 @@ LOCK TABLES, ON *.* TO '$MASTER_DBUSER$'@'$MASTER_DBHOST$'
 IDENTIFIED BY '$MASTER_DBPASS$';
 ```
 
-``cd ueps``<br/>
 ``chmod +x *.sh``<br/>
 ``./build-package.sh``<br/>
 

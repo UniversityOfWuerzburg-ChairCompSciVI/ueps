@@ -24,8 +24,7 @@
   <!--- ` -->
    Der unter ``MASTER_DBUSER`` festgelegte Nutzer sollte folgende Rechte besitzen:
   ```
-  GRANT SELECT, INSERT, UPDATE, DELETE, ALTER,
-  CREATE, DROP, GRANT OPTION, LOCK TABLES
+  SELECT, INSERT, UPDATE, DELETE, ALTER, CREATE, DROP, GRANT OPTION, LOCK TABLES
   ```
   <!--- ` -->
   Die aufgelisteten Rechte müssen für die unter ``MASTER_DBNAME`` angegebene

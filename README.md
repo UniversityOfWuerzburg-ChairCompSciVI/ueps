@@ -57,6 +57,10 @@ Mit der Standard-Konfiguration werden beim Start der Anwendungen folgenden Daten
 * ``ueps_slave_001`` (Datenbank für das erste Beispielszenario)
 * ``ueps_slave_002`` (Datenbank für das zweite Beispielszenario)
 
+Für die ``slave``-Datenbanken werden jeweils folgende Datenbanknutzer mit beschränkten Rechten erstellt:
+* ``ueps_001``
+* ``ueps_002``
+
 ## Systemanforderungen
 * Tomcat 7 oder höher
 * Maven (zum Kompilieren)

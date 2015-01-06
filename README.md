@@ -73,7 +73,24 @@ Für die ``slave``-Datenbanken werden jeweils folgende Datenbanknutzer mit besch
 ## Konfiguration und Deploy
 
 ### config.properties-Optionen
-#### Datenbankangaben
+TODO :: TODO :: TODO :: TODO
+
+### Datenbankangaben
+TODO :: TODO :: TODO :: TODO
+
+### Automatisierung der Installation
+TODO :: TODO :: TODO :: TODO
+
+### Nutzer-Authentifizierung
+TODO :: TODO :: TODO :: TODO
+
+### Pfadangaben
+TODO :: TODO :: TODO :: TODO
+
+### Aussehen anpassen
+TODO :: TODO :: TODO :: TODO
+
+### Verschiedenes
 TODO :: TODO :: TODO :: TODO
 
 <a name="DeployMaven"></a>

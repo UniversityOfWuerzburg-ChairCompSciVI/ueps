@@ -49,8 +49,6 @@ tomcat-users.xml<br/>
 <user username="admin" password="testing" roles="manager-script"/>
 ```
 
-<!--- ` -->
-
 pom.xml
 ```
 <plugin>
@@ -68,7 +66,6 @@ pom.xml
 </configuration>
 </plugin>```
 
-<!--- ` -->
 
 ### Dokumentation
 <!--- TODO: -->

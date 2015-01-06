@@ -3,6 +3,12 @@
 
 ![](http://kolbasa.github.io/ueps/screenshots/ueps_neu_02.png)
 
+## Systemanforderungen
+* Tomcat 7 oder höher
+  (Für diese Anleitung wird Tomcat 7 verwendet)
+* Maven 3 (zum Kompilieren)
+* MySQL 5
+
 ## Kurzanleitung zur Installation
 
 1. Quellcode herunterladen:<br/>
@@ -61,10 +67,6 @@ Für die ``slave``-Datenbanken werden jeweils folgende Datenbanknutzer mit besch
 * ``ueps_001``
 * ``ueps_002``
 
-## Systemanforderungen
-* Tomcat 7 oder höher
-* Maven (zum Kompilieren)
-* MySQL
 
 ## Konfiguration und Deploy
 

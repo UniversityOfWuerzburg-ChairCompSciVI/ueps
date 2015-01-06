@@ -24,7 +24,8 @@ TODO :: TODO :: TODO :: TODO
     ``<user username="admin" password="testing" roles="manager-script"/>``
 
     pom.xml
-    ```<plugin>
+    ``
+    <plugin>
     <groupId>org.apache.tomcat.maven</groupId>
     <artifactId>tomcat7-maven-plugin</artifactId>
     ...
@@ -38,7 +39,7 @@ TODO :: TODO :: TODO :: TODO
       <path>/ueps</path>
     </configuration>
     </plugin>
-    ```
+    ``
 
     ### Dokumentation
     <!--- TODO: -->

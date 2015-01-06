@@ -13,14 +13,14 @@
 
 3. Konfigurationsdatei in einem Editor öffnen: ``src/main/resources/config.properties``
 
-
-```
-MASTER_DBHOST               = 127.0.0.1
-MASTER_DBPORT               = 3306
-MASTER_DBNAME               = ueps_master
-MASTER_DBUSER               = test_user
-MASTER_DBPASS               = 3ti4k4tm270kg
-```
+4. Den Datenbank-Server und einen Nutzer festlegen:
+  ```
+  MASTER_DBHOST               = 127.0.0.1
+  MASTER_DBPORT               = 3306
+  MASTER_DBNAME               = ueps_master
+  MASTER_DBUSER               = test_user
+  MASTER_DBPASS               = 3ti4k4tm270kg
+  ```
 
 ```
 GRANT SELECT, INSERT, UPDATE, DELETE, ALTER,

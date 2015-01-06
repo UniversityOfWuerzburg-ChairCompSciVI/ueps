@@ -5,18 +5,20 @@
 ![](res/screenshots/ueps_neu_03.png)
 
 ## Kurzanleitung zur Installation
+
+``git clone --depth=1 https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps``
+
 TODO :: TODO :: TODO :: TODO
 
 ## Systemanforderungen
-* Tomcat 7 oder 8
+* Tomcat 7 oder höher
 * Maven (zum Kompilieren)
 * MySQL
 
-## Konfiguration
+## Konfiguration und Deploy
 TODO :: TODO :: TODO :: TODO
 
-## Kompilieren
-TODO :: TODO :: TODO :: TODO
+### Dokumentation
 
 ## Neues Szenario erstellen
 TODO :: TODO :: TODO :: TODO
@@ -36,5 +38,7 @@ TODO :: TODO :: TODO :: TODO
 
 ## Abgaben bewerten
 TODO :: TODO :: TODO :: TODO
+
+
 
 ## Screenshots

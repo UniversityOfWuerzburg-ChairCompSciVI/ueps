@@ -1,5 +1,29 @@
 package de.uniwue.info6.database.map.daos;
 
+/*
+ * #%L
+ * ************************************************************************
+ * ORGANIZATION  :  Institute of Computer Science, University of Wuerzburg
+ * PROJECT       :  UEPS - Uebungs-Programm fuer SQL
+ * FILENAME      :  DaoTools.java
+ * ************************************************************************
+ * %%
+ * Copyright (C) 2014 - 2015 Institute of Computer Science, University of Wuerzburg
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -28,8 +52,8 @@ public class DaoTools<T> implements Serializable {
 	// ******************************************************************
 
 	/**
-	 *
-	 */
+   *
+   */
 	private static final long serialVersionUID = 1L;
 	private static boolean STARTED = false;
 	private static final Log log = LogFactory.getLog(ExerciseDao.class);
@@ -41,8 +65,8 @@ public class DaoTools<T> implements Serializable {
 	// ******************************************************************
 
 	/**
-	 *
-	 */
+   *
+   */
 	public DaoTools(Class<T> typeClass) {
 		this.typeClass = typeClass;
 	}
@@ -58,9 +82,9 @@ public class DaoTools<T> implements Serializable {
 	}
 
 	/**
-	 *
-	 *
-	 */
+   *
+   *
+   */
 	protected synchronized void endTransaction(Session session) {
 		endTransaction(session, true);
 	}
@@ -71,14 +95,13 @@ public class DaoTools<T> implements Serializable {
 	 * @return
 	 */
 	protected synchronized Session getSession() {
-
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		if (!session.isOpen()) {
 			session = HibernateUtil.getSessionFactory().openSession();
 		}
+
 		session.setFlushMode(FlushMode.MANUAL);
 		ManagedSessionContext.bind(session);
-
 		return session;
 	}
 
@@ -89,7 +112,8 @@ public class DaoTools<T> implements Serializable {
 	 *
 	 * @throws Exception
 	 */
-	protected synchronized Session startTransaction(Object obj) throws Exception {
+	protected synchronized Session startTransaction(Object obj)
+			throws Exception {
 		try {
 			Session session = getSession();
 			int countRetries = 0;
@@ -111,37 +135,40 @@ public class DaoTools<T> implements Serializable {
 			}
 			return session;
 		} catch (Exception e) {
-			log.error("custom hibernate operation failed", e);
+			log.info("custom hibernate operation failed", e);
 			return null;
 		}
 	}
 
 	/**
-	 *
-	 *
-	 */
+   *
+   *
+   */
 	protected synchronized void endTransaction(Session session, boolean success) {
-		Transaction transaction = session.getTransaction();
-		try {
-			if (session.isOpen()) {
-				if (transaction != null && transaction.isActive()) {
-					ManagedSessionContext.unbind(HibernateUtil.getSessionFactory());
-					session.flush();
-					transaction.commit();
-				} else if (!success) {
-					if (transaction != null) {
-						transaction.rollback();
+		if (session != null) {
+			Transaction transaction = session.getTransaction();
+			try {
+				if (session.isOpen()) {
+					if (transaction != null && transaction.isActive()) {
+						ManagedSessionContext.unbind(HibernateUtil
+								.getSessionFactory());
+						session.flush();
+						transaction.commit();
+					} else if (!success) {
+						if (transaction != null) {
+							transaction.rollback();
+						}
 					}
 				}
-			}
-		} catch (Exception e) {
-			if (transaction != null) {
-				transaction.rollback();
-			}
-			log.error("custom hibernate operation failed", e);
-		} finally {
-			if (session != null && session.isConnected()) {
-				session.close();
+			} catch (Exception e) {
+				if (transaction != null) {
+					transaction.rollback();
+				}
+				log.error("custom hibernate operation failed", e);
+			} finally {
+				if (session != null && session.isConnected()) {
+					session.close();
+				}
 			}
 		}
 	}
@@ -163,9 +190,9 @@ public class DaoTools<T> implements Serializable {
 	}
 
 	/**
-	 *
-	 *
-	 */
+   *
+   *
+   */
 	public synchronized void updateObject(Object obj) {
 		Session session = null;
 		if (obj != null) {
@@ -190,26 +217,28 @@ public class DaoTools<T> implements Serializable {
 	public synchronized SessionFactory getSessionFactory() {
 		SessionFactory fac = null;
 		try {
-			fac = (SessionFactory) new InitialContext().lookup("SessionFactory");
+			fac = (SessionFactory) new InitialContext()
+					.lookup("SessionFactory");
 			if (fac == null) {
 				throw new NullPointerException(FACT_ERROR + " [hibernate]");
 			}
 		} catch (Exception e) {
-			if (!DaoTools.STARTED) {
-				System.err.println("INFO: STARTING HIBERNATE SESSION...");
-				DaoTools.STARTED = true;
-			}
 			try {
+				if (!DaoTools.STARTED) {
+					System.err
+							.println("INFO (ueps): Starting hibernate session");
+				}
 				fac = HibernateUtil.getSessionFactory();
 				if (fac == null) {
 					throw new NullPointerException(FACT_ERROR + " [manual]");
+				} else {
+					DaoTools.STARTED = true;
 				}
 			} catch (Exception x) {
 				log.error(FACT_ERROR, x);
 				throw new IllegalStateException(FACT_ERROR);
 			}
 		}
-
 		return fac;
 	}
 
@@ -228,9 +257,13 @@ public class DaoTools<T> implements Serializable {
 		boolean success = true;
 		try {
 			session = startTransaction();
-			return session.createCriteria(typeClass).list();
+			if (session != null) {
+				return session.createCriteria(typeClass).list();
+			} else {
+				return null;
+			}
 		} catch (Exception e) {
-			log.error("custom hibernate operation failed", e);
+			log.info("custom hibernate operation failed", e);
 			success = false;
 			return null;
 		} finally {

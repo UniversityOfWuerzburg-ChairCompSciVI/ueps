@@ -1,48 +1,148 @@
 # ÜPS
-ÜPS (Übungs-Programm für SQL) is a web-based intelligent teaching tool for the SQL database language.
+**ÜPS** (**Ü**bungs-**P**rogramm für **S**QL) ist ein webbasiertes Trainingssystem zum Erlernen der Datenbanksprache SQL.
 
-![](res/screenshots/ueps_01.png)
+![](http://kolbasa.github.io/ueps/screenshots/ueps_neu_02.png)
 
-![](res/screenshots/ueps_02.png)
+## Systemanforderungen
+* Tomcat 7 oder höher
+  (Für diese Anleitung wird Tomcat 7 verwendet)
+* Maven 3 (zum Kompilieren)
+* MySQL 5
 
-![](res/screenshots/ueps_03.png)
+## Kurzanleitung zur Installation
 
-![](res/screenshots/ueps_04.png)
+1. Quellcode herunterladen:<br/>
+   ``git clone --depth=1 https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps``<br/>
+   (Alternativ auch als [direkter Download](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/archive/master.zip))
 
-![](res/screenshots/ueps_05.png)
+2. In das ``ueps``-Verzeichnis wechseln.
 
-![](res/screenshots/ueps_06.png)
+3. Konfigurationsdatei in einem Editor öffnen: ``src/main/resources/config.properties``
 
-![](res/screenshots/ueps_07.png)
+4. Den Datenbank-Server und einen Nutzer festlegen:
+   ```
+   MASTER_DBHOST = 127.0.0.1
+   MASTER_DBPORT = 3306
+   MASTER_DBNAME = ueps_master
+   MASTER_DBUSER = test_user
+   MASTER_DBPASS = 3ti4k4tm270kg
+   ```
+  <!--- ` -->
+   Der unter ``MASTER_DBUSER`` festgelegte Nutzer sollte folgende Rechte besitzen:
+  ```
+  SELECT, INSERT, UPDATE, DELETE, ALTER, CREATE, DROP, GRANT OPTION, LOCK TABLES
+  ```
+  <!--- ` -->
+  Die aufgelisteten Rechte müssen für die unter ``MASTER_DBNAME`` angegebene
+  Datenbank sowie für neu erstellte Datenbanken gelten. Eine Rechteskript könnte
+  beispielsweise folgendermaßen aussehen:
+  ```
+  GRANT SELECT, INSERT, UPDATE, DELETE, ALTER, CREATE, DROP, GRANT OPTION,
+  LOCK TABLES, ON *.* TO '$MASTER_DBUSER$'@'$MASTER_DBHOST$'
+  IDENTIFIED BY '$MASTER_DBPASS$';
+  ```
+  <!--- ` -->
 
-![](res/screenshots/ueps_08.png)
+5. Anschließend kann die Anwendung kompiliert werden:
+   * *Unter Linux*<br/>
+     Zuerst müssen einigen Build-Skripte im Wurzelverzeichnis ausführbar gemacht werden:<br/>
+     ``chmod +x *.sh``<br/>
+     Dann einfach foldendes Skript ausführen<br/>
+     ``./build-package.sh``<br/>
 
-![](res/screenshots/ueps_09.png)
+   * *Unter Windows*<br/>
+     Einfach folgendes Skript auführen (Doppelklick genügt):<br/>
+     ``build-package.bat``
 
-![](res/screenshots/ueps_10.png)
+6. Die kompilierte ``ueps.war``-Datei sollte jetzt deploy-fertig im Wurzelverzeichnis zu finden sein.
 
-## Quick Install Guide
+7. ÜPS lässt sich alternativ auch [direkt mit Maven deployen](#DeployMaven).
 
-### Requirements
-Testing 1
+<br/>
 
-### Download and Install
-Testing 2
+Mit der Standard-Konfiguration werden beim Start der Anwendungen folgenden Datenbanken erstellt:
+* ``ueps_master`` (festgelegt durch ``MASTER_DBNAME``)
+* ``ueps_slave_001`` (Datenbank für das erste Beispielszenario)
+* ``ueps_slave_002`` (Datenbank für das zweite Beispielszenario)
 
-### Configuration
-Testing 3
+Für die ``slave``-Datenbanken werden jeweils folgende Datenbanknutzer mit beschränkten Rechten erstellt:
+* ``ueps_001``
+* ``ueps_002``
 
-## Administration
-Testing 4
 
-### Assigning permissions
-Testing 5
+## Konfiguration und Deploy
 
-### Editing scenarios
-Testing 6
+### Konfiguration mit 'config.properties'
+TODO :: TODO :: TODO :: TODO
 
-### Review student solutions
-Testing 7
+#### Datenbankangaben
+TODO :: TODO :: TODO :: TODO
 
-## Build from source
-Testing 8
+#### Automatisierung der Installation
+TODO :: TODO :: TODO :: TODO
+
+#### Nutzer-Authentifizierung
+TODO :: TODO :: TODO :: TODO
+
+#### Pfadangaben
+TODO :: TODO :: TODO :: TODO
+
+#### Aussehen anpassen
+TODO :: TODO :: TODO :: TODO
+
+#### Verschiedenes
+TODO :: TODO :: TODO :: TODO
+
+<a name="DeployMaven"></a>
+### Deploy mit Maven
+tomcat-users.xml<br/>
+```
+<role rolename="manager-script"/>
+<user username="admin" password="testing" roles="manager-script"/>
+```
+
+<!--- ` -->
+
+pom.xml
+```
+<plugin>
+<groupId>org.apache.tomcat.maven</groupId>
+<artifactId>tomcat7-maven-plugin</artifactId>
+...
+<configuration>
+  <url>http://127.0.0.1:8080/manager/text</url>
+  <mode>war</mode>
+  <warFile>ueps.war</warFile>
+  <server>TomcatServer</server>
+  <username>admin</username>
+  <password>testing</password>
+  <path>/ueps</path>
+</configuration>
+</plugin>
+```
+
+<!--- ` -->
+
+### Quellcodedokumentation
+<!--- TODO: -->
+[Doxygen Dokumentation](http://kolbasa.github.io/ueps/doxygen/)
+
+## Neues Szenario erstellen
+TODO :: TODO :: TODO :: TODO
+![](http://kolbasa.github.io/ueps/screenshots/ueps_10.png)
+
+### Aufgabengruppe erstellen
+TODO :: TODO :: TODO :: TODO
+
+### Aufgabe erstellen
+TODO :: TODO :: TODO :: TODO
+
+## Benutzerrechte hinzufügen/bearbeiten
+TODO :: TODO :: TODO :: TODO
+### Rolle 'Admin'
+TODO :: TODO :: TODO :: TODO
+### Rolle 'Dozent'
+TODO :: TODO :: TODO :: TODO
+
+## Abgaben bewerten
+TODO :: TODO :: TODO :: TODO

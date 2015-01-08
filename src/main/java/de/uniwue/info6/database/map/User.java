@@ -1,5 +1,29 @@
 package de.uniwue.info6.database.map;
 
+/*
+ * #%L
+ * ************************************************************************
+ * ORGANIZATION  :  Institute of Computer Science, University of Wuerzburg
+ * PROJECT       :  UEPS - Uebungs-Programm fuer SQL
+ * FILENAME      :  User.java
+ * ************************************************************************
+ * %%
+ * Copyright (C) 2014 - 2015 Institute of Computer Science, University of Wuerzburg
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 // Generated Oct 30, 2013 2:01:27 PM by Hibernate Tools 4.0.0
 
 import java.util.Date;
@@ -42,10 +66,10 @@ public class User implements java.io.Serializable {
   private String id;
   private Date lastModified;
   private Boolean isAdmin;
+  private Boolean isLecturer;
   private String description;
   private Set userEntries = new HashSet(0);
   private Set userResults = new HashSet(0);
-  private Set userExTags = new HashSet(0);
   private Set userRights = new HashSet(0);
 
   public User() {
@@ -56,15 +80,15 @@ public class User implements java.io.Serializable {
     this.lastModified = lastModified;
   }
 
-  public User(String id, Date lastModified, Boolean isAdmin, String description, Set userEntries,
-      Set userResults, Set userExTags, Set userRights) {
+  public User(String id, Date lastModified, Boolean isAdmin, Boolean isLecturer, String description, Set userEntries,
+              Set userResults, Set userRights) {
     this.id = id;
     this.lastModified = lastModified;
     this.isAdmin = isAdmin;
+    this.isLecturer = isLecturer;
     this.description = description;
     this.userEntries = userEntries;
     this.userResults = userResults;
-    this.userExTags = userExTags;
     this.userRights = userRights;
   }
 
@@ -92,6 +116,14 @@ public class User implements java.io.Serializable {
     this.isAdmin = isAdmin;
   }
 
+  public Boolean getIsLecturer() {
+    return this.isLecturer;
+  }
+
+  public void setIsLecturer(Boolean isLecturer) {
+    this.isLecturer = isLecturer;
+  }
+
   public String getDescription() {
     return this.description;
   }
@@ -114,14 +146,6 @@ public class User implements java.io.Serializable {
 
   public void setUserResults(Set userResults) {
     this.userResults = userResults;
-  }
-
-  public Set getUserExTags() {
-    return this.userExTags;
-  }
-
-  public void setUserExTags(Set userExTags) {
-    this.userExTags = userExTags;
   }
 
   public Set getUserRights() {

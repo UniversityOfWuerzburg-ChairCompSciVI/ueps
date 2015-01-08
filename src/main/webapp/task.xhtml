@@ -1,4 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  #%L
+  ************************************************************************
+  ORGANIZATION  :  Institute of Computer Science, University of Wuerzburg
+  PROJECT       :  UEPS - Uebungs-Programm fuer SQL
+  FILENAME      :  task.xhtml
+  ************************************************************************
+  %%
+  Copyright (C) 2014 - 2015 Institute of Computer Science, University of Wuerzburg
+  %%
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+       http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  #L%
+  -->
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
@@ -174,6 +198,7 @@ xmlns:p="http://primefaces.org/ui">
         <h:outputText value="#{txt['QUE.TABLES']} "
         class="boldPoints" />
         <h:outputText value="(#{txt['QUE.RESULT_DETAILS']}):" />
+
         <p:dataList var="table" value="#{e.availableTables}"
         emptyMessage="#{e.getSQLError()}"
         styleClass="relevant_tables_list" id="relevant_tables_list">
@@ -181,6 +206,7 @@ xmlns:p="http://primefaces.org/ui">
          value="#{table}"
          onclick="relevent_tables_dialog_wid_#{table}.show();return false;" />
         </p:dataList>
+
         <p:dataList var="table" emptyMessage=""
         value="#{e.availableTables}" rowIndexVar="rowIndex"
         styleClass="relevant_tables_list">

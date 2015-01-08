@@ -1,21 +1,43 @@
 package de.uniwue.info6.webapp.session;
 
+/*
+ * #%L
+ * ************************************************************************
+ * ORGANIZATION  :  Institute of Computer Science, University of Wuerzburg
+ * PROJECT       :  UEPS - Uebungs-Programm fuer SQL
+ * FILENAME      :  AuthorizationFilter.java
+ * ************************************************************************
+ * %%
+ * Copyright (C) 2014 - 2015 Institute of Computer Science, University of Wuerzburg
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import static de.uniwue.info6.misc.properties.PropBool.FORCE_RESET_DATABASE;
 import static de.uniwue.info6.misc.properties.PropBool.IMPORT_DB_IF_EMPTY;
 import static de.uniwue.info6.misc.properties.PropBool.IMPORT_EXAMPLE_SCENARIO;
 import static de.uniwue.info6.misc.properties.PropBool.LOG_BROWSER_HISTORY;
 import static de.uniwue.info6.misc.properties.PropBool.USE_FALLBACK_USER;
 import static de.uniwue.info6.misc.properties.PropInteger.SESSION_TIMEOUT;
-import static de.uniwue.info6.misc.properties.PropString.SCENARIO_RESOURCES;
+import static de.uniwue.info6.misc.properties.PropString.SCENARIO_RESOURCES_PATH;
 import static de.uniwue.info6.misc.properties.PropertiesFile.MAIN_CONFIG;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -66,14 +88,21 @@ public class AuthorizationFilter implements Filter, Serializable {
   private static final long serialVersionUID = 1L;
   private static final Log LOGGER = LogFactory.getLog(AuthorizationFilter.class);
 
-  private final static String logoutPage = "logout", permissionPage = "permission",
-      loginPage = "index.xhtml", sessionPosition = "auth_controller", errorPage = "starterror";
+  private final static String
+  LOGOUT_PAGE        = "logout",
+  PERMISSION_PAGE    = "permission",
+  SESSION_POSITION   = "auth_controller",
+  ERROR_PAGE         = "starterror",
+  BROWSER_LOG_DIR    = "log",
+  SCENARIO_RES_PATH  = "scn",
+  TEMP_SCENARIO_DIR  = "0";
+
   private final static String userID = "userID", secureValue = "secureValue",
-      scenarioID = "scenarioID";
+                              scenarioID = "scenarioID";
   private final static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd-HH_mm_ss");
 
   private final static String SCRIPT_PATH = StringTools.shortenUnixHomePathReverse(Cfg.inst()
-      .getProp(MAIN_CONFIG, SCENARIO_RESOURCES));
+      .getProp(MAIN_CONFIG, SCENARIO_RESOURCES_PATH));
   private final static String FALLBACK_USER = Cfg.inst().getProp(MAIN_CONFIG,
       PropString.FALLBACK_USER);
   private final static String FALLBACK_SECUREVALUE = Cfg.inst().getProp(MAIN_CONFIG,
@@ -81,20 +110,11 @@ public class AuthorizationFilter implements Filter, Serializable {
   private final static String FALLBACK_SCENARIO = Cfg.inst().getProp(MAIN_CONFIG,
       PropString.FALLBACK_SCENARIO);
 
-  private static final String RESOURCE_PATH = "scn";
-  private final static String SUB_DIR = "0";
-  private final static String BROWSER_LOG_DIR = "browser_logs";
-  private final static String MAIN_DB_DIR = "main_database";
-
-  private static final String CREATE_SCRIPT_FILE = "backup_latest.sql";
-  private static final String CREATE_SCRIPT_FILE_WITH_EXAMPLE = "backup_latest_with_data.sql";
-
   private String[] id, sv, sc;
 
   private User user;
   private Scenario scenario;
   private UserRights rights;
-  private UserDao userDao;
 
   private static String browserLogFile;
 
@@ -102,12 +122,14 @@ public class AuthorizationFilter implements Filter, Serializable {
 
   public static String errorDescription;
 
+  private String mainPathErrorMessage = null;
+  private String dbErrorMessage = null;
+
   /**
    *
    */
   public AuthorizationFilter() {
     this.rights = new UserRights().initialize();
-    this.userDao = new UserDao();
     this.fatalError = false;
     try {
       System.setProperty("file.encoding", "UTF-8");
@@ -117,7 +139,6 @@ public class AuthorizationFilter implements Filter, Serializable {
     } catch (Exception e) {
     }
 
-    boolean checkProperties = checkProperties();
     boolean checkMainScenarioPath = checkMainScenarioPath();
     boolean checkDBConnection = checkDBConnection();
 
@@ -127,22 +148,25 @@ public class AuthorizationFilter implements Filter, Serializable {
       System.out.println(e);
     }
 
-    if (!checkDBConnection || !checkMainScenarioPath || !checkProperties) {
+    if (!checkDBConnection || !checkMainScenarioPath) {
       this.fatalError = true;
       errorDescription = "<br/>";
 
       if (!checkDBConnection) {
-        errorDescription += "[problem creating connection to main database]<br/>";
+        errorDescription += "[problem creating connection to main database]<br/>"
+                            + (dbErrorMessage != null ? "LOG: " + dbErrorMessage : "")
+                            + "<br/><br/>";
       }
+
       if (!checkMainScenarioPath) {
-        errorDescription += "[problem finding main scenario path given by config.properties]<br/>";
+        errorDescription += "[problem finding main scenario path given by config.properties]<br/>"
+                            + (mainPathErrorMessage != null ? "LOG: " + mainPathErrorMessage : "")
+                            + "<br/>";
       }
-      if (!checkProperties) {
-        errorDescription += "[problem finding config.properties]<br/>";
-      }
+
       LOGGER.error("NOT ALL RESOURCES FOUND, GOING TO SHOW ERRORPAGE");
     } else {
-      new ConnectionTools().start();
+      ConnectionTools.inst().start();
       initBrowserLog();
     }
   }
@@ -153,24 +177,14 @@ public class AuthorizationFilter implements Filter, Serializable {
    */
   private void initBrowserLog() {
     if (Cfg.inst().getProp(MAIN_CONFIG, LOG_BROWSER_HISTORY)) {
-      this.browserLogFile = SCRIPT_PATH + File.separator + RESOURCE_PATH + File.separator + SUB_DIR
-          + File.separator + BROWSER_LOG_DIR + File.separator + "browser_log_"
-          + dateFormat.format(new Date()) + ".csv";
+      browserLogFile = SCRIPT_PATH + File.separator + SCENARIO_RES_PATH + File.separator + TEMP_SCENARIO_DIR
+                       + File.separator + BROWSER_LOG_DIR + File.separator + "browser_log_"
+                       + dateFormat.format(new Date()) + ".csv";
       logBrowser("User-ID\tUser-Agent");
     }
   }
 
-  /**
-   *
-   *
-   */
-  private boolean checkProperties() {
-    if (loginPage == null) {
-      LOGGER.error("ERROR: \"config.properties\" FILE NOT FOUND!");
-      return false;
-    }
-    return true;
-  }
+
 
   /**
    *
@@ -178,125 +192,105 @@ public class AuthorizationFilter implements Filter, Serializable {
    */
   private boolean checkDBConnection() {
     try {
-      if (Cfg.inst().getProp(MAIN_CONFIG, FORCE_RESET_DATABASE)) {
-        Cfg.inst().setProp(MAIN_CONFIG, FORCE_RESET_DATABASE, false);
-        return generateNewDB(true);
+
+      // ------------------------------------------------ //
+
+      boolean masterDBFound = dBDataExists();
+      boolean forceReset = Cfg.inst().getProp(MAIN_CONFIG, FORCE_RESET_DATABASE);
+      boolean importIfNoDBFound = Cfg.inst().getProp(MAIN_CONFIG, IMPORT_DB_IF_EMPTY);
+
+      if (!masterDBFound) {
+        System.err.println("INFO (ueps): Master database not found");
+      }
+
+      if (forceReset || (!masterDBFound && importIfNoDBFound)) {
+        new GenerateData().resetDB();
+      }
+
+      // ------------------------------------------------ //
+
+      if (!dBDataExists()) {
+        dbErrorMessage = "COULD NOT ACCESS DB, CHECK IF CREDENTIALS ARE CORRECT.";
+        LOGGER.error(dbErrorMessage);
+        return false;
       } else {
-        if (Cfg.inst().getProp(MAIN_CONFIG, IMPORT_DB_IF_EMPTY)) {
-          if (!dBDataExists()) {
-            if (Cfg.inst().getProp(MAIN_CONFIG, FORCE_RESET_DATABASE)) {
-              Cfg.inst().setProp(MAIN_CONFIG, FORCE_RESET_DATABASE, false);
-              return generateNewDB(true);
-            } else {
-              return generateNewDB(false);
-            }
-          }
+        try {
+          ConnectionManager.instance().updateScenarios();
+        } catch (Exception e) {
+          LOGGER.error("UPDATING SCENARIOS FAILED", e);
+          return false;
         }
       }
 
-      if (!dBDataExists()) {
-        String errorMessage = "COULD NOT ACCESS DB, CHECK IF LOGIN DATA IS CORRECT.";
-        LOGGER.error(errorMessage);
-        return false;
-      }
+      // ------------------------------------------------ //
+
     } catch (Exception e) {
-      String errorMessage = "COULD NOT ACCESS DB, CHECK IF LOGIN DATA IS CORRECT.";
-      LOGGER.error(errorMessage, e);
+      dbErrorMessage = "COULD NOT ACCESS DB, CHECK IF CREDENTIALS ARE CORRECT.";
+      LOGGER.error(dbErrorMessage, e);
       return false;
     }
 
     return true;
   }
 
-  /**
-   *
-   *
-   */
-  private boolean generateNewDB(boolean forceReset) {
-    GenerateData gen = new GenerateData();
-
-    if (Cfg.inst().getProp(MAIN_CONFIG, IMPORT_EXAMPLE_SCENARIO)) {
-      gen.resetDB(true, forceReset);
-    } else {
-      gen.resetDB(false, forceReset);
-    }
-
-    if (!dBDataExists()) {
-      String errorMessage = "COULD NOT CREATE DB, CHECK IF LOGIN DATA IS CORRECT.";
-      LOGGER.error(errorMessage);
-      return false;
-    } else {
-      try {
-        ConnectionManager.instance().updateScenarios();
-      } catch (SQLException | IOException e) {
-        e.printStackTrace();
-        return false;
-      }
-    }
-    return true;
-  }
 
   /**
    *
    *
    */
   private boolean checkMainScenarioPath() {
-    String logMessage = null;
 
     try {
       File mainDir = new File(SCRIPT_PATH);
 
       if (SCRIPT_PATH.trim().isEmpty()) {
-        logMessage = "SCENARIO RESOURCES PATH IS EMPTY!";
-      } else if (!mainDir.exists()) {
-        logMessage = "ERROR: \"" + mainDir.getAbsolutePath()
-            + "\" SCENARIO RESOURCES DIRECTORY NOT FOUND!";
+        mainPathErrorMessage = "SCENARIO RESOURCES PATH IS EMPTY!";
+      } else if (!mainDir.exists() || !mainDir.isDirectory()) {
+        mainPathErrorMessage =  "SCENARIO RESOURCES DIRECTORY NOT FOUND:\n\"" +
+                                mainDir.getAbsolutePath() + "\"";
       } else if (!mainDir.canWrite()) {
-        logMessage = "ERROR: NO WRITING-PERMISSIONS FOR SCENARIO RESOURCES: \""
-            + mainDir.getAbsolutePath() + "\"!";
+        mainPathErrorMessage = "NO WRITING - PERMISSIONS FOR SCENARIO RESOURCES:\n\""
+                               + mainDir.getAbsolutePath() + "\"";
       } else {
-        File subFolder = new File(mainDir, RESOURCE_PATH);
+
+        // create needed path structure in resource directory {{{
+        File subFolder = new File(mainDir, SCENARIO_RES_PATH);
         if (!subFolder.exists()) {
           subFolder.mkdir();
         }
-
-        File subSubFolder = new File(subFolder, SUB_DIR);
+        File subSubFolder = new File(subFolder, TEMP_SCENARIO_DIR);
         if (!subSubFolder.exists()) {
           subSubFolder.mkdir();
         }
-
-        File browserLogFolder = new File(subSubFolder, BROWSER_LOG_DIR);
-
-        if (Cfg.inst().getProp(MAIN_CONFIG, LOG_BROWSER_HISTORY) && !browserLogFolder.exists()) {
-          browserLogFolder.mkdir();
-        }
+        // }}}
 
         if (Cfg.inst().getProp(MAIN_CONFIG, FORCE_RESET_DATABASE)
             || Cfg.inst().getProp(MAIN_CONFIG, IMPORT_DB_IF_EMPTY)) {
 
-          File databaseFolder = new File(subSubFolder, MAIN_DB_DIR);
-          if (!databaseFolder.exists()) {
-            logMessage = "ERROR: MAIN DATABASE-FOLDER NOT FOUND: \"" + databaseFolder + "\"";
-          } else {
-            File createScriptFile = new File(databaseFolder, CREATE_SCRIPT_FILE);
-            File createScriptFileWithExample = new File(databaseFolder,
-                CREATE_SCRIPT_FILE_WITH_EXAMPLE);
-            if (!createScriptFile.exists()) {
-              logMessage = "ERROR: MAIN SQL-SCRIPT NOT FOUND: \"" + createScriptFile + "\"";
-            }
-            if (Cfg.inst().getProp(MAIN_CONFIG, IMPORT_EXAMPLE_SCENARIO)
-                && !createScriptFileWithExample.exists()) {
-              logMessage = "ERROR: SQL-SCRIPT NOT FOUND: \"" + createScriptFileWithExample + "\"";
-            }
+          final URL scriptFileURL = this.getClass().getResource("/" +
+                                    GenerateData.CREATE_SCRIPT_FILE);
+
+          final URL scriptFileWithDataURL = this.getClass().getResource("/" +
+                                            GenerateData.CREATE_SCRIPT_FILE_WITH_EXAMPLE_DATA);
+
+          if (scriptFileURL == null) {
+            mainPathErrorMessage = "MAIN SQL-SCRIPT NOT FOUND:\n\"" +
+                                   GenerateData.CREATE_SCRIPT_FILE + "\"";
+          }
+
+          if (Cfg.inst().getProp(MAIN_CONFIG, IMPORT_EXAMPLE_SCENARIO)
+              && scriptFileWithDataURL == null) {
+            mainPathErrorMessage = "SQL-SCRIPT NOT FOUND:\n\"" +
+                                   GenerateData.CREATE_SCRIPT_FILE_WITH_EXAMPLE_DATA + "\"";
           }
         }
       }
-      if (logMessage != null) {
-        LOGGER.error(logMessage);
+      if (mainPathErrorMessage != null) {
+        LOGGER.error(mainPathErrorMessage);
         return false;
       }
     } catch (Exception e) {
-      LOGGER.error("ERROR: problem occurred checking folder-structure", e);
+      LOGGER.error("problem occurred checking folder-structure", e);
       return false;
     }
 
@@ -318,7 +312,7 @@ public class AuthorizationFilter implements Filter, Serializable {
     try {
       String dbUser = "", dbPass = "", dbName = "";
       SessionFactoryImpl sessionFactoryImpl = (SessionFactoryImpl) new ScenarioDao()
-          .getSessionFactory();
+                                              .getSessionFactory();
       Properties props = sessionFactoryImpl.getProperties();
 
       String url = props.get("hibernate.connection.url").toString();
@@ -333,7 +327,7 @@ public class AuthorizationFilter implements Filter, Serializable {
       // Class.forName("org.drizzle.jdbc.DrizzleDriver"); //Register JDBC Driver
       Class.forName("org.mariadb.jdbc.Driver"); // Register JDBC Driver
       connection = DriverManager.getConnection(url, dbUser, dbPass); // Open a
-                                                                     // connection
+      // connection
 
       resultSet = connection.getMetaData().getCatalogs();
       while (resultSet.next()) {
@@ -384,7 +378,7 @@ public class AuthorizationFilter implements Filter, Serializable {
    *
    */
   private void addSessionObject(HttpSession session) {
-    SessionObject ac = (SessionObject) session.getAttribute(sessionPosition);
+    SessionObject ac = (SessionObject) session.getAttribute(SESSION_POSITION);
     if (ac == null) {
       new SessionObject(session);
     }
@@ -400,7 +394,7 @@ public class AuthorizationFilter implements Filter, Serializable {
    */
   @Override
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-      throws ServletException, IOException {
+  throws ServletException, IOException {
     try {
       HttpServletRequest req = (HttpServletRequest) request;
       HttpServletResponse res = (HttpServletResponse) response;
@@ -436,7 +430,7 @@ public class AuthorizationFilter implements Filter, Serializable {
               String path = req.getServletPath();
 
               if (session != null) {
-                SessionObject ac = (SessionObject) session.getAttribute(sessionPosition);
+                SessionObject ac = (SessionObject) session.getAttribute(SESSION_POSITION);
                 if (ac != null) {
                   User user = ac.getUser();
                   if (user != null) {
@@ -446,13 +440,13 @@ public class AuthorizationFilter implements Filter, Serializable {
               }
 
               if ((path.contains("/admin.xhtml") || path.contains("/edit_ex.xhtml")
-                  || path.contains("/edit_group.xhtml") || path.contains("/edit_scenario.xhtml"))) {
+                   || path.contains("/edit_group.xhtml") || path.contains("/edit_scenario.xhtml"))) {
                 if (!rights.hasEditingRight(user, scenario)) {
                   throwPermissionError(res, req);
                 }
               } else if ((path.contains("/submission.xhtml") || path
-                  .contains("/edit_submission.xhtml"))
-                  && !rights.hasRatingRight(user, scenario)) {
+                          .contains("/edit_submission.xhtml"))
+                         && !rights.hasRatingRight(user, scenario)) {
                 throwPermissionError(res, req);
               } else if (path.contains("/user_rights.xhtml") && !rights.isAdmin(user)) {
                 throwPermissionError(res, req);
@@ -479,7 +473,7 @@ public class AuthorizationFilter implements Filter, Serializable {
     String[] id = getCredentials(request);
     try {
       if ((session != null && id != null)) {
-        SessionObject sessionObject = (SessionObject) session.getAttribute(sessionPosition);
+        SessionObject sessionObject = (SessionObject) session.getAttribute(SESSION_POSITION);
 
         if (sessionObject != null) {
           sessionObject = sessionObject.init(id[0], id[1], id[2], request.getRemoteAddr());
@@ -488,10 +482,12 @@ public class AuthorizationFilter implements Filter, Serializable {
             if (user != null) {
               HttpServletRequest req = (HttpServletRequest) request;
               String userAgent = req.getHeader("User-Agent");
+
               if (Cfg.inst().getProp(MAIN_CONFIG, LOG_BROWSER_HISTORY)
                   && !SessionListener.userExists(user) && !user.getId().equals(FALLBACK_USER)) {
                 logBrowser(user.getId() + "\t" + userAgent);
               }
+
               SessionListener.addUser(session, user, scenario);
               session.setMaxInactiveInterval(Cfg.inst().getProp(MAIN_CONFIG, SESSION_TIMEOUT));
             }
@@ -511,11 +507,12 @@ public class AuthorizationFilter implements Filter, Serializable {
    * @param browser
    */
   private static synchronized void logBrowser(String browser) {
-    try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(browserLogFile, true)))) {
-      out.println(browser);
-    } catch (Exception e) {
-      LOGGER.error("COULD NOT LOG USER-AGENT.", e);
-    }
+    // TODO: browser logging - dirty implementation
+    // try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(browserLogFile, true)))) {
+    //   out.println(browser);
+    // } catch (Exception e) {
+    //   LOGGER.error("COULD NOT LOG USER-AGENT.", e);
+    // }
   }
 
   /**
@@ -571,7 +568,7 @@ public class AuthorizationFilter implements Filter, Serializable {
   private void logoutUser(HttpServletResponse res, HttpServletRequest req) throws IOException {
     if (!isPublicURL(req)) {
       if (!res.isCommitted()) {
-        res.sendRedirect(req.getContextPath() + "/" + logoutPage);
+        res.sendRedirect(req.getContextPath() + "/" + LOGOUT_PAGE);
         return;
       }
     }
@@ -586,10 +583,10 @@ public class AuthorizationFilter implements Filter, Serializable {
    * @throws IOException
    */
   private void throwPermissionError(HttpServletResponse res, HttpServletRequest req)
-      throws IOException {
+  throws IOException {
     if (!isPublicURL(req)) {
       if (!res.isCommitted()) {
-        res.sendRedirect(req.getContextPath() + "/" + permissionPage);
+        res.sendRedirect(req.getContextPath() + "/" + PERMISSION_PAGE);
         return;
       }
     }
@@ -606,7 +603,7 @@ public class AuthorizationFilter implements Filter, Serializable {
   private void throwErrorPage(HttpServletResponse res, HttpServletRequest req) throws IOException {
     if (!isPublicURL(req)) {
       if (!res.isCommitted()) {
-        res.sendRedirect(req.getContextPath() + "/" + errorPage);
+        res.sendRedirect(req.getContextPath() + "/" + ERROR_PAGE);
         return;
       }
     }

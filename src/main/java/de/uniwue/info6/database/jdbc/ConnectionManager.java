@@ -1,4 +1,34 @@
+
 package de.uniwue.info6.database.jdbc;
+
+/*
+ * #%L
+ * ************************************************************************
+ * ORGANIZATION  :  Institute of Computer Science, University of Wuerzburg
+ * PROJECT       :  UEPS - Uebungs-Programm fuer SQL
+ * FILENAME      :  ConnectionManager.java
+ * ************************************************************************
+ * %%
+ * Copyright (C) 2014 - 2015 Institute of Computer Science, University of Wuerzburg
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+import static de.uniwue.info6.misc.properties.PropBool.DEBUG_MODE;
+import static de.uniwue.info6.misc.properties.PropBool.FORCE_RESET_DATABASE;
+import static de.uniwue.info6.misc.properties.PropBool.IMPORT_EXAMPLE_SCENARIO;
+import static de.uniwue.info6.misc.properties.PropertiesFile.DEF_LANGUAGE;
+import static de.uniwue.info6.misc.properties.PropertiesFile.MAIN_CONFIG;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -7,6 +37,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.StringWriter;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,26 +52,22 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import de.uniwue.info6.database.gen.ScriptRunner;
 import de.uniwue.info6.database.map.Scenario;
 import de.uniwue.info6.database.map.User;
 import de.uniwue.info6.database.map.daos.ScenarioDao;
-import de.uniwue.info6.misc.OldPropertiesManager;
 import de.uniwue.info6.misc.StringTools;
+import de.uniwue.info6.misc.properties.Cfg;
 import de.uniwue.info6.misc.properties.PropBool;
 import de.uniwue.info6.misc.properties.PropString;
 import de.uniwue.info6.misc.properties.PropertiesFile;
-import de.uniwue.info6.misc.properties.Cfg;
+import de.uniwue.info6.webapp.misc.InitVariables;
 import de.uniwue.info6.webapp.session.SessionCollector;
 import de.uniwue.info6.webapp.session.SessionObject;
-
-import static de.uniwue.info6.misc.properties.PropertiesFile.DEF_LANGUAGE;
-import de.uniwue.info6.misc.properties.Cfg;
 
 /**
  *
@@ -53,19 +80,18 @@ public class ConnectionManager implements Serializable {
    */
   private static final long serialVersionUID = 1L;
 
-  private static final Log LOGGER = LogFactory.getLog(ConnectionManager.class);
+  private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(ConnectionManager.class);
 
-  // @formatter:off
   private static final String
-    RESOURCE_PATH     = "/scn/",
-    DRIVER            = "org.mariadb.jdbc.Driver",
-    URL_PREFIX        = "jdbc:mariadb://";
-  // @formatter:on
+  RESOURCE_PATH     = "scn",
+  ORIGINAL_SCRIPTS  = "sql",
+  DRIVER            = "org.mariadb.jdbc.Driver",
+  URL_PREFIX        = "jdbc:mariadb://";
 
   private String scriptPath;
 
   private HashMap<Scenario, ArrayList<String>> scenarioScripts, scenarioTables,
-      scenarioTablesWithHash;
+          scenarioTablesWithHash;
   private HashMap<Scenario, JdbcTemplate> pools;
   private HashMap<Scenario, String> errors;
   private ArrayList<Scenario> hasForeignKeys, originalTableDeleted;
@@ -96,14 +122,11 @@ public class ConnectionManager implements Serializable {
   public static synchronized ConnectionManager instance() {
     if (instance == null) {
       instance = new ConnectionManager();
-      try {
-        instance.updateScenarios();
-      } catch (Exception e) {
-        LOGGER.error("UPDATING SCENARIOS FAILED", e);
-      }
     }
     return instance;
   }
+
+
 
   /**
    *
@@ -116,12 +139,15 @@ public class ConnectionManager implements Serializable {
    */
   public static synchronized ConnectionManager offline_instance() {
     if (instance == null) {
-      // if (scriptPath == null) {
-      // System.out.println("OFFLINE ZUGRIFF AUF DIE DATENBANK FUER TEMPORAERE TABELLEN...\n\n");
-      OldPropertiesManager pr = OldPropertiesManager.instance();
-      pr.loadProperties("config.properties").loadProperties("text_de.properties");
-      // }
-      instance = new ConnectionManager();
+      try {
+        System.err.println("INFO (ueps): Offline mode");
+        InitVariables var = new InitVariables();
+        var.initPropertyManager(true);
+        instance = new ConnectionManager();
+      } catch (Exception e) {
+        // TODO: logging
+        e.printStackTrace();
+      }
     }
     return instance;
   }
@@ -135,7 +161,7 @@ public class ConnectionManager implements Serializable {
 
     this.config = Cfg.inst();
     this.scriptPath = this.config
-        .getProp(PropertiesFile.MAIN_CONFIG, PropString.SCENARIO_RESOURCES);
+                      .getProp(PropertiesFile.MAIN_CONFIG, PropString.SCENARIO_RESOURCES_PATH);
     this.scriptPath = StringTools.shortenUnixHomePathReverse(this.scriptPath);
 
     this.pools = new HashMap<Scenario, JdbcTemplate>();
@@ -152,18 +178,19 @@ public class ConnectionManager implements Serializable {
     // getting resource path
     File rootPath = new File(scriptPath);
     if (rootPath.exists() && rootPath.isDirectory() && rootPath.canWrite()) {
-      File resource = new File(scriptPath + File.separator + RESOURCE_PATH);
+      File resource = new File(scriptPath + File.separator + RESOURCE_PATH + File.separator);
       if (!resource.exists()) {
         resource.mkdir();
       }
       resourcePath = resource.getAbsolutePath();
     } else {
-      try {
-        throw new FileNotFoundException("RESOURCE PATH NOT FOUND (OR INSUFFICIENT RW-PERMISSIONS)!");
-      } catch (FileNotFoundException e) {
-        LOGGER.error(e);
-        e.printStackTrace();
-      }
+
+      // try {
+      //   throw new FileNotFoundException("RESOURCE PATH NOT FOUND (OR INSUFFICIENT RW-PERMISSIONS)!");
+      // } catch (FileNotFoundException e) {
+      //   LOGGER.error("", e);
+      //   e.printStackTrace();
+      // }
     }
   }
 
@@ -205,7 +232,7 @@ public class ConnectionManager implements Serializable {
    * @throws SQLException
    */
   public void resetDatabaseTablesForUser(Scenario scenario, User user, List<String> tablesToDelete)
-      throws SQLException {
+  throws SQLException {
     Connection connection = null;
 
     if (scenario != null) {
@@ -266,7 +293,7 @@ public class ConnectionManager implements Serializable {
             } else {
               statement.execute("UNLOCK TABLES;");
               statement.execute("DROP TABLE IF EXISTS `" + table + "`;");
-              // System.err.println("INFO: DROPPING TABLE AT STARTUP: \"" +
+              // System.err.println("INFO (ueps): Dropping table at startup: \"" +
               // table + "\"");
             }
           }
@@ -324,7 +351,7 @@ public class ConnectionManager implements Serializable {
         }
       } catch (Exception e) {
         throw new SQLException("COULD NOT CONNECT TO ADMIN DATABASE: \n" + "[" + script + "]"
-            + "\n\n" + ExceptionUtils.getStackTrace(e));
+                               + "\n\n" + ExceptionUtils.getStackTrace(e));
       }
     }
     return false;
@@ -337,23 +364,16 @@ public class ConnectionManager implements Serializable {
   public boolean createAdminDataSource() throws Exception {
     String dbHost = "", dbUser = "", dbPass = "", dbPort = "", url = "";
 
-    dbHost = this.config.getProp(PropertiesFile.MAIN_CONFIG, PropString.MAIN_DBHOST);
-    dbUser = this.config.getProp(PropertiesFile.MAIN_CONFIG, PropString.MAIN_DBUSER);
-    dbPass = this.config.getProp(PropertiesFile.MAIN_CONFIG, PropString.MAIN_DBPASS);
-    dbPort = this.config.getProp(PropertiesFile.MAIN_CONFIG, PropString.MAIN_DBPORT);
-
-    Boolean allowCreation = this.config.getProp(PropertiesFile.MAIN_CONFIG,
-        PropBool.ALLOW_DB_CREATION);
-
-    if (!allowCreation) {
-      return false;
-    }
+    dbHost = this.config.getProp(PropertiesFile.MAIN_CONFIG, PropString.MASTER_DBHOST);
+    dbUser = this.config.getProp(PropertiesFile.MAIN_CONFIG, PropString.MASTER_DBUSER);
+    dbPass = this.config.getProp(PropertiesFile.MAIN_CONFIG, PropString.MASTER_DBPASS);
+    dbPort = this.config.getProp(PropertiesFile.MAIN_CONFIG, PropString.MASTER_DBPORT);
 
     // admin-database
     adminDataSource = new DriverManagerDataSource();
 
     url = url + URL_PREFIX + dbHost + ":" + dbPort
-        + "?useUnicode=true&characterEncoding=UTF8&autoReconnect=true";
+          + "?useUnicode=true&characterEncoding=UTF8&autoReconnect=true";
 
     adminDataSource.setDriverClassName(DRIVER);
     adminDataSource.setUrl(url);
@@ -395,9 +415,7 @@ public class ConnectionManager implements Serializable {
             }
           }
 
-          dbName = "sqltsdb_"
-              + StringTools.normalize(StringTools.trimToLength(scenario.getName(), 4) + "_"
-                  + StringTools.zeroPad(1, 3));
+          dbName = "ueps_slave_" + StringTools.zeroPad(1, 3);
 
           resultSet = connection.getMetaData().getCatalogs();
           ArrayList<String> dbNames = new ArrayList<String>();
@@ -422,7 +440,7 @@ public class ConnectionManager implements Serializable {
         }
       } catch (Exception e) {
         throw new SQLException("could not connect to admin database: " + "[" + dbHost + "]" + "["
-            + dbUser + "]" + "[" + dbPass + "]" + "[" + dbPort + "]" + "[" + url + "]", e);
+                               + dbUser + "]" + "[" + dbPass + "]" + "[" + dbPort + "]" + "[" + url + "]", e);
       } finally {
         try {
           if (resultSet != null) {
@@ -453,7 +471,7 @@ public class ConnectionManager implements Serializable {
           createAdminDataSource();
         }
         if (adminDataSource != null) {
-          LOGGER.info("INFO: FORCE DROP AND CREATE SCENARIO DATABASE");
+          LOGGER.info("INFO (ueps): Force drop and create scenario database");
 
           JdbcTemplate template = new JdbcTemplate(adminDataSource);
           if (template != null) {
@@ -485,7 +503,7 @@ public class ConnectionManager implements Serializable {
       File sqlScript = new File(resourcePath + File.separator + scenario.getId(), dbScript);
       if (!sqlScript.exists()) {
         String er = ExceptionUtils.getStackTrace(new FileNotFoundException(sqlScript
-            .getAbsolutePath()));
+                    .getAbsolutePath()));
 
         if (er.length() > 500) {
           return er.substring(0, 500) + " [...]";
@@ -498,6 +516,39 @@ public class ConnectionManager implements Serializable {
     return null;
   }
 
+
+  /**
+   *
+   *
+   */
+  private JdbcTemplate createJDBCTemplate (Scenario scenario) throws SQLException {
+    DriverManagerDataSource dataSource = new DriverManagerDataSource();
+    dataSource.setDriverClassName(DRIVER);
+
+    String url = URL_PREFIX + scenario.getDbHost();
+    String port = scenario.getDbPort();
+    String password = scenario.getDbPass();
+
+    // port is optional
+    if (port != null && !port.isEmpty()) {
+      url = url + ":" + port;
+    }
+    url = url + "?useUnicode=true&characterEncoding=UTF8&autoReconnect=true";
+
+    dataSource.setUrl(url);
+    dataSource.setUsername(scenario.getDbUser());
+
+    if (password != null && !password.isEmpty()) {
+      dataSource.setPassword(password);
+    }
+
+    JdbcTemplate template = new JdbcTemplate(dataSource);
+    if (template != null) {
+      pools.put(scenario, template);
+    }
+    return template;
+  }
+
   /**
    *
    *
@@ -507,40 +558,12 @@ public class ConnectionManager implements Serializable {
    * @throws IOException
    * @throws FileNotFoundException
    */
-  public synchronized String addDB(Scenario scenario, boolean resetDB) throws SQLException,
-      FileNotFoundException, IOException {
+  public synchronized String addDB(Scenario scenario) throws SQLException,
+    FileNotFoundException, IOException {
     if (scenario == null) {
       LOGGER.error("ADDED SCENARIO IS NULL");
     } else {
-      DriverManagerDataSource dataSource = new DriverManagerDataSource();
-      dataSource.setDriverClassName(DRIVER);
-
-      String url = URL_PREFIX + scenario.getDbHost();
-      String port = scenario.getDbPort();
-      String password = scenario.getDbPass();
-
-      // port is optional
-      if (port != null && !port.isEmpty()) {
-        url = url + ":" + port;
-      }
-      url = url + "?useUnicode=true&characterEncoding=UTF8&autoReconnect=true";
-      // url = url + "?useUnicode=true&characterEncoding=UTF8";
-
-      dataSource.setUrl(url);
-      dataSource.setUsername(scenario.getDbUser());
-
-      if (password != null && !password.isEmpty()) {
-        dataSource.setPassword(password);
-      }
-
-      JdbcTemplate template = new JdbcTemplate(dataSource);
-      if (template != null) {
-        pools.put(scenario, template);
-      }
-
-      if (resetDB) {
-        resetDatabaseRoot(scenario);
-      }
+      this.createJDBCTemplate(scenario);
 
       // parse import-scripts
       String error = "";
@@ -561,15 +584,29 @@ public class ConnectionManager implements Serializable {
           PrintWriter pwError = new PrintWriter(swError);
           sc.setErrorLogWriter(pwError);
 
-          File sqlScript = new File(resourcePath + File.separator + scenario.getId(), dbScript);
-          File sqlScriptOriginal = new File(resourcePath + File.separator + "0", dbScript);
+          File sqlScript = null;
+          File tempScenarioDir = null;
+          Integer scID = scenario.getId();
 
-          if (!sqlScript.exists() && sqlScriptOriginal.exists()) {
-            if (!sqlScript.getParentFile().exists()) {
-              sqlScript.getParentFile().mkdirs();
+          // ------------------------------------------------ //
+
+          if (scID.equals(0)) {
+            final URL scriptFileURL = this.getClass().getResource("/" + dbScript);
+            if (scriptFileURL != null) {
+              sqlScript = new File(scriptFileURL.getFile());
             }
-            FileUtils.copyFile(sqlScriptOriginal, sqlScript);
+          } else {
+            sqlScript = new File(resourcePath + File.separator + scID, dbScript);
+            tempScenarioDir = new File(resourcePath + File.separator + "0", dbScript);
+            if (!sqlScript.exists() && tempScenarioDir.exists()) {
+              if (!sqlScript.getParentFile().exists()) {
+                sqlScript.getParentFile().mkdirs();
+              }
+              FileUtils.copyFile(tempScenarioDir, sqlScript);
+            }
           }
+
+          // ------------------------------------------------ //
 
           if (sqlScript.exists()) {
             sc.runScript(new FileReader(sqlScript), true);
@@ -582,18 +619,24 @@ public class ConnectionManager implements Serializable {
               addUserPrefix(command, scenario, null);
             }
           }
+
+          // ------------------------------------------------ //
+
         } catch (Exception e) {
           error = swError.toString();
           if (error.isEmpty()) {
             String er = ExceptionUtils.getStackTrace(e);
             if (er.length() > 500) {
               error = Cfg.inst().getProp(DEF_LANGUAGE, "ERROR.UNEXPECTED") + ": \n" + er.substring(0, 500)
-                  + " [...]";
+                      + " [...]";
             } else {
               error = Cfg.inst().getProp(DEF_LANGUAGE, "ERROR.UNEXPECTED") + ": \n" + er;
             }
           }
+
+          // System.out.println(scenario.getDbName());
           LOGGER.error(error, e);
+
           if (!errors.containsKey(scenario)) {
             errors.put(scenario, error);
           }
@@ -618,7 +661,7 @@ public class ConnectionManager implements Serializable {
    * @throws FileNotFoundException
    */
   public synchronized void updateScenarios() throws FileNotFoundException, SQLException,
-      IOException {
+    IOException {
     List<Scenario> scenarios = scenarioDao.findAll();
     errors = new HashMap<Scenario, String>();
 
@@ -631,8 +674,33 @@ public class ConnectionManager implements Serializable {
           scDir.mkdir();
         }
 
+        if (Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG, PropBool.IMPORT_EXAMPLE_SCENARIO)) {
+          final String scriptFileName = sc.getCreateScriptPath();
+          final String diagramFileName = sc.getImagePath();
+
+          final Integer scriptID = sc.getId();
+          final File scriptFile = new File(resourcePath + File.separator + scriptID + File.separator + scriptFileName);
+          final File imageFile = new File(resourcePath + File.separator + scriptID + File.separator + diagramFileName);
+
+          if (!scriptFile.exists()) {
+            URL originalScriptFile = this.getClass().getResource("/" + ORIGINAL_SCRIPTS +
+                                     File.separator + scriptID + File.separator + scriptFileName);
+            if (originalScriptFile != null) {
+              FileUtils.copyFile(new File(originalScriptFile.getFile()), scriptFile);
+            }
+          }
+
+          if (!imageFile.exists()) {
+            URL originalImageFile = this.getClass().getResource("/" + ORIGINAL_SCRIPTS +
+                                    File.separator + scriptID + File.separator + diagramFileName);
+            if (originalImageFile != null) {
+              FileUtils.copyFile(new File(originalImageFile.getFile()), imageFile);
+            }
+          }
+        }
+
         if (!pools.containsKey(sc)) {
-          instance.addDB(sc, false);
+          instance.addDB(sc);
         }
       }
 
@@ -769,7 +837,7 @@ public class ConnectionManager implements Serializable {
    * @throws SQLException
    */
   public synchronized String getTableChecksum(Scenario scenario, User user, String table)
-      throws SQLException {
+  throws SQLException {
     if (scenario != null) {
       Connection connection = null;
       ResultSet resultSet = null;
@@ -782,7 +850,7 @@ public class ConnectionManager implements Serializable {
           statement.execute("CHECKSUM TABLE " + table);
         } else {
           statement.execute("CHECKSUM TABLE `" + user.getId().toLowerCase().trim() + "_" + table
-              + "`");
+                            + "`");
         }
         resultSet = statement.getResultSet();
 
@@ -811,6 +879,7 @@ public class ConnectionManager implements Serializable {
     return null;
   }
 
+
   /**
    * @throws SQLException
    * @throws IOException
@@ -819,8 +888,8 @@ public class ConnectionManager implements Serializable {
    *
    */
   public synchronized void resetTables(Scenario scenario, User user) throws SQLException,
-      FileNotFoundException, IOException {
-    long starttime = System.currentTimeMillis();
+    FileNotFoundException, IOException {
+    // long starttime = System.currentTimeMillis();
 
     if (!originalTableDeleted.contains(scenario)) {
       resetDatabaseTablesForUser(scenario, null, getScenarioTableNames(scenario));
@@ -831,6 +900,7 @@ public class ConnectionManager implements Serializable {
       Connection connection = null;
       Statement statement = null;
       try {
+
         List<String> changedTables = checkSumChanged(scenario, user);
         List<String> temp = getScenarioTableNames(scenario);
         List<String> unchangedTables = new ArrayList<String>();
@@ -894,7 +964,7 @@ public class ConnectionManager implements Serializable {
                 fileNotFound = "";
               }
               LOGGER.error("SQL COMMAND LIST IS EMPTY. THERE IS"
-                  + " SOMETHING WRONG WITH THE IMPORT SCRIPT" + fileNotFound);
+                           + " SOMETHING WRONG WITH THE IMPORT SCRIPT" + fileNotFound);
             }
           } else {
             LOGGER.error("CAN'T ESTABLISH CONNECTION FROM SELECTED SCENARIO!");
@@ -976,7 +1046,7 @@ public class ConnectionManager implements Serializable {
     // "(?:create|drop|lock|alter)[\\s]+table[s]?(?:[\\s]*if[\\s]*exists)?" +
     // regex_table;
     String REGEX_FIELD = "(?:create|drop|lock|alter)[\\s]+table[s]?(?:[\\s]*if[\\s]*not?[\\s]*exists)?"
-        + regex_table;
+                         + regex_table;
     Matcher matcher = Pattern.compile(REGEX_FIELD, Pattern.CASE_INSENSITIVE).matcher(query);
 
     ArrayList<String> exclusions = new ArrayList<String>() {
@@ -1054,7 +1124,7 @@ public class ConnectionManager implements Serializable {
         String foundTable = tablesToReplace.get(i);
         if (user != null) {
           query = query.substring(0, stringStart.get(i)) + user.getId() + "_" + foundTable
-              + query.substring(stringEnd.get(i), query.length());
+                  + query.substring(stringEnd.get(i), query.length());
         }
       }
 
@@ -1080,24 +1150,154 @@ public class ConnectionManager implements Serializable {
   /**
    *
    *
-   * @param scenario
+   * @param masterScript
    *
    * @throws SQLException
    */
-  private void resetDatabaseRoot(Scenario scenario) throws SQLException {
+  public void resetMasterDatabase(Scenario masterScript, Scenario dataScript) throws SQLException {
+    if (masterScript == null) {
+      return;
+    }
+
+    try {
+      boolean forceReset = Cfg.inst().getProp(MAIN_CONFIG, FORCE_RESET_DATABASE);
+      boolean debugMode = Cfg.inst().getProp(MAIN_CONFIG, DEBUG_MODE);
+
+      if (forceReset && !debugMode) {
+        // set reset-flag to false
+        Cfg.inst().setProp(MAIN_CONFIG, FORCE_RESET_DATABASE, false);
+      }
+
+      JdbcTemplate template = instance.getTemplate(masterScript);
+      if (template == null) {
+        template = this.createJDBCTemplate(masterScript);
+      }
+      String dbName = masterScript.getDbName();
+
+      if (forceReset) {
+        // ------------------------------------------------ //
+
+        String dropMasterDBQuery = "DROP DATABASE IF EXISTS `" + dbName + "`;";
+        System.err.println("INFO (ueps): dropping database `" + dbName + "`");
+        template.execute(dropMasterDBQuery);
+
+        // ------------------------------------------------ //
+
+        final String resetDBQuery = "SELECT CONCAT('DROP DATABASE IF EXISTS `',schema_name,'`; ') AS stmt FROM " +
+                                    "information_schema.schemata WHERE schema_name " +
+                                    "LIKE 'ueps\\_slave\\_%' ESCAPE '\\\\' ORDER BY schema_name";
+
+        final List<String> dropDBQueries = template.query(resetDBQuery,
+        new RowMapper<String>() {
+          public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return rs.getString(1);
+          }
+        });
+
+        for (String dropDBQuery : dropDBQueries) {
+          System.err.println("INFO (ueps): " + dropDBQuery.trim() + "");
+          template.execute(dropDBQuery.trim());
+        }
+
+        // ------------------------------------------------ //
+
+        final String selectAllUsersQuery = "SELECT User FROM mysql.user;";
+        final List<String> userList = template.query(selectAllUsersQuery,
+        new RowMapper<String>() {
+          public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return rs.getString(1);
+          }
+        });
+
+        for (String userString : userList) {
+          userString = userString.trim();
+          if (userString.startsWith("ueps_")) {
+            String userID = userString + "@" + masterScript.getDbHost();
+            System.err.println("INFO (ueps): Dropping restricted database user: `" + userID + "`");
+            template.execute("REVOKE ALL PRIVILEGES, GRANT OPTION FROM " + userID + ";");
+            template.execute("DROP USER " + userID + ";");
+          }
+        }
+      }
+
+      // System.exit(0);
+
+      // ------------------------------------------------ //
+
+      String createMasterDBQuery = "CREATE DATABASE IF NOT EXISTS `" + dbName + "` CHARACTER SET utf8;";
+      System.err.println("INFO (ueps): creating database `" + dbName + "`");
+      template.execute(createMasterDBQuery);
+
+      // ------------------------------------------------ //
+
+      masterScript.setId(0);
+      addDB(masterScript);
+      removeDB(masterScript);
+
+      if (dataScript != null) {
+        dataScript.setId(0);
+        addDB(dataScript);
+        removeDB(dataScript);
+      }
+
+      // ------------------------------------------------ //
+
+    } catch (Exception e) {
+      errors.put(masterScript, e.getMessage());
+    }
+  }
+
+
+  /**
+   *
+   *
+   * @param scenario
+   * @return
+   *
+   * @throws SQLException
+   */
+  public synchronized String getDropSlaveDBList(Scenario scenario)
+  throws SQLException {
     if (scenario != null) {
+      Connection connection = null;
+      ResultSet resultSet = null;
+      Statement statement = null;
       try {
-        System.err.println("INFO: FORCE DROP AND CREATE DATABASE");
-        JdbcTemplate template = instance.getTemplate(scenario);
-        String dbName = scenario.getDbName();
-        template.execute("DROP DATABASE IF EXISTS `" + dbName + "`;");
-        Thread.sleep(100);
-        template.execute("CREATE DATABASE IF NOT EXISTS`" + dbName + "` CHARACTER SET utf8;");
-        Thread.sleep(100);
+        connection = instance.getConnection(scenario);
+        statement = connection.createStatement();
+
+        String query = "SELECT CONCAT('DROP DATABASE IF EXISTS `',schema_name,'`; ') AS stmt FROM " +
+                       "information_schema.schemata WHERE schema_name " +
+                       "LIKE 'ueps\\_slave\\_%' ESCAPE '\\\\' ORDER BY schema_name";
+        statement.execute(query);
+
+        resultSet = statement.getResultSet();
+
+        StringBuilder dropQuery = new StringBuilder();
+        while (resultSet.next()) {
+          dropQuery.append(resultSet.getString(1));
+        }
+        // statement.execute(dropQuery.toString());
+        return dropQuery.toString();
       } catch (Exception e) {
-        errors.put(scenario, e.getMessage());
+        LOGGER.error("PROBLEM GETTING DATABASE LIST", e);
+      } finally {
+        if (resultSet != null) {
+          resultSet.close();
+        }
+        if (statement != null) {
+          statement.close();
+        }
+        if (connection != null) {
+          try {
+            connection.close();
+          } catch (SQLException e) {
+            e.printStackTrace();
+          }
+        }
       }
     }
+    return null;
   }
 
   /**

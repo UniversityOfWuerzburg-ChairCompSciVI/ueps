@@ -1,4 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  #%L
+  ************************************************************************
+  ORGANIZATION  :  Institute of Computer Science, University of Wuerzburg
+  PROJECT       :  UEPS - Uebungs-Programm fuer SQL
+  FILENAME      :  pom.xml
+  ************************************************************************
+  %%
+  Copyright (C) 2014 - 2015 Institute of Computer Science, University of Wuerzburg
+  %%
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+       http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  #L%
+  -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
@@ -11,12 +35,22 @@
 	<artifactId>ueps</artifactId>
 	<version>0.9.1</version>
 	<description>A web-based intelligent teaching tool for the SQL database language.</description>
+	<inceptionYear>2014</inceptionYear>
+	<name>UEPS - Uebungs-Programm fuer SQL</name>
+
+	<!-- ... -->
+	<organization>
+		<name>Institute of Computer Science, University of Wuerzburg</name>
+		<url>https://github.com/UniversityOfWuerzburg-ChairCompSciVI</url>
+	</organization>
 
 	<!-- ... -->
 	<properties>
-		<jdk.version>1.8</jdk.version>
+		<jdk.version>1.7</jdk.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<target>target</target>
+		<resourcesDir>res</resourcesDir>
 	</properties>
 
 	<!-- ... -->
@@ -50,10 +84,48 @@
 		</repository>
 	</repositories>
 
+	<pluginRepositories>
+		<!-- DOXYGEN-Repository -->
+		<pluginRepository>
+			<id>doodleproject-repo</id>
+			<name>DoodleProject Maven 2 Repository</name>
+			<url>http://doodleproject.sourceforge.net/maven2/release</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</pluginRepository>
+	</pluginRepositories>
+
 	<!-- ... -->
 	<build>
 		<finalName>ueps</finalName>
 		<plugins>
+			<!-- Doxygen documentation -->
+			<plugin>
+				<groupId>com.soebes.maven.plugins.dmg</groupId>
+				<artifactId>doxygen-maven-plugin</artifactId>
+				<version>1.0.1</version>
+				<!-- http://khmarbaise.github.io/doxygen-maven-plugin/report-mojo.html -->
+				<configuration>
+					<projectName>ueps</projectName>
+					<projectNumber>0.9.1</projectNumber>
+					<optimizeOutputJava>true</optimizeOutputJava>
+					<extractAll>true</extractAll>
+					<extractStatic>true</extractStatic>
+					<recursive>true</recursive>
+					<exclude>.git</exclude>
+					<input>${basedir}/src/main/java ${resourcesDir}/introduction.dox</input>
+					<recursive>true</recursive>
+					<umlLook>true</umlLook>
+					<haveGraph>true</haveGraph>
+					<generateLatex>false</generateLatex>
+					<generateHtml>true</generateHtml>
+					<usePdflatex>false</usePdflatex>
+					<pdfHyperlinks>true</pdfHyperlinks>
+					<outputDirectory>${basedir}/doc</outputDirectory>
+				</configuration>
+			</plugin>
+			<!-- -->
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.0</version>
@@ -65,20 +137,98 @@
 					<encoding>${project.build.sourceEncoding}</encoding>
 				</configuration>
 			</plugin>
+			<!-- Deploy with the Tomcat-Manager -->
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat7-maven-plugin</artifactId>
-				<version>2.1</version>
+				<version>2.2</version>
+				<executions>
+					<execution>
+						<id>tomcat-run</id>
+						<goals>
+							<goal>exec-war-only</goal>
+						</goals>
+						<phase>package</phase>
+					</execution>
+				</executions>
 				<configuration>
 					<url>http://127.0.0.1:8080/manager/text</url>
 					<mode>war</mode>
-					<!-- <warFile>test.war</warFile> -->
+					<warFile>ueps.war</warFile>
 					<server>TomcatServer</server>
-					<!-- <username>admin</username> <password>testing</password> -->
+					<username>admin</username>
+					<password>testing</password>
 					<path>/ueps</path>
 				</configuration>
 			</plugin>
+
+
+			<!-- -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.7</version>
+				<executions>
+					<execution>
+						<id>create-empty-directory</id>
+						<phase>package</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<delete file="ueps.war" failonerror="false" />
+								<copy file="${target}/ueps.war" tofile="ueps.war" />
+								<chmod dir="${basedir}" perm="ugo+rx" includes="**/*.sh" />
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
+
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>license-maven-plugin</artifactId>
+					<version>1.7</version>
+
+					<!-- http://mojo.codehaus.org/license-maven-plugin/update-file-header-mojo.html -->
+					<configuration>
+						<verbose>false</verbose>
+						<includes>
+							<includes>**/*.java</includes>
+							<includes>**/*.xml</includes>
+							<includes>**/*.xsd</includes>
+							<includes>**/*.xhtml</includes>
+							<includes>**/*.properties</includes>
+							<includes>**/*.sql</includes>
+							<!-- <includes>**/*.sh</includes> -->
+						</includes>
+						<descriptionTemplate>${basedir}/res/license-header.ftl</descriptionTemplate>
+						<canUpdateCopyright>true</canUpdateCopyright>
+						<canUpdateDescription>true</canUpdateDescription>
+						<canUpdateLicense>true</canUpdateLicense>
+						<roots>
+							<root>${basedir}</root>
+						</roots>
+						<licenseName>apache_v2</licenseName>
+					</configuration>
+
+					<executions>
+						<execution>
+							<id>generate-license-headers</id>
+							<goals>
+								<goal>update-file-header</goal>
+							</goals>
+							<phase>process-sources</phase>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
 	</build>
 
 	<!-- ... -->
@@ -94,6 +244,20 @@
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>1.2.17</version>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.jms</groupId>
+					<artifactId>jms</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sun.jmx</groupId>
+					<artifactId>jmxri</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sun.jdmk</groupId>
+					<artifactId>jmxtools</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.primefaces.themes</groupId>
@@ -194,12 +358,12 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-c3p0</artifactId>
-			<version>4.3.4.Final</version>
+			<version>4.3.7.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
-			<version>4.3.4.Final</version>
+			<version>4.3.7.Final</version>
 		</dependency>
 		<!-- needed for primefaces -->
 		<dependency>

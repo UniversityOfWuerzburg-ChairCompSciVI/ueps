@@ -1,4 +1,28 @@
 <?xml version="1.0"?>
+<!--
+  #%L
+  ************************************************************************
+  ORGANIZATION  :  Institute of Computer Science, University of Wuerzburg
+  PROJECT       :  UEPS - Uebungs-Programm fuer SQL
+  FILENAME      :  Exercise.hbm.xml
+  ************************************************************************
+  %%
+  Copyright (C) 2014 - 2015 Institute of Computer Science, University of Wuerzburg
+  %%
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+       http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  #L%
+  -->
+
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated Nov 19, 2013 8:02:38 PM by Hibernate Tools 4.0.0 -->
@@ -31,18 +55,6 @@
                 <column name="exercise_id" not-null="true" />
             </key>
             <one-to-many class="de.uniwue.info6.database.map.UserEntry" />
-        </set>
-        <set name="userExTags" table="user_ex_tag" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="exercise_id" not-null="true" />
-            </key>
-            <one-to-many class="de.uniwue.info6.database.map.UserExTag" />
-        </set>
-        <set name="generatedTags" table="generated_tag" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="exercise_id" not-null="true" />
-            </key>
-            <one-to-many class="de.uniwue.info6.database.map.GeneratedTag" />
         </set>
         <set name="exercises" table="exercise" inverse="true" lazy="true" fetch="select">
             <key>

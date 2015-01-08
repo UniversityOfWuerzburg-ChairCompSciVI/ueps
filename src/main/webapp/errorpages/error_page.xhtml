@@ -1,14 +1,37 @@
+<!--
+  #%L
+  ************************************************************************
+  ORGANIZATION  :  Institute of Computer Science, University of Wuerzburg
+  PROJECT       :  UEPS - Uebungs-Programm fuer SQL
+  FILENAME      :  error_page.xhtml
+  ************************************************************************
+  %%
+  Copyright (C) 2014 - 2015 Institute of Computer Science, University of Wuerzburg
+  %%
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+       http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  #L%
+  -->
 <ui:composition template="/templates/errorpage.xhtml" xmlns="http://www.w3.org/1999/xhtml"
 xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
 xmlns:p="http://primefaces.org/ui">
-  <ui:define name="header_text">
-    <span class="error">#{txt['SESSION.PERMISSION']}</span>
-    <script type="text/javascript">synctime=false; jQuery.ajaxSetup({ error: handleXhrError }); function
-    	handleXhrError(xhr){}; setTimeout("endAjaxStatus()", 500);</script>
-  </ui:define>
-  <ui:define name="content">
-    <p id="session_expired_button" style="font-size:14px" >
-		<h:outputText value="#{startup_error.error}" escape="false"/>
-    </p>
-  </ui:define>
+ <ui:define name="header_text">
+  <span class="error">#{txt['ERROR']}</span>
+  <script type="text/javascript">synctime=false; jQuery.ajaxSetup({ error: handleXhrError }); function
+  handleXhrError(xhr){}; setTimeout("endAjaxStatus()", 500);</script>
+ </ui:define>
+ <ui:define name="content">
+  <p id="session_expired_button" style="font-size:14px">
+   <h:outputText value="#{startup_error.error}" escape="false" />
+  </p>
+ </ui:define>
 </ui:composition>

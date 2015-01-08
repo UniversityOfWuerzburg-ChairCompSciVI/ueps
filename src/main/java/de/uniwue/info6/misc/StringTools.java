@@ -1,5 +1,29 @@
 package de.uniwue.info6.misc;
 
+/*
+ * #%L
+ * ************************************************************************
+ * ORGANIZATION  :  Institute of Computer Science, University of Wuerzburg
+ * PROJECT       :  UEPS - Uebungs-Programm fuer SQL
+ * FILENAME      :  StringTools.java
+ * ************************************************************************
+ * %%
+ * Copyright (C) 2014 - 2015 Institute of Computer Science, University of Wuerzburg
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.Collections;
@@ -154,7 +178,7 @@ public class StringTools {
     for (int i = substrings.size() - 1; i >= 0; i--) {
       Integer sub = substrings.get(i);
       queryText = queryText.substring(0, sub) + user.getId() + "_"
-          + queryText.substring(sub, queryText.length());
+                  + queryText.substring(sub, queryText.length());
     }
 
     return queryText;
@@ -400,7 +424,7 @@ public class StringTools {
         String newName = path.toLowerCase();
         // delete date-field
         newName = newName.replaceAll("[ü}]", "ue").replaceAll("[ä]", "ae").replaceAll("[ö]", "oe")
-            .replaceAll("[ß]", "ss").replaceAll("[^a-z0-9&-]", "_").replaceAll("[_]{2,}", "_");
+                  .replaceAll("[ß]", "ss").replaceAll("[^a-z0-9&]", "_").replaceAll("[_]{2,}", "_");
 
         while (newName.endsWith("_")) {
           newName = newName.substring(0, newName.length() - 1);

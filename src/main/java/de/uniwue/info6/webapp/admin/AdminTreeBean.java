@@ -1,5 +1,29 @@
 package de.uniwue.info6.webapp.admin;
 
+/*
+ * #%L
+ * ************************************************************************
+ * ORGANIZATION  :  Institute of Computer Science, University of Wuerzburg
+ * PROJECT       :  UEPS - Uebungs-Programm fuer SQL
+ * FILENAME      :  AdminTreeBean.java
+ * ************************************************************************
+ * %%
+ * Copyright (C) 2014 - 2015 Institute of Computer Science, University of Wuerzburg
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import static de.uniwue.info6.misc.properties.PropertiesFile.DEF_LANGUAGE;
 
 import java.io.File;
@@ -35,7 +59,6 @@ import de.uniwue.info6.database.map.daos.ScenarioDao;
 import de.uniwue.info6.database.map.daos.SolutionQueryDao;
 import de.uniwue.info6.database.map.daos.UserDao;
 import de.uniwue.info6.database.map.daos.UserEntryDao;
-import de.uniwue.info6.database.map.daos.UserExTagDao;
 import de.uniwue.info6.misc.FileTransfer;
 import de.uniwue.info6.misc.properties.Cfg;
 import de.uniwue.info6.webapp.session.SessionCollector;
@@ -63,7 +86,6 @@ public class AdminTreeBean implements Serializable {
   private ExerciseGroupDao exgroupDao;
   private ExerciseDao exerciseDao;
   private SolutionQueryDao solutionDao;
-  private UserExTagDao userTagDao;
   private UserDao userDao;
   private UserEntryDao userEntryDao;
   private List<Scenario> scenarios;
@@ -96,7 +118,6 @@ public class AdminTreeBean implements Serializable {
     exgroupDao = new ExerciseGroupDao();
     exerciseDao = new ExerciseDao();
     solutionDao = new SolutionQueryDao();
-    userTagDao = new UserExTagDao();
     userDao = new UserDao();
     userEntryDao = new UserEntryDao();
     rights = new UserRights().initialize();
@@ -334,7 +355,7 @@ public class AdminTreeBean implements Serializable {
   public void displaySelectedSingle() {
     if (selectedNode != null) {
       FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Selected", selectedNode.getData()
-          .toString());
+                                              .toString());
 
       FacesContext.getCurrentInstance().addMessage(null, message);
     }
@@ -357,19 +378,19 @@ public class AdminTreeBean implements Serializable {
       if (exerciseNode.isExercise()) {
         copiedExercise = exerciseNode.getExercise();
         context.addMessage(
-            null,
-            new FacesMessage(Cfg.inst().getProp(DEF_LANGUAGE, "ADMINTREE.CLIPBOARD") + ":", Cfg.inst().getProp(DEF_LANGUAGE,
-                "EXERCISE_GROUP") + ": [" + copiedExercise.getId() + "]"));
+          null,
+          new FacesMessage(Cfg.inst().getProp(DEF_LANGUAGE, "ADMINTREE.CLIPBOARD") + ":", Cfg.inst().getProp(DEF_LANGUAGE,
+                           "EXERCISE_GROUP") + ": [" + copiedExercise.getId() + "]"));
       } else if (exerciseNode.isExerciseGroup()) {
         copiedExerciseGroup = exerciseNode.getGroup();
         context.addMessage(
-            null,
-            new FacesMessage(Cfg.inst().getProp(DEF_LANGUAGE, "ADMINTREE.CLIPBOARD") + ":", Cfg.inst().getProp(DEF_LANGUAGE,
-                "EXERCISE")
-                + ": ["
-                + copiedExerciseGroup.getId()
-                + "] "
-                + copiedExerciseGroup.getName()));
+          null,
+          new FacesMessage(Cfg.inst().getProp(DEF_LANGUAGE, "ADMINTREE.CLIPBOARD") + ":", Cfg.inst().getProp(DEF_LANGUAGE,
+                           "EXERCISE")
+                           + ": ["
+                           + copiedExerciseGroup.getId()
+                           + "] "
+                           + copiedExerciseGroup.getName()));
       }
     }
   }

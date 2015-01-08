@@ -1,5 +1,29 @@
 package de.uniwue.info6.webapp.misc;
 
+/*
+ * #%L
+ * ************************************************************************
+ * ORGANIZATION  :  Institute of Computer Science, University of Wuerzburg
+ * PROJECT       :  UEPS - Uebungs-Programm fuer SQL
+ * FILENAME      :  AutoCompleteUser.java
+ * ************************************************************************
+ * %%
+ * Copyright (C) 2014 - 2015 Institute of Computer Science, University of Wuerzburg
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import static de.uniwue.info6.misc.properties.PropertiesFile.DEF_LANGUAGE;
 
 import java.util.ArrayList;
@@ -133,18 +157,21 @@ public class AutoCompleteUser {
     if (!rightsMode) {
       results.add("[" + Cfg.inst().getProp(DEF_LANGUAGE, "ASSERTION.EMPTY_FIELD") + "]");
     }
+
     if (users != null && rights != null) {
       for (User user : users) {
         if (user.getId().contains(query.trim())) {
+          // System.out.println(user.getId() + " " + query.trim());
           results.add(user.getId());
         }
       }
     }
 
-    if (results.size() <= 1 && notFound != null) {
+    if (results.size() < 1 && notFound != null) {
       results = new ArrayList<String>();
       results.add(notFound);
     }
+
     return results;
   }
 }

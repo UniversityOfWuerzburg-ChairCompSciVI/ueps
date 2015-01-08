@@ -1,5 +1,33 @@
 package de.uniwue.info6.misc;
 
+/*
+ * #%L
+ * ************************************************************************
+ * ORGANIZATION  :  Institute of Computer Science, University of Wuerzburg
+ * PROJECT       :  UEPS - Uebungs-Programm fuer SQL
+ * FILENAME      :  FileTransfer.java
+ * ************************************************************************
+ * %%
+ * Copyright (C) 2014 - 2015 Institute of Computer Science, University of Wuerzburg
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
+import static de.uniwue.info6.misc.properties.PropString.SCENARIO_RESOURCES_PATH;
+import static de.uniwue.info6.misc.properties.PropertiesFile.DEF_LANGUAGE;
+import static de.uniwue.info6.misc.properties.PropertiesFile.MAIN_CONFIG;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -27,11 +55,6 @@ import de.uniwue.info6.database.map.daos.ExerciseDao;
 import de.uniwue.info6.database.map.daos.ExerciseGroupDao;
 import de.uniwue.info6.database.map.daos.ScenarioDao;
 import de.uniwue.info6.database.map.daos.SolutionQueryDao;
-
-import static de.uniwue.info6.misc.properties.PropBool.*;
-import static de.uniwue.info6.misc.properties.PropString.*;
-import static de.uniwue.info6.misc.properties.PropInteger.*;
-import static de.uniwue.info6.misc.properties.PropertiesFile.*;
 import de.uniwue.info6.misc.properties.Cfg;
 
 /**
@@ -42,7 +65,7 @@ import de.uniwue.info6.misc.properties.Cfg;
 public class FileTransfer {
 
   private static final Log LOGGER = LogFactory.getLog(FileTransfer.class);
-  private static String scriptPath = Cfg.inst().getProp(MAIN_CONFIG, SCENARIO_RESOURCES);
+  private static String scriptPath = Cfg.inst().getProp(MAIN_CONFIG, SCENARIO_RESOURCES_PATH);
   private static final String RESOURCE_PATH = "scn";
   private static final String COPY_STRING = "[" + Cfg.inst().getProp(DEF_LANGUAGE, "COPY") + "]";
 
@@ -97,7 +120,6 @@ public class FileTransfer {
           newExercise.setLastModified(new Date());
           newExercise.setQuestion(originExercise.getQuestion());
           newExercise.setExerciseGroup(group);
-          newExercise.setGeneratedTags(originExercise.getGeneratedTags());
 
           SolutionQuery solExample = new SolutionQuery();
           solExample.setExercise(originExercise);
@@ -222,16 +244,16 @@ public class FileTransfer {
         }
 
         String scenarioFolder = scriptPath + File.separator + RESOURCE_PATH + File.separator
-            + newScenario.getId();
+                                + newScenario.getId();
 
         File scriptFile = new File(scenarioFolder + File.separator
-            + newScenario.getCreateScriptPath());
+                                   + newScenario.getCreateScriptPath());
 
         if (!scriptFile.exists()) {
           String oldScriptPath = originScenario.getCreateScriptPath();
           if (oldScriptPath != null && !oldScriptPath.trim().isEmpty()) {
             File oldScriptFile = new File(scriptPath + File.separator + RESOURCE_PATH
-                + File.separator + originScenario.getId() + File.separator + oldScriptPath);
+                                          + File.separator + originScenario.getId() + File.separator + oldScriptPath);
 
             if (oldScriptFile.exists()) {
               try {
@@ -250,7 +272,7 @@ public class FileTransfer {
           String oldImagePath = originScenario.getImagePath();
           if (oldImagePath != null && !oldImagePath.trim().isEmpty()) {
             File oldImageFile = new File(scriptPath + File.separator + RESOURCE_PATH
-                + File.separator + originScenario.getId() + File.separator + oldImagePath);
+                                         + File.separator + originScenario.getId() + File.separator + oldImagePath);
 
             if (oldImageFile.exists()) {
               try {
@@ -315,10 +337,10 @@ public class FileTransfer {
     SimpleDateFormat fmt = new SimpleDateFormat("yyyy_MM_dd-HH_mm_ss");
     String fileName = normalize(event.getFile().getFileName());
     String name = StringTools.normalize(StringTools.deleteDate(fileName.substring(0, fileName
-        .lastIndexOf('.'))))
-        + "_" + fmt.format(new Date()) + fileName.substring(fileName.lastIndexOf('.'));
+                                        .lastIndexOf('.'))))
+                  + "_" + fmt.format(new Date()) + fileName.substring(fileName.lastIndexOf('.'));
     File file = new File(scriptPath + File.separator + RESOURCE_PATH + File.separator + folder
-        + File.separator + name);
+                         + File.separator + name);
 
     if (!file.getParentFile().exists()) {
       file.getParentFile().mkdir();

@@ -1,5 +1,29 @@
 package de.uniwue.info6.webapp.lists;
 
+/*
+ * #%L
+ * ************************************************************************
+ * ORGANIZATION  :  Institute of Computer Science, University of Wuerzburg
+ * PROJECT       :  UEPS - Uebungs-Programm fuer SQL
+ * FILENAME      :  ExerciseController.java
+ * ************************************************************************
+ * %%
+ * Copyright (C) 2014 - 2015 Institute of Computer Science, University of Wuerzburg
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import static de.uniwue.info6.misc.properties.PropertiesFile.DEF_LANGUAGE;
 
 import java.io.Serializable;
@@ -171,8 +195,8 @@ public class ExerciseController implements Serializable {
   public MethodExpression getSortByModel() {
     FacesContext context = FacesContext.getCurrentInstance();
     return context.getApplication().getExpressionFactory().createMethodExpression(
-        context.getELContext(), "#{e.sortByModel}", Integer.class,
-        new Class[] { Object.class, Object.class });
+             context.getELContext(), "#{e.sortByModel}", Integer.class,
+             new Class[] { Object.class, Object.class });
   }
 
   /**
@@ -234,7 +258,7 @@ public class ExerciseController implements Serializable {
     solutionQueryMColumns.clear();
     for (int i = 0; i < solutionQueryColumns.size(); i++) {
       solutionQueryMColumns.add(new ColumnModel(solutionQueryColumns.get(i), StringTools.zeroPad(i,
-          2)));
+                                2)));
     }
   }
 
@@ -437,7 +461,7 @@ public class ExerciseController implements Serializable {
                         }
 
                         this.tableValuesOriginal = new HashMap<String, List<TableEntry>>(
-                            tableValues);
+                          tableValues);
                         currentTableFilter = new String[tableValues.size() + 2];
                       }
                     } catch (Exception e) {
@@ -477,8 +501,8 @@ public class ExerciseController implements Serializable {
    */
   public String getSQLError() {
     return "<span style='color:red'>" + "Import-Skript nicht gefunden! Siehe Details:"
-        + "<br/><br/></span><span style='color:red;font-size:10px' class='monospace'>"
-        + importScriptError + "</span>";
+           + "<br/><br/></span><span style='color:red;font-size:10px' class='monospace'>"
+           + importScriptError + "</span>";
   }
 
   /**
@@ -531,7 +555,7 @@ public class ExerciseController implements Serializable {
    */
   public boolean adminSolutionVisible() {
     Boolean prop = Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG,
-        PropBool.SHOW_SOLUTIONS_TO_ADMINS);
+                                      PropBool.SHOW_SOL_TO_PRIVELEGED);
     if (prop && hasEditingRights()) {
       return true;
     }
@@ -600,7 +624,7 @@ public class ExerciseController implements Serializable {
       if (usedSolutionQuery == null || usedSolutionQuery.getResult() == null) {
         ArrayList<UserFeedback> newFeedbackList = new ArrayList<UserFeedback>();
         newFeedbackList.add(new UserFeedback(Cfg.inst().getProp(DEF_LANGUAGE, "QUE.UNEXPECTED_ERROR"),
-              Cfg.inst().getProp(DEF_LANGUAGE, "QUE.UNEXPECTED_ERROR2"), user));
+                                             Cfg.inst().getProp(DEF_LANGUAGE, "QUE.UNEXPECTED_ERROR2"), user));
         newFeedbackList.addAll(feedbackList);
         feedbackList = newFeedbackList;
         this.feedbackVisible = true;
@@ -666,25 +690,35 @@ public class ExerciseController implements Serializable {
         }
 
         if (!userString.trim().isEmpty() && (!isRated() || !showResults())) {
-          entry = userEntryDao.getLastEntry(exercise, user);
 
-          // String msg = Cfg.inst().getProp(DEF_LANGUAGE, "ASSERTION.FILTER5");
+          entry = userEntryDao.getLastEntry(exercise, user);
           String msg = "Ihre Abgabe wurde erfolgreich gespeichert.";
           if (entry != null) {
-            entry.setUserQuery(userString);
-            entry.setEntryTime(new Date());
-            entry.setResultMessage(feedbackSummaryDB);
-            userEntryAvailable = userEntryDao.updateInstance(entry);
-            result = userResultDao.getLastUserResultFromEntry(entry);
-
-            if (result != null) {
-              result.setCredits(reachedCredits);
-              result.setLastModified(new Date());
-              result.setSolutionQuery(usedQuery);
-              result.setComment(feedbackSummaryDB);
-              userResultDao.updateInstance(result);
-            }
             msg = "Ihre Abgabe wurde erfolgreich überschrieben.";
+          }
+
+          if (Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG, PropBool.ONLY_SAVE_LAST_USER_QUERY)) {
+            // String msg = Cfg.inst().getProp(DEF_LANGUAGE, "ASSERTION.FILTER5");
+            // TODO:
+            if (entry != null) {
+              entry.setUserQuery(userString);
+              entry.setEntryTime(new Date());
+              entry.setResultMessage(feedbackSummaryDB);
+              userEntryAvailable = userEntryDao.updateInstance(entry);
+              result = userResultDao.getLastUserResultFromEntry(entry);
+
+              if (result != null) {
+                result.setCredits(reachedCredits);
+                result.setLastModified(new Date());
+                result.setSolutionQuery(usedQuery);
+                result.setComment(feedbackSummaryDB);
+                userResultDao.updateInstance(result);
+              }
+            } else {
+              entry = new UserEntry(user, exercise, userString, new Date());
+              entry.setResultMessage(feedbackSummaryDB);
+              userEntryAvailable = userEntryDao.insertNewInstance(entry);
+            }
           } else {
             entry = new UserEntry(user, exercise, userString, new Date());
             entry.setResultMessage(feedbackSummaryDB);
@@ -1164,7 +1198,7 @@ public class ExerciseController implements Serializable {
   public void setSolutionQueryFilter(String solutionQueryFilter) {
     this.solutionQueryFilter = solutionQueryFilter;
     filteredSolutionQueryValues = setQueryFilter(solutionQueryFilter, solutionQueryColumns,
-        solutionQueryValues);
+                                  solutionQueryValues);
   }
 
   /**

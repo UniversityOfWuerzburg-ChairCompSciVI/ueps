@@ -1,18 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  #%L
+  ************************************************************************
+  ORGANIZATION  :  Institute of Computer Science, University of Wuerzburg
+  PROJECT       :  UEPS - Uebungs-Programm fuer SQL
+  FILENAME      :  admin.xhtml
+  ************************************************************************
+  %%
+  Copyright (C) 2014 - 2015 Institute of Computer Science, University of Wuerzburg
+  %%
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+       http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  #L%
+  -->
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-xmlns:f="http://java.sun.com/jsf/core"
-xmlns:h="http://java.sun.com/jsf/html"
-xmlns:ui="http://java.sun.com/jsf/facelets"
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html" xmlns:ui="http://java.sun.com/jsf/facelets"
 xmlns:p="http://primefaces.org/ui">
  <META HTTP-EQUIV="refresh" CONTENT="15" />
  <h:body>
   <!-- main template defining header, footer and content -->
   <ui:composition template="/templates/common/commonLayout.xhtml">
-  <ui:define name="header_text">
+   <ui:define name="header_text">
     <span>#{txt['HEADER.LINK3']}</span>
-  </ui:define>
+   </ui:define>
    <ui:define name="content">
     <h:form id="form">
      <p:growl id="messages" showDetail="true" />
@@ -21,27 +43,23 @@ xmlns:p="http://primefaces.org/ui">
      <!-- -->
      jQuery(function() {
      <!-- -->
-     jQuery( ".scenario_class" ).tipsy({fallback:
-     "#{txt['ADMINTREE.SCENARIO']}", gravity: 'w' });
+     jQuery( ".scenario_class" ).tipsy({fallback: "#{txt['ADMINTREE.SCENARIO']}", gravity: 'w' });
      <!-- -->
-     jQuery( ".group_class").tipsy({fallback:
-     "#{txt['ADMINTREE.EX_NOT_RATED']}", gravity: 'w' });
+     jQuery( ".group_class").tipsy({fallback: "#{txt['ADMINTREE.EX_NOT_RATED']}", gravity: 'w' });
      <!-- -->
-     jQuery( ".rated_group_class").tipsy({fallback:
-     "#{txt['ADMINTREE.EX_RATED']}", gravity: 'w' });
+     jQuery( ".rated_group_class").tipsy({fallback: "#{txt['ADMINTREE.EX_RATED']}", gravity: 'w' });
      <!-- -->
      });
      <!-- -->
      function context_tooltip() {
      <!-- -->
-     jQuery( ".menu_export").tipsy({fallback:
-     "#{txt['ADMINTREE.EXPORT']}", gravity: 'w' });
+     jQuery( ".menu_export").tipsy({fallback: "#{txt['ADMINTREE.EXPORT']}", gravity: 'w' });
      <!-- -->
-     jQuery( ".menu_cut_copy").tipsy({fallback:
-     "#{txt['ADMINTREE.CUT_COPY']}", gravity: 'w' });
+     jQuery( ".menu_cut_copy").tipsy({fallback: "#{txt['ADMINTREE.CUT_COPY']}", gravity: 'w' });
      <!-- -->
-     jQuery( ".menu_delete").tipsy({fallback:
-     "#{txt['ADMINTREE.DELETE']}", gravity: 'w' }); }
+     jQuery( ".menu_delete").tipsy({fallback: "#{txt['ADMINTREE.DELETE']}", gravity: 'w' });
+     <!-- -->
+     }
      <!-- -->
      function start() { statusDialog.show(); }
      <!-- -->
@@ -50,72 +68,53 @@ xmlns:p="http://primefaces.org/ui">
      <!-- ##################################### -->
      <!-- download loading popup -->
      <!-- ##################################### -->
-     <p:dialog modal="true" widgetVar="statusDialog"
-     header="#{txt['ADMINTREE.STATUS']}" draggable="false"
+     <p:dialog modal="true" widgetVar="statusDialog" header="#{txt['ADMINTREE.STATUS']}" draggable="false"
      closable="true" resizable="false">
       <p:graphicImage value="/resources/img/#{config['IMG.LOAD']}" />
      </p:dialog>
      <!-- ##################################### -->
      <!-- delete confirm dialog -->
      <!-- ##################################### -->
-
-     <p:confirmDialog message="#{txt['ADMINTREE.DELETE_DIALOG']}"
-     header="#{txt['ADMINTREE.DELETE_HEADER']}" widgetVar="del"
-     severity="alert">
-      <p:commandButton value="#{txt['ADMINTREE.DELETE_2']}"
-      onclick="del.hide()"
-      styleClass="ui-confirmdialog-yes confirmbutton"
-      icon="ui-icon-check" actionListener="#{t.deleteNode}"
+     <p:confirmDialog message="#{txt['ADMINTREE.DELETE_DIALOG']}" header="#{txt['ADMINTREE.DELETE_HEADER']}"
+     widgetVar="del" severity="alert">
+      <p:commandButton value="#{txt['ADMINTREE.DELETE_2']}" onclick="del.hide()"
+      styleClass="ui-confirmdialog-yes confirmbutton" icon="ui-icon-check" actionListener="#{t.deleteNode}"
       update="exerciseTree" />
-
-      <p:commandButton value="#{txt['ADMINTREE.CANCEL']}"
-      styleClass="ui-confirmdialog-no confirmbutton"
+      <p:commandButton value="#{txt['ADMINTREE.CANCEL']}" styleClass="ui-confirmdialog-no confirmbutton"
       icon="ui-icon-close" onclick="del.hide()" />
      </p:confirmDialog>
-
      <!-- ##################################### -->
      <!-- duplicate confirm dialog -->
      <!-- ##################################### -->
-     <p:confirmDialog message="#{txt['ADMINTREE.DUPLICATE']}"
-     header="#{txt['ADMINTREE.DUPLICATE']}" widgetVar="duplicate"
-     severity="info">
-      <p:commandButton value="#{txt['ADMINTREE.CONFIRM']}"
-      onclick="duplicate.hide()"
-      styleClass="ui-confirmdialog-yes confirmbutton"
-      icon="ui-icon-check" actionListener="#{t.duplicateNode}"
-      update="exerciseTree" />
-      <p:commandButton value="#{txt['ADMINTREE.CANCEL']}"
-      styleClass="ui-confirmdialog-no confirmbutton"
+     <p:confirmDialog message="#{txt['ADMINTREE.DUPLICATE']}" header="#{txt['ADMINTREE.DUPLICATE']}"
+     widgetVar="duplicate" severity="info">
+      <p:commandButton value="#{txt['ADMINTREE.CONFIRM']}" onclick="duplicate.hide()"
+      styleClass="ui-confirmdialog-yes confirmbutton" icon="ui-icon-check"
+      actionListener="#{t.duplicateNode}" update="exerciseTree" />
+      <p:commandButton value="#{txt['ADMINTREE.CANCEL']}" styleClass="ui-confirmdialog-no confirmbutton"
       icon="ui-icon-close" onclick="duplicate.hide()" />
      </p:confirmDialog>
      <!-- ##################################### -->
      <!-- paste confirm dialog -->
      <!-- ##################################### -->
-     <p:confirmDialog message="#{txt['ADMINTREE.PASTE_DIALOG']}"
-     widgetVar="paste" severity="info">
-      <p:commandButton value="#{txt['ADMINTREE.PASTE']}"
-      onclick="paste.hide()"
-      styleClass="ui-confirmdialog-yes confirmbutton"
-      icon="ui-icon-check" actionListener="#{t.copyNode}"
+     <p:confirmDialog message="#{txt['ADMINTREE.PASTE_DIALOG']}" widgetVar="paste" severity="info">
+      <p:commandButton value="#{txt['ADMINTREE.PASTE']}" onclick="paste.hide()"
+      styleClass="ui-confirmdialog-yes confirmbutton" icon="ui-icon-check" actionListener="#{t.copyNode}"
       update="exerciseTree" />
-      <p:commandButton value="#{txt['ADMINTREE.CANCEL']}"
-      styleClass="ui-confirmdialog-no confirmbutton"
+      <p:commandButton value="#{txt['ADMINTREE.CANCEL']}" styleClass="ui-confirmdialog-no confirmbutton"
       icon="ui-icon-close" onclick="paste.hide()" />
      </p:confirmDialog>
      <!-- ##################################### -->
      <!-- export scenario dialog -->
      <!-- ##################################### -->
-     <p:confirmDialog message="#{txt['ADMINTREE.EXPORT_2']}"
-     widgetVar="exp" severity="info">
+     <p:confirmDialog message="#{txt['ADMINTREE.EXPORT_2']}" widgetVar="exp" severity="info">
       <p:commandButton value="#{txt['ADMINTREE.GEN']}" ajax="false"
       onclick="exp.hide(); PrimeFaces.monitorDownload(start, stop)"
-      styleClass="ui-confirmdialog-yes confirmbutton"
-      icon="ui-icon-check" actionListener="#{t.exportNode}"
+      styleClass="ui-confirmdialog-yes confirmbutton" icon="ui-icon-check" actionListener="#{t.exportNode}"
       update="exerciseTree">
        <p:fileDownload value="#{t.exportStream}" />
       </p:commandButton>
-      <p:commandButton value="#{txt['ADMINTREE.CANCEL']}"
-      styleClass="ui-confirmdialog-no confirmbutton"
+      <p:commandButton value="#{txt['ADMINTREE.CANCEL']}" styleClass="ui-confirmdialog-no confirmbutton"
       icon="ui-icon-close" onclick="exp.hide()" />
      </p:confirmDialog>
      <!-- ##################################### -->
@@ -124,16 +123,14 @@ xmlns:p="http://primefaces.org/ui">
      <p:sticky target="admintree_toolbar" />
      <p:toolbar id="admintree_toolbar">
       <p:toolbarGroup>
-       <h:outputText class="boldPoints"
-       value="#{txt['ADMINTREE.EDIT']}: "
+       <h:outputText class="boldPoints" value="#{txt['ADMINTREE.EDIT']}: "
        style="position:relative;top:5px" />
-       <p:commandButton value="#{txt['ADMINTREE.REFRESH']}"
-       update="exerciseTree" styleClass="tree_button"
+       <p:commandButton value="#{txt['ADMINTREE.REFRESH']}" update="exerciseTree" styleClass="tree_button"
        actionListener="#{t.updateTree}" />
-	   <p:commandButton value="#{txt['ADMINTREE.EXPAND']}"
-	   styleClass="tree_button" onclick="expand_tree()" />
-	   <p:commandButton value="#{txt['ADMINTREE.COLLAPSE']}"
-	   styleClass="tree_button" onclick="collapse_tree()" />
+       <p:commandButton value="#{txt['ADMINTREE.EXPAND']}" styleClass="tree_button"
+       onclick="expand_tree()" />
+       <p:commandButton value="#{txt['ADMINTREE.COLLAPSE']}" styleClass="tree_button"
+       onclick="collapse_tree()" />
        <!-- TODO: Help-Button -->
        <!--
               <p:commandButton value="#{txt['HELP']}" styleClass="tree_button"
@@ -144,64 +141,49 @@ xmlns:p="http://primefaces.org/ui">
      <!-- ##################################### -->
      <!-- context-menu items -->
      <!-- ##################################### -->
-     <p:contextMenu for="exerciseTree" id="tableMenu"
-     beforeShow="context_tooltip();" widgetVar="tableMenu">
+     <p:contextMenu for="exerciseTree" id="tableMenu" widgetVar="tableMenuWX" >
       <!-- -->
-      <p:menuitem value="#{t.getChildName()}#{txt['ADMINTREE.MENU_ADD']}"
-      update="exerciseTree" rendered="#{t.renderAddMenu()}"
-      icon="ui-icon-plus"
-      action="#{moveTo.edit(t.getSelection(), true)}" ajax="false"
-      disabled="false" style="color:#004188" />
+      <p:menuitem value="#{t.getChildName()}#{txt['ADMINTREE.MENU_ADD']}" update="exerciseTree"
+      rendered="#{t.renderAddMenu()}" icon="ui-icon-plus" action="#{moveTo.edit(t.getSelection(), true)}"
+      ajax="false" disabled="false" style="color:#004188" />
       <!-- -->
-      <p:menuitem value="#{t.getNodeName()}#{txt['ADMINTREE.MENU_EDIT']}"
-      icon="ui-icon-pencil"
-      action="#{moveTo.edit(t.getSelection(), false)}" ajax="false"
-      disabled="false" rendered="#{t.renderEditMenu()}"
-      style="color:#004188" />
+      <p:menuitem value="#{t.getNodeName()}#{txt['ADMINTREE.MENU_EDIT']}" icon="ui-icon-pencil"
+      action="#{moveTo.edit(t.getSelection(), false)}" ajax="false" disabled="false"
+      rendered="#{t.renderEditMenu()}" style="color:#004188" />
       <!-- -->
-      <p:menuitem value="#{t.getNodeName()}#{txt['ADMINTREE.MENU_CUT']}"
-      disabled="false" rendered="#{t.renderCutMenu()}"
-      actionListener="#{t.setNodeToCopy(true)}" update="messages"
-      icon="ui-icon-scissors" style="color:green"
-      styleClass="menu_cut_copy" />
+      <p:menuitem value="#{t.getNodeName()}#{txt['ADMINTREE.MENU_CUT']}" disabled="false"
+      rendered="#{t.renderCutMenu()}" actionListener="#{t.setNodeToCopy(true)}" update="messages"
+      icon="ui-icon-scissors" style="color:green" styleClass="menu_cut_copy" />
       <!-- -->
-      <p:menuitem value="#{t.getNodeName()}#{txt['ADMINTREE.MENU_COPY']}"
-      disabled="false" update="messages"
-      rendered="#{t.renderCopyMenu()}"
-      actionListener="#{t.setNodeToCopy(false)}" icon="ui-icon-copy"
+      <p:menuitem value="#{t.getNodeName()}#{txt['ADMINTREE.MENU_COPY']}" disabled="false" update="messages"
+      rendered="#{t.renderCopyMenu()}" actionListener="#{t.setNodeToCopy(false)}" icon="ui-icon-copy"
       style="color:green" styleClass="menu_cut_copy" />
       <!-- -->
-      <p:menuitem value="#{t.getChildName()}#{txt['ADMINTREE.MENU_PASTE']}"
-      disabled="#{t.pasteDisabled()}" update="exerciseTree"
-      rendered="#{t.renderPasteMenu()}" onclick="paste.show()"
-      icon="ui-icon-clipboard" style="color:green" />
+      <p:menuitem value="#{t.getChildName()}#{txt['ADMINTREE.MENU_PASTE']}" disabled="#{t.pasteDisabled()}"
+      update="exerciseTree" rendered="#{t.renderPasteMenu()}" onclick="paste.show()" icon="ui-icon-clipboard"
+      style="color:green" />
       <!-- -->
-      <p:menuitem value="#{t.getNodeName()}#{txt['ADMINTREE.MENU_DUPLICATE']}"
-      update="exerciseTree" rendered="#{t.renderDuplicateMenu()}"
-      onclick="duplicate.show()" icon="ui-icon-arrowreturnthick-1-s"
+      <p:menuitem value="#{t.getNodeName()}#{txt['ADMINTREE.MENU_DUPLICATE']}" update="exerciseTree"
+      rendered="#{t.renderDuplicateMenu()}" onclick="duplicate.show()" icon="ui-icon-arrowreturnthick-1-s"
       style="color:#EA8C00" />
       <!-- -->
-      <p:menuitem value="#{t.getNodeName()}#{txt['ADMINTREE.MENU_DEL']}"
-      update="exerciseTree" rendered="#{t.renderDeleteMenu()}"
-      onclick="del.show()" disabled="false" icon="ui-icon-close"
+      <p:menuitem value="#{t.getNodeName()}#{txt['ADMINTREE.MENU_DEL']}" update="exerciseTree"
+      rendered="#{t.renderDeleteMenu()}" onclick="del.show()" disabled="false" icon="ui-icon-close"
       style="color:#EA8C00" styleClass="menu_delete" />
       <!-- -->
-      <p:menuitem value="#{t.getNodeName()}#{txt['ADMINTREE.MENU_EXPORT']}"
-      disabled="false" update="exerciseTree" icon="ui-icon-disk"
-      rendered="#{t.renderExportMenu()}" onclick="exp.show()"
+      <p:menuitem value="#{t.getNodeName()}#{txt['ADMINTREE.MENU_EXPORT']}" disabled="false"
+      update="exerciseTree" icon="ui-icon-disk" rendered="#{t.renderExportMenu()}" onclick="exp.show()"
       styleClass="menu_export" />
      </p:contextMenu>
      <!-- ##################################### -->
      <!-- the actual tree -->
      <!-- ##################################### -->
-     <p:tree id="exerciseTree" value="#{t.root}" var="node"
-     animate="true" selectionMode="single"
-     selection="#{t.selectedNode}"
-     style="width:848px;margin-right:50px" dynamic="true"
-     widgetVar="ex_tree">
+     <p:tree id="exerciseTree" value="#{t.root}" var="node" animate="true" selectionMode="single"
+     selection="#{t.selectedNode}" style="width:848px;margin-right:50px" dynamic="true" widgetVar="ex_tree">
       <!-- -->
-      <p:ajax event="select" update=":form:tableMenu"
-      listener="#{t.setSelection}" oncomplete="tableMenu.show();" />
+      <p:ajax event="select" update=":form:tableMenu" listener="#{t.setSelection}"
+      oncomplete="tableMenuWX.show()" />
+      <!-- oncomplete="tableMenuWX.show(currentEvent)" /> -->
       <!-- -->
       <p:ajax event="collapse" listener="#{t.onNodeCollapse}" />
       <!-- -->
@@ -209,13 +191,11 @@ xmlns:p="http://primefaces.org/ui">
       <!-- ##################################### -->
       <!-- a tree-node -->
       <!-- ##################################### -->
-      <p:treeNode collapsedIcon="#{t.getIcon(node, true)}"
-      expandedIcon="#{t.getIcon(node, false)}">
+      <p:treeNode collapsedIcon="#{t.getIcon(node, true)}" expandedIcon="#{t.getIcon(node, false)}">
        <!-- -->
-       <span class="tree_doubleclick"
-       onclick="jQuery(this).css( 'white-space', 'normal' );">
-        <h:outputText class="#{node.getStyleClass()}"
-        value="#{node.getMessage()}" />
+       <span class="tree_doubleclick" onclick="jQuery(this).css( 'white-space', 'normal' );">
+        <h:outputText class="#{node.getStyleClass()}" value="#{node.getMessage()}" />
+        <!-- <p:commandButton value="test" onclick="tableMenuWX.show(currentEvent)" /> -->
        </span>
       </p:treeNode>
      </p:tree>
@@ -223,8 +203,7 @@ xmlns:p="http://primefaces.org/ui">
      <!-- right-click-description -->
      <!-- ##################################### -->
      <p:outputPanel style="text-align:center;
-			 position:relative;top:20px"
-     styleClass="tree_description">
+                         position:relative;top:20px" styleClass="tree_description">
       <p style="display:inline;color:#004188;
                 font-size:15px;font-weight:bold">
       <!-- -->

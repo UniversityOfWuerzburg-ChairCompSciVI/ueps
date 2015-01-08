@@ -1,5 +1,33 @@
 package de.uniwue.info6.database.jaxb;
 
+/*
+ * #%L
+ * ************************************************************************
+ * ORGANIZATION  :  Institute of Computer Science, University of Wuerzburg
+ * PROJECT       :  UEPS - Uebungs-Programm fuer SQL
+ * FILENAME      :  ScenarioExporter.java
+ * ************************************************************************
+ * %%
+ * Copyright (C) 2014 - 2015 Institute of Computer Science, University of Wuerzburg
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
+import static de.uniwue.info6.misc.properties.PropString.SCENARIO_RESOURCES_PATH;
+import static de.uniwue.info6.misc.properties.PropertiesFile.DEF_LANGUAGE;
+import static de.uniwue.info6.misc.properties.PropertiesFile.MAIN_CONFIG;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -28,15 +56,10 @@ import de.uniwue.info6.database.map.SolutionQuery;
 import de.uniwue.info6.database.map.daos.ExerciseDao;
 import de.uniwue.info6.database.map.daos.ExerciseGroupDao;
 import de.uniwue.info6.database.map.daos.SolutionQueryDao;
-
-import static de.uniwue.info6.misc.properties.PropBool.*;
-import static de.uniwue.info6.misc.properties.PropString.*;
-import static de.uniwue.info6.misc.properties.PropInteger.*;
-import static de.uniwue.info6.misc.properties.PropertiesFile.*;
 import de.uniwue.info6.misc.properties.Cfg;
 
 public class ScenarioExporter {
-  private static String scriptSystemPath = Cfg.inst().getProp(MAIN_CONFIG, SCENARIO_RESOURCES);
+  private static String scriptSystemPath = Cfg.inst().getProp(MAIN_CONFIG, SCENARIO_RESOURCES_PATH);
   private static final String RESOURCE_PATH = "scn";
   private static final Log LOGGER = LogFactory.getLog(ScenarioExporter.class);
 
@@ -103,9 +126,9 @@ public class ScenarioExporter {
           scenarioXml = scenarioXmlConflict;
           scenarioXsd = scenarioXsdConflict;
           export = new File(saveDir, "scenario_" + scenario.getId() + "_export_" + conflict
-              + ".zip");
+                            + ".zip");
           String readme = Cfg.inst().getProp(DEF_LANGUAGE, "MISC.XSD_XML_CONFLICT") + "\n"
-              + scenarioMainConflict.getName();
+                          + scenarioMainConflict.getName();
 
           if (conflictReadme.exists()) {
             conflictReadme.delete();
@@ -213,8 +236,6 @@ public class ScenarioExporter {
         e.setExerciseGroup(group);
         e.setExercise(null);
         e.setExercises(null);
-        e.setGeneratedTags(null);
-        e.setUserExTags(null);
 
         // solutions
         Set<SolutionQuery> solutions = solutionDao.findByExerciceAsSet(e);

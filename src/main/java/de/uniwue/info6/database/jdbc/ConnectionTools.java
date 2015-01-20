@@ -106,6 +106,7 @@ public class ConnectionTools extends Thread {
     this.userDao = new UserDao();
   }
 
+
   /**
    * {@inheritDoc}
    *
@@ -147,82 +148,7 @@ public class ConnectionTools extends Thread {
         boolean debugMode = Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG, PropBool.DEBUG_MODE);
 
         if (debugMode) {
-          UserRightDao userRightDao = new UserRightDao();
-          String[] testUsers = new String[] {"dozent_1", "dozent_2", "student_1", "student_2"};
-          User exampleLecturer = null;
-          for (String testUserId : testUsers) {
-            User testUser = userDao.getById(testUserId.trim());
-            if (testUser == null) {
-              testUser = new User();
-              testUser.setId(testUserId);
-
-              // ------------------------------------------------ //
-              if (testUserId.startsWith("dozent_")) {
-                testUser.setIsLecturer(true);
-              }
-              userDao.insertNewInstance(testUser);
-              // ------------------------------------------------ //
-              if (testUserId.equals("dozent_1")) {
-                exampleLecturer = testUser;
-                Scenario scenario = new ScenarioDao().getById(1);
-                if (scenario != null && testUser != null && lastAdminUser != null) {
-                  UserRight right = new UserRight(testUser, lastAdminUser, scenario, true, true, false);
-                  userRightDao.insertNewInstance(right);
-                }
-              }
-              // ------------------------------------------------ //
-              if (testUserId.equals("student_1")) {
-                Scenario scenario = new ScenarioDao().getById(1);
-                if (scenario != null && testUser != null && exampleLecturer != null) {
-                  UserRight right = new UserRight(testUser, exampleLecturer, scenario, true, true, true);
-                  userRightDao.insertNewInstance(right);
-                }
-              }
-              // ------------------------------------------------ //
-              if (testUserId.equals("student_2")) {
-                Scenario scenario = new ScenarioDao().getById(1);
-                if (scenario != null && testUser != null && exampleLecturer != null) {
-                  UserRight right = new UserRight(testUser, exampleLecturer, scenario, true, false, false);
-                  userRightDao.insertNewInstance(right);
-                }
-              }
-
-              // ------------------------------------------------ //
-              System.err.println("INFO (ueps): Test user with id: \"" + testUserId + "\" added");
-            }
-          }
-
-          UserEntryDao userEntryDao = new UserEntryDao();
-          UserResultDao userResultDao = new UserResultDao();
-          ExerciseDao exerciseDao = new ExerciseDao();
-          SolutionQueryDao solutionQueryDao = new SolutionQueryDao();
-
-          for (int i = 1; i < 100; i++) {
-            try {
-              Exercise testExercise = exerciseDao.getById(i);
-              if (testExercise != null) {
-                UserEntry testEntry = new UserEntry();
-                // testEntry.setExercise(exerciseDao.getById(4));
-                testEntry.setExercise(testExercise);
-                testEntry.setUser(userDao.getById("student_2"));
-                testEntry.setUserQuery("SELECT title, author, price FROM books JOIN publishers ON publisher_id=publishers.id WHERE publishers.name=\"Carlsen\"");
-                testEntry.setEntryTime(new Date());
-                testEntry.setResultMessage("");
-                userEntryDao.insertNewInstance(testEntry);
-
-                UserResult testResult = new UserResult();
-                testResult.setUserEntry(testEntry);
-                testResult.setSolutionQuery(solutionQueryDao.getById(4));
-                testResult.setCredits((byte) 3);
-                testResult.setComment("");
-                testResult.setLastModified(new Date());
-                userResultDao.insertNewInstance(testResult);
-              }
-            } catch (Exception e) {
-              // TODO: logging
-              e.printStackTrace();
-            }
-          }
+          this.addSomeTestData();
         }
 
         // log performance stats
@@ -356,5 +282,90 @@ public class ConnectionTools extends Thread {
   public void cleanUp() {
     if (this.currentThread != null)
       this.currentThread.interrupt();
+  }
+
+
+  /**
+   *
+   *
+   */
+  public void addSomeTestData() {
+    UserRightDao userRightDao = new UserRightDao();
+    String[] testUsers = new String[] {"dozent_1", "dozent_2", "student_1", "student_2"};
+    User exampleLecturer = null;
+    User lastAdminUser = userDao.getRandom();
+    for (String testUserId : testUsers) {
+      User testUser = userDao.getById(testUserId.trim());
+      if (testUser == null) {
+        testUser = new User();
+        testUser.setId(testUserId);
+
+        // ------------------------------------------------ //
+        if (testUserId.startsWith("dozent_")) {
+          testUser.setIsLecturer(true);
+        }
+        userDao.insertNewInstance(testUser);
+        // ------------------------------------------------ //
+        if (testUserId.equals("dozent_1")) {
+          exampleLecturer = testUser;
+          Scenario scenario = new ScenarioDao().getById(1);
+          if (scenario != null && testUser != null && lastAdminUser != null) {
+            UserRight right = new UserRight(testUser, lastAdminUser, scenario, true, true, false);
+            userRightDao.insertNewInstance(right);
+          }
+        }
+        // ------------------------------------------------ //
+        if (testUserId.equals("student_1")) {
+          Scenario scenario = new ScenarioDao().getById(1);
+          if (scenario != null && testUser != null && exampleLecturer != null) {
+            UserRight right = new UserRight(testUser, exampleLecturer, scenario, true, true, true);
+            userRightDao.insertNewInstance(right);
+          }
+        }
+        // ------------------------------------------------ //
+        if (testUserId.equals("student_2")) {
+          Scenario scenario = new ScenarioDao().getById(1);
+          if (scenario != null && testUser != null && exampleLecturer != null) {
+            UserRight right = new UserRight(testUser, exampleLecturer, scenario, true, false, false);
+            userRightDao.insertNewInstance(right);
+          }
+        }
+
+        // ------------------------------------------------ //
+        System.err.println("INFO (ueps): Test user with id: \"" + testUserId + "\" added");
+      }
+    }
+
+    UserEntryDao userEntryDao = new UserEntryDao();
+    UserResultDao userResultDao = new UserResultDao();
+    ExerciseDao exerciseDao = new ExerciseDao();
+    SolutionQueryDao solutionQueryDao = new SolutionQueryDao();
+
+    for (int i = 1; i < 100; i++) {
+      try {
+        Exercise testExercise = exerciseDao.getById(i);
+        if (testExercise != null) {
+          UserEntry testEntry = new UserEntry();
+          // testEntry.setExercise(exerciseDao.getById(4));
+          testEntry.setExercise(testExercise);
+          testEntry.setUser(userDao.getById("student_2"));
+          testEntry.setUserQuery("SELECT title, author, price FROM books JOIN publishers ON publisher_id=publishers.id WHERE publishers.name=\"Carlsen\"");
+          testEntry.setEntryTime(new Date());
+          testEntry.setResultMessage("");
+          userEntryDao.insertNewInstance(testEntry);
+
+          UserResult testResult = new UserResult();
+          testResult.setUserEntry(testEntry);
+          testResult.setSolutionQuery(solutionQueryDao.getById(4));
+          testResult.setCredits((byte) 0);
+          testResult.setComment("");
+          testResult.setLastModified(new Date());
+          userResultDao.insertNewInstance(testResult);
+        }
+      } catch (Exception e) {
+        // TODO: logging
+        e.printStackTrace();
+      }
+    }
   }
 }

@@ -60,7 +60,6 @@ import de.uniwue.info6.database.map.Scenario;
 import de.uniwue.info6.database.map.User;
 import de.uniwue.info6.database.map.daos.ScenarioDao;
 import de.uniwue.info6.misc.StringTools;
-import de.uniwue.info6.misc.TicToc;
 import de.uniwue.info6.misc.properties.Cfg;
 import de.uniwue.info6.misc.properties.PropBool;
 import de.uniwue.info6.misc.properties.PropString;
@@ -105,7 +104,7 @@ public class ConnectionManager implements Serializable {
 
   private static ConnectionManager instance;
 
-  private boolean dropTables = false;
+  private boolean dropTables = true;
 
   // -----------------------------------------------------------------------
   // initialize
@@ -385,7 +384,7 @@ public class ConnectionManager implements Serializable {
     adminDataSource = new DriverManagerDataSource();
 
     url = url + URL_PREFIX + dbHost + ":" + dbPort
-          + "?useUnicode=true&characterEncoding=UTF8&autoReconnect=true";
+          + "?useUnicode=true&characterEncoding=UTF8&autoReconnect=true&wait_timeout=57600&interactive_timeout=57600";
 
     adminDataSource.setDriverClassName(DRIVER);
     adminDataSource.setUrl(url);
@@ -1043,8 +1042,8 @@ public class ConnectionManager implements Serializable {
                           // System.out.println(StringTools.trimToLength(commandWithUserPrefix, 200));
                         }
                       } catch (Exception e) {
-                        // TODO:
-                        LOGGER.error("test", e);
+                        // TODO: duplicate entries???
+                        // LOGGER.error("test", e);
                       }
                     }
                   }

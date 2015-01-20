@@ -45,7 +45,7 @@
 
 5. Anschließend kann die Anwendung kompiliert werden:
    * *Unter Linux*<br/>
-     Zuerst müssen einigen Build-Skripte im Wurzelverzeichnis ausführbar gemacht werden:<br/>
+     Zuerst müssen einige Build-Skripte im Wurzelverzeichnis ausführbar gemacht werden:<br/>
      ``chmod +x *.sh``<br/>
      Dann einfach foldendes Skript ausführen<br/>
      ``./build-package.sh``<br/>

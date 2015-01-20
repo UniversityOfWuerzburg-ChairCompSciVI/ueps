@@ -222,6 +222,10 @@
   background-color:white;
 }
 
+.ui-fileupload-content {
+  background:lightcyan;
+}
+
 
 /*
  * -------------------------------------------------------------

@@ -13,9 +13,9 @@ package de.uniwue.info6.webapp.admin;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -51,7 +51,6 @@ import de.uniwue.info6.database.map.daos.ExerciseGroupDao;
 import de.uniwue.info6.database.map.daos.ScenarioDao;
 import de.uniwue.info6.misc.DateFormatTools;
 import de.uniwue.info6.misc.properties.Cfg;
-import de.uniwue.info6.webapp.session.SessionCollector;
 import de.uniwue.info6.webapp.session.SessionObject;
 
 /**
@@ -125,14 +124,14 @@ public class AdminEditGroup implements Serializable {
         message = Cfg.inst().getProp(DEF_LANGUAGE, "EDIT_GROUP.TIME_CONFLICT1");
         sev = FacesMessage.SEVERITY_ERROR;
       } else if (scenario.getStartTime() != null && startDate != null
-          && startDate.before(scenario.getStartTime())) {
+                 && startDate.before(scenario.getStartTime())) {
         message = Cfg.inst().getProp(DEF_LANGUAGE, "EDIT_GROUP.TIME_CONFLICT2") + ": ["
-            + DateFormatTools.getGermanFormat(scenario.getStartTime()) + "]";
+                  + DateFormatTools.getGermanFormat(scenario.getStartTime()) + "]";
         sev = FacesMessage.SEVERITY_ERROR;
       } else if (scenario.getEndTime() != null && endDate != null
-          && endDate.after(scenario.getEndTime())) {
+                 && endDate.after(scenario.getEndTime())) {
         message = Cfg.inst().getProp(DEF_LANGUAGE, "EDIT_GROUP.TIME_CONFLICT3") + ": ["
-            + DateFormatTools.getGermanFormat(scenario.getEndTime()) + "]";
+                  + DateFormatTools.getGermanFormat(scenario.getEndTime()) + "]";
         sev = FacesMessage.SEVERITY_ERROR;
       }
 
@@ -191,7 +190,7 @@ public class AdminEditGroup implements Serializable {
     scenarioDao = new ScenarioDao();
     exerciseGroupDao = new ExerciseGroupDao();
     Map<String, String> requestParams = ec.getRequestParameterMap();
-    ac = new SessionCollector().getSessionObject();
+    ac = SessionObject.pull();
     user = ac.getUser();
     rights = new UserRights().initialize();
     userHasRights = false;
@@ -271,7 +270,7 @@ public class AdminEditGroup implements Serializable {
    */
   public boolean hasEditingRights() {
     if (exerciseGroup != null) {
-      return rights.checkIfExerciseGroupCanBeEdited(exerciseGroup);
+      return rights.hasEditingRight(user, exerciseGroup);
     }
     return true;
   }

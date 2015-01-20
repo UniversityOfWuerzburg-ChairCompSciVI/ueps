@@ -13,9 +13,9 @@ package de.uniwue.info6.webapp.session;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,36 +24,36 @@ package de.uniwue.info6.webapp.session;
  * #L%
  */
 
+
 import java.io.Serializable;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
-import de.uniwue.info6.database.map.User;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import de.uniwue.info6.database.map.User;
 
 /**
  *
  *
  * @author Michael
  */
-@ManagedBean
-@SessionScoped
-public class SessionCollector implements Serializable {
+@ManagedBean(name = "userSession")
+@ViewScoped
+public class SessionBean implements Serializable {
 
   /**
    *
    */
   private static final long serialVersionUID = 1L;
-  private static final Log LOGGER = LogFactory.getLog(SessionCollector.class);
-  private final static String sessionPosition = "auth_controller";
+  private static final Log LOGGER = LogFactory.getLog(SessionBean.class);
   private final static String userID = "userID";
   private long sessionTime;
 
@@ -68,7 +68,7 @@ public class SessionCollector implements Serializable {
       HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(false);
       if (session != null) {
         sessionTime = session.getMaxInactiveInterval()
-            - ((System.currentTimeMillis() - session.getLastAccessedTime()) / 1000);
+                      - ((System.currentTimeMillis() - session.getLastAccessedTime()) / 1000);
       }
     } catch (Exception e) {
       LOGGER.info("problem with updating server time", e);
@@ -80,30 +80,8 @@ public class SessionCollector implements Serializable {
    *
    * @return
    */
-  public SessionObject getSessionObject() {
-    try {
-      FacesContext facesContext = FacesContext.getCurrentInstance();
-      if (facesContext != null) {
-        HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(false);
-        SessionObject ac = null;
-        if (session != null) {
-          ac = (SessionObject) session.getAttribute(sessionPosition);
-        }
-        return ac;
-      }
-    } catch (Exception e) {
-      LOGGER.error("problem getting saved session user object", e);
-    }
-    return null;
-  }
-
-  /**
-   *
-   *
-   * @return
-   */
   public User getUser() {
-    SessionObject ac = getSessionObject();
+    SessionObject ac = SessionObject.pull();
     User user = null;
     if (ac != null) {
       user = ac.getUser();

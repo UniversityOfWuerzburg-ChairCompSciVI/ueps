@@ -12,9 +12,9 @@
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
-  
+
        http://www.apache.org/licenses/LICENSE-2.0
-  
+
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -42,7 +42,7 @@ xmlns:p="http://primefaces.org/ui">
       <h:link value="#{txt['HEADER.LINK1']}" outcome="home" rendered="#{rights.showExerciseLink()}"
       class="lightshadow #{moveTo.getHeaderLinkStyle('index.xhtml')}" />
       <!-- -->
-      <h:link value="#{txt['HEADER.LINK2']}" rendered="#{rights.isAdmin()}" outcome="rights"
+      <h:link value="#{txt['HEADER.LINK2']}" rendered="#{rights.hasUserAddingRights()}" outcome="rights"
       class="lightshadow #{moveTo.getHeaderLinkStyle('user_rights.xhtml')}" />
       <!-- -->
       <h:link value="#{txt['HEADER.LINK3']}" rendered="#{rights.hasEditingRight()}" outcome="admin"
@@ -59,13 +59,13 @@ xmlns:p="http://primefaces.org/ui">
       <ui:insert name="header_text">
        <h:outputText value="#{txt['HEADER.DEFAULT']}" />
       </ui:insert>
-      <h:outputText class="maincolor" rendered="#{sessionCollector.hasUser()}"
+      <h:outputText class="maincolor" rendered="#{userSession.hasUser()}"
       value="   (#{txt['SESSION.USER']} '" />
-      <h:outputText value="#{sessionCollector.getUserName()}" />
-      <h:outputText class="maincolor" value="'" rendered="#{sessionCollector.hasUser()}" />
+      <h:outputText value="#{userSession.getUserName()}" />
+      <h:outputText class="maincolor" value="'" rendered="#{userSession.hasUser()}" />
       <h:outputText rendered="#{rights.isAdmin()}" value=" - " />
       <h:outputText rendered="#{rights.isAdmin()}" class="admin-text" value="#{txt['RIGHTS.ADMIN']}" />
-      <h:outputText class="maincolor" rendered="#{sessionCollector.hasUser()}" value=")" />
+      <h:outputText class="maincolor" rendered="#{userSession.hasUser()}" value=")" />
      </p>
     </td>
    </tr>

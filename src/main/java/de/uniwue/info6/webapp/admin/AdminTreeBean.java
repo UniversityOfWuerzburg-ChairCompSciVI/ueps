@@ -13,9 +13,9 @@ package de.uniwue.info6.webapp.admin;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -61,7 +61,7 @@ import de.uniwue.info6.database.map.daos.UserDao;
 import de.uniwue.info6.database.map.daos.UserEntryDao;
 import de.uniwue.info6.misc.FileTransfer;
 import de.uniwue.info6.misc.properties.Cfg;
-import de.uniwue.info6.webapp.session.SessionCollector;
+import de.uniwue.info6.webapp.session.SessionBean;
 import de.uniwue.info6.webapp.session.SessionObject;
 
 /**
@@ -124,7 +124,7 @@ public class AdminTreeBean implements Serializable {
     transferController = new FileTransfer();
     connectionPool = ConnectionManager.instance();
 
-    SessionObject ac = new SessionCollector().getSessionObject();
+    SessionObject ac = SessionObject.pull();
     user = ac.getUser();
     updateTree(null);
   }
@@ -143,9 +143,11 @@ public class AdminTreeBean implements Serializable {
       if (scenarios != null) {
         for (Scenario scenario : scenarios) {
           if (user != null) {
-            if (rights.hasEditingRight(user, scenario)) {
+            if (rights.hasEditingRight(user, scenario) || rights.hasEditingRight(user, scenario, true)) {
               TreeNode node1 = new DefaultTreeNode(new ExerciseNode(scenario), node0);
-              // node1.setExpanded(true);
+              if (scenarios.size() <= 2) {
+                node1.setExpanded(true);
+              }
               List<ExerciseGroup> groups = exgroupDao.findByScenario(scenario);
               for (ExerciseGroup group : groups) {
                 TreeNode node2 = new DefaultTreeNode(new ExerciseNode(group), node1);

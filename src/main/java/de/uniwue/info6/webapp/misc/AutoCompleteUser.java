@@ -13,9 +13,9 @@ package de.uniwue.info6.webapp.misc;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -41,7 +41,6 @@ import de.uniwue.info6.database.map.daos.UserEntryDao;
 import de.uniwue.info6.misc.StringTools;
 import de.uniwue.info6.misc.properties.Cfg;
 import de.uniwue.info6.webapp.admin.UserRights;
-import de.uniwue.info6.webapp.session.SessionCollector;
 import de.uniwue.info6.webapp.session.SessionObject;
 
 /**
@@ -82,7 +81,7 @@ public class AutoCompleteUser {
     userEntryDao = new UserEntryDao();
     notFound = Cfg.inst().getProp(DEF_LANGUAGE, "RIGHTS.USER_NOT_FOUND");
 
-    SessionObject ac = new SessionCollector().getSessionObject();
+    SessionObject ac = SessionObject.pull();
     if (ac != null) {
       user = ac.getUser();
     }
@@ -97,6 +96,12 @@ public class AutoCompleteUser {
   public AutoCompleteUser rightsInit() {
     rightsMode = true;
     List<User> temp = dao.findAll();
+
+    // remove current user from list
+    if (user != null) {
+      temp.remove(user);
+    }
+
     users = new ArrayList<User>();
 
     if (temp != null) {
@@ -161,7 +166,6 @@ public class AutoCompleteUser {
     if (users != null && rights != null) {
       for (User user : users) {
         if (user.getId().contains(query.trim())) {
-          // System.out.println(user.getId() + " " + query.trim());
           results.add(user.getId());
         }
       }

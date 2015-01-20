@@ -13,9 +13,9 @@ package de.uniwue.info6.webapp.admin;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -44,13 +44,13 @@ import de.uniwue.info6.database.map.UserEntry;
 import de.uniwue.info6.database.map.UserRight;
 import de.uniwue.info6.database.map.daos.ExerciseDao;
 import de.uniwue.info6.database.map.daos.ExerciseGroupDao;
+import de.uniwue.info6.database.map.daos.ScenarioDao;
 import de.uniwue.info6.database.map.daos.UserDao;
 import de.uniwue.info6.database.map.daos.UserEntryDao;
 import de.uniwue.info6.database.map.daos.UserRightDao;
 import de.uniwue.info6.misc.properties.Cfg;
 import de.uniwue.info6.misc.properties.PropString;
 import de.uniwue.info6.misc.properties.PropertiesFile;
-import de.uniwue.info6.webapp.session.SessionCollector;
 import de.uniwue.info6.webapp.session.SessionObject;
 
 /**
@@ -72,8 +72,10 @@ public class UserRights implements Serializable {
   private ExerciseGroupDao exerciseGroupDao;
   private ExerciseDao exerciseDao;
   private UserEntryDao userEntryDao;
-  private SessionObject ac;
+  private SessionObject session;
   private UserDao userDao;
+  private ScenarioDao scenarioDao;
+  private List<Scenario> scenarioList;
 
   /**
    *
@@ -93,10 +95,23 @@ public class UserRights implements Serializable {
     this.exerciseDao = new ExerciseDao();
     this.userEntryDao = new UserEntryDao();
     this.userDao = new UserDao();
+    this.scenarioDao = new ScenarioDao();
+    this.scenarioList = scenarioDao.findAll();
+  }
 
-    if (ac == null) {
-      ac = new SessionCollector().getSessionObject();
+  /**
+   * @return
+   *
+   *
+   */
+  private boolean validSession() {
+    if (session == null) {
+      session = SessionObject.pull();
     }
+    if (session != null) {
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -120,7 +135,6 @@ public class UserRights implements Serializable {
     return hasEditingRight(user, scenario) || hasRatingRight(user, scenario);
   }
 
-
   /**
    *
    *
@@ -128,8 +142,8 @@ public class UserRights implements Serializable {
    */
   public boolean hasScenario() {
     try {
-      if (ac != null) {
-        Scenario scenario = ac.getScenario();
+      if (this.validSession()) {
+        Scenario scenario = session.getScenario();
         return scenario != null;
       }
     } catch (Exception e) {
@@ -144,15 +158,11 @@ public class UserRights implements Serializable {
    * @return
    */
   public boolean showExerciseLink() {
-    if (ac != null) {
-      Scenario scenario = ac.getScenario();
-      if (scenario != null) {
-        if (ac.getUser() != null) {
-          return true;
-        }
-      }
+    if (this.validSession() && session.getScenario() != null && session.getUser() != null) {
+      return true;
+    } else {
+      return false;
     }
-    return false;
   }
 
   /**
@@ -189,6 +199,8 @@ public class UserRights implements Serializable {
   // ------------------------------------------------ //
   // --
   // ------------------------------------------------ //
+
+  // TODO: delete methods
 
   /**
    *
@@ -245,23 +257,53 @@ public class UserRights implements Serializable {
   // --
   // ------------------------------------------------ //
 
+
   /**
    *
    *
    * @return
    */
   public boolean hasEditingRight() {
+    if (this.validSession()) {
+      return hasEditingRight(session.getUser());
+    }
+    return false;
+  }
+
+  /**
+   *
+   *
+   * @return
+   */
+  public boolean hasEditingRight(User user) {
     try {
-      if (ac != null) {
-        User user = ac.getUser();
-        Scenario scenario = ac.getScenario();
-        return hasEditingRight(user, scenario);
+      if (user != null) {
+        if (isAdmin(user)) {
+          return true;
+        }
+        for (Scenario sc : scenarioList) {
+          final List<ExerciseGroup> groups = exerciseGroupDao.findByScenario(sc);
+          if (hasEditingRight(user, sc)) {
+            return true;
+          }
+          for (ExerciseGroup group : groups) {
+            if (hasEditingRight(user, group)) {
+              return true;
+            }
+          }
+        }
+
+        if (this.validSession()) {
+          Scenario scenario = session.getScenario();
+          return hasEditingRight(user, scenario);
+        }
       }
     } catch (Exception e) {
       LOGGER.error("ERROR CHECKING EDITING RIGHTS", e);
     }
     return false;
   }
+
 
   /**
    *
@@ -271,9 +313,19 @@ public class UserRights implements Serializable {
    * @return
    */
   public boolean hasEditingRight(User user, Scenario scenario) {
+    return hasEditingRight(user, scenario, false);
+  }
+
+  /**
+   *
+   *
+   * @param user
+   * @param scenario
+   * @return
+   */
+  public boolean hasEditingRight(User user, Scenario scenario, boolean groupsOnly) {
     if (user != null) {
       user = userDao.getById(user.getId());
-
       if (isAdmin(user)) {
         return true;
       }
@@ -282,7 +334,9 @@ public class UserRights implements Serializable {
       if (rights != null) {
         for (UserRight right : rights) {
           Scenario sc = right.getScenario();
-          if (right.getHasGroupEditingRights() && scenario.getId() == sc.getId()) {
+          if (((groupsOnly && right.getHasGroupEditingRights()) ||
+               (!groupsOnly && right.getHasScenarioEditingRights()))
+              && scenario.getId().equals(sc.getId())) {
             return true;
           }
         }
@@ -299,7 +353,10 @@ public class UserRights implements Serializable {
    * @return
    */
   public boolean hasEditingRight(User user, ExerciseGroup group) {
-    return hasEditingRight(user, exerciseGroupDao.getById(group.getId()).getScenario());
+    if (group != null) {
+      return hasEditingRight(user, group.getScenario(), true);
+    }
+    return false;
   }
 
 
@@ -322,21 +379,37 @@ public class UserRights implements Serializable {
   // --
   // ------------------------------------------------ //
 
+
   /**
    *
    *
    * @return
    */
   public boolean hasRatingRight() {
+    if (this.validSession()) {
+      return hasRatingRight(session.getUser());
+    }
+    return false;
+  }
+
+  /**
+   *
+   *
+   * @return
+   */
+  public boolean hasRatingRight(User user) {
     try {
-      if (ac != null) {
-        User user = ac.getUser();
-        Scenario scenario = ac.getScenario();
-        return hasRatingRight(user, scenario);
+      if (user != null) {
+        for (Scenario sc : scenarioList) {
+          if (hasRatingRight(user, sc)) {
+            return true;
+          }
+        }
       }
     } catch (Exception e) {
       LOGGER.error("ERROR CHECKING RATING RIGHTS", e);
     }
+    // TODO: shit
     return false;
   }
 
@@ -376,7 +449,7 @@ public class UserRights implements Serializable {
    * @return
    */
   public boolean hasRatingRight(User user, Scenario scenario) {
-    if (user != null) {
+    if (user != null && scenario != null) {
       if (isAdmin(user)) {
         return true;
       }
@@ -398,19 +471,110 @@ public class UserRights implements Serializable {
   // --
   // ------------------------------------------------ //
 
+  /**
+   *
+   *
+   * @return
+   */
   public boolean hasUserAddingRights() {
-    try {
-      if (ac != null) {
-        User user = ac.getUser();
-        Scenario scenario = ac.getScenario();
-        return hasRatingRight(user, scenario);
-      }
-    } catch (Exception e) {
-      LOGGER.error("ERROR CHECKING RATING RIGHTS", e);
+    if (this.validSession()) {
+      return hasUserAddingRights(session.getUser());
     }
     return false;
   }
 
+  /**
+   *
+   *
+   * @param user
+   * @return
+   */
+  public boolean hasUserAddingRights(User user) {
+    try {
+      if (user != null) {
+        if (isAdmin(user)) {
+          return true;
+        }
+
+        boolean hasRights = false;
+        final List<Scenario> scenarioList = scenarioDao.findAll();
+        for (Scenario sc : scenarioList) {
+          if (hasUserAddingRights(user, sc)) {
+            hasRights = true;
+          }
+        }
+        return hasRights;
+      }
+    } catch (Exception e) {
+      LOGGER.error("ERROR CHECKING USER EDITING RIGHTS", e);
+    }
+    return false;
+  }
+
+
+  /**
+   *
+   *
+   * @param user
+   * @param scenario
+   * @return
+   *
+   * @throws Exception
+   */
+  public boolean hasUserAddingRights(User user, Scenario scenario) throws Exception {
+    if (isAdmin(user)) {
+      return true;
+    }
+
+    if (isLecturer(user)) {
+      List<UserRight> rightsList = this.userRightDao.getByUser(user);
+      for (UserRight rights : rightsList) {
+        if (rights.getScenario().getId().equals(scenario.getId())) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  // ------------------------------------------------ //
+  // --
+  // ------------------------------------------------ //
+
+
+  /**
+   *
+   *
+   * @return
+   */
+  public boolean isAdminOrLecturer() {
+    try {
+      if (this.validSession()) {
+        User user = session.getUser();
+        if (user != null) {
+          return isAdminOrLecturer(user);
+        }
+      }
+    } catch (Exception e) {
+      LOGGER.error("ERROR CHECKING ADMIN-LECTURER RIGHTS", e);
+    }
+    return false;
+  }
+
+  /**
+   *
+   *
+   * @param user
+   * @return
+   */
+  public boolean isAdminOrLecturer(User user) {
+    if (isAdmin(user) || isLecturer(user)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   // ------------------------------------------------ //
   // --
@@ -453,8 +617,8 @@ public class UserRights implements Serializable {
    */
   public boolean isLecturer() {
     try {
-      if (ac != null) {
-        User user = ac.getUser();
+      if (this.validSession()) {
+        User user = session.getUser();
         if (user != null) {
           return isLecturer(user);
         }
@@ -465,9 +629,31 @@ public class UserRights implements Serializable {
     return false;
   }
 
+  /**
+   *
+   *
+   * @param user
+   * @return
+   */
+  public List<Scenario> getScenariosOfLecturer(User user) {
+    UserRight example = new UserRight();
+    example.setUser(user);
+    List<UserRight> lecturerRights = this.userRightDao.findByExample(example);
+    List<Scenario> scenarios = new ArrayList<Scenario>();
+    for (UserRight r : lecturerRights) {
+      Scenario sc = r.getScenario();
+      if (!scenarios.contains(sc)) {
+        scenarios.add(scenarioDao.getById(sc.getId()));
+      }
+    }
+    return scenarios;
+  }
+
   // ------------------------------------------------ //
   // --
   // ------------------------------------------------ //
+
+
 
   /**
    *
@@ -476,8 +662,8 @@ public class UserRights implements Serializable {
    */
   public boolean isAdmin() {
     try {
-      if (ac != null) {
-        User user = ac.getUser();
+      if (this.validSession()) {
+        User user = session.getUser();
         if (user != null) {
           return isAdmin(user);
         }

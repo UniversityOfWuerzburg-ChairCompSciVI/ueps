@@ -13,9 +13,9 @@ package de.uniwue.info6.webapp.session;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -68,10 +68,16 @@ import org.hibernate.internal.SessionFactoryImpl;
 import de.uniwue.info6.database.gen.GenerateData;
 import de.uniwue.info6.database.jdbc.ConnectionManager;
 import de.uniwue.info6.database.jdbc.ConnectionTools;
+import de.uniwue.info6.database.map.Exercise;
+import de.uniwue.info6.database.map.ExerciseGroup;
 import de.uniwue.info6.database.map.Scenario;
 import de.uniwue.info6.database.map.User;
+import de.uniwue.info6.database.map.UserEntry;
+import de.uniwue.info6.database.map.daos.ExerciseDao;
+import de.uniwue.info6.database.map.daos.ExerciseGroupDao;
 import de.uniwue.info6.database.map.daos.ScenarioDao;
 import de.uniwue.info6.database.map.daos.UserDao;
+import de.uniwue.info6.database.map.daos.UserEntryDao;
 import de.uniwue.info6.misc.StringTools;
 import de.uniwue.info6.misc.properties.Cfg;
 import de.uniwue.info6.misc.properties.PropString;
@@ -95,7 +101,17 @@ public class AuthorizationFilter implements Filter, Serializable {
   ERROR_PAGE         = "starterror",
   BROWSER_LOG_DIR    = "log",
   SCENARIO_RES_PATH  = "scn",
-  TEMP_SCENARIO_DIR  = "0";
+  TEMP_SCENARIO_DIR  = "0",
+  ADMIN_PAGE         = "/admin.xhtml",
+  EDIT_EXERCISE      = "/edit_ex.xhtml",
+  EDIT_GROUP         = "/edit_group.xhtml",
+  EDIT_SCENARIO      = "/edit_scenario.xhtml",
+  SUBMISSION_PAGE    = "/submission.xhtml",
+  EDIT_SUBMISSION    = "/edit_submission.xhtml",
+  EDIT_RIGHTS        = "/user_rights.xhtml",
+  SCENARIO_PARAM     = "scenario",
+  GROUP_PARAM        = "group",
+  SUBMISSION_PARAM   = "submission";
 
   private final static String userID = "userID", secureValue = "secureValue",
                               scenarioID = "scenarioID";
@@ -125,11 +141,22 @@ public class AuthorizationFilter implements Filter, Serializable {
   private String mainPathErrorMessage = null;
   private String dbErrorMessage = null;
 
+  private ScenarioDao scenarioDao;
+  private ExerciseGroupDao exerciseGroupDao;
+  private UserEntryDao userEntryDao;
+  private ExerciseDao exerciseDao;
+
+
   /**
    *
    */
   public AuthorizationFilter() {
     this.rights = new UserRights().initialize();
+    this.scenarioDao = new ScenarioDao();
+    this.exerciseGroupDao = new ExerciseGroupDao();
+    this.userEntryDao = new UserEntryDao();
+    this.exerciseDao = new ExerciseDao();
+
     this.fatalError = false;
     try {
       System.setProperty("file.encoding", "UTF-8");
@@ -439,18 +466,61 @@ public class AuthorizationFilter implements Filter, Serializable {
                 }
               }
 
-              if ((path.contains("/admin.xhtml") || path.contains("/edit_ex.xhtml")
-                   || path.contains("/edit_group.xhtml") || path.contains("/edit_scenario.xhtml"))) {
-                if (!rights.hasEditingRight(user, scenario)) {
-                  throwPermissionError(res, req);
+
+              // ------------------------------------------------ //
+              final Map<String, String[]> requestParams = request.getParameterMap();
+              final String[] scID = requestParams.get(SCENARIO_PARAM);
+              final String[] grID = requestParams.get(GROUP_PARAM);
+              final String[] sbID = requestParams.get(SUBMISSION_PARAM);
+
+              // ------------------------------------------------ //
+
+              boolean editPermissionError = (path.contains(ADMIN_PAGE) || path.contains(EDIT_EXERCISE)
+                                             || path.contains(EDIT_GROUP) || path.contains(EDIT_SCENARIO))
+                                            && !rights.hasEditingRight(user);
+              if (scID != null && scID.length > 0 && !editPermissionError) {
+                try {
+                  final Scenario scenario = this.scenarioDao.getById(Integer.parseInt(scID[0]));
+                  if (scenario != null) {
+                    editPermissionError = !rights.hasEditingRight(user, scenario);
+                  }
+                } catch (NumberFormatException e) {
+                  if (scID[0].trim().equals("new")) {
+                    if (!rights.isAdmin(user)) {
+                      editPermissionError = true;
+                    }
+                  }
                 }
-              } else if ((path.contains("/submission.xhtml") || path
-                          .contains("/edit_submission.xhtml"))
-                         && !rights.hasRatingRight(user, scenario)) {
-                throwPermissionError(res, req);
-              } else if (path.contains("/user_rights.xhtml") && !rights.isAdmin(user)) {
+              }
+
+              if (grID != null && grID.length > 0 && !editPermissionError) {
+                final ExerciseGroup group = this.exerciseGroupDao.getById(Integer.parseInt(grID[0]));
+                if (group != null) {
+                  editPermissionError = !rights.hasEditingRight(user, group);
+                }
+              }
+
+              // ------------------------------------------------ //
+              boolean editSubmissionError = (path.contains(SUBMISSION_PAGE) || path.contains(EDIT_SUBMISSION))
+                                            && !rights.hasRatingRight(user);
+              if (sbID != null && sbID.length > 0 && !editSubmissionError) {
+                final UserEntry userEntry = this.userEntryDao.getById(Integer.parseInt(sbID[0]));
+                if (userEntry != null) {
+                  final Exercise exercise = exerciseDao.getById(userEntry.getExercise().getId());
+                  editSubmissionError = !rights.hasRatingRight(user, exercise);
+                }
+              }
+              // ------------------------------------------------ //
+              boolean editUserRightsError = path.contains(EDIT_RIGHTS) && !rights.hasUserAddingRights(user);
+              // ------------------------------------------------ //
+
+
+
+              if (editPermissionError || editSubmissionError || editUserRightsError) {
                 throwPermissionError(res, req);
               }
+
+              // ------------------------------------------------ //
 
             } else {
               throwPermissionError(res, req);
@@ -460,7 +530,7 @@ public class AuthorizationFilter implements Filter, Serializable {
       }
       chain.doFilter(request, response);
     } catch (Exception e) {
-      LOGGER.info("UNEXPECTED ERROR WITH CHAINFILTER", e);
+      LOGGER.error("UNEXPECTED ERROR WITH CHAINFILTER", e);
     }
   }
 
@@ -544,8 +614,6 @@ public class AuthorizationFilter implements Filter, Serializable {
       }
 
       UserDao userDao = new UserDao();
-      ScenarioDao scenarioDao = new ScenarioDao();
-
       if (userDao != null && scenarioDao != null && id != null && sv != null && sc != null
           && id.length > 0 && sv.length > 0 && sc.length > 0 && id[0] != null && sv[0] != null
           && sc[0] != null) {

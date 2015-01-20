@@ -13,9 +13,9 @@ package de.uniwue.info6.webapp.lists;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -46,7 +46,6 @@ import de.uniwue.info6.database.map.daos.UserDao;
 import de.uniwue.info6.database.map.daos.UserRightDao;
 import de.uniwue.info6.misc.properties.Cfg;
 import de.uniwue.info6.webapp.admin.UserRights;
-import de.uniwue.info6.webapp.session.SessionCollector;
 import de.uniwue.info6.webapp.session.SessionObject;
 
 /**
@@ -109,29 +108,42 @@ public class UserRightsBean implements Serializable {
   @PostConstruct
   public void init() {
 
-    this.ac = new SessionCollector().getSessionObject();
+    this.ac = SessionObject.pull();
     this.loggedInUser = ac.getUser();
 
     this.userRightDao = new UserRightDao();
     this.scenarioDao = new ScenarioDao();
     this.userDao = new UserDao();
     this.userRights = new UserRights().initialize();
-    this.rights = userRightDao.findAll();
+
+
+    if (userRights.isAdmin(loggedInUser)) {
+      this.rights = userRightDao.findAll();
+    } else if (userRights.isLecturer(loggedInUser)) {
+      this.rights = userRightDao.getByCreator(loggedInUser);
+    }
 
     this.lecturerList = new ArrayList<User>();
     this.adminList = userRights.getAdmins();
 
     this.lecturerList = userRights.getLecturers();
-    this.scenarios = scenarioDao.findAll();
+    this.scenarios = null;
 
-    for (UserRight userRight : rights) {
-      if (userRight.getScenario() != null ) {
-        userRight.setScenario(scenarioDao.getById(userRight.getScenario().getId()));
-        userRight.setUser(userDao.getById(userRight.getUser().getId()));
-      }
+    if (this.userRights.isAdmin()) {
+      scenarios = scenarioDao.findAll();
+    } else if (this.userRights.isLecturer()) {
+      scenarios = this.userRights.getScenariosOfLecturer(this.ac.getUser());
     }
 
-    this.validateUser();
+    if (rights != null) {
+      for (UserRight userRight : rights) {
+        if (userRight.getScenario() != null ) {
+          userRight.setScenario(scenarioDao.getById(userRight.getScenario().getId()));
+          userRight.setUser(userDao.getById(userRight.getUser().getId()));
+        }
+      }
+      this.validateUser();
+    }
   }
 
   /**
@@ -273,8 +285,12 @@ public class UserRightsBean implements Serializable {
           this.canEditGroups = true;
           this.canEditScenario = true;
         } else if (userRights.isLecturer(userToSave)) {
-          this.userStatus = Cfg.inst().getProp(DEF_LANGUAGE, "RIGHTS.INSTRUCTOR");
-          this.disableSave = false;
+          this.userStatus = Cfg.inst().getProp(DEF_LANGUAGE, "RIGHTS.LECTURER");
+          if (userRights.isLecturer(loggedInUser)) {
+            this.disableSave = true;
+          } else {
+            this.disableSave = false;
+          }
           this.canAssert = true;
           this.canEditGroups = true;
           this.disableEditScenario = false;

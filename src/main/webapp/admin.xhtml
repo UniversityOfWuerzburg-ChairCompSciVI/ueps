@@ -12,9 +12,9 @@
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
-  
+
        http://www.apache.org/licenses/LICENSE-2.0
-  
+
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,7 +22,6 @@
   limitations under the License.
   #L%
   -->
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core"
@@ -141,11 +140,11 @@ xmlns:p="http://primefaces.org/ui">
      <!-- ##################################### -->
      <!-- context-menu items -->
      <!-- ##################################### -->
-     <p:contextMenu for="exerciseTree" id="tableMenu" widgetVar="tableMenuWX" >
+     <p:contextMenu for="exerciseTree" id="tableMenu" widgetVar="tableMenuWX">
       <!-- -->
-      <p:menuitem value="#{t.getChildName()}#{txt['ADMINTREE.MENU_ADD']}" update="exerciseTree"
-      rendered="#{t.renderAddMenu()}" icon="ui-icon-plus" action="#{moveTo.edit(t.getSelection(), true)}"
-      ajax="false" disabled="false" style="color:#004188" />
+      <p:menuitem value="#{t.renderAddMenu() ? t.getChildName().concat(txt['ADMINTREE.MENU_ADD']) : txt['ADMINTREE.NO_SC_EDIT_RIGHT']}"
+      update="exerciseTree" icon="ui-icon-plus" action="#{moveTo.edit(t.getSelection(), true)}" ajax="false"
+      disabled="false" style="color:#004188" />
       <!-- -->
       <p:menuitem value="#{t.getNodeName()}#{txt['ADMINTREE.MENU_EDIT']}" icon="ui-icon-pencil"
       action="#{moveTo.edit(t.getSelection(), false)}" ajax="false" disabled="false"

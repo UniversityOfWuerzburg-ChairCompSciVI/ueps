@@ -13,9 +13,9 @@ package de.uniwue.info6.webapp.lists;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -37,7 +37,6 @@ import de.uniwue.info6.database.jdbc.ConnectionManager;
 import de.uniwue.info6.database.map.Scenario;
 import de.uniwue.info6.database.map.User;
 import de.uniwue.info6.misc.properties.Cfg;
-import de.uniwue.info6.webapp.session.SessionCollector;
 import de.uniwue.info6.webapp.session.SessionObject;
 
 /**
@@ -70,7 +69,7 @@ public class ScenarioController implements Serializable {
    */
   @PostConstruct
   public void init() {
-    this.ac = new SessionCollector().getSessionObject();
+    this.ac = SessionObject.pull();
     this.scenario = ac.getScenario();
     ConnectionManager pool = ConnectionManager.instance();
 

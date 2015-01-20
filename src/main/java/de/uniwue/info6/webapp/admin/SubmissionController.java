@@ -13,9 +13,9 @@ package de.uniwue.info6.webapp.admin;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -73,7 +73,7 @@ import de.uniwue.info6.misc.StringTools;
 import de.uniwue.info6.misc.properties.Cfg;
 import de.uniwue.info6.parser.errors.Error;
 import de.uniwue.info6.webapp.lists.UserFeedback;
-import de.uniwue.info6.webapp.session.SessionCollector;
+import de.uniwue.info6.webapp.session.SessionBean;
 import de.uniwue.info6.webapp.session.SessionObject;
 
 /**
@@ -141,7 +141,7 @@ public class SubmissionController implements Serializable {
     userResultDao = new UserResultDao();
     userDao = new UserDao();
 
-    ac = new SessionCollector().getSessionObject();
+    ac = SessionObject.pull();
     user = ac.getUser();
 
     rights = new UserRights().initialize();
@@ -258,11 +258,11 @@ public class SubmissionController implements Serializable {
                         for (UserEntry userEntry : userEntries) {
                           countEntries++;
                           UserResult userResult = userResultDao
-                              .getLastUserResultFromEntry(userEntry);
+                                                  .getLastUserResultFromEntry(userEntry);
 
                           if (userResult != null) {
                             new DefaultTreeNode(
-                                new SubmissionRow(userEntry, userResult, ex), node3);
+                              new SubmissionRow(userEntry, userResult, ex), node3);
                             countResults++;
                             sumCredits += userResult.getCredits();
                           }
@@ -376,12 +376,12 @@ public class SubmissionController implements Serializable {
    * @return
    */
   public String getStyle(SubmissionRow currentRow) {
-    if (currentRow.getIsEntry()) {
-
-      if (currentRow.getUserResult().getCredits() > 0 && currentRow.getUserResult().getComment().equals("")) {
+    if (currentRow != null && currentRow.getIsEntry()) {
+      String comment = currentRow.getUserResult().getComment();
+      if (currentRow.getUserResult().getCredits() > 0 && (comment == null || comment.isEmpty())) {
         return "color:green;";
       } else if (currentRow.getUserResult().getCredits() > 0
-          && !currentRow.getUserResult().getComment().equals("")) {
+                 && comment != null && !comment.isEmpty()) {
         return "color:orange;";
       } else {
         return "color:red;";
@@ -397,8 +397,9 @@ public class SubmissionController implements Serializable {
    * @return
    */
   public String getStyleClass(SubmissionRow currentRow) {
-    if (currentRow.getIsEntry()) {
-      if (currentRow.getUserResult().getCredits() > 0 && !currentRow.getUserResult().getComment().equals("")) {
+    if (currentRow != null && currentRow.getIsEntry()) {
+      String comment = currentRow.getUserResult().getComment();
+      if (currentRow.getUserResult().getCredits() > 0 && comment != null && !comment.isEmpty()) {
         return "unknown_solution";
       }
     }
@@ -496,7 +497,7 @@ public class SubmissionController implements Serializable {
             UserResult userResult = userResultDao.getLastUserResultFromEntry(userEntry);
 
             tmpTxt += ex.getId() + delim + userEntry.getUser().getId() + delim + userResult.getCredits()
-                + delim + ex.getCredits() + "\n";
+                      + delim + ex.getCredits() + "\n";
 
           }
         }

@@ -12,9 +12,9 @@
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
-  
+
        http://www.apache.org/licenses/LICENSE-2.0
-  
+
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,53 +22,42 @@
   limitations under the License.
   #L%
   -->
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-xmlns:f="http://java.sun.com/jsf/core"
-xmlns:h="http://java.sun.com/jsf/html"
-xmlns:ui="http://java.sun.com/jsf/facelets"
-xmlns:a4j="http://richfaces.org/a4j"
-xmlns:rich="http://richfaces.org/rich"
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html" xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich"
 xmlns:p="http://primefaces.org/ui">
  <META HTTP-EQUIV="refresh" CONTENT="15" />
  <h:body>
   <!-- main template defining header, footer and content -->
   <ui:composition template="/templates/common/commonLayout.xhtml">
-
-  <ui:define name="header_text">
+   <ui:define name="header_text">
     <span class="error">#{txt['EXERCISE_GROUP']} #{txt['ADMINTREE.MENU_EDIT']}</span>
-  </ui:define>
-
+   </ui:define>
    <ui:define name="content">
-    <h:graphicImage class="permission_error"
-    value="#{img['BASICS.MULTIPASS']}"
-    rendered="#{not edit_gr.userHasRights}" />
+    <!-- <h:outputText value="shit"/> -->
     <script type="text/javascript">
     <!-- ===================================== -->
     <!-- -->
-    function context_tooltip() { 
+    function context_tooltip() {
     <!-- -->
-    jQuery(".tipsy").remove(); 
+    jQuery(".tipsy").remove();
     <!-- -->
-    jQuery(function() { 
+    jQuery(function() {
     <!-- -->
-    jQuery( '.start_date').tipsy( {fallback:
-    "#{txt['EDIT_GROUP.START_TOOLTIP']}", gravity: 'w' }); 
+    jQuery( '.start_date').tipsy( {fallback: "#{txt['EDIT_GROUP.START_TOOLTIP']}", gravity: 'w' });
     <!-- -->
-    jQuery( '.end_date').tipsy( {fallback:
-    "#{txt['EDIT_GROUP.END_TOOLTIP']}", gravity: 'w' }); 
+    jQuery( '.end_date').tipsy( {fallback: "#{txt['EDIT_GROUP.END_TOOLTIP']}", gravity: 'w' });
     <!-- -->
-    }); } 
+    }); }
     <!-- -->
-    jQuery(document).ready(function() { context_tooltip(); }); 
+    jQuery(document).ready(function() { context_tooltip(); });
     <!-- --></script>
     <h:form id="form" style="text-align:center" rendered="#{edit_gr.userHasRights}">
      <p:growl id="messages_popup" showDetail="true" />
      <p:panel header="#{txt['EDIT_GROUP.EDIT']}">
-      <h:panelGrid id="admin_grid" columns="2"
-      style="margin-bottom:10px;text-align:center">
+      <h:panelGrid id="admin_grid" columns="2" style="margin-bottom:10px;text-align:center">
        <!-- ##################################### -->
        <!-- box for info and error-text -->
        <!-- ##################################### -->
@@ -81,92 +70,71 @@ xmlns:p="http://primefaces.org/ui">
        <h:outputLabel for="gr_scenario" styleClass="boldPoints">
         <h:outputText value="#{txt['EDIT_GROUP.GR_SC']}: " />
        </h:outputLabel>
-       <h:outputText id="gr_scenario"
-       value="#{edit_gr.getScenarioId()}" />
+       <h:outputText id="gr_scenario" value="#{edit_gr.getScenarioId()}" />
        <!-- ##################################### -->
        <!-- last modified time -->
        <!-- ##################################### -->
        <h:outputLabel for="mod_time" styleClass="boldPoints">
         <h:outputText value="#{txt['EDIT_GROUP.LAST_MOD']}: " />
        </h:outputLabel>
-       <h:outputText id="mod_time"
-       value="#{edit_gr.getLastModifiedTime()}" />
+       <h:outputText id="mod_time" value="#{edit_gr.getLastModifiedTime()}" />
        <!-- ##################################### -->
        <!-- original exercise group -->
        <!-- ##################################### -->
-       <h:outputLabel for="original_group"
-       rendered="#{edit_gr.hasOriginalGroup()}"
-       styleClass="boldPoints">
+       <h:outputLabel for="original_group" rendered="#{edit_gr.hasOriginalGroup()}" styleClass="boldPoints">
         <h:outputText value="#{txt['EDIT_GROUP.ORIGIN']}: " />
        </h:outputLabel>
-       <h:outputText id="original_group"
-       rendered="#{edit_gr.hasOriginalGroup()}"
+       <h:outputText id="original_group" rendered="#{edit_gr.hasOriginalGroup()}"
        value="#{txt['EDIT_GROUP.ORIGIN2']}: [#{edit_gr.originalGroupId}]" />
        <!-- ##################################### -->
        <!-- group name field -->
        <!-- ##################################### -->
-       <h:outputLabel style="width: 100px" for="group_name"
-       styleClass="boldPoints">
+       <h:outputLabel style="width: 100px" for="group_name" styleClass="boldPoints">
         <h:outputText value="#{txt['EDIT_GROUP.NAME']}:" />
        </h:outputLabel>
        <h:panelGroup>
         <h:outputText id="group_name_original" escape="false"
         value="#{edit_gr.groupName != null ? edit_gr.groupName : '---'}" />
         <br />
-        <p:inplace style="color:green" id="group_name"
-        emptyLabel="Undefined" effectSpeed="fast"
+        <p:inplace style="color:green" id="group_name" emptyLabel="Undefined" effectSpeed="fast"
         label="[#{txt['EDIT']}]" editor="true">
          <p:ajax event="save" update="group_name_original" />
-         <p:inputText value="#{edit_gr.groupName}"
-         onkeypress="if (event.keyCode == 13) { return false; }" />
+         <p:inputText value="#{edit_gr.groupName}" onkeypress="if (event.keyCode == 13) { return false; }" />
         </p:inplace>
         <h:outputText value=" *" style="color:red" />
        </h:panelGroup>
        <!-- ##################################### -->
        <!-- group type selection -->
        <!-- ##################################### -->
-       <h:outputLabel for="group_rated" styleClass="boldPoints"
-       value="#{txt['EDIT_GROUP.TYPE']}:" />
+       <h:outputLabel for="group_rated" styleClass="boldPoints" value="#{txt['EDIT_GROUP.TYPE']}:" />
        <h:panelGroup>
-        <h:outputText id="group_rated_original" escape="false"
-        value="#{edit_gr.getType()}" />
+        <h:outputText id="group_rated_original" escape="false" value="#{edit_gr.getType()}" />
         <br />
-        <p:inplace style="color:green"
-        rendered="#{edit_gr.hasEditingRights()}" id="group_rated"
+        <p:inplace style="color:green" rendered="#{edit_gr.hasEditingRights()}" id="group_rated"
         effectSpeed="fast" editor="true" label="[#{txt['EDIT']}]">
          <p:ajax event="save" update="group_rated_original" />
          <h:selectOneMenu value="#{edit_gr.rated}" immediate="true">
-          <f:selectItem itemLabel="#{txt['UNRATED']}"
-          itemValue="1" />
-          <f:selectItem itemLabel="#{txt['RATED']}"
-          itemValue="2" />
-          <f:selectItem itemLabel="#{txt['EDIT_GROUP.RATED_NO_FEED']}"
-          itemValue="3" />
+          <f:selectItem itemLabel="#{txt['UNRATED']}" itemValue="1" />
+          <f:selectItem itemLabel="#{txt['RATED']}" itemValue="2" />
+          <f:selectItem itemLabel="#{txt['EDIT_GROUP.RATED_NO_FEED']}" itemValue="3" />
          </h:selectOneMenu>
         </p:inplace>
        </h:panelGroup>
        <!-- ##################################### -->
        <!-- start date field -->
        <!-- ##################################### -->
-       <h:outputLabel style="width: 100px" for="start_date"
-       value="#{txt['EDIT_GROUP.START_TIME']}:"
+       <h:outputLabel style="width: 100px" for="start_date" value="#{txt['EDIT_GROUP.START_TIME']}:"
        styleClass="boldPoints" />
        <h:panelGroup>
-        <h:outputText id="start_date_original"
-        value="#{edit_gr.getStartDateString()}" escape="false" />
+        <h:outputText id="start_date_original" value="#{edit_gr.getStartDateString()}" escape="false" />
         <br />
-        <p:inplace style="color:green" id="start_date"
-        emptyLabel="Undefined" effectSpeed="fast"
-        styleClass="start_date" label="[#{txt['EDIT']}]"
-        editor="true">
-         <p:ajax event="save" update="start_date_original"
-         oncomplete="context_tooltip()" />
+        <p:inplace style="color:green" id="start_date" emptyLabel="Undefined" effectSpeed="fast"
+        styleClass="start_date" label="[#{txt['EDIT']}]" editor="true">
+         <p:ajax event="save" update="start_date_original" oncomplete="context_tooltip()" />
          <p:ajax event="cancel" oncomplete="context_tooltip()" />
-         <p:calendar value="#{edit_gr.startDate}" locale="de"
-         showButtonPanel="true" navigator="true" effect="slideDown"
-         pattern="dd.MM.yyyy HH:mm" stepHour="1" stepMinute="10" />
-         <p:dialog header="Selected Dates" widgetVar="dialog"
-         showEffect="fold" hideEffect="fold">
+         <p:calendar value="#{edit_gr.startDate}" locale="de" showButtonPanel="true" navigator="true"
+         effect="slideDown" pattern="dd.MM.yyyy HH:mm" stepHour="1" stepMinute="10" />
+         <p:dialog header="Selected Dates" widgetVar="dialog" showEffect="fold" hideEffect="fold">
           <h:panelGrid columns="2" cellpadding="5">
            <h:outputText value="Step: " />
            <h:outputText value="#{edit_gr.startDate}">
@@ -179,24 +147,18 @@ xmlns:p="http://primefaces.org/ui">
        <!-- ##################################### -->
        <!-- end date field -->
        <!-- ##################################### -->
-       <h:outputLabel style="width: 100px" for="start_date"
-       value="#{txt['EDIT_GROUP.END_TIME']}:"
+       <h:outputLabel style="width: 100px" for="start_date" value="#{txt['EDIT_GROUP.END_TIME']}:"
        styleClass="boldPoints" />
        <h:panelGroup>
-        <h:outputText id="end_date_original"
-        value="#{edit_gr.getEndDateString()}" escape="false" />
+        <h:outputText id="end_date_original" value="#{edit_gr.getEndDateString()}" escape="false" />
         <br />
-        <p:inplace style="color:green" id="end_date"
-        styleClass="end_date" emptyLabel="Undefined"
+        <p:inplace style="color:green" id="end_date" styleClass="end_date" emptyLabel="Undefined"
         effectSpeed="fast" label="[#{txt['EDIT']}]" editor="true">
-         <p:ajax event="save" update="end_date_original"
-         oncomplete="context_tooltip()" />
+         <p:ajax event="save" update="end_date_original" oncomplete="context_tooltip()" />
          <p:ajax event="cancel" oncomplete="context_tooltip()" />
-         <p:calendar value="#{edit_gr.endDate}" locale="de"
-         showButtonPanel="true" navigator="true" effect="slideDown"
-         pattern="dd.MM.yyyy HH:mm" stepHour="1" stepMinute="10" />
-         <p:dialog header="Selected Dates" widgetVar="dialog"
-         showEffect="fold" hideEffect="fold">
+         <p:calendar value="#{edit_gr.endDate}" locale="de" showButtonPanel="true" navigator="true"
+         effect="slideDown" pattern="dd.MM.yyyy HH:mm" stepHour="1" stepMinute="10" />
+         <p:dialog header="Selected Dates" widgetVar="dialog" showEffect="fold" hideEffect="fold">
           <h:panelGrid columns="2" cellpadding="5">
            <h:outputText value="Step: " />
            <h:outputText value="#{edit_gr.endDate}">
@@ -207,22 +169,17 @@ xmlns:p="http://primefaces.org/ui">
         </p:inplace>
         <br />
         <br />
-        <h:outputText style="color:red"
-        value="* = #{txt['EDIT_GROUP.MUST_FIELD']} " />
+        <h:outputText style="color:red" value="* = #{txt['EDIT_GROUP.MUST_FIELD']} " />
        </h:panelGroup>
       </h:panelGrid>
      </p:panel>
-     <h:panelGrid style="display:inline-table" columns="7"
-     styleClass="admin_buttons">
-      <p:commandButton value="#{txt['SAVE']}" process="@all"
-      update="admin_grid mod_time" actionListener="#{edit_gr.save}"
-      icon="ui-icon-disk" />
-      <p:commandButton value="#{txt['EDIT_GROUP.RESET']}"
-      process="@all" update="admin_grid"
-      actionListener="#{edit_gr.resetFields}"
-      icon="ui-icon-arrowreturnthick-1-s" />
-      <p:commandButton value="#{txt['EDIT_GROUP.CANCEL']}"
-      ajax="false" action="admin" icon="ui-icon-trash" />
+     <h:panelGrid style="display:inline-table" columns="7" styleClass="admin_buttons">
+      <p:commandButton value="#{txt['SAVE']}" process="@all" update="admin_grid mod_time"
+      actionListener="#{edit_gr.save}" icon="ui-icon-disk" />
+      <p:commandButton value="#{txt['EDIT_GROUP.RESET']}" process="@all" update="admin_grid"
+      actionListener="#{edit_gr.resetFields}" icon="ui-icon-arrowreturnthick-1-s" />
+      <p:commandButton value="#{txt['EDIT_GROUP.CANCEL']}" ajax="false" action="admin"
+      icon="ui-icon-trash" />
      </h:panelGrid>
     </h:form>
    </ui:define>

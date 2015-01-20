@@ -12,9 +12,9 @@
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
-  
+
        http://www.apache.org/licenses/LICENSE-2.0
-  
+
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,7 +22,6 @@
   limitations under the License.
   #L%
   -->
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core"
@@ -53,19 +52,21 @@ xmlns:p="http://primefaces.org/ui">
      <!-- -->
      jQuery(".tipsy").remove();
      <!-- -->
+     jQuery( "th.fn_class").tipsy({fallback: "#{txt['FN']}", gravity: 's' });
+     <!-- -->
+     jQuery( ".give_right_button:disabled").tipsy({fallback: "#{txt['RIGHTS.GIVE_RIGHT']}", gravity: 'n' });
+     <!-- -->
      jQuery( ".give_right_button").tipsy({fallback: "#{txt['RIGHTS.GIVE_RIGHT']}", gravity: 'n' });
      <!-- -->
      jQuery( ".remove_right_button").tipsy({fallback: "#{txt['RIGHTS.REMOVE_RIGHT']}", gravity: 'n' });
-     <!-- -->
-     jQuery( "th.fn_class").tipsy({fallback: "#{txt['FN']}", gravity: 's' });
      <!-- -->
      jQuery( ".remove_all_rights").tipsy({fallback: "#{txt['RIGHTS.REMOVE_ALL_RIGHTS']}", gravity: 'n' });
      <!-- -->
      jQuery( ".removeLecturerButton").tipsy({fallback: "#{txt['RIGHTS.DELETE_LECTURER']}", gravity: 'n' });
      <!-- -->
-     jQuery( ".adminFont").tipsy({fallback: "Nutzer mit Admin-Rechten", gravity: 'n' });
+     jQuery( ".adminFont").tipsy({fallback: "#{txt['RIGHTS.ADMIN_RIGHTS']}", gravity: 'n' });
      <!-- -->
-     jQuery( ".lecturerFont").tipsy({fallback: "Nutzer mit Dozent-Rechten", gravity: 'n' });
+     jQuery( ".lecturerFont").tipsy({fallback: "#{txt['RIGHTS.LECTURER_RIGHTS']}", gravity: 'n' });
      <!-- -->
      }
      <!-- -->
@@ -82,34 +83,36 @@ xmlns:p="http://primefaces.org/ui">
      });
      <!-- --></script>
      <!-- ######################################################################### -->
+     <!-- the main table -->
+     <!-- ######################################################################### -->
      <p:dataTable id="rights" var="right" styleClass="rights_table" widgetVar="rightsTable"
      value="#{rights_bean.rights}" sortBy="#{right.user.id}" emptyMessage="#{txt['RIGHTS.NOTFOUND']}"
      cache="false" filteredValue="#{rights_bean.filteredRights}" paginator="true"
-     paginatorAlwaysVisible="false" rows="10">
+     paginatorAlwaysVisible="false" rows="20">
       <!-- ######################################################################### -->
       <f:facet name="header">#{txt['RIGHTS']}
       <p:messages id="messages" widgetVar="messages" escape="false" closable="true"
       redisplay="true" /></f:facet>
       <!-- ######################################################################### -->
       <p:column headerText="#{txt['RIGHTS.USER']}" filterBy="#{right.user.id}" sortBy="#{right.user.id}"
-      style="width:25%;text-align:center;">
+      style="text-align:center;">
        <h:outputText value="#{right.user.id}"
        styleClass="#{rights_bean.getUserStatusFontClass(right.user.id)}" />
       </p:column>
       <!-- ######################################################################### -->
-      <p:column headerText="#{txt['RIGHTS.GIVEN_BY']}" filterBy="#{right.createdByUser.id}"
-      sortBy="#{right.createdByUser.id}" style="width:25%;text-align:center;">
+      <p:column headerText="#{txt['RIGHTS.GIVEN_BY']}" rendered="#{rights.isAdmin()}"
+      filterBy="#{right.createdByUser.id}" sortBy="#{right.createdByUser.id}" style="text-align:center;">
        <h:outputText value="#{right.createdByUser.id}"
        styleClass="#{rights_bean.getUserStatusFontClass(right.createdByUser.id)}" />
       </p:column>
       <!-- ######################################################################### -->
       <p:column headerText="#{txt['ASSERTION.SC']}" filterBy="#{right.scenario.name}"
-      sortBy="#{right.scenario.name}" style="width:25%;text-align:center;">
+      sortBy="#{right.scenario.name}" style="text-align:center;">
        <h:outputText value="#{right.scenario.name}" />
       </p:column>
       <!-- ######################################################################### -->
       <p:column headerText="#{txt['RIGHTS.CAN_EDIT_SCENARIO']}" sortBy="#{right.hasScenarioEditingRights}"
-      style="width:20%;text-align:center;">
+      style="text-align:center;" rendered="#{rights.isAdmin()}">
        <p:commandButton update="rights" action="#{rights_bean.toggleScenarioEditingRight(right)}"
        icon="#{right.hasScenarioEditingRights ? 'ui-icon-circle-check' : 'ui-icon-circle-close'}"
        styleClass="#{right.hasScenarioEditingRights ? 'remove_right_button' : 'give_right_button'} "
@@ -117,7 +120,7 @@ xmlns:p="http://primefaces.org/ui">
       </p:column>
       <!-- ######################################################################### -->
       <p:column headerText="#{txt['RIGHTS.CAN_ASSERT']}" sortBy="#{right.hasRatingRights}"
-      style="width:20%;text-align:center;">
+      style="text-align:center;">
        <p:commandButton update="rights" action="#{rights_bean.toggleAssertRight(right)}"
        icon="#{right.hasRatingRights ? 'ui-icon-circle-check' : 'ui-icon-circle-close'}"
        styleClass="#{right.hasRatingRights ? 'remove_right_button' : 'give_right_button'} "
@@ -125,7 +128,7 @@ xmlns:p="http://primefaces.org/ui">
       </p:column>
       <!-- ######################################################################### -->
       <p:column headerText="#{txt['RIGHTS.CAN_EDIT_GROUPS']}" sortBy="#{right.hasGroupEditingRights}"
-      style="width:20%;text-align:center;">
+      style="text-align:center;">
        <p:commandButton action="#{rights_bean.toggleGroupEditingRight(right)}"
        icon="#{right.hasGroupEditingRights ? 'ui-icon-circle-check' : 'ui-icon-circle-close'}"
        styleClass="#{right.hasGroupEditingRights ? 'remove_right_button' : 'give_right_button'} "
@@ -133,12 +136,13 @@ xmlns:p="http://primefaces.org/ui">
        disabled="#{rights_bean.disableToggleButtons(right)}" />
       </p:column>
       <!-- ######################################################################### -->
-      <p:column headerText="Darf Rechte vergeben" sortBy="#{right.user.isLecturer}"
-      style="width:20%;text-align:center;">
-       <p:commandButton update="rights"
-       icon="#{right.user.isLecturer ? 'ui-icon-circle-check' : 'ui-icon-circle-close'}"
-       oncomplete="context_tooltip()" disabled="true" />
-      </p:column>
+      <!-- TODO: -->
+      <!-- <p:column headerText="Darf Rechte vergeben" sortBy="#{right.user.isLecturer}"      -->
+      <!-- style="text-align:center;" rendered="#{rights.isAdmin()}">                         -->
+      <!--  <p:commandButton update="rights"                                                  -->
+      <!--  icon="#{right.user.isLecturer ? 'ui-icon-circle-check' : 'ui-icon-circle-close'}" -->
+      <!--  oncomplete="context_tooltip()" disabled="true" />                                 -->
+      <!-- </p:column>                                                                        -->
       <!-- ######################################################################### -->
       <p:column headerText="Fn" styleClass="fn_class" style="width:6%;text-align:center;">
        <p:commandButton id="deleteButton" actionListener="#{rights_bean.setSelectedRight(right)}"
@@ -149,14 +153,14 @@ xmlns:p="http://primefaces.org/ui">
       <f:facet name="footer">
        <p:commandButton id="showDialogButton2" type="button" value="#{txt['RIGHTS.INSERT_RIGHTS']}"
        icon="ui-icon-plus" onclick="dlg.show()" />
-       <p:commandButton id="showDialogButton3" type="button" value="#{txt['RIGHTS.INSERT_INSTRUCTOR']}"
-       icon="ui-icon-plus" onclick="instr.show()" />
+       <p:commandButton id="showDialogButton3" type="button" value="#{txt['RIGHTS.INSERT_LECTURER']}"
+       icon="ui-icon-plus" onclick="instr.show()" rendered="#{rights.isAdmin()}" />
       </f:facet>
      </p:dataTable>
      <!-- ######################################################################### -->
      <p:outputPanel style="text-align:center;
-                         position:relative;top:20px">
-      <span style="font-size:15px;font-weight:bold">#{txt['RIGHTS.INSTRUCTOR_LIST']}:</span>
+                         position:relative;top:20px" rendered="#{rights.isAdmin()}">
+      <span style="font-size:15px;font-weight:bold">#{txt['RIGHTS.LECTURER_LIST']}:</span>
       <!-- ######################################################################### -->
       <!-- -->
       <!-- ######################################################################### -->
@@ -169,7 +173,7 @@ xmlns:p="http://primefaces.org/ui">
       <!-- ######################################################################### -->
      </p:outputPanel>
      <p:outputPanel style="text-align:center;
-                         position:relative;top:20px">
+                         position:relative;top:20px" rendered="#{rights.isAdmin()}">
       <p style="font-size:15px;font-weight:bold;margin-bottom:0px">
       <!-- -->
       #{txt['RIGHTS.ADMIN_LIST']}:</p>
@@ -213,9 +217,10 @@ xmlns:p="http://primefaces.org/ui">
        <h:outputText for="canEditGroups" value="#{txt['RIGHTS.CAN_EDIT_GROUPS']}" />
        <p:selectBooleanCheckbox id="canEditGroups" disabled="#{rights_bean.disableEditGroups}"
        value="#{rights_bean.canEditGroups}" />
-       <h:outputText for="canEditScenario" value="#{txt['RIGHTS.CAN_EDIT_SCENARIO']}" />
+       <h:outputText for="canEditScenario" value="#{txt['RIGHTS.CAN_EDIT_SCENARIO']}"
+       rendered="#{rights.isAdmin()}" />
        <p:selectBooleanCheckbox id="canEditScenario" disabled="#{rights_bean.disableEditScenario}"
-       value="#{rights_bean.canEditScenario}" />
+       value="#{rights_bean.canEditScenario}" rendered="#{rights.isAdmin()}" />
        <!---->
       </h:panelGrid>
       <p:commandButton id="insertBut" value="#{txt['RIGHTS.INSERT']}" update="rights"
@@ -223,7 +228,7 @@ xmlns:p="http://primefaces.org/ui">
       oncomplete="dlg.hide(); context_tooltip(); hide_message_timeout()" />
      </p:dialog>
      <!-- ######################################################################### -->
-     <p:dialog header="#{txt['RIGHTS.INSERT_INSTRUCTOR']}" widgetVar="instr" resizable="false">
+     <p:dialog header="#{txt['RIGHTS.INSERT_LECTURER']}" widgetVar="instr" resizable="false">
       <h:panelGrid columns="2" class="add_id_panel" style="margin-bottom:10px;text-align:left">
        <h:outputLabel for="lecturerId" style="display:block;min-width:120px"
        value="#{txt['RIGHTS.USER']}:" />
@@ -254,7 +259,7 @@ xmlns:p="http://primefaces.org/ui">
      <p:dialog widgetVar="deleteRight" resizable="false">
       <br />
       <h:outputLabel style="display:block;min-width:120px;font-weight:bold;"
-      value="#{txt['RIGHTS.DELETE_LECTURER']}" />
+      value="#{txt['RIGHTS.DELETE_RIGHTS']}" />
       <br />
       <p:commandButton id="deleteButton2" value="#{txt['DELETE']}"
       actionListener="#{rights_bean.deleteSelectedRight}" update="rights" style="margin:5px"

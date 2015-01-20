@@ -13,9 +13,9 @@ package de.uniwue.info6.webapp.admin;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -65,7 +65,7 @@ import de.uniwue.info6.misc.FileTransfer;
 import de.uniwue.info6.misc.Password;
 import de.uniwue.info6.misc.StringTools;
 import de.uniwue.info6.misc.properties.Cfg;
-import de.uniwue.info6.webapp.session.SessionCollector;
+import de.uniwue.info6.webapp.session.SessionBean;
 import de.uniwue.info6.webapp.session.SessionObject;
 
 /**
@@ -130,7 +130,7 @@ public class AdminEditScenario implements Serializable {
    * @return
    */
   public String autoCreationText() {
-    if (hasHost() || hasPort() || hasDBName() || hasUser()) {
+    if (hasHost() || hasPort() || hasDBName() || hasUser() || hasPass()) {
       return "";
     }
 
@@ -146,6 +146,7 @@ public class AdminEditScenario implements Serializable {
     addRightsScripts = Cfg.inst().getProp(DEF_LANGUAGE, "EDIT_SC.DESCRIPTION");
     removeRightsScripts = Cfg.inst().getProp(DEF_LANGUAGE, "EDIT_SC.DROP_USER");
 
+    // TODO: rechteskript aus config-datei auslesen
     if (dbHost != null && !dbHost.isEmpty()) {
       addRightsScripts = addRightsScripts.replace("db_host", "<span style=\"color:" + color + "\">"
                          + dbHost + "</span>");
@@ -164,9 +165,9 @@ public class AdminEditScenario implements Serializable {
       removeRightsScripts = removeRightsScripts.replace("db_name", "<span style=\"color:" + color
                             + "\">" + dbName + "</span>");
     }
-    if (dbPass != null) {
-      addRightsScripts = addRightsScripts.replace("password", "<span style=\"color:" + color
-                         + "\">" + dbPass + "</span>");
+    if (dbPass != null && !dbPass.isEmpty()) {
+      addRightsScripts = addRightsScripts.replace("password", "<span class=\"hidden_password\" " +
+                         "style=\"background-color:green;color:green;cursor:help\">" + dbPass + "</span>");
       removeRightsScripts = removeRightsScripts.replace("password", "<span style=\"color:" + color
                             + "\">" + dbPass + "</span>");
     }
@@ -183,7 +184,7 @@ public class AdminEditScenario implements Serializable {
     scenarioDao = new ScenarioDao();
     exerciseGroupDao = new ExerciseGroupDao();
     Map<String, String> requestParams = ec.getRequestParameterMap();
-    ac = new SessionCollector().getSessionObject();
+    ac = SessionObject.pull();
     user = ac.getUser();
     connectionPool = ConnectionManager.instance();
     uploader = new FileTransfer();
@@ -698,9 +699,10 @@ public class AdminEditScenario implements Serializable {
     scriptPath = scriptFile.getName();
 
     Severity sev = FacesMessage.SEVERITY_INFO;
-    FacesMessage msg = new FacesMessage(sev, Cfg.inst().getProp(DEF_LANGUAGE, "EDIT_SC.UPLOAD_SUCCESS"), System
-                                        .getProperty("EDIT_SC.NEW_NAME")
-                                        + ": " + scriptPath);
+
+    FacesMessage msg = new FacesMessage(sev, Cfg.inst().getProp(DEF_LANGUAGE, "EDIT_SC.UPLOAD_SUCCESS"),
+                                        scriptPath != null ? Cfg.inst().getProp(DEF_LANGUAGE, "EDIT_SC.NEW_NAME")
+                                        + ": " + scriptPath : "");
     FacesContext.getCurrentInstance().addMessage(null, msg);
     scriptStream = uploader.getFileToDownload(scriptFile);
   }
@@ -720,9 +722,9 @@ public class AdminEditScenario implements Serializable {
     imagePath = imageFile.getName();
 
     Severity sev = FacesMessage.SEVERITY_INFO;
-    FacesMessage msg = new FacesMessage(sev, Cfg.inst().getProp(DEF_LANGUAGE, "EDIT_SC.UPLOAD_SUCCESS"), System
-                                        .getProperty("EDIT_SC.NEW_NAME")
-                                        + ": " + scriptPath);
+    FacesMessage msg = new FacesMessage(sev, Cfg.inst().getProp(DEF_LANGUAGE, "EDIT_SC.UPLOAD_SUCCESS"),
+                                        imagePath != null ? Cfg.inst().getProp(DEF_LANGUAGE, "EDIT_SC.NEW_NAME")
+                                        + ": " + imagePath : "");
     FacesContext.getCurrentInstance().addMessage(null, msg);
     imageStream = uploader.getFileToDownload(imageFile);
   }

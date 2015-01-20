@@ -43,7 +43,7 @@ import de.uniwue.info6.database.map.Exercise;
 import de.uniwue.info6.database.map.SolutionQuery;
 import de.uniwue.info6.database.map.User;
 import de.uniwue.info6.database.map.UserEntry;
-import de.uniwue.info6.webapp.session.SessionCollector;
+import de.uniwue.info6.webapp.session.SessionBean;
 
 /**
  *
@@ -69,7 +69,7 @@ public class UserEntryDao extends DaoTools<UserEntry> {
 	public UserEntryDao() {
 		super(UserEntry.class);
 		if (FacesContext.getCurrentInstance() != null) {
-			currentUser = new SessionCollector().getUser();
+			currentUser = new SessionBean().getUser();
 		}
 	}
 
@@ -268,7 +268,7 @@ public class UserEntryDao extends DaoTools<UserEntry> {
 		Session session = null;
 		try {
 			session = startTransaction();
-			update(UserEntry, session);
+			pull(UserEntry, session);
 			@SuppressWarnings("unchecked")
 			Set<SolutionQuery> solutions = (Set<SolutionQuery>) UserEntry.getSolutionQueries();
 			List<SolutionQuery> queries = new ArrayList<SolutionQuery>();

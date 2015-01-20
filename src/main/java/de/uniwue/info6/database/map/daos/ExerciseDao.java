@@ -148,7 +148,7 @@ public class ExerciseDao extends DaoTools<Exercise> {
 
     try {
       session = startTransaction();
-      update(exercise, session);
+      pull(exercise, session);
       @SuppressWarnings("unchecked")
       Set<SolutionQuery> solutions = exercise.getSolutionQueries();
       List<SolutionQuery> queries = new ArrayList<SolutionQuery>();

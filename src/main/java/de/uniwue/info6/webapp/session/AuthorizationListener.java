@@ -13,9 +13,9 @@ package de.uniwue.info6.webapp.session;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,8 +38,7 @@ import javax.faces.event.PhaseListener;
  * @author Michael
  */
 
-public class AuthorizationListener implements PhaseListener, Serializable
-{
+public class AuthorizationListener implements PhaseListener, Serializable {
 
   /**
    *
@@ -51,8 +50,7 @@ public class AuthorizationListener implements PhaseListener, Serializable
   /**
    *
    */
-  public AuthorizationListener()
-  {
+  public AuthorizationListener() {
     //
   }
 
@@ -60,12 +58,10 @@ public class AuthorizationListener implements PhaseListener, Serializable
    * {@inheritDoc}
    * @see PhaseListener#afterPhase(PhaseEvent)
    */
-  public void afterPhase(PhaseEvent event)
-  {
+  public void afterPhase(PhaseEvent event) {
     // redirect user on ajax request if session is invalid
-    SessionObject ac = new SessionCollector().getSessionObject();
-    if (ac == null)
-    {
+    SessionObject ac = SessionObject.pull();
+    if (ac == null) {
       loginUser(event.getFacesContext());
     }
   }
@@ -75,8 +71,7 @@ public class AuthorizationListener implements PhaseListener, Serializable
    *
    * @param facesContext
    */
-  private void loginUser(FacesContext facesContext)
-  {
+  private void loginUser(FacesContext facesContext) {
     NavigationHandler nh = facesContext.getApplication().getNavigationHandler();
     nh.handleNavigation(facesContext, null, loginPage);
   }
@@ -86,8 +81,7 @@ public class AuthorizationListener implements PhaseListener, Serializable
    * {@inheritDoc}
    * @see PhaseListener#beforePhase(PhaseEvent)
    */
-  public void beforePhase(PhaseEvent event)
-  {
+  public void beforePhase(PhaseEvent event) {
     //
   }
 
@@ -95,8 +89,7 @@ public class AuthorizationListener implements PhaseListener, Serializable
    * {@inheritDoc}
    * @see PhaseListener#getPhaseId()
    */
-  public PhaseId getPhaseId()
-  {
+  public PhaseId getPhaseId() {
     return PhaseId.RESTORE_VIEW;
   }
 }

@@ -13,9 +13,9 @@ package de.uniwue.info6.webapp.session;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,10 +24,15 @@ package de.uniwue.info6.webapp.session;
  * #L%
  */
 
+import static de.uniwue.info6.misc.properties.PropBool.USE_MOODLE_LOGIN;
+import static de.uniwue.info6.misc.properties.PropString.SECRET_ID_STRING;
+import static de.uniwue.info6.misc.properties.PropertiesFile.MAIN_CONFIG;
+
 import java.util.Date;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
@@ -39,11 +44,6 @@ import de.uniwue.info6.database.map.User;
 import de.uniwue.info6.database.map.daos.ScenarioDao;
 import de.uniwue.info6.database.map.daos.UserDao;
 import de.uniwue.info6.misc.Crypt;
-
-import static de.uniwue.info6.misc.properties.PropBool.*;
-import static de.uniwue.info6.misc.properties.PropString.*;
-import static de.uniwue.info6.misc.properties.PropInteger.*;
-import static de.uniwue.info6.misc.properties.PropertiesFile.*;
 import de.uniwue.info6.misc.properties.Cfg;
 
 /**
@@ -61,6 +61,12 @@ public class SessionObject {
   private ExerciseGroup exerciseGroup;
   private Boolean validCredentials, logedIn, showIEError;
   private static final Lock lock = new ReentrantLock();
+
+
+  @SuppressWarnings("unused")
+  private SessionObject() {
+    // ---
+  }
 
   /**
    *
@@ -100,13 +106,35 @@ public class SessionObject {
   /**
    *
    *
+   * @return
+   */
+  public static SessionObject pull() {
+    try {
+      FacesContext facesContext = FacesContext.getCurrentInstance();
+      if (facesContext != null) {
+        HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(false);
+        SessionObject ac = null;
+        if (session != null) {
+          ac = (SessionObject) session.getAttribute(sessionPosition);
+        }
+        return ac;
+      }
+    } catch (Exception e) {
+      LOGGER.error("problem getting saved session user object", e);
+    }
+    return null;
+  }
+
+  /**
+   *
+   *
    * @param userIP
    * @param userID
    * @param secureValue
    * @return
    */
   private static boolean isValid(String userIP, String userID, String secureValue) {
-    return Crypt.md5(userIP + Cfg.inst().getProp(MAIN_CONFIG,SECRET_ID_STRING) + userID).equals(secureValue);
+    return Crypt.md5(userIP + Cfg.inst().getProp(MAIN_CONFIG, SECRET_ID_STRING) + userID).equals(secureValue);
   }
 
   /**
@@ -126,7 +154,7 @@ public class SessionObject {
 
     if (userID != null && secureValue != null && userIP != null && !userID.isEmpty()
         && !secureValue.isEmpty()) {
-      if (Cfg.inst().getProp(MAIN_CONFIG,USE_MOODLE_LOGIN)) {
+      if (Cfg.inst().getProp(MAIN_CONFIG, USE_MOODLE_LOGIN)) {
         return isValid(userIP, userID, secureValue);
       } else {
         return true;

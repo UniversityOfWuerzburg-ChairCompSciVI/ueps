@@ -13,9 +13,9 @@ package de.uniwue.info6.webapp.lists;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -70,12 +70,13 @@ import de.uniwue.info6.database.map.daos.SolutionQueryDao;
 import de.uniwue.info6.database.map.daos.UserEntryDao;
 import de.uniwue.info6.database.map.daos.UserResultDao;
 import de.uniwue.info6.misc.StringTools;
+import de.uniwue.info6.misc.TicToc;
 import de.uniwue.info6.misc.properties.Cfg;
 import de.uniwue.info6.misc.properties.PropBool;
 import de.uniwue.info6.misc.properties.PropertiesFile;
 import de.uniwue.info6.parser.errors.Error;
 import de.uniwue.info6.webapp.admin.UserRights;
-import de.uniwue.info6.webapp.session.SessionCollector;
+import de.uniwue.info6.webapp.session.SessionBean;
 import de.uniwue.info6.webapp.session.SessionObject;
 
 /**
@@ -305,7 +306,7 @@ public class ExerciseController implements Serializable {
         setEntry = (Boolean) sessionMap.get("show_entry");
         setSolution = (Boolean) sessionMap.get("show_solution");
         // get current scenario
-        ac = new SessionCollector().getSessionObject();
+        ac = SessionObject.pull();
         user = ac.getUser();
         scenario = ac.getScenario();
         // set up connection pool
@@ -326,7 +327,7 @@ public class ExerciseController implements Serializable {
       solutionQueryDao = new SolutionQueryDao();
 
       if (scenario != null) {
-        exerciseDao.updateObject(scenario);
+        exerciseDao.pullObject(scenario);
 
         // get exercise id
         if (!debug) {
@@ -567,7 +568,6 @@ public class ExerciseController implements Serializable {
    *
    */
   public void compareResults() {
-
     if (scenario == null || user == null) {
       return;
     }
@@ -980,7 +980,10 @@ public class ExerciseController implements Serializable {
         // + 5, "s").toString();
         // }
         this.userQuery = new SqlQuery(this.userString);
+
+        // TicToc.tic();
         compareResults();
+        // TicToc.toc();
       }
 
     }

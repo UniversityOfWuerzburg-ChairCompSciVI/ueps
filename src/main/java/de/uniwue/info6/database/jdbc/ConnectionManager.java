@@ -14,9 +14,9 @@ package de.uniwue.info6.database.jdbc;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,7 +26,6 @@ package de.uniwue.info6.database.jdbc;
  */
 import static de.uniwue.info6.misc.properties.PropBool.DEBUG_MODE;
 import static de.uniwue.info6.misc.properties.PropBool.FORCE_RESET_DATABASE;
-import static de.uniwue.info6.misc.properties.PropBool.IMPORT_EXAMPLE_SCENARIO;
 import static de.uniwue.info6.misc.properties.PropertiesFile.DEF_LANGUAGE;
 import static de.uniwue.info6.misc.properties.PropertiesFile.MAIN_CONFIG;
 
@@ -61,12 +60,12 @@ import de.uniwue.info6.database.map.Scenario;
 import de.uniwue.info6.database.map.User;
 import de.uniwue.info6.database.map.daos.ScenarioDao;
 import de.uniwue.info6.misc.StringTools;
+import de.uniwue.info6.misc.TicToc;
 import de.uniwue.info6.misc.properties.Cfg;
 import de.uniwue.info6.misc.properties.PropBool;
 import de.uniwue.info6.misc.properties.PropString;
 import de.uniwue.info6.misc.properties.PropertiesFile;
 import de.uniwue.info6.webapp.misc.InitVariables;
-import de.uniwue.info6.webapp.session.SessionCollector;
 import de.uniwue.info6.webapp.session.SessionObject;
 
 /**
@@ -105,6 +104,8 @@ public class ConnectionManager implements Serializable {
   private Cfg config;
 
   private static ConnectionManager instance;
+
+  private boolean dropTables = false;
 
   // -----------------------------------------------------------------------
   // initialize
@@ -166,7 +167,7 @@ public class ConnectionManager implements Serializable {
 
     this.pools = new HashMap<Scenario, JdbcTemplate>();
     this.errors = new HashMap<Scenario, String>();
-    this.ac = new SessionCollector().getSessionObject();
+    this.ac = SessionObject.pull();
 
     this.scenarioScripts = new HashMap<Scenario, ArrayList<String>>();
     this.scenarioTablesWithHash = new HashMap<Scenario, ArrayList<String>>();
@@ -280,19 +281,30 @@ public class ConnectionManager implements Serializable {
           for (String table : tables) {
             statement = connection.createStatement();
 
+
+            // ------------------------------------------------ //
+
+            statement = connection.createStatement();
+
             if (tablesToDelete != null && !tablesToDelete.isEmpty()
                 && !hasForeignKeys.contains(scenario)) {
               for (String tableToDelete : tablesToDelete) {
                 if ((user != null && table.equalsIgnoreCase(user.getId() + "_" + tableToDelete))
                     || table.equalsIgnoreCase(tableToDelete)) {
                   // droping changed table
-                  statement.execute("UNLOCK TABLES;");
-                  statement.execute("DROP TABLE IF EXISTS `" + table + "`;");
+                  // TODO: unlock?
+                  if (dropTables) {
+                    statement.execute("UNLOCK TABLES;");
+                    statement.execute("DROP TABLE IF EXISTS `" + table + "`;");
+                  }
                 }
               }
             } else {
-              statement.execute("UNLOCK TABLES;");
-              statement.execute("DROP TABLE IF EXISTS `" + table + "`;");
+              if (dropTables) {
+                statement.execute("UNLOCK TABLES;");
+                statement.execute("DROP TABLE IF EXISTS `" + table + "`;");
+              }
+
               // System.err.println("INFO (ueps): Dropping table at startup: \"" +
               // table + "\"");
             }
@@ -585,7 +597,7 @@ public class ConnectionManager implements Serializable {
           sc.setErrorLogWriter(pwError);
 
           File sqlScript = null;
-          File tempScenarioDir = null;
+          File tempScenarioFile = null;
           Integer scID = scenario.getId();
 
           // ------------------------------------------------ //
@@ -597,19 +609,23 @@ public class ConnectionManager implements Serializable {
             }
           } else {
             sqlScript = new File(resourcePath + File.separator + scID, dbScript);
-            tempScenarioDir = new File(resourcePath + File.separator + "0", dbScript);
-            if (!sqlScript.exists() && tempScenarioDir.exists()) {
+            tempScenarioFile = new File(resourcePath + File.separator + "0", dbScript);
+            // System.out.println(sqlScript);
+
+            if (!sqlScript.exists() && tempScenarioFile.exists()) {
               if (!sqlScript.getParentFile().exists()) {
                 sqlScript.getParentFile().mkdirs();
               }
-              FileUtils.copyFile(tempScenarioDir, sqlScript);
+              FileUtils.copyFile(tempScenarioFile, sqlScript);
             }
           }
 
           // ------------------------------------------------ //
 
           if (sqlScript.exists()) {
+            // TicToc.tic();
             sc.runScript(new FileReader(sqlScript), true);
+            // TicToc.toc("scriptrunner");
             ArrayList<String> commands = sc.getCommands();
 
             if (!commands.isEmpty()) {
@@ -881,6 +897,49 @@ public class ConnectionManager implements Serializable {
 
 
   /**
+  *
+  *
+  * @return
+  * @throws SQLException
+  */
+  private boolean tableExists(Scenario scenario, String table) throws SQLException {
+    Connection connection = null;
+    Statement statement = null;
+    ResultSet result = null;
+    try {
+      connection = this.getConnection(scenario);
+      statement = connection.createStatement();
+      String showTables = "SHOW TABLES LIKE '" + table + "';";
+      result = statement.executeQuery(showTables);
+      result.beforeFirst();
+      if (result.next()) {
+        return true;
+        // System.out.println(result.getString(1));
+      }
+    } catch (Exception e) {
+      LOGGER.error("CHECKING IF TABLE EXISTS FAILED", e);
+    } finally {
+      if (statement != null) {
+        statement.close();
+      }
+      if (result != null) {
+        result.close();
+      }
+      if (connection != null) {
+        try {
+          connection.close();
+        } catch (SQLException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+
+    return false;
+  }
+
+
+
+  /**
    * @throws SQLException
    * @throws IOException
    * @throws FileNotFoundException
@@ -889,7 +948,7 @@ public class ConnectionManager implements Serializable {
    */
   public synchronized void resetTables(Scenario scenario, User user) throws SQLException,
     FileNotFoundException, IOException {
-    // long starttime = System.currentTimeMillis();
+    long starttime = System.currentTimeMillis();
 
     if (!originalTableDeleted.contains(scenario)) {
       resetDatabaseTablesForUser(scenario, null, getScenarioTableNames(scenario));
@@ -920,6 +979,11 @@ public class ConnectionManager implements Serializable {
           }
           connection = this.getConnection(scenario);
           if (connection != null) {
+
+            // ------------------------------------------------ //
+            // ------------------------------------------------ //
+
+
             statement = connection.createStatement();
             // LOGGER.error("main-url: " + connection.getMetaData());
             ArrayList<String> commands = scenarioScripts.get(scenario);
@@ -927,7 +991,6 @@ public class ConnectionManager implements Serializable {
               for (String command : commands) {
                 command = command.trim();
                 String commandWithUserPrefix = addUserPrefix(command, scenario, user);
-
                 if (commandWithUserPrefix != null) {
                   statement.execute("SET FOREIGN_KEY_CHECKS = 0;");
                   if (changedTables.isEmpty() || hasForeignKeys.contains(scenario)) {
@@ -936,22 +999,52 @@ public class ConnectionManager implements Serializable {
                     boolean containsUnchangedTable = false;
                     boolean containsChangedTable = false;
 
+                    boolean skipExecute = false;
+
+                    if (commandWithUserPrefix.startsWith("/*") || (!dropTables && isDropStatement(commandWithUserPrefix))) {
+                      skipExecute = true;
+                    }
+
                     for (String unchangedTable : unchangedTables) {
                       if (commandWithUserPrefix.contains(unchangedTable)) {
                         containsUnchangedTable = true;
+                        break;
                       }
                     }
+
                     for (String changedTable : changedTables) {
                       if (commandWithUserPrefix.contains(changedTable)) {
+                        // System.out.println(commandWithUserPrefix);
                         containsChangedTable = true;
+                        break;
                       }
                     }
+
                     // if (containsChangedTable || !containsUnchangedTable) {
                     if (containsChangedTable || !containsUnchangedTable) {
                       try {
-                        statement.execute(commandWithUserPrefix);
-                      } catch (Exception e) {
+                        for (String changedTable : changedTables) {
+                          String tableName = user.getId() + "_" + changedTable;
 
+                          if (!dropTables && tableExists(scenario, tableName) && isCreateStatement(commandWithUserPrefix, tableName)) {
+                            skipExecute = true;
+                            // statement.execute("TRUNCATE TABLE `" + tableName + "`;");
+                            // TicToc.tic();
+                            statement.execute("DELETE FROM `" + tableName + "`;");
+                            // TicToc.toc();
+                          }
+                        }
+
+                        // System.out.println(commandWithUserPrefix);
+                        if (!skipExecute) {
+                          // TicToc.tic();
+                          statement.execute(commandWithUserPrefix);
+                          // TicToc.toc();
+                          // System.out.println(StringTools.trimToLength(commandWithUserPrefix, 200));
+                        }
+                      } catch (Exception e) {
+                        // TODO:
+                        LOGGER.error("test", e);
                       }
                     }
                   }
@@ -986,7 +1079,7 @@ public class ConnectionManager implements Serializable {
       }
     }
 
-    // long elapsedTime = System.currentTimeMillis() - starttime;
+    long elapsedTime = System.currentTimeMillis() - starttime;
     // 150-190ms
     // System.out.println("Import-Script: " + elapsedTime + " ms");
   }
@@ -1027,6 +1120,47 @@ public class ConnectionManager implements Serializable {
 
     return null;
   }
+
+  /**
+   *
+   *
+   * @param query
+   * @param table
+   * @return
+   *
+   * @throws SQLException
+   */
+  private boolean isCreateStatement(String query, String table) throws SQLException {
+    String regex_table = "[\\`\\'\"\\s]+(" + table + ")[\\`\\'\"\\s]*[,]?";
+    String REGEX_FIELD = "(?:create)[\\s]+table[s]?(?:[\\s]*if[\\s]*not?[\\s]*exists)?"
+                         + regex_table;
+    Matcher matcher = Pattern.compile(REGEX_FIELD, Pattern.CASE_INSENSITIVE).matcher(query);
+    if (matcher.find()) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   *
+   *
+   * @param query
+   * @param table
+   * @return
+   *
+   * @throws SQLException
+   */
+  private boolean isDropStatement(String query) throws SQLException {
+    String regex_table = "[\\`\\'\"\\s]+([a-zA-Z0-9-_]+)[\\`\\'\"\\s]*[,]?";
+    String REGEX_FIELD = "(?:drop)[\\s]+table[s]?(?:[\\s]*if[\\s]*not?[\\s]*exists)?"
+                         + regex_table;
+    Matcher matcher = Pattern.compile(REGEX_FIELD, Pattern.CASE_INSENSITIVE).matcher(query);
+    if (matcher.find()) {
+      return true;
+    }
+    return false;
+  }
+
 
   /**
    *

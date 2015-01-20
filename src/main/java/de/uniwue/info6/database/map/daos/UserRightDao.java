@@ -13,9 +13,9 @@ package de.uniwue.info6.database.map.daos;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -71,6 +71,19 @@ public class UserRightDao extends DaoTools<UserRight> {
   public List<UserRight> getByUser(User user) {
     UserRight example = new UserRight();
     example.setUser(user);
+    List<UserRight> rights = findByExample(example);
+    return rights;
+  }
+
+  /**
+   *
+   *
+   * @param user
+   * @return
+   */
+  public List<UserRight> getByCreator(User user) {
+    UserRight example = new UserRight();
+    example.setCreatedByUser(user);
     List<UserRight> rights = findByExample(example);
     return rights;
   }
@@ -142,8 +155,13 @@ public class UserRightDao extends DaoTools<UserRight> {
     try {
       Criteria criteria = session.createCriteria("de.uniwue.info6.database.map.UserRight");
       criteria.add(Example.create(instance));
+
       if (instance.getUser() != null) {
         criteria.createAlias("user", "u").add(Restrictions.eq("u.id", instance.getUser().getId()));
+      }
+
+      if (instance.getCreatedByUser() != null) {
+        criteria.createAlias("createdByUser", "c").add(Restrictions.eq("c.id", instance.getCreatedByUser().getId()));
       }
 
       if (instance.getScenario() != null) {

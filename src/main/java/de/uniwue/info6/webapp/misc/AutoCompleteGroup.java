@@ -13,9 +13,9 @@ package de.uniwue.info6.webapp.misc;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,6 +23,8 @@ package de.uniwue.info6.webapp.misc;
  * limitations under the License.
  * #L%
  */
+
+import static de.uniwue.info6.misc.properties.PropertiesFile.DEF_LANGUAGE;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,12 +39,9 @@ import de.uniwue.info6.database.map.User;
 import de.uniwue.info6.database.map.daos.ExerciseGroupDao;
 import de.uniwue.info6.database.map.daos.ScenarioDao;
 import de.uniwue.info6.misc.StringTools;
-import de.uniwue.info6.webapp.admin.UserRights;
-import de.uniwue.info6.webapp.session.SessionCollector;
-import de.uniwue.info6.webapp.session.SessionObject;
-
-import static de.uniwue.info6.misc.properties.PropertiesFile.DEF_LANGUAGE;
 import de.uniwue.info6.misc.properties.Cfg;
+import de.uniwue.info6.webapp.admin.UserRights;
+import de.uniwue.info6.webapp.session.SessionObject;
 
 /**
  *
@@ -78,7 +77,7 @@ public class AutoCompleteGroup {
     this.notFound = Cfg.inst().getProp(DEF_LANGUAGE, "ASSERTION.NO_GROUP");
     this.rights = new UserRights().initialize();
 
-    SessionObject ac = new SessionCollector().getSessionObject();
+    SessionObject ac = SessionObject.pull();
     if (ac != null) {
       user = ac.getUser();
     }

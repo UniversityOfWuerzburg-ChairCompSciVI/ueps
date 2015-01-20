@@ -13,9 +13,9 @@ package de.uniwue.info6.database.jdbc;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,17 +38,27 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import de.uniwue.info6.database.map.Exercise;
+import de.uniwue.info6.database.map.Scenario;
 import de.uniwue.info6.database.map.User;
+import de.uniwue.info6.database.map.UserEntry;
+import de.uniwue.info6.database.map.UserResult;
+import de.uniwue.info6.database.map.UserRight;
+import de.uniwue.info6.database.map.daos.ExerciseDao;
+import de.uniwue.info6.database.map.daos.ScenarioDao;
+import de.uniwue.info6.database.map.daos.SolutionQueryDao;
 import de.uniwue.info6.database.map.daos.UserDao;
+import de.uniwue.info6.database.map.daos.UserEntryDao;
+import de.uniwue.info6.database.map.daos.UserResultDao;
+import de.uniwue.info6.database.map.daos.UserRightDao;
 import de.uniwue.info6.misc.properties.Cfg;
 import de.uniwue.info6.misc.properties.PropBool;
 import de.uniwue.info6.misc.properties.PropertiesFile;
 import de.uniwue.info6.webapp.admin.UserRights;
-import de.uniwue.info6.webapp.session.SessionListener;
 
 public class ConnectionTools extends Thread {
 
-  private UserDao dao;
+  private UserDao userDao;
   private final static String SCRIPT_PATH = Cfg.inst().getProp(MAIN_CONFIG,
       SCENARIO_RESOURCES_PATH);
   private static final Log LOGGER = LogFactory.getLog(ConnectionTools.class);
@@ -93,7 +103,7 @@ public class ConnectionTools extends Thread {
    */
   private ConnectionTools() {
     super();
-    this.dao = new UserDao();
+    this.userDao = new UserDao();
   }
 
   /**
@@ -106,43 +116,111 @@ public class ConnectionTools extends Thread {
     this.currentThread = Thread.currentThread();
     while (!currentThread.isInterrupted()) {
       try {
-        User user = dao.getById(dummyUser);
+        User user = userDao.getById(dummyUser);
         if (user == null) {
           user = new User();
           user.setId(dummyUser);
           user.setIsAdmin(false);
-          dao.insertNewInstance(user);
+          userDao.insertNewInstance(user);
         }
 
         // add admin users if not found in database {{{
         String[] admins = new UserRights().initialize().getAdminsFromConfigFile();
+        User lastAdminUser = null;
         for (String adminId : admins) {
-          User adminUser = dao.getById(adminId.trim());
-          if (adminUser == null) {
-            adminUser = new User();
-            adminUser.setId(adminId);
-            adminUser.setIsAdmin(true);
-            dao.insertNewInstance(adminUser);
+          lastAdminUser = userDao.getById(adminId.trim());
+          if (lastAdminUser == null) {
+            lastAdminUser = new User();
+            lastAdminUser.setId(adminId);
+            lastAdminUser.setIsAdmin(true);
+            userDao.insertNewInstance(lastAdminUser);
             System.err.println("INFO (ueps): Admin user with id: \"" + adminId + "\" added");
           }
         }
         // }}}
 
+        // ------------------------------------------------ //
+        // --
+        // ------------------------------------------------ //
 
         // TODO: DEBUG
         boolean debugMode = Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG, PropBool.DEBUG_MODE);
+
         if (debugMode) {
-          String[] test = new String[] {"dozent_1", "dozent_2", "student_1", "student_2"};
-          for (String testUserId : test) {
-            User testUser = dao.getById(testUserId.trim());
+          UserRightDao userRightDao = new UserRightDao();
+          String[] testUsers = new String[] {"dozent_1", "dozent_2", "student_1", "student_2"};
+          User exampleLecturer = null;
+          for (String testUserId : testUsers) {
+            User testUser = userDao.getById(testUserId.trim());
             if (testUser == null) {
               testUser = new User();
               testUser.setId(testUserId);
-              if (testUserId.startsWith("dozent")) {
+
+              // ------------------------------------------------ //
+              if (testUserId.startsWith("dozent_")) {
                 testUser.setIsLecturer(true);
               }
-              dao.insertNewInstance(testUser);
+              userDao.insertNewInstance(testUser);
+              // ------------------------------------------------ //
+              if (testUserId.equals("dozent_1")) {
+                exampleLecturer = testUser;
+                Scenario scenario = new ScenarioDao().getById(1);
+                if (scenario != null && testUser != null && lastAdminUser != null) {
+                  UserRight right = new UserRight(testUser, lastAdminUser, scenario, true, true, false);
+                  userRightDao.insertNewInstance(right);
+                }
+              }
+              // ------------------------------------------------ //
+              if (testUserId.equals("student_1")) {
+                Scenario scenario = new ScenarioDao().getById(1);
+                if (scenario != null && testUser != null && exampleLecturer != null) {
+                  UserRight right = new UserRight(testUser, exampleLecturer, scenario, true, true, true);
+                  userRightDao.insertNewInstance(right);
+                }
+              }
+              // ------------------------------------------------ //
+              if (testUserId.equals("student_2")) {
+                Scenario scenario = new ScenarioDao().getById(1);
+                if (scenario != null && testUser != null && exampleLecturer != null) {
+                  UserRight right = new UserRight(testUser, exampleLecturer, scenario, true, false, false);
+                  userRightDao.insertNewInstance(right);
+                }
+              }
+
+              // ------------------------------------------------ //
               System.err.println("INFO (ueps): Test user with id: \"" + testUserId + "\" added");
+            }
+          }
+
+          UserEntryDao userEntryDao = new UserEntryDao();
+          UserResultDao userResultDao = new UserResultDao();
+          ExerciseDao exerciseDao = new ExerciseDao();
+          SolutionQueryDao solutionQueryDao = new SolutionQueryDao();
+
+          for (int i = 1; i < 100; i++) {
+            try {
+              Exercise testExercise = exerciseDao.getById(i);
+              if (testExercise != null) {
+                UserEntry testEntry = new UserEntry();
+                // testEntry.setExercise(exerciseDao.getById(4));
+                testEntry.setExercise(testExercise);
+                testEntry.setUser(userDao.getById("student_2"));
+                testEntry.setUserQuery("SELECT title, author, price FROM books JOIN publishers ON publisher_id=publishers.id WHERE publishers.name=\"Carlsen\"");
+                testEntry.setEntryTime(new Date());
+                testEntry.setResultMessage("");
+                userEntryDao.insertNewInstance(testEntry);
+
+                UserResult testResult = new UserResult();
+                testResult.setUserEntry(testEntry);
+                testResult.setSolutionQuery(solutionQueryDao.getById(4));
+                testResult.setCredits((byte) 3);
+                testResult.setComment("");
+                testResult.setLastModified(new Date());
+                userResultDao.insertNewInstance(testResult);
+              }
+            } catch (Exception e) {
+              // TODO: logging
+              e.printStackTrace();
             }
           }
         }

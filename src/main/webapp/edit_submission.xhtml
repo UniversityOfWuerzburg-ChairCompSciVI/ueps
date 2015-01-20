@@ -12,9 +12,9 @@
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
-  
+
        http://www.apache.org/licenses/LICENSE-2.0
-  
+
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,130 +22,99 @@
   limitations under the License.
   #L%
   -->
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-xmlns:f="http://java.sun.com/jsf/core"
-xmlns:h="http://java.sun.com/jsf/html"
-xmlns:ui="http://java.sun.com/jsf/facelets"
-xmlns:a4j="http://richfaces.org/a4j"
-xmlns:rich="http://richfaces.org/rich"
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html" xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich"
 xmlns:p="http://primefaces.org/ui">
  <META HTTP-EQUIV="refresh" CONTENT="15" />
  <h:body>
   <!-- main template defining header, footer and content -->
   <ui:composition template="/templates/common/commonLayout.xhtml">
-  <ui:define name="header_text">
+   <ui:define name="header_text">
     <span class="error">#{txt['ASSERTION.EDIT']}</span>
-  </ui:define>
+   </ui:define>
    <ui:define name="content">
     <script type="text/javascript">
     <!-- -->
-    jQuery(function() { jQuery( ".ui-icon-flag" ).tipsy({fallback:
-    "#{txt['ASSERTION.SOLUTION_USED']}", gravity: 'w' }); }); 
+    jQuery(function() { jQuery( ".ui-icon-flag" ).tipsy({fallback: "#{txt['ASSERTION.SOLUTION_USED']}",
+    gravity: 'w' }); });
     <!-- --></script>
-    <h:graphicImage style="position:relative;left:220px;top:20px"
-    value="#{img['BASICS.MULTIPASS']}"
+    <h:graphicImage style="position:relative;left:220px;top:20px" value="#{img['BASICS.MULTIPASS']}"
     rendered="#{edit_sub.userNotHasRights()}" />
-    <h:form id="form" style="text-align:center"
-    rendered="#{edit_sub.userHasRights()}">
+    <h:form id="form" style="text-align:center" rendered="#{edit_sub.userHasRights()}">
      <p:panel header="#{txt['ASSERTION.EDIT']}">
       <p:growl id="messages_popup" showDetail="true" />
-      <h:panelGrid id="admin_grid" columns="2"
-      style="margin-bottom:10px;text-align:center">
+      <h:panelGrid id="admin_grid" columns="2" style="margin-bottom:10px;text-align:center">
        <f:facet name="header" styleClass="info_box">
         <p:messages id="messages" escape="false" closable="true" />
        </f:facet>
-
        <h:outputLabel styleClass="boldPoints">
         <h:outputText value="#{txt['USERID']}:" />
        </h:outputLabel>
        <h:panelGroup>
         <h:outputText value="#{edit_sub.student.id}" />
        </h:panelGroup>
-
        <h:outputLabel styleClass="boldPoints">
         <h:outputText value="#{txt['EDIT_EX.QUESTION']}:" />
        </h:outputLabel>
        <h:panelGroup>
-	   <h:outputText value="[#{edit_sub.exercise.id}]: #{edit_sub.getQuestion()}" />
+        <h:outputText value="[#{edit_sub.exercise.id}]: #{edit_sub.getQuestion()}" />
        </h:panelGroup>
-
        <h:outputLabel styleClass="boldPoints">
         <h:outputText value="#{txt['ASSERTION.USERQUERY']}:" />
        </h:outputLabel>
        <h:panelGroup>
-        <h:outputText id="userquery"
-        value="#{edit_sub.userEntry.userQuery}" />
+        <h:outputText id="userquery" value="#{edit_sub.userEntry.userQuery}" />
        </h:panelGroup>
-
        <h:outputLabel styleClass="boldPoints">
         <h:outputText value="#{txt['ASSERTION.DATE']}:" />
        </h:outputLabel>
        <h:panelGroup>
-        <h:outputText value="#{edit_sub.getEntryDate()}"
-        style="white-space:normal;">
-        </h:outputText>
+        <h:outputText value="#{edit_sub.getEntryDate()}" style="white-space:normal;"></h:outputText>
        </h:panelGroup>
-
        <h:outputLabel styleClass="boldPoints">
         <h:outputText value="#{txt['ASSERTION.DATE2']}:" />
        </h:outputLabel>
        <h:panelGroup>
-        <h:outputText value="#{edit_sub.getResultDate()}"
-        style="white-space:normal;">
-        </h:outputText>
-        <h:outputText style="color:green"
-        rendered="#{edit_sub.userResult.user != null}"
+        <h:outputText value="#{edit_sub.getResultDate()}" style="white-space:normal;"></h:outputText>
+        <h:outputText style="color:green" rendered="#{edit_sub.userResult.user != null}"
         value=" (#{txt['ASSERTION.ADMIN_RATING']}: #{edit_sub.userResult.user.id})" />
        </h:panelGroup>
-
-
        <h:outputLabel styleClass="boldPoints">
         <h:outputText value="#{txt['ASSERTION.COMMENT']}:" />
        </h:outputLabel>
        <h:panelGroup>
         <h:outputText id="comment_orig" escape="false"
-        value="#{edit_sub.stringEmpty(edit_sub.userResult.comment) ? '---' : edit_sub.getCommentText()}" />
+        value="#{edit_sub.stringEmpty(edit_sub.newComment) ? '---' : edit_sub.getCommentText()}" />
         <br />
-        <p:inplace style="color:green" id="comment"
-        emptyLabel="Undefined" effectSpeed="fast"
+        <p:inplace style="color:green" id="comment" emptyLabel="Undefined" effectSpeed="fast"
         label="[#{txt['ASSERTION.EDIT']}]" editor="true">
          <p:ajax event="save" update="comment_orig" />
-         <p:editor id="comment2"
-         controls="bold italic underline strikethrough color"
+         <p:editor id="comment2" controls="bold italic underline strikethrough color"
          value="#{edit_sub.newComment}" />
         </p:inplace>
        </h:panelGroup>
-       <h:outputLabel styleClass="boldPoints"
-       value="#{txt['ASSERTION.POINTS_ACHIEVED']}:" />
+       <h:outputLabel styleClass="boldPoints" value="#{txt['ASSERTION.POINTS_ACHIEVED']}:" />
        <h:panelGroup>
-        <h:outputText id="points_orig" escape="false"
-        value="#{edit_sub.userResult.credits}" />
+        <h:outputText id="points_orig" escape="false" value="#{edit_sub.userResult.credits}" />
         <br />
-        <p:inplace style="color:green" id="points" effectSpeed="fast"
-        editor="true" label="[#{txt['ASSERTION.EDIT']}]">
+        <p:inplace style="color:green" id="points" effectSpeed="fast" editor="true"
+        label="[#{txt['ASSERTION.EDIT']}]">
          <p:ajax event="save" update="points_orig" />
-         <h:selectOneMenu id="points2"
-         value="#{edit_sub.userResult.credits}" immediate="true">
-          <f:selectItem itemLabel="0 #{txt['ASSERTION.POINTS']}"
-          itemValue="0"
+         <h:selectOneMenu id="points2" value="#{edit_sub.userResult.credits}" immediate="true">
+          <f:selectItem itemLabel="0 #{txt['ASSERTION.POINTS']}" itemValue="0"
           itemDisabled="#{edit_sub.disableCreditItem(0)}" />
-          <f:selectItem itemLabel="1 #{txt['ASSERTION.POINT']}"
-          itemValue="1"
+          <f:selectItem itemLabel="1 #{txt['ASSERTION.POINT']}" itemValue="1"
           itemDisabled="#{edit_sub.disableCreditItem(1)}" />
-          <f:selectItem itemLabel="2 #{txt['ASSERTION.POINTS']}"
-          itemValue="2"
+          <f:selectItem itemLabel="2 #{txt['ASSERTION.POINTS']}" itemValue="2"
           itemDisabled="#{edit_sub.disableCreditItem(2)}" />
-          <f:selectItem itemLabel="3 #{txt['ASSERTION.POINTS']}"
-          itemValue="3"
+          <f:selectItem itemLabel="3 #{txt['ASSERTION.POINTS']}" itemValue="3"
           itemDisabled="#{edit_sub.disableCreditItem(3)}" />
-          <f:selectItem itemLabel="4 #{txt['ASSERTION.POINTS']}"
-          itemValue="4"
+          <f:selectItem itemLabel="4 #{txt['ASSERTION.POINTS']}" itemValue="4"
           itemDisabled="#{edit_sub.disableCreditItem(4)}" />
-          <f:selectItem itemLabel="5 #{txt['ASSERTION.POINTS']}"
-          itemValue="5"
+          <f:selectItem itemLabel="5 #{txt['ASSERTION.POINTS']}" itemValue="5"
           itemDisabled="#{edit_sub.disableCreditItem(5)}" />
          </h:selectOneMenu>
         </p:inplace>
@@ -153,12 +122,10 @@ xmlns:p="http://primefaces.org/ui">
       </h:panelGrid>
      </p:panel>
      <br />
-     <p:dataTable emptyMessage="#{txt['ASSERTION.NO_SOLUTION_FOUND']}!"
-     dynamic="true" var="solution" rowKey="#{edit_sub.query}"
-     value="#{edit_sub.solutions}" id="solutionList" editable="true"
+     <p:dataTable emptyMessage="#{txt['ASSERTION.NO_SOLUTION_FOUND']}!" dynamic="true" var="solution"
+     rowKey="#{edit_sub.query}" value="#{edit_sub.solutions}" id="solutionList" editable="true"
      styleClass="solutionList">
-      <f:facet name="header">
-      #{txt['ASSERTION.COR_SOLUTION']}:</f:facet>
+      <f:facet name="header">#{txt['ASSERTION.COR_SOLUTION']}:</f:facet>
       <p:column>
        <p:cellEditor>
         <f:facet name="output">
@@ -175,14 +142,11 @@ xmlns:p="http://primefaces.org/ui">
       </p:column>
      </p:dataTable>
      <br />
-     <h:panelGrid style="display:inline-table" columns="6"
-     cellpadding="5" styleClass="admin_buttons">
-      <p:commandButton rendered="#{edit_sub.minDistToCorresponding &gt; 0}"
-      icon="ui-icon-plus" actionListener="#{edit_sub.addAsSolution}"
-      process="@all" value="#{txt['ASSERTION.ADD_AS_SOLUTION']}"
+     <h:panelGrid style="display:inline-table" columns="6" cellpadding="5" styleClass="admin_buttons">
+      <p:commandButton rendered="#{edit_sub.minDistToCorresponding &gt; 0}" icon="ui-icon-plus"
+      actionListener="#{edit_sub.addAsSolution}" process="@all" value="#{txt['ASSERTION.ADD_AS_SOLUTION']}"
       update="admin_grid,solutionList,comment_orig,points_orig, points, comment, comment2, points2" />
-      <p:commandButton value="#{txt['ASSERTION.SAVE']}"
-      process="@all" update="admin_grid"
+      <p:commandButton value="#{txt['ASSERTION.SAVE']}" process="@all" update="admin_grid"
       actionListener="#{edit_sub.save}" icon="ui-icon-disk" />
      </h:panelGrid>
     </h:form>

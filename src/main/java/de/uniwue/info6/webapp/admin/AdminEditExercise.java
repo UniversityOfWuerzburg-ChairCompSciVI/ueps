@@ -13,9 +13,9 @@ package de.uniwue.info6.webapp.admin;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -65,7 +65,6 @@ import de.uniwue.info6.database.map.daos.SolutionQueryDao;
 import de.uniwue.info6.misc.StringTools;
 import de.uniwue.info6.misc.properties.Cfg;
 import de.uniwue.info6.parser.errors.SqlError;
-import de.uniwue.info6.webapp.session.SessionCollector;
 import de.uniwue.info6.webapp.session.SessionObject;
 
 /**
@@ -131,7 +130,7 @@ public class AdminEditExercise implements Serializable {
     scenarioDao = new ScenarioDao();
     exerciseGroupDao = new ExerciseGroupDao();
     Map<String, String> requestParams = ec.getRequestParameterMap();
-    ac = new SessionCollector().getSessionObject();
+    ac = SessionObject.pull();
     user = ac.getUser();
     solutions = new ArrayList<SolutionQuery>();
     solutionsToDelete = new ArrayList<SolutionQuery>();
@@ -383,7 +382,7 @@ public class AdminEditExercise implements Serializable {
     if (exerciseGroup != null) {
       String group = exerciseGroup.getName() + ", ID: " + exerciseGroup.getId() + ", ";
       group += exerciseGroup.getIsRated() == true ? Cfg.inst().getProp(DEF_LANGUAGE, "RATED") + "." : Cfg.inst().getProp(DEF_LANGUAGE,
-          "UNRATED") + ".";
+               "UNRATED") + ".";
       return group;
     }
     return null;
@@ -416,10 +415,10 @@ public class AdminEditExercise implements Serializable {
     } else {
       DateFormat df = new SimpleDateFormat("HH:mm:ss");
       FacesContext.getCurrentInstance()
-          .addMessage(
-              null,
-              new FacesMessage(Cfg.inst().getProp(DEF_LANGUAGE, "EDIT_EX.NO_SYNTAX_ERROR") + " ("
-                  + df.format(new Date()) + ")"));
+      .addMessage(
+        null,
+        new FacesMessage(Cfg.inst().getProp(DEF_LANGUAGE, "EDIT_EX.NO_SYNTAX_ERROR") + " ("
+                         + df.format(new Date()) + ")"));
     }
   }
 
@@ -444,7 +443,7 @@ public class AdminEditExercise implements Serializable {
           SqlError error = query.getError();
           if (error != null) {
             message += Cfg.inst().getProp(DEF_LANGUAGE, "EDIT_EX.SYNTAX_ERROR") + ": " + queryText + "<br/>" + error
-                + "<br/>";
+                       + "<br/>";
           }
         }
       }

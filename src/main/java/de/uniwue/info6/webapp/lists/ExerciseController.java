@@ -275,9 +275,8 @@ public class ExerciseController implements Serializable {
     this.user = user;
     this.exercise = exercise;
     this.connectionPool = ConnectionManager.offline_instance();
-
-    debug = true;
-    init();
+    this.debug = true;
+    this.init();
     return this;
   }
 
@@ -327,7 +326,7 @@ public class ExerciseController implements Serializable {
       solutionQueryDao = new SolutionQueryDao();
 
       if (scenario != null) {
-        exerciseDao.pullObject(scenario);
+        // exerciseDao.pullObject(scenario);
 
         // get exercise id
         if (!debug) {
@@ -358,7 +357,11 @@ public class ExerciseController implements Serializable {
                 ac.setScenario(scenario);
               }
             }
+
             userHasRights = rights.hasViewRights(user, scenario, exerciseGroup);
+            if (debug) {
+              userHasRights = true;
+            }
 
             diagramImage = scenario.getImagePath();
             if (diagramImage != null) {

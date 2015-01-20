@@ -13,9 +13,9 @@ package de.uniwue.info6.database;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,6 +24,10 @@ package de.uniwue.info6.database;
  * #L%
  */
 
+import static de.uniwue.info6.misc.properties.PropBool.FORCE_RESET_DATABASE;
+import static de.uniwue.info6.misc.properties.PropBool.IMPORT_EXAMPLE_SCENARIO;
+import static de.uniwue.info6.misc.properties.PropertiesFile.MAIN_CONFIG;
+
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +35,9 @@ import java.util.Random;
 
 import org.apache.commons.lang3.StringUtils;
 
+import de.uniwue.info6.database.gen.GenerateData;
 import de.uniwue.info6.database.jdbc.ConnectionManager;
+import de.uniwue.info6.database.jdbc.ConnectionTools;
 import de.uniwue.info6.database.map.Exercise;
 import de.uniwue.info6.database.map.ExerciseGroup;
 import de.uniwue.info6.database.map.Scenario;
@@ -41,74 +47,82 @@ import de.uniwue.info6.database.map.daos.ExerciseDao;
 import de.uniwue.info6.database.map.daos.ExerciseGroupDao;
 import de.uniwue.info6.database.map.daos.ScenarioDao;
 import de.uniwue.info6.database.map.daos.UserDao;
+import de.uniwue.info6.misc.properties.Cfg;
 import de.uniwue.info6.webapp.lists.ExerciseController;
 
 public class SQLParserTest {
   public static void main(String[] args) throws Exception {
-
-    System.out.println(StringUtils.repeat("-", 80));
-
-    boolean resetDB = false;
+    final boolean resetDb = true;
+    // Falls nur nach einer bestimmten Aufgabe gesucht wird
     final Integer exerciseID = null;
+    final int threadSize = 1;
+
+    // ------------------------------------------------ //
+    final ScenarioDao scenarioDao = new ScenarioDao();
+    final ExerciseDao exerciseDao = new ExerciseDao();
+    final ExerciseGroupDao groupDao = new ExerciseGroupDao();
+    final UserDao userDao = new UserDao();
+    final ArrayList<Thread> threads = new ArrayList<Thread>();
     Connection connection = null;
 
+    // ------------------------------------------------ //
     try {
-
-      if (resetDB) {
-        // // RESET DB
-        // GenerateData gen = new GenerateData();
-        // gen.resetDB(false, true);
-        // gen.insertExampleScenario(true);
+      ConnectionManager.offline_instance();
+      if (resetDb) {
+        Cfg.inst().setProp(MAIN_CONFIG, IMPORT_EXAMPLE_SCENARIO, true);
+        Cfg.inst().setProp(MAIN_CONFIG, FORCE_RESET_DATABASE, true);
+        new GenerateData().resetDB();
+        ConnectionTools.inst().addSomeTestData();
       }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    // ------------------------------------------------ //
 
-      ConnectionManager pool = ConnectionManager.offline_instance();
-      pool.updateScenarios();
+    final List<Scenario> scenarios = scenarioDao.findAll();
 
-      // main daos
+    try {
+      // ------------------------------------------------ //
+      String userID;
+      for (int i = 2; i < 100; i++) {
+        userID = "user_" + i;
+        User userToInsert = new User();
+        userToInsert.setId(userID);
+        userToInsert.setIsAdmin(false);
+        userDao.insertNewInstance(userToInsert);
+      }
+      // ------------------------------------------------ //
 
-      // final UserDao userDao = new UserDao();
-      // String userID;
-      // for (int i = 2; i < 100; i++) {
-      // userID = "user_" + i;
-      // User userToInsert = new User();
-      // userToInsert.setId(userID);
-      // userToInsert.setIsAdmin(false);
-      // userDao.insertNewInstance(userToInsert);
-      // }
-
-      ArrayList<Thread> threads = new ArrayList<Thread>();
-
-      for (int i = 0; i < 1; i++) {
+      for (int i = 0; i < threadSize; i++) {
         Thread thread = new Thread() {
 
           public void run() {
-
+            // ------------------------------------------------ //
             try {
               Thread.sleep(new Random().nextInt(5));
             } catch (InterruptedException e) {
               e.printStackTrace();
             }
-
-            // main daos
-            final ScenarioDao scenarioDao = new ScenarioDao();
-            final ExerciseDao exerciseDao = new ExerciseDao();
-            final ExerciseGroupDao groupDao = new ExerciseGroupDao();
-
-            final UserDao userDao = new UserDao();
-            final List<Scenario> scenarios = scenarioDao.findAll();
+            // ------------------------------------------------ //
 
             User user = userDao.getRandom();
-            System.out.println("thread: " + Thread.currentThread().getId() + " started: "
-                + user.getId());
+            Thread.currentThread().setName(user.getId());
+            System.err.println("\n\nINFO (ueps): Thread '" + Thread.currentThread().getName() + "' started\n");
+
+            // ------------------------------------------------ //
 
             for (Scenario scenario : scenarios) {
               System.out.println(StringUtils.repeat("#", 90));
               System.out.println("SCENARIO: " + scenario.getId());
+
+              // ------------------------------------------------ //
               for (ExerciseGroup group : groupDao.findByScenario(scenario)) {
                 System.out.println(StringUtils.repeat("#", 90));
                 System.out.println("GROUP: " + group.getId());
                 System.out.println(StringUtils.repeat("#", 90));
                 List<Exercise> exercises = exerciseDao.findByExGroup(group);
+
+                // ------------------------------------------------ //
                 for (Exercise exercise : exercises) {
                   if (exerciseID != null && !exercise.getId().equals(exerciseID)) {
                     continue;
@@ -122,17 +136,20 @@ public class SQLParserTest {
                   exc.setUserString(solution);
 
                   String fd = exc.getFeedbackList().get(0).getFeedback();
-                  if (!fd.trim().toLowerCase().equals("bestanden")) {
-                    System.err.println("ERROR:\n");
-                  }
                   System.out.println("Used Query: " + solution);
-                  System.out.println(exercise.getId() + ": " + fd);
+                  if (fd.trim().toLowerCase().equals("bestanden")) {
+                    System.out.println(exercise.getId() + ": " + fd);
+                  } else {
+                    System.err.println(exercise.getId() + ": " + fd);
+                  }
+
                   System.out.println(StringUtils.repeat("-", 90));
+
                 }
               }
             }
-            System.out.println("thread: " + Thread.currentThread().getId() + " is done: "
-                + user.getId());
+
+            System.err.println("INFO (ueps): Thread '" + Thread.currentThread().getName() + "' stopped");
           }
         };
         thread.start();

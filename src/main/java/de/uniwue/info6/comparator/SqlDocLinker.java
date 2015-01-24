@@ -1,5 +1,9 @@
 package de.uniwue.info6.comparator;
 
+import de.uniwue.info6.misc.properties.Cfg;
+import de.uniwue.info6.misc.properties.PropString;
+import de.uniwue.info6.misc.properties.PropertiesFile;
+
 /*
  * #%L
  * ************************************************************************
@@ -34,8 +38,8 @@ package de.uniwue.info6.comparator;
 public class SqlDocLinker {
 	
 	public static RefLink getUrlByKeyword(String keyword){
-		
-		String url = "http://dev.mysql.com/doc/refman/5.1/de/";
+
+		String url = Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG, PropString.MYSQL_DOC_URL);
 		
 		if(keyword.equals("SELECT")){
 			url += "select.html";

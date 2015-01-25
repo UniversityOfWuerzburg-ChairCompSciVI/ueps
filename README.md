@@ -109,7 +109,7 @@ IDENTIFIED BY '3ti4k4tm270kg';
 ```
 
 #### Automatisierung der Installation
-Ermöglicht die Automatisierung der Datenbank-Konfiguration. Dafuer benoetigt der unter
+Ermöglicht die Automatisierung der Datenbank-Konfiguration. Dafür benötigt der unter
 [MASTER_DBUSER](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L43)
 angegebene Nutzer zusätzlich noch ``ALTER, CREATE, DROP, LOCK TABLES``-Rechte.
 Die Konfiguration wird nur gestartet, wenn keine

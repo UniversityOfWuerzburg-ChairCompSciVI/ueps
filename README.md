@@ -102,7 +102,7 @@ Hierzu müssen zwei Dateien abgeändert werden.
 Linux-Pfad:<br/>
 ``/etc/tomcat7/tomcat-users.xml``<br/>
 Windows-Pfad:<br/>
-``%TOMCAT_PATH%\conf\tomcat-users.xml``<br/>
+``%TOMCAT_PATH%\conf\tomcat-users.xml``<br/><br/>
 Hier muss einem Nutzer (hier: 'admin') die Rolle 'manager-script' vergeben werden.<br/>
 ```
 <role rolename="manager-script"/>

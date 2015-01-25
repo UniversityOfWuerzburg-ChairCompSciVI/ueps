@@ -97,22 +97,20 @@ angegeben durch [MASTER_DBNAME](https://github.com/UniversityOfWuerzburg-ChairCo
 Beispiel MySQL-Rechte-Skript:
 ```
 GRANT SELECT, INSERT, UPDATE, DELETE ON $MASTER_DBNAME$.*
-TO '$MASTER_DBUSER$'@'$MASTER_DBHOST$'
-IDENTIFIED BY '$MASTER_DBPASS$';
+TO '$MASTER_DBUSER$'@'$MASTER_DBHOST$' IDENTIFIED BY '$MASTER_DBPASS$';
 ```
 
 Ausgefüllt mit den oberen Beispiel-Daten:
 ```
 GRANT SELECT, INSERT, UPDATE, DELETE ON ueps_master.*
-TO 'test_user'@'127.0.0.1'
-IDENTIFIED BY '3ti4k4tm270kg';
+TO 'test_user'@'127.0.0.1' IDENTIFIED BY '3ti4k4tm270kg';
 ```
 
 #### Automatisierung der Installation
 Ermöglicht die Automatisierung der Datenbank-Konfiguration. Dafür benötigt der unter
 [MASTER_DBUSER](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L43)
 angegebene Nutzer zusätzlich noch ``ALTER, CREATE, DROP, LOCK TABLES``-Rechte.
-Die Konfiguration wird nur gestartet, wenn keine
+Die Installation wird nur gestartet, wenn keine
 Datenbank mit dem Namen [MASTER_DBNAME](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L42)
 gefunden wurde.
 

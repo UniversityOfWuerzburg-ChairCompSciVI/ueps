@@ -112,6 +112,7 @@ Hier muss einem Nutzer (hier: 'admin') die Rolle 'manager-script' zugewiesen wer
 <!--- ` -->
 
 **pom.xml** im [Root-Verzeichnis](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/pom.xml#L141-L163)
+Hier dann den entsprechenden Nutzer eintragen und die [Tomcat-URL anpassen](http://tomcat.apache.org/maven-plugin-trunk/tomcat7-maven-plugin/usage.html).
 ```
 <plugin>
 <groupId>org.apache.tomcat.maven</groupId>

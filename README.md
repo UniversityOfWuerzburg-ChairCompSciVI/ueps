@@ -120,6 +120,9 @@ Die Installation wird nur gestartet, wenn keine
 Datenbank mit dem Namen [MASTER_DBNAME](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L42)
 gefunden wurde.
 
+Möchte man die zusätzlichen Rechte nicht vergeben, so kann man die Datenbank auch manuell importieren.
+Das zugehörige MySQL-Skript findet sich unter [``src/main/resources/admin_db_structure.sql``]().
+
 #### Nutzer-Authentifizierung
 TODO :: TODO :: TODO :: TODO
 

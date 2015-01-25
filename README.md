@@ -63,7 +63,7 @@
 Mit der Standard-Konfiguration werden beim Start der Anwendungen folgenden Datenbanken erstellt:
 * ``ueps_master`` (festgelegt durch ``MASTER_DBNAME``)
 * ``ueps_slave_001`` (Datenbank für das erste Beispielszenario - Amazon Buchdatenbank)
-* ``ueps_slave_002`` (Datenbank für das zweite Beispielszenario - WM )
+* ``ueps_slave_002`` (Datenbank für das zweite Beispielszenario - Fussball WM 2010)
 
 Für die ``slave``-Datenbanken werden jeweils folgende Datenbanknutzer mit beschränkten Rechten erstellt:
 * ``ueps_001``

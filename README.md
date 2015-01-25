@@ -80,14 +80,16 @@ werfen und Angaben zur Datenbank überschreiben.
 
 #### Datenbankangaben
 Der Nutzer unter [MASTER_DBUSER](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L43)
-benoetigt mindestens folgende
-Rechte: ``SELECT, INSERT, UPDATE, DELETE`` fuer die Datenbank
-angegeben durch [MASTER_DBNAME](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L42)
+benötigt mindestens folgende
+Rechte: ``SELECT, INSERT, UPDATE, DELETE`` für die Datenbank
+angegeben durch [MASTER_DBNAME](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L42).
 
 Beispiel Rechte-Skript:
+```
   GRANT SELECT, INSERT, UPDATE, DELETE ON $MASTER_DBNAME$.*
   TO '$MASTER_DBUSER$'@'$MASTER_DBHOST$'
   IDENTIFIED BY '$MASTER_DBPASS$';
+```
 Ausgefuellt mit den Beispiel-Daten:
   GRANT SELECT, INSERT, UPDATE, DELETE ON ueps_master.*
   TO 'test_user'@'127.0.0.1'

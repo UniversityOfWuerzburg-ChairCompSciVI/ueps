@@ -78,12 +78,26 @@ Bevor man die Anwendung startet sollte man zunächst einen Blick in die Konfigur
 werfen und Angaben zur Datenbank überschreiben.
 
 #### Datenbankangaben
+Der Nutzer unter [MASTER_DBUSER](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L42)
+benoetigt mindestens folgende
+Rechte: 'SELECT, INSERT, UPDATE, DELETE' fuer die Datenbank
+angegeben durch $MASTER_DBNAME$
+
+Beispiel Rechte-Skript:
+  GRANT SELECT, INSERT, UPDATE, DELETE ON $MASTER_DBNAME$.*
+  TO '$MASTER_DBUSER$'@'$MASTER_DBHOST$'
+  IDENTIFIED BY '$MASTER_DBPASS$';
+Ausgefuellt mit den Beispiel-Daten:
+  GRANT SELECT, INSERT, UPDATE, DELETE ON ueps_master.*
+  TO 'test_user'@'127.0.0.1'
+  IDENTIFIED BY '3ti4k4tm270kg';
+
 ```
-MASTER_DBHOST               = 127.0.0.1
-MASTER_DBPORT               = 3306
-MASTER_DBNAME               = ueps_master
-MASTER_DBUSER               = test_user
-MASTER_DBPASS               = 3ti4k4tm270kg
+MASTER_DBHOST = 127.0.0.1
+MASTER_DBPORT = 3306
+MASTER_DBNAME = ueps_master
+MASTER_DBUSER = test_user
+MASTER_DBPASS = 3ti4k4tm270kg
 ```
 
 

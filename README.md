@@ -79,7 +79,9 @@ unter ``src/main/resources/``
 werfen und Angaben zum Datenbank-Server überschreiben.
 
 #### Datenbankangaben
-Angaben zur [administrativen Datenbank](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L40-L44):
+Angaben zur [administrativen Datenbank](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L40-L44).
+In dieser Datenbank werden alle Studentenabgaben und zugehörige Aufgaben gespeichert (siehe [ER-Diagramm](http://kolbasa.github.io/ueps/screenshots/admin-db-er-diagram.png)).
+
 
 ```
 MASTER_DBHOST = 127.0.0.1

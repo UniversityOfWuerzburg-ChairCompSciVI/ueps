@@ -112,7 +112,9 @@ TO 'test_user'@'127.0.0.1' IDENTIFIED BY '3ti4k4tm270kg';
 Die Option [IMPORT_DB_IF_EMPTY](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L57)
 ermöglicht die Automatisierung der Datenbank-Konfiguration. Dafür benötigt der unter
 [MASTER_DBUSER](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L43)
-angegebene Nutzer zusätzlich noch ``ALTER, CREATE, DROP, LOCK TABLES``-Rechte.
+angegebene Nutzer zusätzlich noch ``ALTER, CREATE, DROP, LOCK TABLES``-Rechte,
+da bei der Installation die administrative Datenbank erstellt werden muss.
+
 Die Installation wird nur gestartet, wenn keine
 Datenbank mit dem Namen [MASTER_DBNAME](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L42)
 gefunden wurde.

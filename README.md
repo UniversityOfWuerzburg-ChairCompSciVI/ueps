@@ -98,7 +98,7 @@ TODO :: TODO :: TODO :: TODO
 Die Anwendung lässt sich direkt mit Maven und dem [Tomcat-Manager](http://tomcat.apache.org/tomcat-7.0-doc/manager-howto.html) deployen.
 Hierzu müssen zwei Dateien abgeändert werden.
 
-tomcat-users.xml<br/>
+**tomcat-users.xml**<br/>
 Linux:
 ``/etc/tomcat7/tomcat-users.xml``
 Hier muss einem Nutzer (hier: 'admin') die Rolle 'manager-script' vergeben werden.

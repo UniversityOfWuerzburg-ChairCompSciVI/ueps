@@ -76,24 +76,10 @@ Für die ``slave``-Datenbanken werden jeweils folgende Datenbanknutzer mit besch
 Bevor man die Anwendung startet sollte man zunächst einen Blick in die Konfigurationsdatei
 [config.properties](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties)
 ``src/main/resources/config.properties``
-werfen und Angaben zur Datenbank überschreiben.
+werfen und Angaben zum Datenbank-Server überschreiben.
 
 #### Datenbankangaben
-Der Nutzer unter [MASTER_DBUSER](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L43)
-benötigt mindestens folgende
-Rechte: ``SELECT, INSERT, UPDATE, DELETE`` für die Datenbank
-angegeben durch [MASTER_DBNAME](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L42).
-
-Beispiel Rechte-Skript:
-```
-  GRANT SELECT, INSERT, UPDATE, DELETE ON $MASTER_DBNAME$.*
-  TO '$MASTER_DBUSER$'@'$MASTER_DBHOST$'
-  IDENTIFIED BY '$MASTER_DBPASS$';
-```
-Ausgefuellt mit den Beispiel-Daten:
-  GRANT SELECT, INSERT, UPDATE, DELETE ON ueps_master.*
-  TO 'test_user'@'127.0.0.1'
-  IDENTIFIED BY '3ti4k4tm270kg';
+Angaben zur [administrativen Datenbank](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L40-L44):
 
 ```
 MASTER_DBHOST = 127.0.0.1
@@ -101,6 +87,25 @@ MASTER_DBPORT = 3306
 MASTER_DBNAME = ueps_master
 MASTER_DBUSER = test_user
 MASTER_DBPASS = 3ti4k4tm270kg
+```
+
+Der Nutzer unter [MASTER_DBUSER](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L43)
+benötigt mindestens folgende
+Rechte: ``SELECT, INSERT, UPDATE, DELETE`` für die Datenbank
+angegeben durch [MASTER_DBNAME](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L42).
+
+Beispiel MySQL-Rechte-Skript:
+```
+GRANT SELECT, INSERT, UPDATE, DELETE ON $MASTER_DBNAME$.*
+TO '$MASTER_DBUSER$'@'$MASTER_DBHOST$'
+IDENTIFIED BY '$MASTER_DBPASS$';
+```
+
+Ausgefüllt mit den oberen Beispiel-Daten:
+```
+GRANT SELECT, INSERT, UPDATE, DELETE ON ueps_master.*
+TO 'test_user'@'127.0.0.1'
+IDENTIFIED BY '3ti4k4tm270kg';
 ```
 
 

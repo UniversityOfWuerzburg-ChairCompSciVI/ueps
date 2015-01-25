@@ -110,17 +110,17 @@ TO 'test_user'@'127.0.0.1' IDENTIFIED BY '3ti4k4tm270kg';
 
 #### Automatisierung der Installation
 Die Option [IMPORT_DB_IF_EMPTY](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L57)
-ermöglicht die Automatisierung der Datenbank-Konfiguration. Dafür benötigt der unter
+ermöglicht die Automatisierung des Datenbank-Imports. Dafür benötigt der unter
 [MASTER_DBUSER](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L43)
-angegebene Nutzer zusätzlich noch ``ALTER, CREATE, DROP, LOCK TABLES``-Rechte,
-da bei der Installation die administrative Datenbank erstellt werden muss.
+angegebene Nutzer zusätzlich noch ``ALTER, CREATE, DROP, LOCK TABLES``-Rechte.
 
 Die Installation wird nur gestartet, wenn keine
 Datenbank mit dem Namen [MASTER_DBNAME](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L42)
 gefunden wurde.
 
 Möchte man die zusätzlichen Rechte nicht vergeben, so kann man die Datenbank auch manuell importieren.
-Das zugehörige MySQL-Skript findet sich unter [``src/main/resources/admin_db_structure.sql``]().
+Das zugehörige MySQL-Skript findet sich unter
+[``src/main/resources/admin_db_structure.sql``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/admin_db_structure.sql).
 
 #### Nutzer-Authentifizierung
 TODO :: TODO :: TODO :: TODO

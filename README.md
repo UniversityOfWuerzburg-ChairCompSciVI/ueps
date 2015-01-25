@@ -79,10 +79,10 @@ Bevor man die Anwendung startet sollte man zunächst einen Blick in die Konfigur
 werfen und Angaben zur Datenbank überschreiben.
 
 #### Datenbankangaben
-Der Nutzer unter [MASTER_DBUSER](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L42)
+Der Nutzer unter [MASTER_DBUSER](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L43)
 benoetigt mindestens folgende
-Rechte: 'SELECT, INSERT, UPDATE, DELETE' fuer die Datenbank
-angegeben durch $MASTER_DBNAME$
+Rechte: ``SELECT, INSERT, UPDATE, DELETE`` fuer die Datenbank
+angegeben durch [MASTER_DBNAME](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L42)
 
 Beispiel Rechte-Skript:
   GRANT SELECT, INSERT, UPDATE, DELETE ON $MASTER_DBNAME$.*

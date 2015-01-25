@@ -103,7 +103,7 @@ Linux-Pfad:<br/>
 ``/etc/tomcat7/tomcat-users.xml``<br/>
 Windows-Pfad:<br/>
 ``%TOMCAT_PATH%\conf\tomcat-users.xml``<br/><br/>
-Hier muss einem Nutzer (hier: 'admin') die Rolle 'manager-script' vergeben werden.<br/>
+Hier muss einem Nutzer (hier: 'admin') die Rolle 'manager-script' zugewiesen werden.<br/>
 ```
 <role rolename="manager-script"/>
 <user username="admin" password="testing" roles="manager-script"/>
@@ -111,7 +111,7 @@ Hier muss einem Nutzer (hier: 'admin') die Rolle 'manager-script' vergeben werde
 
 <!--- ` -->
 
-pom.xml
+**pom.xml** im [Root-Verzeichnis](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/pom.xml#L141-L163)
 ```
 <plugin>
 <groupId>org.apache.tomcat.maven</groupId>

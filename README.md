@@ -83,8 +83,6 @@ Angaben zur [administrativen Datenbank](https://github.com/UniversityOfWuerzburg
 In der administrativen Datenbank werden alle Studentenabgaben und zugehörige
 Aufgaben gespeichert (siehe [ER-Diagramm](http://kolbasa.github.io/ueps/screenshots/admin-db-er-diagram.png)).
 
-
-[
 ```
 MASTER_DBHOST = 127.0.0.1
 MASTER_DBPORT = 3306
@@ -92,7 +90,6 @@ MASTER_DBNAME = ueps_master
 MASTER_DBUSER = test_user
 MASTER_DBPASS = 3ti4k4tm270kg
 ```
-](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L40-L44)
 
 Der Nutzer unter [MASTER_DBUSER](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L43)
 benötigt mindestens folgende

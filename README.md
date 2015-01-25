@@ -108,9 +108,14 @@ TO 'test_user'@'127.0.0.1'
 IDENTIFIED BY '3ti4k4tm270kg';
 ```
 
-
 #### Automatisierung der Installation
-TODO :: TODO :: TODO :: TODO
+Ermöglicht die Automatisierung der Datenbank-Konfiguration.
+Dafuer benoetigt der unter
+[MASTER_DBUSER](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L43)
+angegebene Nutzer
+zusaetzlich noch ``ALTER, CREATE, DROP, LOCK TABLES``-Rechte.
+Die Konfiguration wird nur gestartet, wenn keine
+Datenbank mit dem Namen $MASTER_DBNAME$ gefunden wurde.
 
 #### Nutzer-Authentifizierung
 TODO :: TODO :: TODO :: TODO

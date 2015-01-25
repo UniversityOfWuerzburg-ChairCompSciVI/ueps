@@ -78,7 +78,14 @@ Bevor man die Anwendung startet sollte man zunächst einen Blick in die Konfigur
 werfen und Angaben zur Datenbank überschreiben.
 
 #### Datenbankangaben
-TODO :: TODO :: TODO :: TODO
+```
+MASTER_DBHOST               = 127.0.0.1
+MASTER_DBPORT               = 3306
+MASTER_DBNAME               = ueps_master
+MASTER_DBUSER               = test_user
+MASTER_DBPASS               = 3ti4k4tm270kg
+```
+
 
 #### Automatisierung der Installation
 TODO :: TODO :: TODO :: TODO

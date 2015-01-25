@@ -95,7 +95,7 @@ TODO :: TODO :: TODO :: TODO
 
 <a name="DeployMaven"></a>
 ### Deploy mit Maven
-Die Anwendung lässt sich direkt mit Maven und dem (Tomcat-Manager)[http://tomcat.apache.org/tomcat-7.0-doc/manager-howto.html] deployen.
+Die Anwendung lässt sich direkt mit Maven und dem [Tomcat-Manager](http://tomcat.apache.org/tomcat-7.0-doc/manager-howto.html) deployen.
 Hierzu müssen zwei Dateien abgeändert werden.
 
 tomcat-users.xml<br/>

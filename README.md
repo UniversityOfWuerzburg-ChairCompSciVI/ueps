@@ -73,7 +73,8 @@ Für die ``slave``-Datenbanken werden jeweils folgende Datenbanknutzer mit besch
 ## Konfiguration und Deploy
 
 ### Konfiguration mit 'config.properties'
-TODO :: TODO :: TODO :: TODO
+Bevor man die Anwendung startet sollte man zunächst einen Blick in die Konfigurationsdatei 'config.properties' werfen.
+Hier findet man die wichtigsten Optionen.
 
 #### Datenbankangaben
 TODO :: TODO :: TODO :: TODO
@@ -103,7 +104,7 @@ Linux-Pfad:<br/>
 ``/etc/tomcat7/tomcat-users.xml``<br/>
 Windows-Pfad:<br/>
 ``%TOMCAT_PATH%\conf\tomcat-users.xml``<br/><br/>
-Hier muss einem Nutzer (hier: 'admin') die Rolle 'manager-script' zugewiesen werden.<br/>
+Hier muss einem Nutzer (hier: 'admin') die Rolle 'manager-script' zugewiesen werden:<br/>
 ```
 <role rolename="manager-script"/>
 <user username="admin" password="testing" roles="manager-script"/>
@@ -112,7 +113,7 @@ Hier muss einem Nutzer (hier: 'admin') die Rolle 'manager-script' zugewiesen wer
 <!--- ` -->
 
 **pom.xml** im [Root-Verzeichnis](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/pom.xml#L141-L163)<br/>
-Hier dann den entsprechenden Nutzer eintragen und die [Tomcat-URL anpassen](http://tomcat.apache.org/maven-plugin-trunk/tomcat7-maven-plugin/usage.html).
+Hier dann den entsprechenden Nutzer eintragen und die [Tomcat-URL anpassen](http://tomcat.apache.org/maven-plugin-trunk/tomcat7-maven-plugin/usage.html):
 ```
 <plugin>
 <groupId>org.apache.tomcat.maven</groupId>

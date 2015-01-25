@@ -37,8 +37,8 @@
   Datenbank sowie für neu erstellte Datenbanken gelten. Eine Rechteskript könnte
   beispielsweise folgendermaßen aussehen:
   ```
-  GRANT SELECT, INSERT, UPDATE, DELETE, ALTER, CREATE, DROP, GRANT OPTION,
-  LOCK TABLES, ON *.* TO '$MASTER_DBUSER$'@'$MASTER_DBHOST$'
+  GRANT SELECT, INSERT, UPDATE, DELETE, ALTER, CREATE, DROP,
+  GRANT OPTION, LOCK TABLES, ON *.* TO '$MASTER_DBUSER$'@'$MASTER_DBHOST$'
   IDENTIFIED BY '$MASTER_DBPASS$';
   ```
   <!--- ` -->
@@ -62,8 +62,8 @@
 
 Mit der Standard-Konfiguration werden beim Start der Anwendungen folgenden Datenbanken erstellt:
 * ``ueps_master`` (festgelegt durch ``MASTER_DBNAME``)
-* ``ueps_slave_001`` (Datenbank für das erste Beispielszenario)
-* ``ueps_slave_002`` (Datenbank für das zweite Beispielszenario)
+* ``ueps_slave_001`` (Datenbank für das erste Beispielszenario - Amazon Buchdatenbank)
+* ``ueps_slave_002`` (Datenbank für das zweite Beispielszenario - WM )
 
 Für die ``slave``-Datenbanken werden jeweils folgende Datenbanknutzer mit beschränkten Rechten erstellt:
 * ``ueps_001``

@@ -46,7 +46,7 @@
 5. Anschließend kann die Anwendung kompiliert werden:
    * *Unter Linux*<br/>
      Zuerst müssen einige Build-Skripte im Wurzelverzeichnis ausführbar gemacht werden:<br/>
-     ``chmod +x *.sh``<br/>
+     ``chmod +x check-dependencies.sh build-deploy.sh``<br/>
      Dann einfach foldendes Skript ausführen<br/>
      ``./build-package.sh``<br/>
 

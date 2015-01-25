@@ -99,8 +99,10 @@ Die Anwendung lässt sich direkt mit Maven und dem [Tomcat-Manager](http://tomca
 Hierzu müssen zwei Dateien abgeändert werden.
 
 **tomcat-users.xml**<br/>
-Linux:
+Linux-Pfad:<br/>
 ``/etc/tomcat7/tomcat-users.xml``
+Windows-Pfad:<br/>
+``%TOMCAT_PATH%\conf\tomcat-users.xml``
 Hier muss einem Nutzer (hier: 'admin') die Rolle 'manager-script' vergeben werden.
 ```
 <role rolename="manager-script"/>

@@ -50,6 +50,7 @@ import de.uniwue.info6.database.map.conf.HibernateUtil;
 import de.uniwue.info6.misc.StringTools;
 import de.uniwue.info6.misc.properties.Cfg;
 import de.uniwue.info6.misc.properties.PropBool;
+import de.uniwue.info6.misc.properties.PropInteger;
 import de.uniwue.info6.misc.properties.PropString;
 import de.uniwue.info6.misc.properties.PropertiesFile;
 
@@ -225,8 +226,8 @@ public class InitVariables implements ServletContextListener, Serializable {
 
     Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropBool.IMPORT_DB_IF_EMPTY, true);
     Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropBool.IMPORT_EXAMPLE_SCENARIO, true);
-    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropBool.FORCE_RESET_DATABASE, false);
+    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropBool.FORCE_RESET_DATABASE, true);
     Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropBool.USE_MOODLE_LOGIN, false);
-
+    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropInteger.SESSION_TIMEOUT, 100);
   }
 }

@@ -173,7 +173,7 @@ public class AdminEditExercise implements Serializable {
           if (scenario != null) {
             if (rights.hasEditingRight(user, scenario)) {
               userHasRights = true;
-              availableTables = connectionPool.getScenarioTableNamesWithHash(scenario);
+              availableTables = connectionPool.getScenarioTableNames(scenario);
               connectionPool.resetTables(scenario, user);
             }
           }

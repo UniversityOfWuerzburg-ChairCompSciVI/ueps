@@ -53,7 +53,8 @@ public class Cfg {
   private final org.slf4j.Logger LOG = org.slf4j.LoggerFactory.getLogger(getClass());
 
   public static final String
-  RESOURCE_PATH           = "scn";
+  RESOURCE_PATH           = "scn",
+  SLAVE_DB_PREFIX         = "ueps_slave_";
 
   /**
    * Let's test some shit!

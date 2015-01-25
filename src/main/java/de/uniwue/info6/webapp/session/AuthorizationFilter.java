@@ -100,7 +100,6 @@ public class AuthorizationFilter implements Filter, Serializable {
   SESSION_POSITION   = "auth_controller",
   ERROR_PAGE         = "starterror",
   BROWSER_LOG_DIR    = "log",
-  SCENARIO_RES_PATH  = "scn",
   TEMP_SCENARIO_DIR  = "0",
   ADMIN_PAGE         = "/admin.xhtml",
   EDIT_EXERCISE      = "/edit_ex.xhtml",
@@ -170,7 +169,7 @@ public class AuthorizationFilter implements Filter, Serializable {
     boolean checkDBConnection = checkDBConnection();
 
     try {
-      ConnectionManager.instance().resetAllScenarioTables();
+      ConnectionManager.instance().dropDatabaseTablesForUser();
     } catch (SQLException e) {
       System.out.println(e);
     }
@@ -204,7 +203,7 @@ public class AuthorizationFilter implements Filter, Serializable {
    */
   private void initBrowserLog() {
     if (Cfg.inst().getProp(MAIN_CONFIG, LOG_BROWSER_HISTORY)) {
-      browserLogFile = SCRIPT_PATH + File.separator + SCENARIO_RES_PATH + File.separator + TEMP_SCENARIO_DIR
+      browserLogFile = SCRIPT_PATH + File.separator + Cfg.RESOURCE_PATH + File.separator + TEMP_SCENARIO_DIR
                        + File.separator + BROWSER_LOG_DIR + File.separator + "browser_log_"
                        + dateFormat.format(new Date()) + ".csv";
       logBrowser("User-ID\tUser-Agent");
@@ -281,7 +280,7 @@ public class AuthorizationFilter implements Filter, Serializable {
       } else {
 
         // create needed path structure in resource directory {{{
-        File subFolder = new File(mainDir, SCENARIO_RES_PATH);
+        File subFolder = new File(mainDir, Cfg.RESOURCE_PATH);
         if (!subFolder.exists()) {
           subFolder.mkdir();
         }

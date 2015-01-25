@@ -65,7 +65,6 @@ public class ConnectionTools extends Thread {
 
   private static final String dummyUser = "DEBUG_USER";
   private static final String STATS_DIR = "miscellaneous";
-  private static final String RESOURCE_PATH = "scn";
   private static final String SUB_DIR = "0";
 
   private static final SimpleDateFormat timeFormat = new SimpleDateFormat(
@@ -195,12 +194,12 @@ public class ConnectionTools extends Thread {
 
     String date = dateFileExecuter.format(new Date());
 
-    this.executerStatsFile = SCRIPT_PATH + File.separator + RESOURCE_PATH
+    this.executerStatsFile = SCRIPT_PATH + File.separator + Cfg.RESOURCE_PATH
                              + File.separator + SUB_DIR + File.separator + STATS_DIR
                              + File.separator + "executer_log_" + date + "_00.csv";
 
     date = dateFileSession.format(new Date());
-    this.sessionStatsFile = SCRIPT_PATH + File.separator + RESOURCE_PATH
+    this.sessionStatsFile = SCRIPT_PATH + File.separator + Cfg.RESOURCE_PATH
                             + File.separator + SUB_DIR + File.separator + STATS_DIR
                             + File.separator + "session_log_" + date + ".csv";
 

@@ -88,7 +88,6 @@ public class AdminEditScenario implements Serializable {
 
 
   private static String scriptSystemPath = Cfg.inst().getProp(MAIN_CONFIG, SCENARIO_RESOURCES_PATH);
-  private static final String RESOURCE_PATH = "scn";
 
   private ScenarioDao scenarioDao;
   private Scenario scenario;
@@ -266,7 +265,7 @@ public class AdminEditScenario implements Serializable {
    * @return
    */
   public File getSourceFile(String fileName) {
-    File file = new File(scriptSystemPath + File.separator + RESOURCE_PATH + File.separator
+    File file = new File(scriptSystemPath + File.separator + Cfg.RESOURCE_PATH + File.separator
                          + scenario.getId() + File.separator + fileName);
     return file;
   }
@@ -278,7 +277,7 @@ public class AdminEditScenario implements Serializable {
    */
   public String getAvailableTables() {
     if (scenario != null && connectionPool != null) {
-      ArrayList<String> tables = connectionPool.getScenarioTableNamesWithHash(scenario);
+      ArrayList<String> tables = connectionPool.getScenarioTableNames(scenario);
       StringBuffer returnString = new StringBuffer();
       if (tables != null) {
         for (String table : tables) {

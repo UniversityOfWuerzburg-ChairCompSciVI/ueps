@@ -281,7 +281,7 @@ public class SessionListener implements HttpSessionListener, Serializable {
     ConnectionManager pool = ConnectionManager.instance();
     Scenario scenario = scenarios.get(user);
     if (user != null && scenario != null) {
-      pool.resetDatabaseTablesForUser(scenario, user);
+      pool.dropDatabaseTablesForUser(scenario, user);
     }
   }
 

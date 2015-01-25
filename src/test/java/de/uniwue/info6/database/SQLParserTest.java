@@ -47,15 +47,29 @@ import de.uniwue.info6.database.map.daos.ExerciseDao;
 import de.uniwue.info6.database.map.daos.ExerciseGroupDao;
 import de.uniwue.info6.database.map.daos.ScenarioDao;
 import de.uniwue.info6.database.map.daos.UserDao;
+import de.uniwue.info6.misc.EquivalenceLock;
 import de.uniwue.info6.misc.properties.Cfg;
 import de.uniwue.info6.webapp.lists.ExerciseController;
 
 public class SQLParserTest {
   public static void main(String[] args) throws Exception {
+    // SimpleTupel<String, Integer> test1 =  new SimpleTupel<String, Integer>("test1", 1);
+    // SimpleTupel<String, Integer> test2 =  new SimpleTupel<String, Integer>("test1", 12);
+
+    // ArrayList<SimpleTupel<String, Integer>> test = new ArrayList<SimpleTupel<String, Integer>>();
+    // test.add(test1);
+    // System.out.println(test1.equals(test2));
+    // System.exit(0);
+
     final boolean resetDb = true;
     // Falls nur nach einer bestimmten Aufgabe gesucht wird
     final Integer exerciseID = null;
+    // final Integer exerciseID = 128;
+    final Integer scenarioID = null;
     final int threadSize = 1;
+
+    final EquivalenceLock <Long[]> equivalenceLock = new EquivalenceLock<Long[]>();
+    final Long[] performance = new Long[] {0L, 0L};
 
     // ------------------------------------------------ //
     final ScenarioDao scenarioDao = new ScenarioDao();
@@ -112,6 +126,10 @@ public class SQLParserTest {
             // ------------------------------------------------ //
 
             for (Scenario scenario : scenarios) {
+              if (scenarioID != null && !scenario.getId().equals(scenarioID)) {
+                continue;
+              }
+
               System.out.println(StringUtils.repeat("#", 90));
               System.out.println("SCENARIO: " + scenario.getId());
 
@@ -128,23 +146,38 @@ public class SQLParserTest {
                     continue;
                   }
 
-                  List<SolutionQuery> solutions = new ExerciseDao().getSolutions(exercise);
-                  String solution = solutions.get(0).getQuery();
+                  for (int i = 0; i < 40; i++) {
+                    long startTime = System.currentTimeMillis();
 
-                  ExerciseController exc = new ExerciseController().init_debug(scenario, exercise,
-                      user);
-                  exc.setUserString(solution);
+                    List<SolutionQuery> solutions = new ExerciseDao().getSolutions(exercise);
+                    String solution = solutions.get(0).getQuery();
 
-                  String fd = exc.getFeedbackList().get(0).getFeedback();
-                  System.out.println("Used Query: " + solution);
-                  if (fd.trim().toLowerCase().equals("bestanden")) {
-                    System.out.println(exercise.getId() + ": " + fd);
-                  } else {
-                    System.err.println(exercise.getId() + ": " + fd);
+                    ExerciseController exc = new ExerciseController().init_debug(scenario, exercise,
+                        user);
+                    exc.setUserString(solution);
+
+                    String fd = exc.getFeedbackList().get(0).getFeedback();
+                    System.out.println("Used Query: " + solution);
+                    if (fd.trim().toLowerCase().equals("bestanden")) {
+                      System.out.println(exercise.getId() + ": " + fd);
+                    } else {
+                      System.err.println(exercise.getId() + ": " + fd + "\n");
+                    }
+                    System.out.println(StringUtils.repeat("-", 90));
+
+                    long elapsedTime = System.currentTimeMillis() - startTime;
+
+                    if (i > 5) {
+                      try {
+                        equivalenceLock.lock(performance);
+                        performance[0] += elapsedTime;
+                        performance[1]++;
+                      } catch (Exception e) {
+                      } finally {
+                        equivalenceLock.release(performance);
+                      }
+                    }
                   }
-
-                  System.out.println(StringUtils.repeat("-", 90));
-
                 }
               }
             }
@@ -158,6 +191,16 @@ public class SQLParserTest {
 
       for (Thread thread : threads) {
         thread.join();
+      }
+
+      try {
+        equivalenceLock.lock(performance);
+
+        long elapsedTime = (performance[0] / performance[1]);
+        System.out.println("\n" + String.format("perf : %d.%03dsec", elapsedTime / 1000, elapsedTime % 1000));
+      } catch (Exception e) {
+      } finally {
+        equivalenceLock.release(performance);
       }
 
     } finally {

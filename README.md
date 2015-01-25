@@ -80,7 +80,8 @@ werfen und Angaben zum Datenbank-Server überschreiben.
 
 #### Datenbankangaben
 Angaben zur [administrativen Datenbank](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L40-L44).<br/>
-In dieser Datenbank werden alle Studentenabgaben und zugehörige Aufgaben gespeichert (siehe [ER-Diagramm](http://kolbasa.github.io/ueps/screenshots/admin-db-er-diagram.png)).
+In der administrativen Datenbank werden alle Studentenabgaben und zugehörige
+Aufgaben gespeichert (siehe [ER-Diagramm](http://kolbasa.github.io/ueps/screenshots/admin-db-er-diagram.png)).
 
 
 ```

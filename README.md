@@ -17,7 +17,7 @@
 
 2. In das ``ueps``-Verzeichnis wechseln.
 
-3. Konfigurationsdatei in einem Editor öffnen: ``src/main/resources/config.properties``
+3. Konfigurationsdatei in einem Editor öffnen: [``src/main/resources/config.properties``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties)
 
 4. Den Datenbank-Server und einen Nutzer festlegen:
    ```
@@ -41,7 +41,7 @@
   ```
   <!--- ` -->
 
-5. Admin-Benutzer-ID unter [ADMINS](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L96) festlegen ([Siehe Nutzer-Authentifizierung](#Login)).
+5. Admin-Benutzer-ID unter [ADMINS](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L96) festlegen ([siehe Nutzer-Authentifizierung](#Login)).
 
 6. Anschließend kann die Anwendung kompiliert werden:
    * *Unter Linux*<br/>

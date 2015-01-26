@@ -108,6 +108,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON ueps_master.*
 TO 'test_user'@'127.0.0.1' IDENTIFIED BY '3ti4k4tm270kg';
 ```
 
+<!--- ************************************************************** -->
 #### Automatisierung der Installation
 Die Option [IMPORT_DB_IF_EMPTY](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L57) ermöglicht die Automatisierung des Datenbank-Imports. Dafür benötigt der unter [MASTER_DBUSER](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L43) angegebene Nutzer zusätzlich noch ``ALTER, CREATE, DROP, LOCK TABLES``-Rechte.
 
@@ -128,7 +129,7 @@ IDENTIFIED BY '$MASTER_DBPASS$';
 ```
 
 #### Nutzer-Authentifizierung
-TODO :: TODO :: TODO :: TODO
+In der Konfigurationsdatei sollte mindestens ein Adminstrator-Nutzer festgelegt werden.
 
 #### Pfadangaben
 TODO :: TODO :: TODO :: TODO

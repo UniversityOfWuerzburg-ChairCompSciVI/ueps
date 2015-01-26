@@ -109,27 +109,22 @@ TO 'test_user'@'127.0.0.1' IDENTIFIED BY '3ti4k4tm270kg';
 ```
 
 #### Automatisierung der Installation
-Die Option [IMPORT_DB_IF_EMPTY](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L57)
-ermöglicht die Automatisierung des Datenbank-Imports. Dafür benötigt der unter
-[MASTER_DBUSER](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L43)
-angegebene Nutzer zusätzlich noch ``ALTER, CREATE, DROP, LOCK TABLES``-Rechte.
+Die Option [IMPORT_DB_IF_EMPTY](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L57) ermöglicht die Automatisierung des Datenbank-Imports. Dafür benötigt der unter [MASTER_DBUSER](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L43) angegebene Nutzer zusätzlich noch ``ALTER, CREATE, DROP, LOCK TABLES``-Rechte.
 
-Die Installation wird nur gestartet, wenn keine
-Datenbank mit dem Namen [MASTER_DBNAME](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L42)
-gefunden wurde.
+Die Installation wird nur gestartet, wenn keine Datenbank mit dem Namen [MASTER_DBNAME](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L42) gefunden wurde.
 
-Möchte man die zusätzlichen Rechte nicht vergeben, so kann man die Datenbank auch manuell importieren.
-Das zugehörige MySQL-Skript findet sich unter
-[``src/main/resources/admin_db_structure.sql``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/admin_db_structure.sql).
+Möchte man die zusätzlichen Rechte nicht vergeben, so kann man die Datenbank auch manuell importieren. Das zugehörige MySQL-Skript findet sich unter [``src/main/resources/admin_db_structure.sql``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/admin_db_structure.sql).
 
-Möchte man die Datenbank zurücksetzen, so lässt sich dies mit der Option
-[FORCE_RESET_DATABASE](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L84)
-bewerkstelligen. Diese Option wird nach einem erfolgreichen Reset von der Anwendung selbst auf 'false' gesetzt, sodass ein Server-Neustart
-die Datenbank nicht erneut zurücksetzt.
+Möchte man die Datenbank zurücksetzen, so lässt sich dies mit der Option [FORCE_RESET_DATABASE](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L84) bewerkstelligen. Diese Option wird nach einem erfolgreichen Reset von der Anwendung selbst auf 'false' gesetzt, sodass ein Server-Neustart die Datenbank nicht erneut zurücksetzt.
 
-Möchte man noch zusätzlich zwei Beispielszenarien importieren, so kann man das über die Option
-[IMPORT_EXAMPLE_SCENARIO](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L75)
-aktivieren.
+Möchte man noch zusätzlich zwei Beispielszenarien importieren, so kann man das über die Option [IMPORT_EXAMPLE_SCENARIO](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L75) aktivieren. Es wird für jedes Szenario eine neue Datenbank unter [MASTER_DBHOST](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L40) erstellt.
+Für jede Szenario-Datenbank wird ebenfalls ein Datenbank-Nutzer mit beschränkten Rechten erstellt. Hierfür benötigt der [MASTER_DBUSER](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L43) jedoch zusätzlich ``GRANT OPTION``-Rechte.
+
+Ein vollständiges Rechte-Skript würde also folgendermaßen aussehen:
+```
+GRANT SELECT, INSERT, UPDATE, DELETE, ALTER, CREATE, DROP, GRANT OPTION, LOCK TABLES, ON *.*
+TO '$MASTER_DBUSER$'@'$MASTER_DBHOST$' IDENTIFIED BY '$MASTER_DBPASS$';
+```
 
 #### Nutzer-Authentifizierung
 TODO :: TODO :: TODO :: TODO

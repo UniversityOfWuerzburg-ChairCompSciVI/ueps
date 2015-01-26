@@ -127,6 +127,10 @@ Möchte man die Datenbank zurücksetzen, so lässt sich dies mit der Option
 bewerkstelligen. Diese Option wird nach einem erfolgreichen Reset von der Anwendung selbst auf 'false' gesetzt, sodass ein Server-Neustart
 die Datenbank nicht erneut zurücksetzt.
 
+Möchte man noch zusätzlich zwei Beispielszenarien importieren, so kann man das über die Option
+[IMPORT_EXAMPLE_SCENARIO](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L75)
+aktivieren.
+
 #### Nutzer-Authentifizierung
 TODO :: TODO :: TODO :: TODO
 

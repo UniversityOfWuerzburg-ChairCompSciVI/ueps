@@ -122,8 +122,9 @@ Für jede Szenario-Datenbank wird ebenfalls ein Datenbank-Nutzer mit beschränkt
 
 Ein vollständiges Rechte-Skript würde also folgendermaßen aussehen:
 ```
-GRANT SELECT, INSERT, UPDATE, DELETE, ALTER, CREATE, DROP, GRANT OPTION, LOCK TABLES, ON *.*
-TO '$MASTER_DBUSER$'@'$MASTER_DBHOST$' IDENTIFIED BY '$MASTER_DBPASS$';
+GRANT SELECT, INSERT, UPDATE, DELETE, ALTER, CREATE, DROP, GRANT OPTION,
+LOCK TABLES, ON *.* TO '$MASTER_DBUSER$'@'$MASTER_DBHOST$'
+IDENTIFIED BY '$MASTER_DBPASS$';
 ```
 
 #### Nutzer-Authentifizierung

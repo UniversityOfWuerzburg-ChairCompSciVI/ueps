@@ -72,7 +72,7 @@ Für die ``slave``-Datenbanken werden jeweils folgende Datenbanknutzer mit besch
 
 ## Konfiguration und Deploy
 
-### Konfiguration mit 'config.properties'
+## Konfiguration mit 'config.properties'
 Bevor man die Anwendung startet sollte man zunächst einen Blick in die Konfigurationsdatei
 [config.properties](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties)
 unter ``src/main/resources/``
@@ -108,7 +108,6 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON ueps_master.*
 TO 'test_user'@'127.0.0.1' IDENTIFIED BY '3ti4k4tm270kg';
 ```
 
-<!--- ************************************************************** -->
 #### Automatisierung der Installation
 Die Option [IMPORT_DB_IF_EMPTY](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L57) ermöglicht die Automatisierung des Datenbank-Imports. Dafür benötigt der unter [MASTER_DBUSER](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L43) angegebene Nutzer zusätzlich noch ``ALTER, CREATE, DROP, LOCK TABLES``-Rechte.
 
@@ -129,7 +128,8 @@ IDENTIFIED BY '$MASTER_DBPASS$';
 ```
 
 #### Nutzer-Authentifizierung
-In der Konfigurationsdatei sollte mindestens ein Adminstrator-Nutzer festgelegt werden.
+In der Konfigurationsdatei sollte mindestens ein [Adminstrator-Nutzer](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L96) festgelegt werden. Mehrere Nutzer sollten mit Semikolon getrennt werden (z.B. admin_id1;admin_id2;)
+Admins können auch zur Laufzeit hinzugefuegt werden, hierfür muss man jedoch den Datenbankeintrag fuer den Nutzer abändern ([Tabelle: "user", Spalte: "is_admin"](http://kolbasa.github.io/ueps/screenshots/admin-db-er-diagram.png)).
 
 #### Pfadangaben
 TODO :: TODO :: TODO :: TODO

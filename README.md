@@ -41,7 +41,7 @@
   ```
   <!--- ` -->
 
-5. Admin-Benutzer-ID unter [ADMINS](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L96) festlegen (Siehe Nutzer-Authentifizierung).
+5. Admin-Benutzer-ID unter [ADMINS](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L96) festlegen ([Siehe Nutzer-Authentifizierung](#Login)).
 
 6. Anschließend kann die Anwendung kompiliert werden:
    * *Unter Linux*<br/>
@@ -127,6 +127,7 @@ LOCK TABLES, ON *.* TO '$MASTER_DBUSER$'@'$MASTER_DBHOST$'
 IDENTIFIED BY '$MASTER_DBPASS$';
 ```
 
+<a name="Login"></a>
 #### Nutzer-Authentifizierung
 In der Konfigurationsdatei sollte mindestens ein [Adminstrator-Nutzer](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L96) festgelegt werden. Mehrere Nutzer sollten mit Semikolon getrennt werden (z.B. ``admin_id1;admin_id2;``).
 Admins können auch zur Laufzeit hinzugefügt werden, hierfür muss man jedoch den Datenbankeintrag für den Nutzer abändern ([Tabelle: "user", Spalte: "is_admin"](http://kolbasa.github.io/ueps/screenshots/admin-db-er-diagram.png)).

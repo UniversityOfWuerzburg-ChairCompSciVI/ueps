@@ -122,6 +122,10 @@ Möchte man die zusätzlichen Rechte nicht vergeben, so kann man die Datenbank a
 Das zugehörige MySQL-Skript findet sich unter
 [``src/main/resources/admin_db_structure.sql``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/admin_db_structure.sql).
 
+Möchte man die Datenbank zurücksetzen, so lässt sich dies mit der Option
+[FORCE_RESET_DATABASE](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L84)
+bewerkstelligen.
+
 #### Nutzer-Authentifizierung
 TODO :: TODO :: TODO :: TODO
 

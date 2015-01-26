@@ -33,9 +33,7 @@
   SELECT, INSERT, UPDATE, DELETE, ALTER, CREATE, DROP, GRANT OPTION, LOCK TABLES
   ```
   <!--- ` -->
-  Die aufgelisteten Rechte müssen für die unter ``MASTER_DBNAME`` angegebene
-  Datenbank sowie für neu erstellte Datenbanken gelten. Eine Rechteskript könnte
-  beispielsweise folgendermaßen aussehen:
+  Die aufgelisteten Rechte müssen für die unter ``MASTER_DBNAME`` angegebene Datenbank sowie für neu erstellte Datenbanken gelten. Eine Rechteskript könnte beispielsweise folgendermaßen aussehen:
   ```
   GRANT SELECT, INSERT, UPDATE, DELETE, ALTER, CREATE, DROP,
   GRANT OPTION, LOCK TABLES, ON *.* TO '$MASTER_DBUSER$'@'$MASTER_DBHOST$'
@@ -43,7 +41,9 @@
   ```
   <!--- ` -->
 
-5. Anschließend kann die Anwendung kompiliert werden:
+5. Admin-Benutzer-ID unter [ADMINS](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L96) festlegen (Siehe Nutzer-Authentifizierung).
+
+6. Anschließend kann die Anwendung kompiliert werden:
    * *Unter Linux*<br/>
      Zuerst müssen einige Build-Skripte im Wurzelverzeichnis ausführbar gemacht werden:<br/>
      ``chmod +x check-dependencies.sh build-deploy.sh``<br/>
@@ -54,9 +54,9 @@
      Einfach folgendes Skript auführen (Doppelklick genügt):<br/>
      ``build-package.bat``
 
-6. Die kompilierte ``ueps.war``-Datei sollte jetzt deploy-fertig im Wurzelverzeichnis zu finden sein.
+7. Die kompilierte ``ueps.war``-Datei sollte jetzt deploy-fertig im Wurzelverzeichnis zu finden sein.
 
-7. ÜPS lässt sich alternativ auch [direkt mit Maven deployen](#DeployMaven).
+8. ÜPS lässt sich alternativ auch [direkt mit Maven deployen](#DeployMaven).
 
 <br/>
 
@@ -128,7 +128,7 @@ IDENTIFIED BY '$MASTER_DBPASS$';
 ```
 
 #### Nutzer-Authentifizierung
-In der Konfigurationsdatei sollte mindestens ein [Adminstrator-Nutzer](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L96) festgelegt werden. Mehrere Nutzer sollten mit Semikolon getrennt werden (z.B. ``admin_id1;admin_id2;``)
+In der Konfigurationsdatei sollte mindestens ein [Adminstrator-Nutzer](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L96) festgelegt werden. Mehrere Nutzer sollten mit Semikolon getrennt werden (z.B. ``admin_id1;admin_id2;``).
 Admins können auch zur Laufzeit hinzugefügt werden, hierfür muss man jedoch den Datenbankeintrag für den Nutzer abändern ([Tabelle: "user", Spalte: "is_admin"](http://kolbasa.github.io/ueps/screenshots/admin-db-er-diagram.png)).
 
 #### Pfadangaben

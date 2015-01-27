@@ -55,7 +55,7 @@
 7. Die kompilierte ``ueps.war``-Datei sollte jetzt deploy-fertig im Wurzelverzeichnis zu finden sein.
    (ÜPS lässt sich alternativ auch [direkt mit Maven deployen](#DeployMaven)).
 
-8. ÜPS lässt sich jetzt über die eingestellte Tomcat-URL aufrufen. Die Tomcat-Ausagebe sollte folgende Zeilen zeigen:
+8. ([Die Startseite](http://kolbasa.github.io/ueps/screenshots/startpage.png)) lässt sich jetzt über die eingestellte Tomcat-URL aufrufen. Die Tomcat-Ausgabe sollte folgende Zeilen zeigen:
 
   ```
     INFO (ueps): Load 'config.properties' from

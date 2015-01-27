@@ -198,8 +198,8 @@ Hier dann den entsprechenden Nutzer eintragen und die [Tomcat-URL anpassen](http
 
 <!--- ` -->
 
-Anschließend kann die Anwendung deployed werden:
-  ``./build-package.sh`` unter Linux bzw. ``build-package.bat`` unter Windows.
+Anschließend kann die Anwendung mit folgendem Skrip deployed werden:<br/>
+``./build-package.sh`` unter Linux bzw. ``build-package.bat`` unter Windows.
 
 
 ### Quellcodedokumentation

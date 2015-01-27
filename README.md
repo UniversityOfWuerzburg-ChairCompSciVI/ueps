@@ -55,7 +55,8 @@
 7. Die kompilierte ``ueps.war``-Datei sollte jetzt deploy-fertig im Wurzelverzeichnis zu finden sein.
    (ÜPS lässt sich alternativ auch [direkt mit Maven deployen](#DeployMaven)).
 
-8. ```
+8. ÜPS sollte jetzt über die eingestellte Tomcat-URL aufrufbar sein.
+  ```
     INFO (ueps): Load 'config.properties' from
          'webapps/ueps/WEB-INF/classes'
     INFO (ueps): Load 'text_de.properties' from
@@ -66,10 +67,11 @@
     INFO (ueps): Master database not found
     INFO (ueps): SQL-script found
     INFO (ueps): Importing database
-    INFO (ueps): creating database `ueps_master`
-    INFO (ueps): Admin user with id: "user_1" added
-  ``
+    INFO (ueps): creating database 'ueps_master'
+    INFO (ueps): Admin user with id: 'user_1' added
+  ```
 
+  <!--- ` -->
 <br/>
 
 <!--- 5. Admin-Benutzer-ID unter [ADMINS](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L96) festlegen ([siehe Nutzer-Authentifizierung](#Login)). -->

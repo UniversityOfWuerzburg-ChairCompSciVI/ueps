@@ -41,8 +41,6 @@
   ```
   <!--- ` -->
 
-<!--- 5. Admin-Benutzer-ID unter [ADMINS](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L96) festlegen ([siehe Nutzer-Authentifizierung](#Login)). -->
-
 6. Anschließend kann die Anwendung kompiliert werden:
    * *Unter Linux*<br/>
      Zuerst müssen einige Build-Skripte im Wurzelverzeichnis ausführbar gemacht werden:<br/>
@@ -70,9 +68,12 @@
     INFO (ueps): Importing database
     INFO (ueps): creating database `ueps_master`
     INFO (ueps): Admin user with id: "user_1" added
-  ```
+  ``
 
 <br/>
+
+<!--- 5. Admin-Benutzer-ID unter [ADMINS](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L96) festlegen ([siehe Nutzer-Authentifizierung](#Login)). -->
+
 
 Mit der Standard-Konfiguration werden beim Start der Anwendungen folgenden Datenbanken erstellt:
 * ``ueps_master`` (festgelegt durch ``MASTER_DBNAME``)

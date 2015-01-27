@@ -41,7 +41,9 @@
   ```
   <!--- ` -->
 
+  <!---
 5. Admin-Benutzer-ID unter [ADMINS](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L96) festlegen ([siehe Nutzer-Authentifizierung](#Login)).
+-->
 
 6. Anschließend kann die Anwendung kompiliert werden:
    * *Unter Linux*<br/>
@@ -55,8 +57,22 @@
      ``build-package.bat``
 
 7. Die kompilierte ``ueps.war``-Datei sollte jetzt deploy-fertig im Wurzelverzeichnis zu finden sein.
+   (ÜPS lässt sich alternativ auch [direkt mit Maven deployen](#DeployMaven)).
 
-8. ÜPS lässt sich alternativ auch [direkt mit Maven deployen](#DeployMaven).
+8. ```
+    INFO (ueps): Load 'config.properties' from
+         'webapps/ueps/WEB-INF/classes'
+    INFO (ueps): Load 'text_de.properties' from
+         'webapps/ueps/WEB-INF/classes'
+    INFO (ueps): Init logger with filepath
+         'webapps/ueps/WEB-INF/classes/log/ueps-webapp.log'
+    INFO (ueps): Starting hibernate session
+    INFO (ueps): Master database not found
+    INFO (ueps): SQL-script found
+    INFO (ueps): Importing database
+    INFO (ueps): creating database `ueps_master`
+    INFO (ueps): Admin user with id: "user_1" added
+  ```
 
 <br/>
 

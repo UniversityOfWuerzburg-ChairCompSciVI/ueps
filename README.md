@@ -55,7 +55,8 @@
 7. Die kompilierte ``ueps.war``-Datei sollte jetzt deploy-fertig im Wurzelverzeichnis zu finden sein.
    (ÜPS lässt sich alternativ auch [direkt mit Maven deployen](#DeployMaven)).
 
-8. ÜPS sollte jetzt über die eingestellte Tomcat-URL aufrufbar sein.
+8. ÜPS lässt sich jetzt über die eingestellte Tomcat-URL aufrufen. Die Tomcat-Ausagebe sollte folgende Zeilen zeigen:
+
   ```
     INFO (ueps): Load 'config.properties' from
          'webapps/ueps/WEB-INF/classes'
@@ -67,7 +68,7 @@
     INFO (ueps): Master database not found
     INFO (ueps): SQL-script found
     INFO (ueps): Importing database
-    INFO (ueps): creating database 'ueps_master'
+    INFO (ueps): Creating database 'ueps_master'
     INFO (ueps): Admin user with id: 'user_1' added
   ```
 

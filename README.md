@@ -50,7 +50,7 @@
 
    * *Unter Windows*<br/>
      Einfach folgendes Skript auführen (Doppelklick genügt):<br/>
-     ``build-package.bat``
+     [``build-deploy.bat``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/build-deploy.bat)
 
 7. Die kompilierte ``ueps.war``-Datei sollte jetzt deploy-fertig im Wurzelverzeichnis zu finden sein.
    (ÜPS lässt sich alternativ auch [direkt mit Maven deployen](#DeployMaven)).

@@ -41,9 +41,7 @@
   ```
   <!--- ` -->
 
-  <!---
-5. Admin-Benutzer-ID unter [ADMINS](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L96) festlegen ([siehe Nutzer-Authentifizierung](#Login)).
--->
+<!--- 5. Admin-Benutzer-ID unter [ADMINS](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L96) festlegen ([siehe Nutzer-Authentifizierung](#Login)). -->
 
 6. Anschließend kann die Anwendung kompiliert werden:
    * *Unter Linux*<br/>

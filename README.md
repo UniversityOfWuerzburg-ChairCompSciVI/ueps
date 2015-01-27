@@ -44,7 +44,7 @@
 6. Anschließend kann die Anwendung kompiliert werden:
    * *Unter Linux*<br/>
      Zuerst müssen einige Build-Skripte im Wurzelverzeichnis ausführbar gemacht werden:<br/>
-     ``chmod +x check-dependencies.sh build-deploy.sh``<br/>
+     ``chmod +x check-dependencies.sh build-deploy.sh build-package.sh``<br/>
      Dann einfach foldendes Skript ausführen<br/>
      ``./build-package.sh``<br/>
 
@@ -197,6 +197,10 @@ Hier dann den entsprechenden Nutzer eintragen und die [Tomcat-URL anpassen](http
 ```
 
 <!--- ` -->
+
+Anschließend kann die Anwendung deployed werden:
+  ``./build-package.sh`` unter Linux bzw. ``build-package.bat`` unter Windows.
+
 
 ### Quellcodedokumentation
 <!--- TODO: -->

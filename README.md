@@ -209,6 +209,7 @@ Hier dann den entsprechenden Nutzer eintragen und die [Tomcat-URL anpassen](http
 Anschließend kann die Anwendung mit folgendem Skript deployed werden:<br/>
 [``./build-deploy.sh``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/build-deploy.sh) unter Linux bzw. [``build-deploy.bat``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/build-deploy.bat) unter Windows.
 
+------
 
 ### Quellcodedokumentation
 <!--- TODO: -->

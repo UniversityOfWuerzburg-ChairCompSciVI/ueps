@@ -88,7 +88,6 @@ Mit der gezeigten Konfiguration werden beim Start der Anwendungen folgenden Date
 Für die ``slave``-Datenbanken werden jeweils folgende Datenbanknutzer mit beschränkten Rechten erstellt:
 * ``ueps_001``
 * ``ueps_002``
-
 <br/>
 
 ------

@@ -8,8 +8,8 @@
   (Für diese Anleitung wird Tomcat 7 verwendet)
 * Maven 3 (zum Kompilieren)
 * MySQL 5
-
 <br/>
+
 ## Kurzanleitung zur Installation
 
 1. Quellcode herunterladen:<br/>

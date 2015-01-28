@@ -48,10 +48,7 @@
 6. Anschließend kann die Anwendung kompiliert werden:
    * *Unter Linux*<br/>
      Zuerst müssen einige Build-Skripte im Wurzelverzeichnis ausführbar gemacht werden:<br/>
-     ```bash
-     chmod +x check-dependencies.sh build-deploy.sh build-package.sh
-     ```
-     <br/>
+     ``chmod +x check-dependencies.sh build-deploy.sh build-package.sh``<br/>
      Dann einfach foldendes Skript ausführen<br/>
      [``./build-package.sh``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/build-deploy.sh)<br/>
 
@@ -80,10 +77,8 @@
   ```
 
   <!--- ` -->
-<br/>
 
-<!--- 5. Admin-Benutzer-ID unter [ADMINS](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L96) festlegen ([siehe Nutzer-Authentifizierung](#Login)). -->
-
+--
 
 Mit der gezeigten Konfiguration werden beim Start der Anwendungen folgenden Datenbanken erstellt:
 * ``ueps_master`` ([Administrative Datenbank](http://kolbasa.github.io/ueps/screenshots/admin-db-er-diagram.png) - festgelegt durch ``MASTER_DBNAME``)
@@ -94,7 +89,8 @@ Für die ``slave``-Datenbanken werden jeweils folgende Datenbanknutzer mit besch
 * ``ueps_001``
 * ``ueps_002``
 
-<br/>
+------
+
 ## Konfiguration und Deploy
 ## Konfiguration mit 'config.properties'
 Bevor man die Anwendung startet sollte man zunächst einen Blick in die Konfigurationsdatei

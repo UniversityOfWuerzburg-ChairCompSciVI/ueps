@@ -88,7 +88,7 @@ Für die ``slave``-Datenbanken werden jeweils folgende Datenbanknutzer mit besch
 * ``ueps_001``
 * ``ueps_002``
 
-
+<br/>
 ## Konfiguration und Deploy
 ## Konfiguration mit 'config.properties'
 Bevor man die Anwendung startet sollte man zunächst einen Blick in die Konfigurationsdatei

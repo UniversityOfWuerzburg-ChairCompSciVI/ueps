@@ -102,7 +102,7 @@ werfen und Angaben zum Datenbank-Server überschreiben.
 In der [administrativen Datenbank](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L40-L44) werden alle Studentenabgaben und zugehörige
 Aufgaben gespeichert (siehe [ER-Diagramm](http://kolbasa.github.io/ueps/screenshots/admin-db-er-diagram.png)).
 
-```
+```properties
 MASTER_DBHOST = 127.0.0.1
 MASTER_DBPORT = 3306
 MASTER_DBNAME = ueps_master

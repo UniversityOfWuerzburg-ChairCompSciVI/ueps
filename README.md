@@ -78,7 +78,7 @@
 <!--- 5. Admin-Benutzer-ID unter [ADMINS](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L96) festlegen ([siehe Nutzer-Authentifizierung](#Login)). -->
 
 
-Mit der Standard-Konfiguration werden beim Start der Anwendungen folgenden Datenbanken erstellt:
+Mit der gezeigten Konfiguration werden beim Start der Anwendungen folgenden Datenbanken erstellt:
 * ``ueps_master`` (festgelegt durch ``MASTER_DBNAME``)
 * ``ueps_slave_001`` (Datenbank für das erste Beispielszenario - Amazon Buchdatenbank)
 * ``ueps_slave_002`` (Datenbank für das zweite Beispielszenario - Fussball WM 2010)

@@ -215,6 +215,8 @@ Anschließend kann die Anwendung mit folgendem Skript deployed werden:<br/>
 <!--- TODO: -->
 [Doxygen Dokumentation](http://kolbasa.github.io/ueps/doxygen/)
 
+------
+
 ## Neues Szenario erstellen
 TODO :: TODO :: TODO :: TODO
 ![](http://kolbasa.github.io/ueps/screenshots/ueps_10.png)
@@ -225,12 +227,16 @@ TODO :: TODO :: TODO :: TODO
 ### Aufgabe erstellen
 TODO :: TODO :: TODO :: TODO
 
+------
+
 ## Benutzerrechte hinzufügen/bearbeiten
 TODO :: TODO :: TODO :: TODO
 ### Rolle 'Admin'
 TODO :: TODO :: TODO :: TODO
 ### Rolle 'Dozent'
 TODO :: TODO :: TODO :: TODO
+
+------
 
 ## Abgaben bewerten
 TODO :: TODO :: TODO :: TODO

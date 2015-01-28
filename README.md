@@ -155,9 +155,9 @@ Admins können auch zur Laufzeit hinzugefügt werden, hierfür muss man jedoch d
 #### Pfadangaben
 Es lassen sich zwei Pfade konfigurieren.
 
-1. Der Pfad für Logdateien unter [LOG_PATH](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L124).
+1. Der Pfad für Logdateien unter [``LOG_PATH``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L124).
 
-2. Der Pfad für die Szenario-Dateien unter [SCENARIO_RESOURCES_PATH](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L121).
+2. Der Pfad für die Szenario-Dateien unter [``SCENARIO_RESOURCES_PATH``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L121).
 
 #### Aussehen anpassen
 TODO :: TODO :: TODO :: TODO

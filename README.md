@@ -16,7 +16,9 @@
 ## Kurzanleitung zur Installation
 
 1. Quellcode herunterladen:<br/>
-   ``git clone --depth=1 https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps``<br/>
+   ```bash
+   git clone --depth=1 https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps
+   ``<br/>
    (Alternativ auch als [direkter Download](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/archive/master.zip))
 
 2. In das ``ueps``-Verzeichnis wechseln.

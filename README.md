@@ -50,7 +50,8 @@
      Zuerst müssen einige Build-Skripte im Wurzelverzeichnis ausführbar gemacht werden:<br/>
      ```bash
      chmod +x check-dependencies.sh build-deploy.sh build-package.sh
-     ```<br/>
+     ```
+     <br/>
      Dann einfach foldendes Skript ausführen<br/>
      [``./build-package.sh``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/build-deploy.sh)<br/>
 

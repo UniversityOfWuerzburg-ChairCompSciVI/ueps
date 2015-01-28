@@ -24,7 +24,7 @@
 3. Konfigurationsdatei in einem Editor öffnen: [``src/main/resources/config.properties``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties)
 
 4. Den Datenbank-Server und einen Nutzer festlegen:
-   ```
+   ```properties
    MASTER_DBHOST = 127.0.0.1
    MASTER_DBPORT = 3306
    MASTER_DBNAME = ueps_master

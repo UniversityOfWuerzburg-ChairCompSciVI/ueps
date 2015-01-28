@@ -28,12 +28,12 @@
    MASTER_DBPASS = 3ti4k4tm270kg
    ```
   <!--- ` -->
-   Der unter ``MASTER_DBUSER`` festgelegte Nutzer sollte folgende Rechte besitzen:
+   Der unter [``MASTER_DBUSER``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L43) festgelegte Nutzer sollte folgende Rechte besitzen:
   ```
   SELECT, INSERT, UPDATE, DELETE, ALTER, CREATE, DROP, GRANT OPTION, LOCK TABLES
   ```
   <!--- ` -->
-  Die aufgelisteten Rechte müssen für die unter ``MASTER_DBNAME`` angegebene Datenbank sowie für neu erstellte Datenbanken gelten. Eine Rechteskript könnte beispielsweise folgendermaßen aussehen:
+  Die aufgelisteten Rechte müssen für die unter [``MASTER_DBNAME``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L42) angegebene Datenbank sowie für neu erstellte Datenbanken gelten. Eine Rechteskript könnte beispielsweise folgendermaßen aussehen:
   ```
   GRANT SELECT, INSERT, UPDATE, DELETE, ALTER, CREATE, DROP,
   GRANT OPTION, LOCK TABLES, ON *.* TO '$MASTER_DBUSER$'@'$MASTER_DBHOST$'
@@ -46,7 +46,7 @@
      Zuerst müssen einige Build-Skripte im Wurzelverzeichnis ausführbar gemacht werden:<br/>
      ``chmod +x check-dependencies.sh build-deploy.sh build-package.sh``<br/>
      Dann einfach foldendes Skript ausführen<br/>
-     ``./build-package.sh``<br/>
+     [``./build-package.sh``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/build-deploy.sh)<br/>
 
    * *Unter Windows*<br/>
      Einfach folgendes Skript auführen (Doppelklick genügt):<br/>
@@ -159,8 +159,9 @@ Es lassen sich zwei Pfade konfigurieren.
 
 2. Der Pfad für die Szenario-Dateien unter [``SCENARIO_RESOURCES_PATH``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L121). Unter diesem Pfad werden alle hochgeladenen Szenario-MySQL-Skripte und ER-Diagramme abgelegt.
 
-#### Aussehen anpassen
-TODO :: TODO :: TODO :: TODO
+#### Aussehen/Text anpassen
+
+[``text_de.properties``]()
 
 #### Verschiedenes
 TODO :: TODO :: TODO :: TODO

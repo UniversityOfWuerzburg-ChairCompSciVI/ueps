@@ -33,8 +33,8 @@
    ```
   <!--- ` -->
    Der unter [``MASTER_DBUSER``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L43) festgelegte Nutzer sollte folgende Rechte besitzen:
-  ```sql
-  SELECT, INSERT, UPDATE, DELETE, ALTER, CREATE, DROP, GRANT OPTION, LOCK TABLES
+  ```sqlite3
+  SELECT, UPDATE, DELETE, INSERT, ALTER, CREATE, DROP, GRANT OPTION, LOCK TABLES
   ```
   <!--- ` -->
   Die aufgelisteten Rechte müssen für die unter [``MASTER_DBNAME``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L42) angegebene Datenbank sowie für neu erstellte Datenbanken gelten. Eine Rechteskript könnte beispielsweise folgendermaßen aussehen:

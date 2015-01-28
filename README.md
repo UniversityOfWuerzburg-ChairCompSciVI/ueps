@@ -153,7 +153,11 @@ In der Konfigurationsdatei sollte mindestens ein [Adminstrator-Nutzer](https://g
 Admins können auch zur Laufzeit hinzugefügt werden, hierfür muss man jedoch den Datenbankeintrag für den Nutzer abändern ([Tabelle: "user", Spalte: "is_admin"](http://kolbasa.github.io/ueps/screenshots/admin-db-er-diagram.png)).
 
 #### Pfadangaben
-TODO :: TODO :: TODO :: TODO
+Es lassen sich zwei Pfade konfigurieren.
+
+1. Der Pfad für Logdateien unter [LOG_PATH](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L124).
+
+2. Der Pfad für die Szenario-Dateien unter [SCENARIO_RESOURCES_PATH](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L121).
 
 #### Aussehen anpassen
 TODO :: TODO :: TODO :: TODO

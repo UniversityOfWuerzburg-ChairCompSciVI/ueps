@@ -9,7 +9,7 @@
 * Maven 3 (zum Kompilieren)
 * MySQL 5
 
-
+<br/>
 
 ## Kurzanleitung zur Installation
 

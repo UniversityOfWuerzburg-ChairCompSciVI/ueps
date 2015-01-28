@@ -10,6 +10,7 @@
 * MySQL 5
 
 
+
 ## Kurzanleitung zur Installation
 
 1. Quellcode herunterladen:<br/>

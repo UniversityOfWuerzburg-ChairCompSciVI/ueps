@@ -91,7 +91,6 @@ Für die ``slave``-Datenbanken werden jeweils folgende Datenbanknutzer mit besch
 
 ------
 
-## Konfiguration und Deploy
 ## Konfiguration mit 'config.properties'
 Bevor man die Anwendung startet sollte man zunächst einen Blick in die Konfigurationsdatei
 [config.properties](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties)
@@ -164,10 +163,10 @@ Es lassen sich zwei Pfade konfigurieren (optional).
 
 Alle Texte sind in der Properties-Datei [``text_de.properties``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/text_de.properties) zusammengefasst und lassen sich so komfortabel abändern.
 
---
+------
 
 <a name="DeployMaven"></a>
-### Deploy mit Maven
+## Deploy mit Maven
 Die Anwendung lässt sich direkt mit Maven und dem [Tomcat-Manager](http://tomcat.apache.org/tomcat-7.0-doc/manager-howto.html) deployen.
 Hierzu müssen zwei Dateien abgeändert werden.
 

@@ -89,7 +89,9 @@ Für die ``slave``-Datenbanken werden jeweils folgende Datenbanknutzer mit besch
 * ``ueps_001``
 * ``ueps_002``
 
+
 ------
+
 
 ## Konfiguration mit 'config.properties'
 Bevor man die Anwendung startet sollte man zunächst einen Blick in die Konfigurationsdatei
@@ -163,7 +165,6 @@ Es lassen sich zwei Pfade konfigurieren (optional).
 
 Alle Texte sind in der Properties-Datei [``text_de.properties``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/text_de.properties) zusammengefasst und lassen sich so komfortabel abändern.
 
-<br/>
 
 ------
 

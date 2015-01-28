@@ -163,6 +163,7 @@ Es lassen sich zwei Pfade konfigurieren (optional).
 
 Alle Texte sind in der Properties-Datei [``text_de.properties``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/text_de.properties) zusammengefasst und lassen sich so komfortabel abändern.
 
+<br/>
 
 ------
 

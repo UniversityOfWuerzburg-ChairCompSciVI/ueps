@@ -38,7 +38,7 @@
   ```
   <!--- ` -->
   Die aufgelisteten Rechte müssen für die unter [``MASTER_DBNAME``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L42) angegebene Datenbank sowie für neu erstellte Datenbanken gelten. Eine Rechteskript könnte beispielsweise folgendermaßen aussehen:
-  ```
+  ```sql
   GRANT SELECT, INSERT, UPDATE, DELETE, ALTER, CREATE, DROP,
   GRANT OPTION, LOCK TABLES, ON *.* TO '$MASTER_DBUSER$'@'$MASTER_DBHOST$'
   IDENTIFIED BY '$MASTER_DBPASS$';

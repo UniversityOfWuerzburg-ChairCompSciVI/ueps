@@ -153,7 +153,7 @@ In der Konfigurationsdatei sollte mindestens ein [Adminstrator-Nutzer](https://g
 Admins können auch zur Laufzeit hinzugefügt werden, hierfür muss man jedoch den Datenbankeintrag für den Nutzer abändern ([Tabelle: "user", Spalte: "is_admin"](http://kolbasa.github.io/ueps/screenshots/admin-db-er-diagram.png)).
 
 #### Pfadangaben
-Es lassen sich zwei Pfade konfigurieren.
+Es lassen sich zwei Pfade konfigurieren (optional).
 
 1. Der Pfad für Logdateien unter [``LOG_PATH``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L124).
 
@@ -161,7 +161,8 @@ Es lassen sich zwei Pfade konfigurieren.
 
 #### Aussehen/Text anpassen
 
-[``text_de.properties``]()
+Alle Texte sind in der Properties-Datei [``text_de.properties``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/text_de.properties) zusammengefasst und lassen sich so komfortabel abändern.
+
 
 <a name="DeployMaven"></a>
 ### Deploy mit Maven

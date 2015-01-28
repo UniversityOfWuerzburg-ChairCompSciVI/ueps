@@ -217,7 +217,7 @@ Anschließend kann die Anwendung mit folgendem Skript deployed werden:<br/>
 
 ------
 
-## Neues Szenario erstellen
+## Szenarien erstellen/bearbeiten.
 TODO :: TODO :: TODO :: TODO
 ![](http://kolbasa.github.io/ueps/screenshots/ueps_10.png)
 

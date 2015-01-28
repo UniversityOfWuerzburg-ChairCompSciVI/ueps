@@ -33,7 +33,7 @@
    ```
   <!--- ` -->
    Der unter [``MASTER_DBUSER``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L43) festgelegte Nutzer sollte folgende Rechte besitzen:
-  ```sqlite3
+  ```sql
   SELECT, UPDATE, DELETE, INSERT, ALTER, CREATE, DROP, GRANT OPTION, LOCK TABLES
   ```
   <!--- ` -->

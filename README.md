@@ -3,6 +3,8 @@
 
 ![](http://kolbasa.github.io/ueps/screenshots/ueps_neu_02.png)
 
+------
+
 ## Systemanforderungen
 * Tomcat 7 oder höher
   (Für diese Anleitung wird Tomcat 7 verwendet)

@@ -163,6 +163,9 @@ Es lassen sich zwei Pfade konfigurieren (optional).
 
 Alle Texte sind in der Properties-Datei [``text_de.properties``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/text_de.properties) zusammengefasst und lassen sich so komfortabel abändern.
 
+[style.css](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/webapp/resources/css/styles.css)
+
+[tipsy.css](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/webapp/resources/css/tipsy.css)
 
 ------
 
@@ -217,7 +220,7 @@ Anschließend kann die Anwendung mit folgendem Skript deployed werden:<br/>
 
 ------
 
-## Szenarien erstellen/bearbeiten.
+## Szenarien erstellen/bearbeiten
 TODO :: TODO :: TODO :: TODO
 ![](http://kolbasa.github.io/ueps/screenshots/ueps_10.png)
 
@@ -240,3 +243,4 @@ TODO :: TODO :: TODO :: TODO
 
 ## Abgaben bewerten
 TODO :: TODO :: TODO :: TODO
+

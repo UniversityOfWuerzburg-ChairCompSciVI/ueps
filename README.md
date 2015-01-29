@@ -93,7 +93,7 @@ Für die ``slave``-Datenbanken werden jeweils folgende Datenbanknutzer mit besch
 
 ## Konfiguration mit 'config.properties'
 Bevor man die Anwendung startet sollte man zunächst einen Blick in die Konfigurationsdatei
-[config.properties](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties)
+[``config.properties``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties)
 unter ``src/main/resources/``
 werfen und Angaben zum Datenbank-Server überschreiben.
 
@@ -163,11 +163,7 @@ Es lassen sich zwei Pfade konfigurieren (optional).
 
 Alle Texte sind in der Properties-Datei [``text_de.properties``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/text_de.properties) zusammengefasst und lassen sich so komfortabel abändern.
 
-Alle Bilder, das Favicon und die Hintergrundfarbe können in der [config.properties](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties) geändert werden. Für größere Änderungen gibt es das Stylesheet [style.css](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/webapp/resources/css/styles.css).
-
-[style.css](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/webapp/resources/css/styles.css)
-
-[tipsy.css](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/webapp/resources/css/tipsy.css)
+Alle Bilder, das Favicon und die Hintergrundfarbe können in der [``config.properties``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties) geändert werden. Für größere Änderungen gibt es das Stylesheet [``style.css``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/webapp/resources/css/styles.css). Das Aussehen der Tooltips lässt sich mit [tipsy.css](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/webapp/resources/css/tipsy.css) verändern.
 
 ------
 

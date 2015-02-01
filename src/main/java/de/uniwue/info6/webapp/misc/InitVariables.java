@@ -91,9 +91,9 @@ public class InitVariables implements ServletContextListener, Serializable {
 
     Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropBool.IMPORT_DB_IF_EMPTY, true);
     Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropBool.IMPORT_EXAMPLE_SCENARIO, true);
-    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropBool.FORCE_RESET_DATABASE, false);
+    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropBool.FORCE_RESET_DATABASE, true);
     Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropBool.USE_MOODLE_LOGIN, false);
-    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropBool.USE_FALLBACK_USER, true);
+    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropBool.USE_FALLBACK_USER, false);
     Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropString.FALLBACK_USER, "user_1");
     Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropString.FALLBACK_SCENARIO, "2");
     Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropString.FALLBACK_SECUREVALUE, "d1ac3b14896c2faf640d1e00966fc065");
@@ -154,7 +154,7 @@ public class InitVariables implements ServletContextListener, Serializable {
         );
     Cfg.inst(configFiles);
 
-    if (Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG, PropBool.DEBUG_MODE)) {
+    if (Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG, PropBool.DEBUG_MODE) && new File("/home/foo/a/git0").exists()) {
       this.setDebugVariables();
     }
 

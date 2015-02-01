@@ -7,6 +7,7 @@
 
 # Inhaltsverzeichnis
 1. [Systemanforderungen](#systemanforderungen)
+2. [Kurzanleitung zur Installation](#kurzanleitung)
 
 
 ------
@@ -20,6 +21,7 @@
 
 ------
 
+<a name="kurzanleitung"></a>
 ## Kurzanleitung zur Installation
 
 1. Quellcode herunterladen:<br/>

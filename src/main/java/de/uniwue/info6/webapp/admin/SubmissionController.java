@@ -44,8 +44,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.DefaultTreeNode;
@@ -73,7 +71,6 @@ import de.uniwue.info6.misc.StringTools;
 import de.uniwue.info6.misc.properties.Cfg;
 import de.uniwue.info6.parser.errors.Error;
 import de.uniwue.info6.webapp.lists.UserFeedback;
-import de.uniwue.info6.webapp.session.SessionBean;
 import de.uniwue.info6.webapp.session.SessionObject;
 
 /**
@@ -86,7 +83,7 @@ import de.uniwue.info6.webapp.session.SessionObject;
 public class SubmissionController implements Serializable {
 
   private static final long serialVersionUID = 3024228920485372328L;
-  private static final Log LOGGER = LogFactory.getLog(SubmissionController.class);
+  private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(SubmissionController.class);
   private static final String EMPTY = "[" + Cfg.inst().getProp(DEF_LANGUAGE, "ASSERTION.EMPTY_FIELD") + "]";
   private static final String EMPTY_SC = Cfg.inst().getProp(DEF_LANGUAGE, "ASSERTION.NO_SCENARIO");
   private static final String EMPTY_GR = Cfg.inst().getProp(DEF_LANGUAGE, "ASSERTION.NO_GROUP");
@@ -111,6 +108,7 @@ public class SubmissionController implements Serializable {
   private UserRights rights;
   private int countEntries;
   private String errorText;
+  private int assertionProgress;
 
   private String userID, scenarioID, groupID, exID;
   private Integer scenarioIDInt, groupIDInt, exIDInt;
@@ -125,6 +123,7 @@ public class SubmissionController implements Serializable {
   public SubmissionController() {
 
   }
+
 
   /**
    *
@@ -573,13 +572,18 @@ public class SubmissionController implements Serializable {
 
         try {
           connection = connectionPool.getConnection(sc);
+
+          int countEntries = 0;
+          this.setAssertionProgress(0);
           for (UserEntry userEntry : userEntries) {
+
             UserResult userResult = userResultDao.getLastUserResultFromEntry(userEntry);
+            int percent = (int) Math.ceil(((double) countEntries++ / (double) userEntries.size()) * 100);
+            this.setAssertionProgress(percent);
 
             if (userResult != null) {
 
               SqlQuery userQuery = new SqlQuery(userEntry.getUserQuery());
-
 
               connectionPool.resetTables(sc, user);
               SqlExecuter executer = new SqlExecuter(connection, user, sc);
@@ -631,6 +635,8 @@ public class SubmissionController implements Serializable {
               userResultDao.updateInstance(userResult);
             }
           }
+          this.forceAssertionComplete();
+          this.setAssertionProgress(100);
         } catch (Exception e) {
           LOGGER.error("Error forcing reset assertion", e);
         } finally {
@@ -645,6 +651,11 @@ public class SubmissionController implements Serializable {
       }
     }
     reloadTree();
+  }
+
+
+  public void forceAssertionComplete() {
+    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Server-Meldung", "Neubewertung abgeschlossen!"));
   }
 
   public StreamedContent getExport2(ExerciseGroup exGroup) {
@@ -796,5 +807,24 @@ public class SubmissionController implements Serializable {
    */
   public String getScenarioID() {
     return scenarioID;
+  }
+
+  /**
+   *
+   *
+   * @return
+   */
+  public int getAssertionProgress() {
+    // return 10;
+    return this.assertionProgress;
+  }
+
+  /**
+   *
+   *
+   * @param assertionProgress
+   */
+  public void setAssertionProgress(int assertionProgress) {
+    this.assertionProgress = assertionProgress;
   }
 }

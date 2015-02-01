@@ -13,9 +13,9 @@ package de.uniwue.info6.parser.errors;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,9 +24,6 @@ package de.uniwue.info6.parser.errors;
  * #L%
  */
 
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import static de.uniwue.info6.misc.properties.PropertiesFile.DEF_LANGUAGE;
 import de.uniwue.info6.misc.properties.Cfg;
@@ -40,7 +37,7 @@ public class SqlError extends Error {
 
   private String origText;
 
-  private static final Log LOGGER = LogFactory.getLog(SqlError.class);
+  private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(SqlError.class);
 
   public SqlError(String title, String text, String origText, String user) {
 
@@ -50,12 +47,12 @@ public class SqlError extends Error {
 
       if (origText.matches("Table '[\\S]*' doesn't exist")) {
         String tmp = origText.substring(origText.indexOf("'") + 1,
-            origText.indexOf("'", origText.indexOf("'") + 1));
+                                        origText.indexOf("'", origText.indexOf("'") + 1));
         origText = origText.replace(tmp, cleanTableFromPrefix(tmp, user));
       } else if (origText.matches("Unknown column '[\\S]*'[\\S\\s]*")) {
 
         String tmp = origText.substring(origText.indexOf("'") + 1,
-            origText.indexOf("'", origText.indexOf("'") + 1));
+                                        origText.indexOf("'", origText.indexOf("'") + 1));
 
         if (tmp.contains(user + "_")) {
           origText = origText.replace(user + "_", "");
@@ -68,7 +65,7 @@ public class SqlError extends Error {
       }
     } catch (Exception e) {
       LOGGER.error("PROBLEM WITH TRANSLATING SQL ERROR MESSAGE:\n" + title + "\n" + text + "\n" + origText + "\n"
-          + user, e);
+                   + user, e);
     }
 
     this.origText = origText;
@@ -90,13 +87,13 @@ public class SqlError extends Error {
 
     if (origText.matches("Table '[\\S]*' doesn't exist")) {
       String tmp = origText
-          .substring(origText.indexOf("'") + 1, origText.indexOf("'", origText.indexOf("'") + 1));
+                   .substring(origText.indexOf("'") + 1, origText.indexOf("'", origText.indexOf("'") + 1));
       return fillPropertyString(Cfg.inst().getProp(DEF_LANGUAGE, "EXECUTER.TABLE_NOTFOUND"),
-          new String[] { cleanTableFromPrefix(tmp, user) });
+                                new String[] { cleanTableFromPrefix(tmp, user) });
     } else if (origText.matches("Unknown column '[\\S]*'[\\S\\s]*")) {
 
       String tmp = origText
-          .substring(origText.indexOf("'") + 1, origText.indexOf("'", origText.indexOf("'") + 1));
+                   .substring(origText.indexOf("'") + 1, origText.indexOf("'", origText.indexOf("'") + 1));
 
       if (tmp.contains(user + "_")) {
         tmp = tmp.replace(user + "_", "");
@@ -106,7 +103,7 @@ public class SqlError extends Error {
 
     } else if (origText.contains("to use near")) {
       String tmp = origText
-          .substring(origText.indexOf("'") + 1, origText.indexOf("'", origText.indexOf("'") + 1));
+                   .substring(origText.indexOf("'") + 1, origText.indexOf("'", origText.indexOf("'") + 1));
 
       if (tmp.contains(user + "_")) {
         tmp = tmp.replace(user + "_", "");
@@ -156,3 +153,4 @@ public class SqlError extends Error {
   }
 
 }
+

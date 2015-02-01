@@ -13,9 +13,9 @@ package de.uniwue.info6.comparator;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,6 +23,8 @@ package de.uniwue.info6.comparator;
  * limitations under the License.
  * #L%
  */
+
+import static de.uniwue.info6.misc.properties.PropertiesFile.DEF_LANGUAGE;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -34,20 +36,15 @@ import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import de.uniwue.info6.database.jdbc.ConnectionManager;
 import de.uniwue.info6.database.map.Scenario;
 import de.uniwue.info6.database.map.User;
+import de.uniwue.info6.misc.properties.Cfg;
 import de.uniwue.info6.parser.errors.SqlError;
 import de.uniwue.info6.parser.structures.JoinTableStructure;
 import de.uniwue.info6.parser.structures.TableStructure;
 import de.uniwue.info6.parser.visitors.RootVisitor;
 import de.uniwue.info6.webapp.session.SessionListener;
-
-import static de.uniwue.info6.misc.properties.PropertiesFile.DEF_LANGUAGE;
-import de.uniwue.info6.misc.properties.Cfg;
 
 /* Howto create restricted user
 
@@ -70,7 +67,7 @@ public class SqlExecuter {
   private User user;
   private Scenario scenario;
 
-  private static final Log LOGGER = LogFactory.getLog(SqlExecuter.class);
+  private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(SqlExecuter.class);
 
   /**
    *
@@ -101,7 +98,7 @@ public class SqlExecuter {
 
     if (query.getPlainContent() == null || query.getPlainContent().equals("")) {
       query.setError(new SqlError(Cfg.inst().getProp(DEF_LANGUAGE, "EXECUTER.SQL_ERROR"), System
-          .getProperty("EXECUTER.EMPTY_QUERY"), Cfg.inst().getProp(DEF_LANGUAGE, "EXECUTER.EMPTY_QUERY"), user.getId()));
+                                  .getProperty("EXECUTER.EMPTY_QUERY"), Cfg.inst().getProp(DEF_LANGUAGE, "EXECUTER.EMPTY_QUERY"), user.getId()));
       return;
     }
 
@@ -113,8 +110,8 @@ public class SqlExecuter {
             .contains("set"))) { // restricted user hat drop, truncate und alter rechte
 
       query.setError(new SqlError(Cfg.inst().getProp(DEF_LANGUAGE, "EXECUTER.SQL_ERROR"), System
-          .getProperty("EXECUTER.SECURITY_ISSUE"), Cfg.inst().getProp(DEF_LANGUAGE, "EXECUTER.SECURITY_ISSUE"), user
-          .getId()));
+                                  .getProperty("EXECUTER.SECURITY_ISSUE"), Cfg.inst().getProp(DEF_LANGUAGE, "EXECUTER.SECURITY_ISSUE"), user
+                                  .getId()));
       return;
 
     }
@@ -166,8 +163,8 @@ public class SqlExecuter {
 
       } else {
         query.setError(new SqlError(Cfg.inst().getProp(DEF_LANGUAGE, "EXECUTER.SQL_ERROR"), System
-            .getProperty("EXECUTER.SECURITY_ISSUE"), Cfg.inst().getProp(DEF_LANGUAGE, "EXECUTER.SECURITY_ISSUE"), user
-            .getId()));
+                                    .getProperty("EXECUTER.SECURITY_ISSUE"), Cfg.inst().getProp(DEF_LANGUAGE, "EXECUTER.SECURITY_ISSUE"), user
+                                    .getId()));
         return;
       }
 
@@ -178,15 +175,15 @@ public class SqlExecuter {
 
         // if somebody tries to use | or & to escape a query, we stop him
         query.setError(new SqlError(Cfg.inst().getProp(DEF_LANGUAGE, "EXECUTER.SQL_ERROR"), System
-            .getProperty("EXECUTER.SECURITY_ISSUE"), Cfg.inst().getProp(DEF_LANGUAGE, "EXECUTER.SECURITY_ISSUE"), user
-            .getId()));
+                                    .getProperty("EXECUTER.SECURITY_ISSUE"), Cfg.inst().getProp(DEF_LANGUAGE, "EXECUTER.SECURITY_ISSUE"), user
+                                    .getId()));
         return;
 
       }
 
       try { // provoke a sql error //TODO blind Tabellen ersetzen
 
-         LOGGER.warn("PARSER HAS BEEN KILLED ", e);
+        LOGGER.warn("PARSER HAS BEEN KILLED ", e);
 
         ConnectionManager pool = ConnectionManager.instance();
 
@@ -230,7 +227,7 @@ public class SqlExecuter {
 
       } catch (Exception e2) {
         query.setError(new SqlError(Cfg.inst().getProp(DEF_LANGUAGE, "EXECUTER.SQL_ERROR"), e2.getMessage(), e2.getMessage(),
-            user.getId()));
+                                    user.getId()));
         return;
 
       } finally {
@@ -277,7 +274,7 @@ public class SqlExecuter {
 
       } catch (Exception e) {
         query.setError(new SqlError(Cfg.inst().getProp(DEF_LANGUAGE, "EXECUTER.SQL_ERROR"), e.getMessage(), e.getMessage(),
-            user.getId()));
+                                    user.getId()));
         return;
       }
 
@@ -329,7 +326,7 @@ public class SqlExecuter {
 
         } catch (Exception e) {
           query.setError(new SqlError(Cfg.inst().getProp(DEF_LANGUAGE, "EXECUTER.SQL_ERROR"), e.getMessage(), e
-              .getMessage(), user.getId()));
+                                      .getMessage(), user.getId()));
 
           try {
             return;

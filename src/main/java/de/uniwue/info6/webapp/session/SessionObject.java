@@ -35,8 +35,8 @@ import java.util.concurrent.locks.ReentrantLock;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 
 import de.uniwue.info6.database.map.ExerciseGroup;
 import de.uniwue.info6.database.map.Scenario;
@@ -54,7 +54,7 @@ import de.uniwue.info6.misc.properties.Cfg;
 public class SessionObject {
   private String userID, secureValue, scenarioID, userIP;
   private final static String sessionPosition = "auth_controller";
-  private static final Log LOGGER = LogFactory.getLog(SessionObject.class);
+  private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(SessionObject.class);
   private User user;
   private HttpSession session;
   private Scenario scenario;
@@ -166,19 +166,6 @@ public class SessionObject {
   /**
    *
    *
-   * @param par
-   * @return
-   */
-  private boolean parseBoolean(String par) {
-    if (par.trim().equalsIgnoreCase("true")) {
-      return true;
-    }
-    return false;
-  }
-
-  /**
-   *
-   *
    */
   private synchronized boolean loadUser() {
     boolean userFound = false;
@@ -248,6 +235,45 @@ public class SessionObject {
     return scenario;
   }
 
+
+  /**
+   *
+   *
+   * @return
+   */
+  public String getUserIP() {
+    return this.userIP;
+
+  }
+
+
+  /**
+   *
+   *
+   * @return
+   */
+  public String getUserIDParameter() {
+    return this.userID;
+  }
+
+  /**
+   *
+   *
+   * @return
+   */
+  public String getSecureValueParameter() {
+    return this.secureValue;
+  }
+
+  /**
+   *
+   *
+   * @return
+   */
+  public String getScenarioParameter() {
+    return scenarioID;
+  }
+
   /**
    * @param scenario
    *          the scenario to set
@@ -262,6 +288,8 @@ public class SessionObject {
   public ExerciseGroup getExerciseGroup() {
     return exerciseGroup;
   }
+
+
 
   /**
    * @param exerciseGroup

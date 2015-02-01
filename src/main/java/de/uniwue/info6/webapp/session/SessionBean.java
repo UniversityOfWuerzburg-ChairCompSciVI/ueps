@@ -35,8 +35,8 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 
 import de.uniwue.info6.database.map.User;
 
@@ -53,7 +53,7 @@ public class SessionBean implements Serializable {
    *
    */
   private static final long serialVersionUID = 1L;
-  private static final Log LOGGER = LogFactory.getLog(SessionBean.class);
+  private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(SessionBean.class);
   private final static String userID = "userID";
   private long sessionTime;
 

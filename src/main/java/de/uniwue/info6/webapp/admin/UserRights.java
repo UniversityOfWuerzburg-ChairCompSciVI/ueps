@@ -33,8 +33,8 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.view.ViewScoped;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 
 import de.uniwue.info6.database.map.Exercise;
 import de.uniwue.info6.database.map.ExerciseGroup;
@@ -66,7 +66,7 @@ public class UserRights implements Serializable {
    *
    */
   private static final long serialVersionUID = 1L;
-  private static final Log LOGGER = LogFactory.getLog(UserRights.class);
+  private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(UserRights.class);
 
   private UserRightDao userRightDao;
   private ExerciseGroupDao exerciseGroupDao;

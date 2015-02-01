@@ -26,8 +26,8 @@ package de.uniwue.info6.database.map.daos;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 import org.hibernate.Session;
 import org.hibernate.criterion.Example;
 
@@ -44,7 +44,7 @@ public class ScenarioDao extends DaoTools<Scenario> {
    *
    */
   private static final long serialVersionUID = 1L;
-  private static final Log log = LogFactory.getLog(ScenarioDao.class);
+  private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ScenarioDao.class);
 
   // ******************************************************************
   // custom (not generated methods)

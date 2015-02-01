@@ -30,8 +30,8 @@ import java.util.Set;
 
 import javax.faces.context.FacesContext;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -57,7 +57,7 @@ public class UserEntryDao extends DaoTools<UserEntry> {
 	 */
 	private static final long serialVersionUID = 1L;
 	private User currentUser;
-	private static final Log log = LogFactory.getLog(UserEntryDao.class);
+	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(UserEntryDao.class);
 
 	// ******************************************************************
 	// custom (not generated methods)

@@ -30,8 +30,8 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 
 /**
  *
@@ -47,7 +47,7 @@ public class StartupError implements Serializable {
    */
   private static final long serialVersionUID = 1L;
   @SuppressWarnings("unused")
-  private static final Log LOGGER = LogFactory.getLog(StartupError.class);
+  private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(StartupError.class);
   private String error;
 
 

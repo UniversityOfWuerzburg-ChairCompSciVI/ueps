@@ -13,9 +13,9 @@ package de.uniwue.info6.database.jaxb;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -46,8 +46,6 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.SchemaOutputResolver;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import de.uniwue.info6.database.map.Exercise;
 import de.uniwue.info6.database.map.ExerciseGroup;
@@ -60,8 +58,7 @@ import de.uniwue.info6.misc.properties.Cfg;
 
 public class ScenarioExporter {
   private static String scriptSystemPath = Cfg.inst().getProp(MAIN_CONFIG, SCENARIO_RESOURCES_PATH);
-  private static final String RESOURCE_PATH = "scn";
-  private static final Log LOGGER = LogFactory.getLog(ScenarioExporter.class);
+  private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(ScenarioExporter.class);
 
   private ExerciseGroupDao exerciseGroupDao;
   private ExerciseDao exerciseDao;
@@ -83,7 +80,7 @@ public class ScenarioExporter {
    */
   public File generateScenarioXml(Scenario scenario) {
     scenario = populateScenario(scenario);
-    File base = new File(scriptSystemPath + File.separator + RESOURCE_PATH);
+    File base = new File(scriptSystemPath + File.separator + Cfg.RESOURCE_PATH);
     File saveDir = new File(base, String.valueOf(scenario.getId()));
 
     try {

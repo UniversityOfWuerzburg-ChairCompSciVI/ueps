@@ -26,8 +26,8 @@ package de.uniwue.info6.database.map.daos;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -48,7 +48,7 @@ public class UserResultDao extends DaoTools<UserResult> {
 	 *
 	 */
 	private static final long serialVersionUID = 1L;
-	private static final Log log = LogFactory.getLog(UserResultDao.class);
+	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(UserResultDao.class);
 
 	// ******************************************************************
 	// custom (not generated methods)

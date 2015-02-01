@@ -13,9 +13,9 @@ package de.uniwue.info6.misc;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -40,8 +40,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
@@ -64,9 +62,8 @@ import de.uniwue.info6.misc.properties.Cfg;
  */
 public class FileTransfer {
 
-  private static final Log LOGGER = LogFactory.getLog(FileTransfer.class);
+  private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(FileTransfer.class);
   private static String scriptPath = Cfg.inst().getProp(MAIN_CONFIG, SCENARIO_RESOURCES_PATH);
-  private static final String RESOURCE_PATH = "scn";
   private static final String COPY_STRING = "[" + Cfg.inst().getProp(DEF_LANGUAGE, "COPY") + "]";
 
   // daos
@@ -243,7 +240,7 @@ public class FileTransfer {
           copy(gr, newScenario, false);
         }
 
-        String scenarioFolder = scriptPath + File.separator + RESOURCE_PATH + File.separator
+        String scenarioFolder = scriptPath + File.separator + Cfg.RESOURCE_PATH + File.separator
                                 + newScenario.getId();
 
         File scriptFile = new File(scenarioFolder + File.separator
@@ -252,7 +249,7 @@ public class FileTransfer {
         if (!scriptFile.exists()) {
           String oldScriptPath = originScenario.getCreateScriptPath();
           if (oldScriptPath != null && !oldScriptPath.trim().isEmpty()) {
-            File oldScriptFile = new File(scriptPath + File.separator + RESOURCE_PATH
+            File oldScriptFile = new File(scriptPath + File.separator + Cfg.RESOURCE_PATH
                                           + File.separator + originScenario.getId() + File.separator + oldScriptPath);
 
             if (oldScriptFile.exists()) {
@@ -271,7 +268,7 @@ public class FileTransfer {
         if (!imageFile.exists()) {
           String oldImagePath = originScenario.getImagePath();
           if (oldImagePath != null && !oldImagePath.trim().isEmpty()) {
-            File oldImageFile = new File(scriptPath + File.separator + RESOURCE_PATH
+            File oldImageFile = new File(scriptPath + File.separator + Cfg.RESOURCE_PATH
                                          + File.separator + originScenario.getId() + File.separator + oldImagePath);
 
             if (oldImageFile.exists()) {
@@ -301,7 +298,7 @@ public class FileTransfer {
    * @return
    */
   public boolean copy(File scriptFile, File imageFile, String id) {
-    File folder = new File(scriptPath + File.separator + RESOURCE_PATH + File.separator + id);
+    File folder = new File(scriptPath + File.separator + Cfg.RESOURCE_PATH + File.separator + id);
     try {
       if (!folder.exists()) {
         folder.mkdir();
@@ -339,7 +336,7 @@ public class FileTransfer {
     String name = StringTools.normalize(StringTools.deleteDate(fileName.substring(0, fileName
                                         .lastIndexOf('.'))))
                   + "_" + fmt.format(new Date()) + fileName.substring(fileName.lastIndexOf('.'));
-    File file = new File(scriptPath + File.separator + RESOURCE_PATH + File.separator + folder
+    File file = new File(scriptPath + File.separator + Cfg.RESOURCE_PATH + File.separator + folder
                          + File.separator + name);
 
     if (!file.getParentFile().exists()) {

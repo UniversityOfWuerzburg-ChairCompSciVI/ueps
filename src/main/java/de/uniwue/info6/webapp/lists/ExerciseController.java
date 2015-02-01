@@ -26,6 +26,7 @@ package de.uniwue.info6.webapp.lists;
 
 import static de.uniwue.info6.misc.properties.PropertiesFile.DEF_LANGUAGE;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.ResultSetMetaData;
@@ -47,8 +48,8 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 
 import de.uniwue.info6.comparator.RefLink;
 import de.uniwue.info6.comparator.SqlExecuter;
@@ -92,7 +93,7 @@ public class ExerciseController implements Serializable {
    *
    */
   private static final long serialVersionUID = 1L;
-  private static final Log LOGGER = LogFactory.getLog(ExerciseController.class);
+  private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(ExerciseController.class);
 
   @SuppressWarnings("unused")
   private static final String error = "ERROR: Scenario not found", exerciseParam = "exercise";
@@ -326,8 +327,6 @@ public class ExerciseController implements Serializable {
       solutionQueryDao = new SolutionQueryDao();
 
       if (scenario != null) {
-        // exerciseDao.pullObject(scenario);
-
         // get exercise id
         if (!debug) {
           ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
@@ -342,6 +341,11 @@ public class ExerciseController implements Serializable {
           exerciseGroup = exGroupDao.getById(exercise.getExerciseGroup().getId());
 
           if (exerciseGroup != null) {
+            try {
+              this.connectionPool.resetTables(scenario, user, true);
+            } catch (Exception e) {
+              LOGGER.error("COULD NOT RESET TABLES", e);
+            }
 
             if (exerciseGroup.getDescription() == null
                 || exerciseGroup.getDescription().trim().isEmpty()) {
@@ -369,7 +373,7 @@ public class ExerciseController implements Serializable {
             }
 
             // get list of sql tables
-            availableTables = connectionPool.getScenarioTableNamesWithHash(scenario);
+            availableTables = connectionPool.getScenarioTableNames(scenario);
             if (availableTables == null || availableTables.isEmpty()) {
               importScriptError = connectionPool.checkIfImportScriptExists(scenario);
             }
@@ -393,11 +397,6 @@ public class ExerciseController implements Serializable {
                 solutionQueries.add(sqlQuery);
               }
 
-              try {
-                connectionPool.resetTables(scenario, user);
-              } catch (Exception e) {
-                LOGGER.error("COULD NOT RESET TABLES", e);
-              }
 
               UserEntry entry = userEntryDao.getLastUserEntry(exercise, user);
 

@@ -50,6 +50,7 @@ import de.uniwue.info6.database.map.conf.HibernateUtil;
 import de.uniwue.info6.misc.StringTools;
 import de.uniwue.info6.misc.properties.Cfg;
 import de.uniwue.info6.misc.properties.PropBool;
+import de.uniwue.info6.misc.properties.PropInteger;
 import de.uniwue.info6.misc.properties.PropString;
 import de.uniwue.info6.misc.properties.PropertiesFile;
 
@@ -76,6 +77,28 @@ public class InitVariables implements ServletContextListener, Serializable {
    *
    */
   private static final long serialVersionUID = 1L;
+
+  /**
+   *
+   *
+   */
+  private void setDebugVariables() {
+    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropString.MASTER_DBHOST, "127.0.0.1");
+    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropString.MASTER_DBPORT, "3306");
+    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropString.MASTER_DBNAME, "ueps_master");
+    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropString.MASTER_DBUSER, "test_user");
+    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropString.MASTER_DBPASS, "3ti4k4tm270kg");
+
+    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropBool.IMPORT_DB_IF_EMPTY, true);
+    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropBool.IMPORT_EXAMPLE_SCENARIO, true);
+    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropBool.FORCE_RESET_DATABASE, false);
+    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropBool.USE_MOODLE_LOGIN, false);
+    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropBool.USE_FALLBACK_USER, true);
+    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropString.FALLBACK_USER, "user_1");
+    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropString.FALLBACK_SCENARIO, "2");
+    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropString.FALLBACK_SECUREVALUE, "d1ac3b14896c2faf640d1e00966fc065");
+    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropInteger.SESSION_TIMEOUT, 1000);
+  }
 
   /**
    * @param event
@@ -212,21 +235,4 @@ public class InitVariables implements ServletContextListener, Serializable {
     }
   }
 
-  /**
-   *
-   *
-   */
-  private void setDebugVariables() {
-    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropString.MASTER_DBHOST, "127.0.0.1");
-    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropString.MASTER_DBPORT, "3306");
-    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropString.MASTER_DBNAME, "ueps_master");
-    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropString.MASTER_DBUSER, "test_user");
-    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropString.MASTER_DBPASS, "3ti4k4tm270kg");
-
-    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropBool.IMPORT_DB_IF_EMPTY, true);
-    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropBool.IMPORT_EXAMPLE_SCENARIO, true);
-    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropBool.FORCE_RESET_DATABASE, false);
-    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropBool.USE_MOODLE_LOGIN, false);
-
-  }
 }

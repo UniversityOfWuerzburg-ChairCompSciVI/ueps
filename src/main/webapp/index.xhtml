@@ -12,9 +12,9 @@
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
-  
+
        http://www.apache.org/licenses/LICENSE-2.0
-  
+
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,6 +34,9 @@ xmlns:p="http://primefaces.org/ui">
  <h:body>
   <!-- main template defining header, footer and content -->
   <ui:composition template="/templates/common/commonLayout.xhtml">
+   <ui:define name="header_text">
+     <span>#{scenarioController.isValidScenario() ? txt['HEADER.DEFAULT'] : ''}</span>
+   </ui:define>
    <ui:define name="content">
     <!-- tooltips -->
     <script type="text/javascript">
@@ -85,9 +88,9 @@ xmlns:p="http://primefaces.org/ui">
     <!-- dynamic means tabs are being loaded through ajax -->
     <!-- ######################################################################### -->
     <p:accordionPanel activeIndex="0" widgetVar="intro" global="true"
-    dynamic="false" cache="false" collapsible="true">
+        dynamic="false" cache="false" collapsible="true">
      <!-- first tab: introduction-text -->
-     <p:tab title="#{txt['AC.INTRO']}">
+     <p:tab title="#{scenarioController.isValidScenario() ? txt['AC.INTRO'] : 'Info'}">
       <h:outputText value="#{scenarioController.getIntroductionText()}"
       escape="false" styleClass="intoduction_text" />
      </p:tab>
@@ -107,7 +110,7 @@ xmlns:p="http://primefaces.org/ui">
      oncomplete="show_tooltip()" />
      <!-- one exercise-group tab with title -->
      <p:tab title="#{overview.getGroupName(exerciseGroup)}"
-	 titleStyleClass="#{exerciseGroup.isRated ? 'rated_tab' : 'unrated_tab'}"
+   titleStyleClass="#{exerciseGroup.isRated ? 'rated_tab' : 'unrated_tab'}"
      global="true"
      disabled="#{overview.disableGroup(exerciseGroup)}">
       <h:panelGrid columns="2" cellpadding="10"
@@ -125,7 +128,7 @@ xmlns:p="http://primefaces.org/ui">
          #{txt['EX.RATED_DESCRIPTION']}</p:outputPanel>
          <h3>
           <p:outputPanel rendered="#{overview.showResults(exerciseGroup)}">
-		  #{txt['EX.RESULT_CREDITS']}:
+      #{txt['EX.RESULT_CREDITS']}:
           <span style="color:green">
           #{overview.getAchievedPoints(exerciseGroup)} /
           #{overview.getMaxPoints(exerciseGroup)} -
@@ -272,7 +275,7 @@ xmlns:p="http://primefaces.org/ui">
           <p:commandButton styleClass="selected_exercises"
           disabled="#{overview.selectionSize(exerciseGroup) eq 0}"
           value="#{overview.selectionSize(exerciseGroup) eq 1 ?
-		  txt['AC.SEL_SING']:txt['AC.SEL_PLUR']} [#{overview.selectionSize(exerciseGroup)}]"
+      txt['AC.SEL_SING']:txt['AC.SEL_PLUR']} [#{overview.selectionSize(exerciseGroup)}]"
           id="selected_exercises" icon="ui-icon-arrowreturnthick-1-e"
           ajax="false"
           action="#{moveTo.exerciseModule(overview.getSelectedExercises())}"
@@ -293,3 +296,4 @@ xmlns:p="http://primefaces.org/ui">
   </ui:composition>
  </h:body>
 </html>
+

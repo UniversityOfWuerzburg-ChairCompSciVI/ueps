@@ -25,17 +25,21 @@ package de.uniwue.info6.webapp.lists;
  */
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
+import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 
 import de.uniwue.info6.database.jdbc.ConnectionManager;
 import de.uniwue.info6.database.map.Scenario;
 import de.uniwue.info6.database.map.User;
+import de.uniwue.info6.database.map.daos.ScenarioDao;
 import de.uniwue.info6.misc.properties.Cfg;
 import de.uniwue.info6.webapp.session.SessionObject;
 
@@ -48,6 +52,8 @@ import de.uniwue.info6.webapp.session.SessionObject;
 @ViewScoped
 public class ScenarioController implements Serializable {
 
+  private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(ScenarioController.class);
+
   /**
    *
    */
@@ -55,7 +61,10 @@ public class ScenarioController implements Serializable {
   private SessionObject ac;
   private final String error = Cfg.inst().getText("SCENARIO_NOT_FOUND");
   private Scenario scenario;
-  private static final Log LOGGER = LogFactory.getLog(ScenarioController.class);
+  private String scenarioParameter, userIDParameter, secureValueParameter;
+  private ScenarioDao scenarioDao;
+  private List<Scenario> scenarios;
+  public static String NO_SCENARIO_SELECTED_PARAMETER = "NO_SCENARIO";
 
   /**
    *
@@ -70,9 +79,16 @@ public class ScenarioController implements Serializable {
   @PostConstruct
   public void init() {
     this.ac = SessionObject.pull();
-    this.scenario = ac.getScenario();
-    ConnectionManager pool = ConnectionManager.instance();
 
+    this.scenario             = this.ac.getScenario();
+    this.scenarioParameter    = this.ac.getScenarioParameter();
+    this.userIDParameter      = this.ac.getUserIDParameter();
+    this.secureValueParameter = this.ac.getSecureValueParameter();
+
+    this.scenarioDao = new ScenarioDao();
+    this.scenarios = this.scenarioDao.findAll();
+
+    final ConnectionManager pool = ConnectionManager.instance();
     if (!pool.getOriginalTableDeleted().contains(scenario)) {
       User user = ac.getUser();
       if (pool != null && scenario != null && user != null) {
@@ -90,18 +106,80 @@ public class ScenarioController implements Serializable {
    *
    * @return
    */
-  public String getIntroductionText() {
-    String msg = error;
-    if (scenario != null) {
-      if (ac != null) {
+  public boolean isValidScenario() {
+    if (ac != null) {
+      if (scenario != null) {
         String temp = scenario.getDescription();
         if (temp != null) {
-          msg = temp;
+          return true;
         }
+      } else if (scenarioParameter != null &&
+                 scenarioParameter.equals(NO_SCENARIO_SELECTED_PARAMETER)) {
+        return false;
       }
     }
-    return msg;
+    return false;
   }
+
+  /**
+   *
+   *
+   * @return
+   */
+  public String getIntroductionText() {
+    if (isValidScenario()) {
+      return scenario.getDescription();
+    } else if (scenarioParameter != null && scenarioParameter.equals(NO_SCENARIO_SELECTED_PARAMETER)) {
+      final StringBuilder listScenarios = new StringBuilder();
+
+
+      final FacesContext ctx = FacesContext.getCurrentInstance();
+      if (ctx != null) {
+        final HttpServletRequest servletRequest = (HttpServletRequest) ctx.getExternalContext().getRequest();
+        final String contextURL = servletRequest.getRequestURL().toString().replace(servletRequest.getRequestURI().substring(0), "") +
+                                  servletRequest.getContextPath();
+
+        if (scenarios != null && !scenarios.isEmpty()) {
+          listScenarios.append("Es wurde kein Szenario gewählt. Folgende Szenarien stehen zur Verfügung:<br/>");
+          if (servletRequest != null) {
+
+            if (userIDParameter != null && secureValueParameter != null) {
+              listScenarios.append("<ul>");
+              for (Scenario sc : scenarios) {
+                listScenarios.append("<li>");
+                listScenarios.append("<a href='" + contextURL + "/moodle/");
+                listScenarios.append(userIDParameter + "/");
+                listScenarios.append(secureValueParameter + "/");
+                listScenarios.append(sc.getId() + "'>[ID: " + sc.getId() + "] " + sc.getName() + "</a>");
+                listScenarios.append("</li>");
+              }
+              listScenarios.append("</ul>");
+            }
+          }
+        } else {
+          listScenarios.append("Es wurde kein Szenario gefunden. Ein neues Szenario kann im '");
+          listScenarios.append("<a href='" + contextURL + "/admin/" + "'>");
+          listScenarios.append("Editieren");
+          listScenarios.append("</a>");
+          listScenarios.append("'-Bereich erstellt werden.");
+        }
+      }
+
+      return listScenarios.toString();
+    }
+    return error;
+  }
+
+
+// public String openScenario() {
+//   if (ac != null && scenario != null) {
+//     ac.setScenario(scenario);
+//   }
+//   if (scenario != null) {
+//     return ".";
+//   }
+//   return null;
+// }
 
   /**
    *

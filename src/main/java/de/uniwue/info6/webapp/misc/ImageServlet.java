@@ -13,9 +13,9 @@ package de.uniwue.info6.webapp.misc;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -37,8 +37,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 
 import de.uniwue.info6.misc.properties.Cfg;
 
@@ -54,8 +54,7 @@ public class ImageServlet extends HttpServlet {
    *
    */
   private static final long serialVersionUID = 1L;
-  private static final String RESOURCE_PATH = "scn";
-  private static final Log LOGGER = LogFactory.getLog(ImageServlet.class);
+  private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(ImageServlet.class);
 
   /**
    * {@inheritDoc}
@@ -63,10 +62,10 @@ public class ImageServlet extends HttpServlet {
    * @see HttpServlet#doGet(HttpServletRequest,HttpServletResponse)
    */
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
+  throws ServletException, IOException {
     String filename = request.getPathInfo();
-    File file = new File(Cfg.inst().getProp(MAIN_CONFIG, SCENARIO_RESOURCES_PATH), RESOURCE_PATH + "/"
-        + filename);
+    File file = new File(Cfg.inst().getProp(MAIN_CONFIG, SCENARIO_RESOURCES_PATH), Cfg.RESOURCE_PATH + "/"
+                         + filename);
     response.setHeader("Content-Type", getServletContext().getMimeType(filename));
     response.setHeader("Content-Length", String.valueOf(file.length()));
     response.setHeader("Content-Disposition", "inline; filename=\"" + filename + "\"");

@@ -5,6 +5,17 @@
 
 ------
 
+# Inhaltsverzeichnis
+1. [Systemanforderungen](#systemanforderungen)
+2. [Kurzanleitung zur Installation](#kurzanleitung)
+3. [Konfiguration mit 'config.properties'](#konfiguration)
+  1. [Datenbankangaben](#datenbankangaben)
+  2. [Automatischer Import der Datenbank](#auto_import)
+
+
+------
+
+<a name="systemanforderungen"></a>
 ## Systemanforderungen
 * Tomcat 7 oder höher
   (Für diese Anleitung wird Tomcat 7 verwendet)
@@ -13,6 +24,7 @@
 
 ------
 
+<a name="kurzanleitung"></a>
 ## Kurzanleitung zur Installation
 
 1. Quellcode herunterladen:<br/>
@@ -91,12 +103,14 @@ Für die ``slave``-Datenbanken werden jeweils folgende Datenbanknutzer mit besch
 
 ------
 
+<a name="konfiguration"></a>
 ## Konfiguration mit 'config.properties'
 Bevor man die Anwendung startet sollte man zunächst einen Blick in die Konfigurationsdatei
 [``config.properties``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties)
 unter ``src/main/resources/``
 werfen und Angaben zum Datenbank-Server überschreiben.
 
+<a name="datenbankangaben"></a>
 #### Datenbankangaben
 In der [administrativen Datenbank](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L40-L44) werden alle Studentenabgaben und zugehörige
 Aufgaben gespeichert (siehe [ER-Diagramm](http://kolbasa.github.io/ueps/screenshots/admin-db-er-diagram.png)).
@@ -126,6 +140,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON ueps_master.*
 TO 'test_user'@'127.0.0.1' IDENTIFIED BY '3ti4k4tm270kg';
 ```
 
+<a name="auto_import"></a>
 #### Automatischer Import der Datenbank
 Die Option [``IMPORT_DB_IF_EMPTY``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L57) ermöglicht die Automatisierung des Datenbank-Imports. Dafür benötigt der unter [``MASTER_DBUSER``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L43) angegebene Nutzer zusätzlich noch ``ALTER, CREATE, DROP, LOCK TABLES``-Rechte.
 
@@ -152,12 +167,12 @@ Wenn eine automatische Installation nicht erwünscht ist, so benötigt die Anwen
 In der Konfigurationsdatei sollte mindestens ein [Adminstrator-Nutzer](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L96) festgelegt werden. Mehrere Nutzer sollten mit Semikolon getrennt werden (z.B. ``admin_id1;admin_id2;``).
 Admins können auch zur Laufzeit hinzugefügt werden, hierfür muss man jedoch den Datenbankeintrag für den Nutzer abändern ([Tabelle: "user", Spalte: "is_admin"](http://kolbasa.github.io/ueps/screenshots/admin-db-er-diagram.png)).
 
+TODO :: TODO :: TODO :: TODO
 
 ``http://[hostname]/[rootfolder]/?scenarioID=[scenario_id]&userID=[user_id]&secureValue=[secure_value]``
 
-# Ausgefuelltes Beispiel:
-# http://localhost:8080/ueps/?scenarioID=1&userID=user_1
-#   &secureValue=d1ac3b14896c2faf640d1e00966fc065
+Ausgefülltes Beispiel
+``http://localhost:8080/ueps/?scenarioID=1&userID=user_1&secureValue=d1ac3b14896c2faf640d1e00966fc065``
 
 #### Pfadangaben
 Es lassen sich zwei Pfade konfigurieren (optional).

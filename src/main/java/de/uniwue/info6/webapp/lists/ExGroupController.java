@@ -31,8 +31,8 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.view.ViewScoped;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 
 import de.uniwue.info6.database.map.ExerciseGroup;
 import de.uniwue.info6.database.map.Scenario;
@@ -53,7 +53,7 @@ public class ExGroupController implements Serializable {
    *
    */
   private static final long serialVersionUID = 1L;
-  private static final Log LOGGER = LogFactory.getLog(ExGroupController.class);
+  private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(ExGroupController.class);
 
   private Scenario scenario;
   private List<ExerciseGroup> exGroups;

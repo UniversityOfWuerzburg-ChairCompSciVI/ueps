@@ -75,6 +75,13 @@
   <navigation-rule>
     <from-view-id>*</from-view-id>
     <navigation-case>
+      <from-outcome>404</from-outcome>
+      <to-view-id>/errorpages/404.xhtml</to-view-id>
+    </navigation-case>
+  </navigation-rule>
+  <navigation-rule>
+    <from-view-id>*</from-view-id>
+    <navigation-case>
       <from-outcome>permission</from-outcome>
       <to-view-id>/errorpages/permission_denied.xhtml</to-view-id>
     </navigation-case>

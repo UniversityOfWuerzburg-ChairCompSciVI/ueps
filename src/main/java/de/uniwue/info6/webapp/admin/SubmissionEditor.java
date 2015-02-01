@@ -46,8 +46,8 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 
 import de.uniwue.info6.comparator.LevenshteinDistance;
 import de.uniwue.info6.comparator.SqlExecuter;
@@ -84,7 +84,7 @@ import de.uniwue.info6.webapp.session.SessionObject;
 public class SubmissionEditor implements Serializable {
 
   private static final long serialVersionUID = -257870928796155120L;
-  private static final Log LOGGER = LogFactory.getLog(SubmissionEditor.class);
+  private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(SubmissionEditor.class);
 
   private static final String SUBMISSION_PARAM = "submission";
   private static final String RESULT_PARAM = "result";

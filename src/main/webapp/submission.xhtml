@@ -72,19 +72,22 @@ xmlns:p="http://primefaces.org/ui">
     <!-- -->
     });
     <!-- -->
-    function start() { statusDialog.show(); }
+    function start() { statusDialog.show(); pbAjax.start(); }
     <!-- -->
     function stop() { statusDialog.hide(); }
     <!-- --></script>
     <p:outputPanel style="text-align:center">
      <h:form id="form">
-      <p:growl id="messages" showDetail="true" life="6000" />
-      <p:dialog modal="true" widgetVar="statusDialog" header="Status" draggable="false" closable="true"
-      resizable="false">#{txt['ASSERTION.DIALOG_LOADING']}
+      <p:growl id="messages" showDetail="true" life="10000" />
+      <p:dialog modal="true" widgetVar="statusDialog" header="Status" draggable="true" closable="true"
+      resizable="false">
+      #{txt['ASSERTION.DIALOG_LOADING']}
       <br />
       <br />
-      <p:graphicImage value="/resources/img/#{config['IMG.LOAD']}" />
-      <br /></p:dialog>
+      <p:progressBar widgetVar="pbAjax" ajax="true" styleClass="animated" interval="2000" value="#{sub.assertionProgress}" labelTemplate="{value}%">
+        <p:ajax event="complete" listener="#{sub.forceAssertionComplete}" update="messages" />
+      </p:progressBar>
+    </p:dialog>
       <h:panelGrid columns="5" cellpadding="2" id="filter_fields">
        <!-- -->
        <p:autoComplete id="scenarioID" value="#{sub.scenarioID}" dropdown="true" forceSelection="true"

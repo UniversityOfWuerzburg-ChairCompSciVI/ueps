@@ -49,8 +49,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.StreamedContent;
 
@@ -65,7 +63,6 @@ import de.uniwue.info6.misc.FileTransfer;
 import de.uniwue.info6.misc.Password;
 import de.uniwue.info6.misc.StringTools;
 import de.uniwue.info6.misc.properties.Cfg;
-import de.uniwue.info6.webapp.session.SessionBean;
 import de.uniwue.info6.webapp.session.SessionObject;
 
 /**
@@ -81,10 +78,12 @@ public class AdminEditScenario implements Serializable {
    *
    */
   private static final long serialVersionUID = 1L;
-  private static final Log LOGGER = LogFactory.getLog(AdminEditScenario.class);
+  private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(AdminEditScenario.class);
 
   private static final String SCENARIO_PARAM = "scenario";
   private static final String EMPTY_FIELD = "---";
+
+
 
 
   private static String scriptSystemPath = Cfg.inst().getProp(MAIN_CONFIG, SCENARIO_RESOURCES_PATH);

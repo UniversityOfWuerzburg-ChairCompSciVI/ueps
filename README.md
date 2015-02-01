@@ -152,6 +152,13 @@ Wenn eine automatische Installation nicht erwünscht ist, so benötigt die Anwen
 In der Konfigurationsdatei sollte mindestens ein [Adminstrator-Nutzer](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L96) festgelegt werden. Mehrere Nutzer sollten mit Semikolon getrennt werden (z.B. ``admin_id1;admin_id2;``).
 Admins können auch zur Laufzeit hinzugefügt werden, hierfür muss man jedoch den Datenbankeintrag für den Nutzer abändern ([Tabelle: "user", Spalte: "is_admin"](http://kolbasa.github.io/ueps/screenshots/admin-db-er-diagram.png)).
 
+
+``http://[hostname]/[rootfolder]/?scenarioID=[scenario_id]&userID=[user_id]&secureValue=[secure_value]``
+
+# Ausgefuelltes Beispiel:
+# http://localhost:8080/ueps/?scenarioID=1&userID=user_1
+#   &secureValue=d1ac3b14896c2faf640d1e00966fc065
+
 #### Pfadangaben
 Es lassen sich zwei Pfade konfigurieren (optional).
 

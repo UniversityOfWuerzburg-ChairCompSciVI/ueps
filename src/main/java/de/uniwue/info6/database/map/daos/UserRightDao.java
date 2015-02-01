@@ -29,8 +29,8 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.view.ViewScoped;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Example;
@@ -49,7 +49,7 @@ import de.uniwue.info6.database.map.UserRight;
 public class UserRightDao extends DaoTools<UserRight> {
 
   private static final long serialVersionUID = 1L;
-  private static final Log log = LogFactory.getLog(UserRightDao.class);
+  private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(UserRightDao.class);
 
   // ******************************************************************
   // custom (not generated methods)

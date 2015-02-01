@@ -28,8 +28,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Example;
@@ -49,7 +49,7 @@ public class ExerciseGroupDao extends DaoTools<ExerciseGroup> {
    *
    */
   private static final long serialVersionUID = 1L;
-  private static final Log log = LogFactory.getLog(ExerciseGroupDao.class);
+  private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ExerciseGroupDao.class);
 
   // ******************************************************************
   // custom (not generated methods)

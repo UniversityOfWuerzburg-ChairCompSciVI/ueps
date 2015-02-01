@@ -46,8 +46,8 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 import org.primefaces.event.RowEditEvent;
 
 import de.uniwue.info6.comparator.SqlExecuter;
@@ -80,7 +80,7 @@ public class AdminEditExercise implements Serializable {
    *
    */
   private static final long serialVersionUID = 1L;
-  private static final Log LOGGER = LogFactory.getLog(AdminEditExercise.class);
+  private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(AdminEditExercise.class);
 
   private Integer id;
   private Integer originalExerciseId;

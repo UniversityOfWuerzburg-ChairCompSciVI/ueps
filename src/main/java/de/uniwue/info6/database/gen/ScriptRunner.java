@@ -35,9 +35,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import de.uniwue.info6.misc.TicToc;
 
 /**
@@ -49,7 +46,7 @@ public class ScriptRunner implements Serializable {
    *
    */
   private static final long serialVersionUID = 1L;
-  private static final Log LOGGER = LogFactory.getLog(ScriptRunner.class);
+  private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(ScriptRunner.class);
 
   private static final String DEFAULT_DELIMITER = ";";
 

@@ -44,8 +44,8 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 
 import de.uniwue.info6.database.jdbc.ConnectionManager;
 import de.uniwue.info6.database.map.Scenario;
@@ -67,7 +67,7 @@ public class SessionListener implements HttpSessionListener, Serializable {
   private static ConcurrentHashMap<Date, String> executerStats;
   private static ConcurrentHashMap<Date, String> sessionStats;
 
-  private static final Log LOGGER = LogFactory.getLog(SessionListener.class);
+  private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(SessionListener.class);
   private static final long serialVersionUID = 1L;
 
   /**

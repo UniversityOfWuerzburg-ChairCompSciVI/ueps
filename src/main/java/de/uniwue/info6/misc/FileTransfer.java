@@ -40,8 +40,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
@@ -64,7 +62,7 @@ import de.uniwue.info6.misc.properties.Cfg;
  */
 public class FileTransfer {
 
-  private static final Log LOGGER = LogFactory.getLog(FileTransfer.class);
+  private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(FileTransfer.class);
   private static String scriptPath = Cfg.inst().getProp(MAIN_CONFIG, SCENARIO_RESOURCES_PATH);
   private static final String COPY_STRING = "[" + Cfg.inst().getProp(DEF_LANGUAGE, "COPY") + "]";
 

@@ -46,8 +46,6 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.SchemaOutputResolver;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import de.uniwue.info6.database.map.Exercise;
 import de.uniwue.info6.database.map.ExerciseGroup;
@@ -60,7 +58,7 @@ import de.uniwue.info6.misc.properties.Cfg;
 
 public class ScenarioExporter {
   private static String scriptSystemPath = Cfg.inst().getProp(MAIN_CONFIG, SCENARIO_RESOURCES_PATH);
-  private static final Log LOGGER = LogFactory.getLog(ScenarioExporter.class);
+  private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(ScenarioExporter.class);
 
   private ExerciseGroupDao exerciseGroupDao;
   private ExerciseDao exerciseDao;

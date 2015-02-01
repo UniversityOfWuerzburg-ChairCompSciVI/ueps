@@ -55,9 +55,8 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
+
+import com.mchange.v2.c3p0.ComboPooledDataSource;
 
 import de.uniwue.info6.database.gen.ScriptRunner;
 import de.uniwue.info6.database.map.Scenario;
@@ -81,13 +80,14 @@ public class ConnectionManager implements Serializable {
   ORIGINAL_SCRIPTS  = "sql",
   DRIVER            = "org.mariadb.jdbc.Driver",
   URL_PREFIX        = "jdbc:mariadb://",
+  DRIVER_PARAMETERS = "useUnicode=true&characterEncoding=UTF8&autoReconnect=true&interactiveClient=true",
   OFFLINE_MODE_MSG  = "INFO (ueps): Offline mode";
 
   private HashMap<Scenario, ArrayList<String>> scenarioScripts;
   private HashMap<Scenario, HashMap<String, String>> autoIncrements, scenarioTablesWithHash;
 
   private String scriptPath;
-  private HashMap<Scenario, JdbcTemplate> pools;
+  private HashMap<Scenario, ComboPooledDataSource> newPools;
   private HashMap<Scenario, String> errors;
   private ArrayList<Scenario> hasForeignKeys, originalTableDeleted;
 
@@ -95,7 +95,7 @@ public class ConnectionManager implements Serializable {
   private SessionObject ac;
   private ScenarioDao scenarioDao;
 
-  private DriverManagerDataSource adminDataSource;
+  private ComboPooledDataSource newAdminDataSource;
   private Cfg config;
   private static ConnectionManager instance;
 
@@ -130,10 +130,9 @@ public class ConnectionManager implements Serializable {
     this.scriptPath = this.config
                       .getProp(MAIN_CONFIG, SCENARIO_RESOURCES_PATH);
     this.scriptPath = StringTools.shortenUnixHomePathReverse(this.scriptPath);
-
     this.ac = SessionObject.pull();
 
-    this.pools                    = new HashMap<Scenario, JdbcTemplate>();
+    this.newPools                 = new HashMap<Scenario, ComboPooledDataSource>();
     this.errors                   = new HashMap<Scenario, String>();
     this.scenarioScripts          = new HashMap<Scenario, ArrayList<String>>();
     this.scenarioTablesWithHash   = new HashMap<Scenario, HashMap<String, String>>();
@@ -195,18 +194,11 @@ public class ConnectionManager implements Serializable {
     Connection connection = null;
     if (scenario != null) {
       try {
-        final JdbcTemplate template = instance.getTemplate(scenario);
-        final String dbName = scenario.getDbName();
-
-        connection = template.getDataSource().getConnection();
-        connection.setCatalog(dbName);
-
+        connection = getConnection(scenario);
         if (tablesToDrop == null || tablesToDrop.isEmpty()) {
           tablesToDrop = DatabaseTools.getTablesOfUser(connection, user);
         }
-
         DatabaseTools.dropTable(connection, tablesToDrop);
-
       } catch (Exception e) {
         errors.put(scenario, e.getMessage());
       } finally {
@@ -231,19 +223,14 @@ public class ConnectionManager implements Serializable {
    */
   public synchronized boolean editUserRights(String script) throws SQLException {
     if (script != null && !script.isEmpty()) {
+      Connection connection = null;
       try {
-        if (adminDataSource == null) {
+        if (newAdminDataSource == null) {
           createAdminDataSource();
         }
-
-        if (adminDataSource != null) {
-          JdbcTemplate template = new JdbcTemplate(adminDataSource);
-          String[] statements = script.split(";");
-          for (int i = 0; i < statements.length; i++) {
-            if (!statements[i].trim().isEmpty()) {
-              template.execute(statements[i].trim());
-            }
-          }
+        if (newAdminDataSource != null) {
+          connection = newAdminDataSource.getConnection();
+          DatabaseTools.grantRights(connection, script);
           return true;
         } else {
           throw new SQLException("CAN'T GRANT USER RIGHTS, DATABASE NOT FOUND");
@@ -251,6 +238,10 @@ public class ConnectionManager implements Serializable {
       } catch (Exception e) {
         throw new SQLException("COULD NOT CONNECT TO ADMIN DATABASE: \n" + "[" + script + "]"
                                + "\n\n" + ExceptionUtils.getStackTrace(e));
+      } finally {
+        if (connection != null) {
+          connection.close();
+        }
       }
     }
     return false;
@@ -262,24 +253,33 @@ public class ConnectionManager implements Serializable {
    */
   public boolean createAdminDataSource() throws Exception {
     String dbHost = "", dbUser = "", dbPass = "", dbPort = "", url = "";
+    try {
+      dbHost = this.config.getProp(MAIN_CONFIG, MASTER_DBHOST);
+      dbUser = this.config.getProp(MAIN_CONFIG, MASTER_DBUSER);
+      dbPass = this.config.getProp(MAIN_CONFIG, MASTER_DBPASS);
+      dbPort = this.config.getProp(MAIN_CONFIG, MASTER_DBPORT);
+      url = url + URL_PREFIX + dbHost + ":" + dbPort + "?" + DRIVER_PARAMETERS;
 
-    dbHost = this.config.getProp(MAIN_CONFIG, MASTER_DBHOST);
-    dbUser = this.config.getProp(MAIN_CONFIG, MASTER_DBUSER);
-    dbPass = this.config.getProp(MAIN_CONFIG, MASTER_DBPASS);
-    dbPort = this.config.getProp(MAIN_CONFIG, MASTER_DBPORT);
+      newAdminDataSource = new ComboPooledDataSource();
+      newAdminDataSource.setDriverClass(DRIVER); // loads the mariadb-jdbc driver
+      newAdminDataSource.setJdbcUrl(url);
+      newAdminDataSource.setUser(dbUser);
 
-    // admin-database
-    adminDataSource = new DriverManagerDataSource();
+      if (dbPass != null && !dbPass.isEmpty()) {
+        newAdminDataSource.setPassword(dbPass);
+      }
 
-    url = url + URL_PREFIX + dbHost + ":" + dbPort
-          + "?useUnicode=true&characterEncoding=UTF8&autoReconnect=true&wait_timeout=57600&interactive_timeout=57600";
+      // the settings below are optional -- c3p0 can work with defaults
+      newAdminDataSource.setMinPoolSize(5);
+      newAdminDataSource.setAcquireIncrement(5);
+      newAdminDataSource.setMaxPoolSize(20);
 
-    adminDataSource.setDriverClassName(DRIVER);
-    adminDataSource.setUrl(url);
-    adminDataSource.setUsername(dbUser);
+      newAdminDataSource.setMaxIdleTimeExcessConnections(80);
+      newAdminDataSource.setMaxIdleTime(120);
+      newAdminDataSource.setUnreturnedConnectionTimeout(160);
 
-    if (dbPass != null && !dbPass.isEmpty()) {
-      adminDataSource.setPassword(dbPass);
+    } catch (Exception e) {
+      LOGGER.error("CAN NOT CREATE ADMIN DATA SOURCE", e);
     }
     return true;
   }
@@ -297,26 +297,17 @@ public class ConnectionManager implements Serializable {
       Connection connection = null;
       ResultSet resultSet = null;
       try {
-        JdbcTemplate template = null;
 
-        if (adminDataSource == null) {
+        if (newAdminDataSource == null) {
           createAdminDataSource();
         }
 
-        if (adminDataSource != null) {
-          template = new JdbcTemplate(adminDataSource);
+        if (newAdminDataSource != null) {
 
-          if (template != null) {
-            try {
-              connection = template.getDataSource().getConnection();
-            } catch (Exception e) {
-              throw new SQLException(e);
-            }
-          }
-
+          connection = newAdminDataSource.getConnection();
+          resultSet = connection.getMetaData().getCatalogs();
           dbName = Cfg.SLAVE_DB_PREFIX + StringTools.zeroPad(1, 3);
 
-          resultSet = connection.getMetaData().getCatalogs();
           ArrayList<String> dbNames = new ArrayList<String>();
 
           while (resultSet.next()) {
@@ -332,14 +323,18 @@ public class ConnectionManager implements Serializable {
               dbName = dbName + "_" + new Random().nextInt(10000);
             }
           }
-          template.execute("CREATE DATABASE IF NOT EXISTS `" + dbName + "`;");
+
+          DatabaseTools.createDatabase(connection, dbName);
+
           return dbName;
         } else {
           throw new SQLException();
         }
       } catch (Exception e) {
-        throw new SQLException("could not connect to admin database: " + "[" + dbHost + "]" + "["
-                               + dbUser + "]" + "[" + dbPass + "]" + "[" + dbPort + "]" + "[" + url + "]", e);
+        throw new SQLException("could not connect to admin database: "
+                               + "[" + dbHost + "]" + "[" + dbUser + "]"
+                               + "[" + dbPass + "]" + "[" + dbPort + "]"
+                               + "[" + url + "]", e);
       } finally {
         try {
           if (resultSet != null) {
@@ -365,23 +360,26 @@ public class ConnectionManager implements Serializable {
    */
   private void removeScenarioDatabase(Scenario scenario) throws SQLException {
     if (scenario != null) {
+      Connection connection = null;
+
       try {
-        if (adminDataSource == null) {
+        if (newAdminDataSource == null) {
           createAdminDataSource();
         }
-        if (adminDataSource != null) {
+        if (newAdminDataSource != null) {
           LOGGER.info("INFO (ueps): Force drop and create scenario database");
-
-          JdbcTemplate template = new JdbcTemplate(adminDataSource);
-          if (template != null) {
-            String dbName = scenario.getDbName();
-            if (dbName != null) {
-              template.execute("DROP DATABASE IF EXISTS `" + dbName + "`;");
-            }
+          connection = newAdminDataSource.getConnection();
+          String dbName = scenario.getDbName();
+          if (dbName != null) {
+            DatabaseTools.dropDatabase(connection, dbName);
           }
         }
       } catch (Exception e) {
         errors.put(scenario, e.getMessage());
+      } finally {
+        if (connection != null) {
+          connection.close();
+        }
       }
     }
   }
@@ -417,35 +415,45 @@ public class ConnectionManager implements Serializable {
 
 
   /**
+   * @param scenario
+   * @return
+   * @throws SQLException
    *
    *
    */
-  private JdbcTemplate createJDBCTemplate (Scenario scenario) throws SQLException {
-    DriverManagerDataSource dataSource = new DriverManagerDataSource();
-    dataSource.setDriverClassName(DRIVER);
+  private ComboPooledDataSource createDataSource (Scenario scenario) throws SQLException {
+    final String dbPort = scenario.getDbPort();
+    final String dbUser = scenario.getDbUser();
+    final String dbPass = scenario.getDbPass();
+    final String dbURL = URL_PREFIX + scenario.getDbHost()
+                         + ((dbPort != null && !dbPort.isEmpty())
+                            ? ":" + dbPort : "")
+                         + "?" + DRIVER_PARAMETERS;
 
-    String url = URL_PREFIX + scenario.getDbHost();
-    String port = scenario.getDbPort();
-    String password = scenario.getDbPass();
+    ComboPooledDataSource cpds = null;
+    try {
+      cpds = new ComboPooledDataSource();
+      cpds.setDriverClass(DRIVER);
+      cpds.setJdbcUrl(dbURL);
+      cpds.setUser(dbUser);
+      cpds.setPassword(dbPass);
 
-    // port is optional
-    if (port != null && !port.isEmpty()) {
-      url = url + ":" + port;
+      cpds.setMinPoolSize(5);
+      cpds.setAcquireIncrement(5);
+      cpds.setMaxPoolSize(20);
+
+      cpds.setMaxIdleTimeExcessConnections(80);
+      cpds.setMaxIdleTime(120);
+      cpds.setUnreturnedConnectionTimeout(160);
+
+      if (cpds != null) {
+        newPools.put(scenario, cpds);
+      }
+
+    } catch (Exception e) {
+      LOGGER.error("CAN NOT CREATE CONNECTION POOL", e);
     }
-    url = url + "?useUnicode=true&characterEncoding=UTF8&autoReconnect=true";
-
-    dataSource.setUrl(url);
-    dataSource.setUsername(scenario.getDbUser());
-
-    if (password != null && !password.isEmpty()) {
-      dataSource.setPassword(password);
-    }
-
-    JdbcTemplate template = new JdbcTemplate(dataSource);
-    if (template != null) {
-      pools.put(scenario, template);
-    }
-    return template;
+    return cpds;
   }
 
   /**
@@ -462,7 +470,7 @@ public class ConnectionManager implements Serializable {
     if (scenario == null) {
       LOGGER.error("ADDED SCENARIO IS NULL");
     } else {
-      this.createJDBCTemplate(scenario);
+      this.createDataSource(scenario);
 
       // parse import-scripts
       String error = "";
@@ -600,7 +608,7 @@ public class ConnectionManager implements Serializable {
           }
         }
 
-        if (!pools.containsKey(sc)) {
+        if (!newPools.containsKey(sc)) {
           instance.addDB(sc);
         }
       }
@@ -608,7 +616,7 @@ public class ConnectionManager implements Serializable {
       List<Scenario> scenariosToRemove = new ArrayList<Scenario>();
 
       // remove scenarios if necessary
-      for (Scenario sc : pools.keySet()) {
+      for (Scenario sc : newPools.keySet()) {
         if (!scenarios.contains(sc)) {
           scenariosToRemove.add(sc);
         }
@@ -625,7 +633,7 @@ public class ConnectionManager implements Serializable {
    * @param scenario
    */
   public void removeScenario(Scenario scenario, boolean deleteDatabase) {
-    if (scenario != null && pools != null) {
+    if (scenario != null && newPools != null) {
       if (ac != null) {
         Scenario currentScenario = ac.getScenario();
         if (scenario.equals(currentScenario)) {
@@ -633,8 +641,8 @@ public class ConnectionManager implements Serializable {
         }
       }
 
-      if (pools.containsKey(scenario)) {
-        pools.remove(scenario);
+      if (newPools.containsKey(scenario)) {
+        newPools.remove(scenario);
       }
 
       if (scenarioScripts.containsKey(scenario)) {
@@ -681,10 +689,10 @@ public class ConnectionManager implements Serializable {
   public synchronized Connection getConnection(Scenario scenario) throws SQLException {
     Connection connection = null;
     if (scenario != null) {
-      if (pools.containsKey(scenario)) {
+      if (newPools.containsKey(scenario)) {
         try {
-          JdbcTemplate templ = pools.get(scenario);
-          connection = templ.getDataSource().getConnection();
+          ComboPooledDataSource pool = newPools.get(scenario);
+          connection = pool.getConnection();
           connection.setCatalog(scenario.getDbName());
         } catch (Exception exception) {
           errors.put(scenario, exception.getMessage());
@@ -703,15 +711,14 @@ public class ConnectionManager implements Serializable {
    *
    * @throws SQLException
    */
-  public synchronized JdbcTemplate getTemplate(Scenario scenario) throws SQLException {
-    JdbcTemplate templ = null;
+  public synchronized ComboPooledDataSource getDataSource(Scenario scenario) throws SQLException {
+    ComboPooledDataSource dataSource = null;
     if (scenario != null) {
-      if (pools.containsKey(scenario)) {
-        templ = pools.get(scenario);
-        templ.setDatabaseProductName(scenario.getDbName());
+      if (newPools.containsKey(scenario)) {
+        dataSource = newPools.get(scenario);
       }
     }
-    return templ;
+    return dataSource;
   }
 
   /**
@@ -720,10 +727,8 @@ public class ConnectionManager implements Serializable {
    * @param scenario
    */
   public synchronized void removeDB(Scenario scenario) {
-    if (pools.containsKey(scenario)) {
-      JdbcTemplate temp = pools.get(scenario);
-      temp.setDataSource(null);
-      pools.remove(scenario);
+    if (newPools.containsKey(scenario)) {
+      newPools.remove(scenario);
     }
   }
 
@@ -983,7 +988,7 @@ public class ConnectionManager implements Serializable {
     }
 
     long elapsedTime = System.currentTimeMillis() - starttime;
-    System.out.println("Import-Script: " + elapsedTime + " ms");
+    // System.out.println("Import-Script: " + elapsedTime + " ms");
   }
 
 
@@ -1305,74 +1310,33 @@ public class ConnectionManager implements Serializable {
       return;
     }
 
+    Connection connection = null;
     try {
-      boolean forceReset = Cfg.inst().getProp(MAIN_CONFIG, FORCE_RESET_DATABASE);
-      boolean debugMode = Cfg.inst().getProp(MAIN_CONFIG, DEBUG_MODE);
+      final String dbHost = masterScript.getDbHost();
+      final boolean forceReset = Cfg.inst().getProp(MAIN_CONFIG, FORCE_RESET_DATABASE);
+      final boolean debugMode = Cfg.inst().getProp(MAIN_CONFIG, DEBUG_MODE);
 
       if (forceReset && !debugMode) {
         // set reset-flag to false
         Cfg.inst().setProp(MAIN_CONFIG, FORCE_RESET_DATABASE, false);
       }
 
-      JdbcTemplate template = instance.getTemplate(masterScript);
-      if (template == null) {
-        template = this.createJDBCTemplate(masterScript);
+      // ------------------------------------------------ //
+
+      ComboPooledDataSource dataSource = instance.getDataSource(masterScript);
+      if (dataSource == null) {
+        dataSource = this.createDataSource(masterScript);
       }
-      String dbName = masterScript.getDbName();
-
-      if (forceReset) {
-        // ------------------------------------------------ //
-
-        String dropMasterDBQuery = "DROP DATABASE IF EXISTS `" + dbName + "`;";
-        System.err.println("INFO (ueps): dropping database `" + dbName + "`");
-        template.execute(dropMasterDBQuery);
-
-        // ------------------------------------------------ //
-
-        final String resetDBQuery = "SELECT CONCAT('DROP DATABASE IF EXISTS `',schema_name,'`; ') AS stmt FROM " +
-                                    "information_schema.schemata WHERE schema_name " +
-                                    "LIKE 'ueps\\_slave\\_%' ESCAPE '\\\\' ORDER BY schema_name";
-
-        final List<String> dropDBQueries = template.query(resetDBQuery,
-        new RowMapper<String>() {
-          public String mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return rs.getString(1);
-          }
-        });
-
-        for (String dropDBQuery : dropDBQueries) {
-          System.err.println("INFO (ueps): " + dropDBQuery.trim() + "");
-          template.execute(dropDBQuery.trim());
-        }
-
-        // ------------------------------------------------ //
-
-        final String selectAllUsersQuery = "SELECT User FROM mysql.user;";
-        final List<String> userList = template.query(selectAllUsersQuery,
-        new RowMapper<String>() {
-          public String mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return rs.getString(1);
-          }
-        });
-
-        for (String userString : userList) {
-          userString = userString.trim();
-          if (userString.startsWith("ueps_")) {
-            String userID = userString + "@" + masterScript.getDbHost();
-            System.err.println("INFO (ueps): Dropping restricted database user: `" + userID + "`");
-            template.execute("REVOKE ALL PRIVILEGES, GRANT OPTION FROM " + userID + ";");
-            template.execute("DROP USER " + userID + ";");
-          }
-        }
-      }
-
-      // System.exit(0);
 
       // ------------------------------------------------ //
 
-      String createMasterDBQuery = "CREATE DATABASE IF NOT EXISTS `" + dbName + "` CHARACTER SET utf8;";
-      System.err.println("INFO (ueps): creating database `" + dbName + "`");
-      template.execute(createMasterDBQuery);
+      connection = dataSource.getConnection();
+      String dbName = masterScript.getDbName();
+      if (forceReset) {
+        DatabaseTools.dropDatabase(connection, dbName);
+        DatabaseTools.removeRestrictedUsers(connection, dbHost);
+      }
+      DatabaseTools.createDatabase(connection, dbName);
 
       // ------------------------------------------------ //
 
@@ -1390,6 +1354,14 @@ public class ConnectionManager implements Serializable {
 
     } catch (Exception e) {
       errors.put(masterScript, e.getMessage());
+    } finally {
+      if (connection != null) {
+        try {
+          connection.close();
+        } catch (SQLException e) {
+          e.printStackTrace();
+        }
+      }
     }
   }
 

@@ -61,9 +61,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 import org.hibernate.internal.SessionFactoryImpl;
+
+import com.sun.faces.context.FacesFileNotFoundException;
 
 import de.uniwue.info6.database.gen.GenerateData;
 import de.uniwue.info6.database.jdbc.ConnectionManager;
@@ -82,6 +84,7 @@ import de.uniwue.info6.misc.StringTools;
 import de.uniwue.info6.misc.properties.Cfg;
 import de.uniwue.info6.misc.properties.PropString;
 import de.uniwue.info6.webapp.admin.UserRights;
+import de.uniwue.info6.webapp.lists.ScenarioController;
 
 /**
  *
@@ -92,11 +95,12 @@ public class AuthorizationFilter implements Filter, Serializable {
 
   final static Lock lock = new ReentrantLock();
   private static final long serialVersionUID = 1L;
-  private static final Log LOGGER = LogFactory.getLog(AuthorizationFilter.class);
+  private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(AuthorizationFilter.class);
 
   private final static String
   LOGOUT_PAGE        = "logout",
   PERMISSION_PAGE    = "permission",
+  PAGE_NOT_FOUND     = "404",
   SESSION_POSITION   = "auth_controller",
   ERROR_PAGE         = "starterror",
   BROWSER_LOG_DIR    = "log",
@@ -336,12 +340,12 @@ public class AuthorizationFilter implements Filter, Serializable {
     boolean tableExists = false;
 
     try {
-      String dbUser = "", dbPass = "", dbName = "";
+      String dbUser = "", dbPass = "", dbName = "", url = "";
       SessionFactoryImpl sessionFactoryImpl = (SessionFactoryImpl) new ScenarioDao()
                                               .getSessionFactory();
       Properties props = sessionFactoryImpl.getProperties();
 
-      String url = props.get("hibernate.connection.url").toString();
+      url = props.get("hibernate.connection.url").toString();
       dbUser = props.get("hibernate.connection.username").toString();
       Object optionalPass = props.get("hibernate.connection.password");
       if (optionalPass != null) {
@@ -421,9 +425,10 @@ public class AuthorizationFilter implements Filter, Serializable {
   @Override
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
   throws ServletException, IOException {
+    HttpServletRequest req = (HttpServletRequest) request;
+    HttpServletResponse res = (HttpServletResponse) response;
+
     try {
-      HttpServletRequest req = (HttpServletRequest) request;
-      HttpServletResponse res = (HttpServletResponse) response;
       response.setCharacterEncoding("UTF-8");
       request.setCharacterEncoding("UTF-8");
 
@@ -520,16 +525,28 @@ public class AuthorizationFilter implements Filter, Serializable {
               }
 
               // ------------------------------------------------ //
-
             } else {
               throwPermissionError(res, req);
             }
           }
         }
       }
-      chain.doFilter(request, response);
     } catch (Exception e) {
-      LOGGER.error("UNEXPECTED ERROR WITH CHAINFILTER", e);
+      // TODO: logging
+      e.printStackTrace();
+    }
+
+
+    try {
+      chain.doFilter(request, response);
+    } catch (FacesFileNotFoundException e) {
+      this.throw404Error(res, req);
+    } catch (Exception e) {
+      if (e.getMessage().contains("sendError()")) {
+        LOGGER.info("UNEXPECTED ERROR WITH CHAINFILTER", e);
+      } else {
+        LOGGER.error("UNEXPECTED ERROR WITH CHAINFILTER", e);
+      }
     }
   }
 
@@ -612,12 +629,19 @@ public class AuthorizationFilter implements Filter, Serializable {
         }
       }
 
+      if (sc == null) {
+        sc = new String[] {ScenarioController.NO_SCENARIO_SELECTED_PARAMETER};
+      }
+
       UserDao userDao = new UserDao();
       if (userDao != null && scenarioDao != null && id != null && sv != null && sc != null
           && id.length > 0 && sv.length > 0 && sc.length > 0 && id[0] != null && sv[0] != null
           && sc[0] != null) {
 
-        scenario = scenarioDao.getById(Integer.parseInt(sc[0]));
+        if (!sc[0].equals(ScenarioController.NO_SCENARIO_SELECTED_PARAMETER)) {
+          scenario = scenarioDao.getById(Integer.parseInt(sc[0]));
+        }
+
         return new String[] { String.valueOf(id[0]), String.valueOf(sv[0]), String.valueOf(sc[0]) };
       }
     } catch (Exception e) {
@@ -636,6 +660,25 @@ public class AuthorizationFilter implements Filter, Serializable {
     if (!isPublicURL(req)) {
       if (!res.isCommitted()) {
         res.sendRedirect(req.getContextPath() + "/" + LOGOUT_PAGE);
+        return;
+      }
+    }
+  }
+
+
+  /**
+   *
+   *
+   * @param res
+   * @param req
+   *
+   * @throws IOException
+   */
+  private void throw404Error(HttpServletResponse res, HttpServletRequest req)
+  throws IOException {
+    if (!isPublicURL(req)) {
+      if (!res.isCommitted()) {
+        res.sendRedirect(req.getContextPath() + "/" + PAGE_NOT_FOUND);
         return;
       }
     }

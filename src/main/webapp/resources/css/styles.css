@@ -868,8 +868,9 @@ img.open_task {
  * -------------------------------------------------------------
  */
 
+/* stacktrace error on 'bug.xhtml' */
 #content pre {
-  font-size: 11px;
+  font-size: 9px;
   color: red;
   overflow: auto;
   width: 750px;
@@ -886,11 +887,6 @@ img.open_task {
   left:220px;
   top:66px;
 }
-
-
-
-
-
 
 /*
  * -------------------------------------------------------------
@@ -993,4 +989,26 @@ img.open_task {
 
 .ui-inputfield{
   background-color:white !important;
+}
+
+/*
+ * -------------------------------------------------------------
+ *
+ * -------------------------------------------------------------
+ */
+
+#page-not-found-container {
+  width:100%;
+  text-align:center;
+  position:relative;
+  top:100px;
+}
+
+#page-not-found-title {
+  color:red;
+  font-size: 50px;
+}
+
+#page-not-found-text {
+  font-size: 20px;
 }

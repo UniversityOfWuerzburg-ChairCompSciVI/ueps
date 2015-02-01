@@ -28,7 +28,6 @@ import static de.uniwue.info6.misc.properties.PropBool.FORCE_RESET_DATABASE;
 import static de.uniwue.info6.misc.properties.PropBool.IMPORT_EXAMPLE_SCENARIO;
 import static de.uniwue.info6.misc.properties.PropertiesFile.MAIN_CONFIG;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -63,8 +62,7 @@ public class SQLParserTest {
 
     final boolean resetDb = true;
     // Falls nur nach einer bestimmten Aufgabe gesucht wird
-    final Integer exerciseID = null;
-    // final Integer exerciseID = 128;
+    final Integer exerciseID = 39;
     final Integer scenarioID = null;
     final int threadSize = 1;
 
@@ -77,7 +75,6 @@ public class SQLParserTest {
     final ExerciseGroupDao groupDao = new ExerciseGroupDao();
     final UserDao userDao = new UserDao();
     final ArrayList<Thread> threads = new ArrayList<Thread>();
-    Connection connection = null;
 
     // ------------------------------------------------ //
     try {
@@ -113,7 +110,7 @@ public class SQLParserTest {
           public void run() {
             // ------------------------------------------------ //
             try {
-              Thread.sleep(new Random().nextInt(5));
+              Thread.sleep(new Random().nextInt(30));
             } catch (InterruptedException e) {
               e.printStackTrace();
             }
@@ -130,6 +127,9 @@ public class SQLParserTest {
                 continue;
               }
 
+
+
+
               System.out.println(StringUtils.repeat("#", 90));
               System.out.println("SCENARIO: " + scenario.getId());
 
@@ -145,13 +145,19 @@ public class SQLParserTest {
                   if (exerciseID != null && !exercise.getId().equals(exerciseID)) {
                     continue;
                   }
+                  long startTime = System.currentTimeMillis();
 
-                  for (int i = 0; i < 40; i++) {
-                    long startTime = System.currentTimeMillis();
+                  for (int i = 0; i < 100; i++) {
+                    String userID = "user_" + new Random().nextInt(100000);
+                    User userToInsert = new User();
+                    userToInsert.setId(userID);
+                    userToInsert.setIsAdmin(false);
+                    userDao.insertNewInstance(userToInsert);
+                    user = userDao.getById(userID);
+
 
                     List<SolutionQuery> solutions = new ExerciseDao().getSolutions(exercise);
                     String solution = solutions.get(0).getQuery();
-
                     ExerciseController exc = new ExerciseController().init_debug(scenario, exercise,
                         user);
                     exc.setUserString(solution);
@@ -164,20 +170,20 @@ public class SQLParserTest {
                       System.err.println(exercise.getId() + ": " + fd + "\n");
                     }
                     System.out.println(StringUtils.repeat("-", 90));
-
-                    long elapsedTime = System.currentTimeMillis() - startTime;
-
-                    if (i > 5) {
-                      try {
-                        equivalenceLock.lock(performance);
-                        performance[0] += elapsedTime;
-                        performance[1]++;
-                      } catch (Exception e) {
-                      } finally {
-                        equivalenceLock.release(performance);
-                      }
-                    }
                   }
+
+                  long elapsedTime = System.currentTimeMillis() - startTime;
+
+                  // if (i > 5) {
+                  //   try {
+                  //     equivalenceLock.lock(performance);
+                  //     performance[0] += elapsedTime;
+                  //     performance[1]++;
+                  //   } catch (Exception e) {
+                  //   } finally {
+                  //     equivalenceLock.release(performance);
+                  //   }
+                  // }
                 }
               }
             }
@@ -193,20 +199,17 @@ public class SQLParserTest {
         thread.join();
       }
 
-      try {
-        equivalenceLock.lock(performance);
+      // try {
+      //   equivalenceLock.lock(performance);
 
-        long elapsedTime = (performance[0] / performance[1]);
-        System.out.println("\n" + String.format("perf : %d.%03dsec", elapsedTime / 1000, elapsedTime % 1000));
-      } catch (Exception e) {
-      } finally {
-        equivalenceLock.release(performance);
-      }
+      //   long elapsedTime = (performance[0] / performance[1]);
+      //   System.out.println("\n" + String.format("perf : %d.%03dsec", elapsedTime / 1000, elapsedTime % 1000));
+      // } catch (Exception e) {
+      // } finally {
+      //   equivalenceLock.release(performance);
+      // }
 
     } finally {
-      if (connection != null) {
-        connection.close();
-      }
     }
   }
 }

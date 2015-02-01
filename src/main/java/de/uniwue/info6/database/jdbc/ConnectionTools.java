@@ -35,9 +35,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import de.uniwue.info6.database.map.Exercise;
 import de.uniwue.info6.database.map.Scenario;
 import de.uniwue.info6.database.map.User;
@@ -61,7 +58,7 @@ public class ConnectionTools extends Thread {
   private UserDao userDao;
   private final static String SCRIPT_PATH = Cfg.inst().getProp(MAIN_CONFIG,
       SCENARIO_RESOURCES_PATH);
-  private static final Log LOGGER = LogFactory.getLog(ConnectionTools.class);
+  private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(ConnectionTools.class);
 
   private static final String dummyUser = "DEBUG_USER";
   private static final String STATS_DIR = "miscellaneous";

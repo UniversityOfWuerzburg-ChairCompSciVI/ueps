@@ -48,8 +48,8 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 
 import de.uniwue.info6.comparator.RefLink;
 import de.uniwue.info6.comparator.SqlExecuter;
@@ -93,7 +93,7 @@ public class ExerciseController implements Serializable {
    *
    */
   private static final long serialVersionUID = 1L;
-  private static final Log LOGGER = LogFactory.getLog(ExerciseController.class);
+  private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(ExerciseController.class);
 
   @SuppressWarnings("unused")
   private static final String error = "ERROR: Scenario not found", exerciseParam = "exercise";

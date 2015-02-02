@@ -35,7 +35,7 @@
 
 2. In das ``ueps``-Verzeichnis wechseln.
 
-3. Konfigurationsdatei in einem Editor öffnen: [``src/main/resources/config.properties``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties)
+3. Konfigurationsdatei in einem Editor öffnen: [``src/main/resources/config.properties``](src/main/resources/config.properties)
 
 4. Den Datenbank-Server und einen Nutzer festlegen:
    ```properties

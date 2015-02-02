@@ -7,15 +7,18 @@
 
 # Inhaltsverzeichnis
 1. [Systemanforderungen](#systemanforderungen)
-2. [Kurzanleitung zur Installation](#kurzanleitung)
-3. [Konfiguration mit 'config.properties'](#konfiguration)
+2. [Kurzanleitung zur Installation](#kurzanleitung-zur-installation)
+3. [Konfiguration mit 'config.properties'](#konfiguration-mit-configproperties)
   1. [Datenbankangaben](#datenbankangaben)
-  2. [Automatischer Import der Datenbank](#auto_import)
+  2. [Automatischer Import der Datenbank](#automatischer-import-der-datenbank)
+  3. [Nutzer-Authentifizierung](#nutzer-authentifizierung)
+  4. [Pfadangaben](#pfadangaben)
+  5. [Aussehen/Text anpassen](#aussehentext-anpassen)
+4. [Deploy mit Maven](#deploy-mit-maven)
 
 
 ------
 
-<a name="systemanforderungen"></a>
 ## Systemanforderungen
 * Tomcat 7 oder höher
   (Für diese Anleitung wird Tomcat 7 verwendet)
@@ -24,7 +27,6 @@
 
 ------
 
-<a name="kurzanleitung"></a>
 ## Kurzanleitung zur Installation
 
 1. Quellcode herunterladen:<br/>
@@ -103,14 +105,12 @@ Für die ``slave``-Datenbanken werden jeweils folgende Datenbanknutzer mit besch
 
 ------
 
-<a name="konfiguration"></a>
 ## Konfiguration mit 'config.properties'
 Bevor man die Anwendung startet sollte man zunächst einen Blick in die Konfigurationsdatei
 [``config.properties``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties)
 unter ``src/main/resources/``
 werfen und Angaben zum Datenbank-Server überschreiben.
 
-<a name="datenbankangaben"></a>
 #### Datenbankangaben
 In der [administrativen Datenbank](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L40-L44) werden alle Studentenabgaben und zugehörige
 Aufgaben gespeichert (siehe [ER-Diagramm](http://kolbasa.github.io/ueps/screenshots/admin-db-er-diagram.png)).
@@ -140,7 +140,6 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON ueps_master.*
 TO 'test_user'@'127.0.0.1' IDENTIFIED BY '3ti4k4tm270kg';
 ```
 
-<a name="auto_import"></a>
 #### Automatischer Import der Datenbank
 Die Option [``IMPORT_DB_IF_EMPTY``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L57) ermöglicht die Automatisierung des Datenbank-Imports. Dafür benötigt der unter [``MASTER_DBUSER``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L43) angegebene Nutzer zusätzlich noch ``ALTER, CREATE, DROP, LOCK TABLES``-Rechte.
 
@@ -162,7 +161,6 @@ IDENTIFIED BY '$MASTER_DBPASS$';
 
 Wenn eine automatische Installation nicht erwünscht ist, so benötigt die Anwendung im laufenden Betrieb nur ``SELECT, INSERT, UPDATE, DELETE`` Rechte.
 
-<a name="Login"></a>
 #### Nutzer-Authentifizierung
 In der Konfigurationsdatei sollte mindestens ein [Adminstrator-Nutzer](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L96) festgelegt werden. Mehrere Nutzer sollten mit Semikolon getrennt werden (z.B. ``admin_id1;admin_id2;``).
 Admins können auch zur Laufzeit hinzugefügt werden, hierfür muss man jedoch den Datenbankeintrag für den Nutzer abändern ([Tabelle: "user", Spalte: "is_admin"](http://kolbasa.github.io/ueps/screenshots/admin-db-er-diagram.png)).

@@ -31,7 +31,7 @@
 
 1. Quellcode herunterladen:<br/>
    ``git clone --depth=1 https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps``<br/>
-   (Alternativ auch als [direkter Download](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/archive/master.zip))
+   (Alternativ auch als [direkter Download](archive/master.zip))
 
 2. In das ``ueps``-Verzeichnis wechseln.
 
@@ -46,12 +46,12 @@
    MASTER_DBPASS = 3ti4k4tm270kg
    ```
   <!--- ` -->
-   Der unter [``MASTER_DBUSER``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L43) festgelegte Nutzer sollte folgende Rechte besitzen:
+   Der unter [``MASTER_DBUSER``](src/main/resources/config.properties#L43) festgelegte Nutzer sollte folgende Rechte besitzen:
   ```
   SELECT, INSERT, UPDATE, DELETE, ALTER, CREATE, DROP, GRANT OPTION, LOCK TABLES
   ```
   <!--- ` -->
-  Die aufgelisteten Rechte müssen für die unter [``MASTER_DBNAME``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L42) angegebene Datenbank sowie für neu erstellte Datenbanken gelten. Eine Rechteskript könnte beispielsweise folgendermaßen aussehen:
+  Die aufgelisteten Rechte müssen für die unter [``MASTER_DBNAME``](src/main/resources/config.properties#L42) angegebene Datenbank sowie für neu erstellte Datenbanken gelten. Eine Rechteskript könnte beispielsweise folgendermaßen aussehen:
   ```
   GRANT SELECT, INSERT, UPDATE, DELETE, ALTER, CREATE, DROP,
   GRANT OPTION, LOCK TABLES, ON *.* TO '$MASTER_DBUSER$'@'$MASTER_DBHOST$'
@@ -64,11 +64,11 @@
      Zuerst müssen einige Build-Skripte im Wurzelverzeichnis ausführbar gemacht werden:<br/>
      ``chmod +x check-dependencies.sh build-deploy.sh build-package.sh``<br/>
      Dann einfach foldendes Skript ausführen<br/>
-     [``./build-package.sh``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/build-deploy.sh)<br/>
+     [``./build-package.sh``](build-deploy.sh)<br/>
 
    * *Unter Windows*<br/>
      Einfach folgendes Skript auführen (Doppelklick genügt):<br/>
-     [``build-deploy.bat``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/build-deploy.bat)
+     [``build-deploy.bat``](build-deploy.bat)
 
 7. Die kompilierte ``ueps.war``-Datei sollte jetzt deploy-fertig im Wurzelverzeichnis zu finden sein.
    (ÜPS lässt sich alternativ auch [direkt mit Maven deployen](#DeployMaven)).
@@ -107,12 +107,12 @@ Für die ``slave``-Datenbanken werden jeweils folgende Datenbanknutzer mit besch
 
 ## Konfiguration mit 'config.properties'
 Bevor man die Anwendung startet sollte man zunächst einen Blick in die Konfigurationsdatei
-[``config.properties``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties)
+[``config.properties``](src/main/resources/config.properties)
 unter ``src/main/resources/``
 werfen und Angaben zum Datenbank-Server überschreiben.
 
 #### Datenbankangaben
-In der [administrativen Datenbank](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L40-L44) werden alle Studentenabgaben und zugehörige
+In der [administrativen Datenbank](src/main/resources/config.properties#L40-L44) werden alle Studentenabgaben und zugehörige
 Aufgaben gespeichert (siehe [ER-Diagramm](http://kolbasa.github.io/ueps/screenshots/admin-db-er-diagram.png)).
 
 ```properties
@@ -123,10 +123,10 @@ MASTER_DBUSER = test_user
 MASTER_DBPASS = 3ti4k4tm270kg
 ```
 
-Der Nutzer unter [``MASTER_DBUSER``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L43)
+Der Nutzer unter [``MASTER_DBUSER``](src/main/resources/config.properties#L43)
 benötigt mindestens folgende
 Rechte: ``SELECT, INSERT, UPDATE, DELETE`` für die Datenbank
-angegeben durch [``MASTER_DBNAME``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L42).
+angegeben durch [``MASTER_DBNAME``](src/main/resources/config.properties#L42).
 
 Beispiel MySQL-Rechte-Skript:
 ```
@@ -141,16 +141,16 @@ TO 'test_user'@'127.0.0.1' IDENTIFIED BY '3ti4k4tm270kg';
 ```
 
 #### Automatischer Import der Datenbank
-Die Option [``IMPORT_DB_IF_EMPTY``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L57) ermöglicht die Automatisierung des Datenbank-Imports. Dafür benötigt der unter [``MASTER_DBUSER``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L43) angegebene Nutzer zusätzlich noch ``ALTER, CREATE, DROP, LOCK TABLES``-Rechte.
+Die Option [``IMPORT_DB_IF_EMPTY``](src/main/resources/config.properties#L57) ermöglicht die Automatisierung des Datenbank-Imports. Dafür benötigt der unter [``MASTER_DBUSER``](src/main/resources/config.properties#L43) angegebene Nutzer zusätzlich noch ``ALTER, CREATE, DROP, LOCK TABLES``-Rechte.
 
-Die Installation wird nur gestartet, wenn keine Datenbank mit dem Namen [``MASTER_DBNAME``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L42) gefunden wurde.
+Die Installation wird nur gestartet, wenn keine Datenbank mit dem Namen [``MASTER_DBNAME``](src/main/resources/config.properties#L42) gefunden wurde.
 
-Möchte man die zusätzlichen Rechte nicht vergeben, so kann man die Datenbank auch manuell importieren. Das zugehörige MySQL-Skript findet sich unter [``src/main/resources/admin_db_structure.sql``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/admin_db_structure.sql).
+Möchte man die zusätzlichen Rechte nicht vergeben, so kann man die Datenbank auch manuell importieren. Das zugehörige MySQL-Skript findet sich unter [``src/main/resources/admin_db_structure.sql``](src/main/resources/admin_db_structure.sql).
 
-Möchte man die Datenbank zurücksetzen, so lässt sich dies mit der Option [``FORCE_RESET_DATABASE``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L84) bewerkstelligen. Diese Option wird nach einem erfolgreichen Reset von der Anwendung selbst auf 'false' gesetzt, sodass ein Server-Neustart die Datenbank nicht erneut zurücksetzt.
+Möchte man die Datenbank zurücksetzen, so lässt sich dies mit der Option [``FORCE_RESET_DATABASE``](src/main/resources/config.properties#L84) bewerkstelligen. Diese Option wird nach einem erfolgreichen Reset von der Anwendung selbst auf 'false' gesetzt, sodass ein Server-Neustart die Datenbank nicht erneut zurücksetzt.
 
-Möchte man noch zusätzlich zwei Beispielszenarien importieren, so kann man das über die Option [``IMPORT_EXAMPLE_SCENARIO``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L75) aktivieren. Es wird für jedes Szenario eine neue Datenbank unter [``MASTER_DBHOST``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L40) erstellt.
-Für jede Szenario-Datenbank wird ebenfalls ein Datenbank-Nutzer mit beschränkten Rechten erstellt. Hierfür benötigt der [``MASTER_DBUSER``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L43) jedoch zusätzlich ``GRANT OPTION``-Rechte.
+Möchte man noch zusätzlich zwei Beispielszenarien importieren, so kann man das über die Option [``IMPORT_EXAMPLE_SCENARIO``](src/main/resources/config.properties#L75) aktivieren. Es wird für jedes Szenario eine neue Datenbank unter [``MASTER_DBHOST``](src/main/resources/config.properties#L40) erstellt.
+Für jede Szenario-Datenbank wird ebenfalls ein Datenbank-Nutzer mit beschränkten Rechten erstellt. Hierfür benötigt der [``MASTER_DBUSER``](src/main/resources/config.properties#L43) jedoch zusätzlich ``GRANT OPTION``-Rechte.
 
 Ein vollständiges Rechte-Skript würde also folgendermaßen aussehen:
 ```
@@ -162,7 +162,7 @@ IDENTIFIED BY '$MASTER_DBPASS$';
 Wenn eine automatische Installation nicht erwünscht ist, so benötigt die Anwendung im laufenden Betrieb nur ``SELECT, INSERT, UPDATE, DELETE`` Rechte.
 
 #### Nutzer-Authentifizierung
-In der Konfigurationsdatei sollte mindestens ein [Adminstrator-Nutzer](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L96) festgelegt werden. Mehrere Nutzer sollten mit Semikolon getrennt werden (z.B. ``admin_id1;admin_id2;``).
+In der Konfigurationsdatei sollte mindestens ein [Adminstrator-Nutzer](src/main/resources/config.properties#L96) festgelegt werden. Mehrere Nutzer sollten mit Semikolon getrennt werden (z.B. ``admin_id1;admin_id2;``).
 Admins können auch zur Laufzeit hinzugefügt werden, hierfür muss man jedoch den Datenbankeintrag für den Nutzer abändern ([Tabelle: "user", Spalte: "is_admin"](http://kolbasa.github.io/ueps/screenshots/admin-db-er-diagram.png)).
 
 TODO :: TODO :: TODO :: TODO
@@ -175,15 +175,15 @@ Ausgefülltes Beispiel
 #### Pfadangaben
 Es lassen sich zwei Pfade konfigurieren (optional).
 
-1. Der Pfad für Logdateien unter [``LOG_PATH``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L124).
+1. Der Pfad für Logdateien unter [``LOG_PATH``](src/main/resources/config.properties#L124).
 
-2. Der Pfad für die Szenario-Dateien unter [``SCENARIO_RESOURCES_PATH``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties#L121). Unter diesem Pfad werden alle hochgeladenen Szenario-MySQL-Skripte und ER-Diagramme abgelegt.
+2. Der Pfad für die Szenario-Dateien unter [``SCENARIO_RESOURCES_PATH``](src/main/resources/config.properties#L121). Unter diesem Pfad werden alle hochgeladenen Szenario-MySQL-Skripte und ER-Diagramme abgelegt.
 
 #### Aussehen/Text anpassen
 
-Alle Texte sind in der Properties-Datei [``text_de.properties``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/text_de.properties) zusammengefasst und lassen sich so komfortabel abändern.
+Alle Texte sind in der Properties-Datei [``text_de.properties``](src/main/resources/text_de.properties) zusammengefasst und lassen sich so komfortabel abändern.
 
-Alle Bilder, das Favicon und die Hintergrundfarbe können in der [``config.properties``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/resources/config.properties) geändert werden. Für größere Änderungen gibt es das Stylesheet [``style.css``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/webapp/resources/css/styles.css). Das Aussehen der Tooltips lässt sich mit [``tipsy.css``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/src/main/webapp/resources/css/tipsy.css) verändern.
+Alle Bilder, das Favicon und die Hintergrundfarbe können in der [``config.properties``](src/main/resources/config.properties) geändert werden. Für größere Änderungen gibt es das Stylesheet [``style.css``](src/main/webapp/resources/css/styles.css). Das Aussehen der Tooltips lässt sich mit [``tipsy.css``](src/main/webapp/resources/css/tipsy.css) verändern.
 
 ------
 
@@ -206,7 +206,7 @@ Hier muss einem Nutzer (hier: 'admin') die Rolle 'manager-script' zugewiesen wer
 
 <!--- ` -->
 
-**pom.xml** im [Root-Verzeichnis](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/pom.xml#L141-L163)<br/>
+**pom.xml** im [Root-Verzeichnis](pom.xml#L141-L163)<br/>
 Hier dann den entsprechenden Nutzer eintragen und die [Tomcat-URL anpassen](http://tomcat.apache.org/maven-plugin-trunk/tomcat7-maven-plugin/usage.html):
 ```
 <plugin>
@@ -228,7 +228,7 @@ Hier dann den entsprechenden Nutzer eintragen und die [Tomcat-URL anpassen](http
 <!--- ` -->
 
 Anschließend kann die Anwendung mit folgendem Skript deployed werden:<br/>
-[``./build-deploy.sh``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/build-deploy.sh) unter Linux bzw. [``build-deploy.bat``](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/blob/master/build-deploy.bat) unter Windows.
+[``./build-deploy.sh``](build-deploy.sh) unter Linux bzw. [``build-deploy.bat``](build-deploy.bat) unter Windows.
 
 ------
 

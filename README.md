@@ -172,7 +172,7 @@ Die Nutzer-Authentifizierung erfolgt über die Open-Source Lernplattform [Moodle
 
 [test](src/main/java/de/uniwue/info6/webapp/session/SessionObject.java#L141-L166)
 
-``http://$hosturl$/?scenarioID=[scenario_id]&userID=[user_id]&secureValue=[secure_value]``
+``http://[hosturl]``test``/?userID=[user_id]&secureValue=[secure_value]&scenarioID=[scenario_id]``
 
 Ausgefülltes Beispiel
 ``http://localhost:8080/ueps/?scenarioID=1&userID=user_1&secureValue=d1ac3b14896c2faf640d1e00966fc065``

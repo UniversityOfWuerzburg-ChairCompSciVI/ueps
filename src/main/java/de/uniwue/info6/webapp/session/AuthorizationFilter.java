@@ -126,8 +126,6 @@ public class AuthorizationFilter implements Filter, Serializable {
       PropString.FALLBACK_USER);
   private final static String FALLBACK_SECUREVALUE = Cfg.inst().getProp(MAIN_CONFIG,
       PropString.FALLBACK_SECUREVALUE);
-  private final static String FALLBACK_SCENARIO = Cfg.inst().getProp(MAIN_CONFIG,
-      PropString.FALLBACK_SCENARIO);
 
   private String[] id, sv, sc;
 
@@ -446,6 +444,7 @@ public class AuthorizationFilter implements Filter, Serializable {
           if (fatalError) {
             throwErrorPage(res, req);
           } else {
+
             if (getCredentials(req) != null) {
               boolean success = checkCredentials(req, session);
               if (!success) {
@@ -563,6 +562,7 @@ public class AuthorizationFilter implements Filter, Serializable {
 
         if (sessionObject != null) {
           sessionObject = sessionObject.init(id[0], id[1], id[2], request.getRemoteAddr());
+
           if (sessionObject.loginSuccessfull()) {
             this.user = sessionObject.getUser();
             if (user != null) {
@@ -616,38 +616,66 @@ public class AuthorizationFilter implements Filter, Serializable {
       sv = requestParams.get(secureValue);
       sc = requestParams.get(scenarioID);
 
+      final boolean userIDMissing = !isValidGetParameter(id);
+      final boolean secureValueMissing = !isValidGetParameter(sv);
+
       if (Cfg.inst().getProp(MAIN_CONFIG, USE_FALLBACK_USER)) {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpSession session = req.getSession(false);
         if (!SessionListener.sessionExists(session)) {
-          if (id == null || sv == null || sc == null || id.length == 0 || sv.length == 0
-              || sc.length == 0 || id[0] == null || sv[0] == null || sc[0] == null) {
+          if (userIDMissing) {
             id = new String[] { FALLBACK_USER };
+          }
+          if (secureValueMissing) {
             sv = new String[] { FALLBACK_SECUREVALUE };
-            sc = new String[] { FALLBACK_SCENARIO };
           }
         }
       }
 
-      if (sc == null) {
-        sc = new String[] {ScenarioController.NO_SCENARIO_SELECTED_PARAMETER};
-      }
-
-      UserDao userDao = new UserDao();
-      if (userDao != null && scenarioDao != null && id != null && sv != null && sc != null
-          && id.length > 0 && sv.length > 0 && sc.length > 0 && id[0] != null && sv[0] != null
-          && sc[0] != null) {
-
-        if (!sc[0].equals(ScenarioController.NO_SCENARIO_SELECTED_PARAMETER)) {
+      if (!userIDMissing && !secureValueMissing) {
+        if (isValidGetParameter(sc, true)) {
           scenario = scenarioDao.getById(Integer.parseInt(sc[0]));
+          return new String[] { String.valueOf(id[0]), String.valueOf(sv[0]), String.valueOf(sc[0])};
+        } else {
+          return new String[] { String.valueOf(id[0]), String.valueOf(sv[0]), null};
         }
-
-        return new String[] { String.valueOf(id[0]), String.valueOf(sv[0]), String.valueOf(sc[0]) };
       }
+
     } catch (Exception e) {
-      LOGGER.info("PROBLEM OCCURRED GETTING LOGIN PARAMETERS", e);
+      LOGGER.error("PROBLEM OCCURRED GETTING LOGIN PARAMETERS", e);
     }
     return null;
+  }
+
+
+  /**
+   *
+   *
+   * @param parameter
+   * @return
+   */
+  private boolean isValidGetParameter(String[] parameter) {
+    return isValidGetParameter(parameter, false);
+  }
+
+  /**
+   *
+   *
+   * @param parameter
+   * @return
+   */
+  private boolean isValidGetParameter(final String[] parameter, boolean number) {
+    if (parameter == null || parameter.length == 0 || parameter[0] == null || parameter[0].isEmpty()) {
+      return false;
+    }
+    if (number) {
+      try {
+        Integer.parseInt(parameter[0]);
+      } catch (Exception e) {
+        return false;
+      }
+    }
+    return true;
   }
 
   /**

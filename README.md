@@ -165,7 +165,11 @@ Wenn eine automatische Installation nicht erwünscht ist, so benötigt die Anwen
 In der Konfigurationsdatei sollte mindestens ein [Adminstrator-Nutzer](src/main/resources/config.properties#L96) festgelegt werden. Mehrere Nutzer sollten mit Semikolon getrennt werden (z.B. ``admin_id1;admin_id2;``).
 Admins können auch zur Laufzeit hinzugefügt werden, hierfür muss man jedoch den Datenbankeintrag für den Nutzer abändern ([Tabelle: "user", Spalte: "is_admin"](http://kolbasa.github.io/ueps/screenshots/admin-db-er-diagram.png)).
 
-TODO :: TODO :: TODO :: TODO
+Die Nutzer-Authentifizierung erfolgt über die Open-Source Lernplattform [Moodle](https://moodle.org/).
+
+```
+Dieses Kennwort wird benutzt, um einen verschlüsselten Code zu generieren, der als Parameter an andere Server übermittelt werden kann. Der verschlüsselte Code wird über einen md5-Wert der aktuellen IP-Adresse in Verbindung mit dem Kennwort erzeugt, d.h. code = md5(IP.secretphrase). Bitte beachten Sie, dass dies nicht zuverlässig ist, weil die IP-Adresse wechseln oder an andere Computer weitergegeben werden kann. Das Standardkennwort wird automatisch generiert.
+```
 
 ``http://[hostname]/[rootfolder]/?scenarioID=[scenario_id]&userID=[user_id]&secureValue=[secure_value]``
 

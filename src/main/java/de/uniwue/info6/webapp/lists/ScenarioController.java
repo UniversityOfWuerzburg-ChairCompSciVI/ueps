@@ -64,7 +64,6 @@ public class ScenarioController implements Serializable {
   private String scenarioParameter, userIDParameter, secureValueParameter;
   private ScenarioDao scenarioDao;
   private List<Scenario> scenarios;
-  public static String NO_SCENARIO_SELECTED_PARAMETER = "NO_SCENARIO";
 
   /**
    *
@@ -82,11 +81,12 @@ public class ScenarioController implements Serializable {
 
     this.scenario             = this.ac.getScenario();
     this.scenarioParameter    = this.ac.getScenarioParameter();
+
     this.userIDParameter      = this.ac.getUserIDParameter();
     this.secureValueParameter = this.ac.getSecureValueParameter();
 
-    this.scenarioDao = new ScenarioDao();
-    this.scenarios = this.scenarioDao.findAll();
+    this.scenarioDao          = new ScenarioDao();
+    this.scenarios            = this.scenarioDao.findAll();
 
     final ConnectionManager pool = ConnectionManager.instance();
     if (!pool.getOriginalTableDeleted().contains(scenario)) {
@@ -113,9 +113,6 @@ public class ScenarioController implements Serializable {
         if (temp != null) {
           return true;
         }
-      } else if (scenarioParameter != null &&
-                 scenarioParameter.equals(NO_SCENARIO_SELECTED_PARAMETER)) {
-        return false;
       }
     }
     return false;
@@ -129,9 +126,8 @@ public class ScenarioController implements Serializable {
   public String getIntroductionText() {
     if (isValidScenario()) {
       return scenario.getDescription();
-    } else if (scenarioParameter != null && scenarioParameter.equals(NO_SCENARIO_SELECTED_PARAMETER)) {
+    } else if (scenarioParameter == null) {
       final StringBuilder listScenarios = new StringBuilder();
-
 
       final FacesContext ctx = FacesContext.getCurrentInstance();
       if (ctx != null) {
@@ -169,17 +165,6 @@ public class ScenarioController implements Serializable {
     }
     return error;
   }
-
-
-// public String openScenario() {
-//   if (ac != null && scenario != null) {
-//     ac.setScenario(scenario);
-//   }
-//   if (scenario != null) {
-//     return ".";
-//   }
-//   return null;
-// }
 
   /**
    *

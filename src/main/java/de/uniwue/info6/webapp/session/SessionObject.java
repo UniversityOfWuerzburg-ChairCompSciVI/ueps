@@ -52,7 +52,7 @@ import de.uniwue.info6.misc.properties.Cfg;
  * @author Michael
  */
 public class SessionObject {
-  private String userID, secureValue, scenarioID, userIP;
+  private String userID, secureValue, scenarioID, userIP, secretIDString;
   private final static String sessionPosition = "auth_controller";
   private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(SessionObject.class);
   private User user;
@@ -84,16 +84,23 @@ public class SessionObject {
    * @param scenario
    * @param session
    */
-  public SessionObject init(String userID, String secureValue, String scenario, String ip) {
+  public SessionObject init(String userID, String secureValue, String scenarioID, String ip) {
     this.user = null;
     this.showIEError = true;
 
-    this.userID = userID.trim();
-    this.secureValue = secureValue.trim();
-    this.scenarioID = scenario.trim();
-    this.userIP = ip;
+    if (userID != null) {
+      this.userID = userID.trim();
+    }
+    if (secureValue != null) {
+      this.secureValue = secureValue.trim();
+    }
+    if (scenarioID != null) {
+      this.scenarioID = scenarioID.trim();
+    }
 
+    this.userIP = ip;
     this.validCredentials = checkCredentials();
+    this.secretIDString = Cfg.inst().getProp(MAIN_CONFIG, SECRET_ID_STRING);
 
     if (validCredentials) {
       loadUser();
@@ -125,17 +132,6 @@ public class SessionObject {
     return null;
   }
 
-  /**
-   *
-   *
-   * @param userIP
-   * @param userID
-   * @param secureValue
-   * @return
-   */
-  private static boolean isValid(String userIP, String userID, String secureValue) {
-    return Crypt.md5(userIP + Cfg.inst().getProp(MAIN_CONFIG, SECRET_ID_STRING) + userID).equals(secureValue);
-  }
 
   /**
    *
@@ -143,19 +139,23 @@ public class SessionObject {
    * @return
    */
   private boolean checkCredentials() {
-    if (scenarioID != null && !scenarioID.isEmpty()) {
-      // get scenario object from database
+    final boolean hasScenarioParameter = scenarioID != null && !scenarioID.trim().isEmpty();
+    final boolean hasUserIDParameter = userID != null && !userID.trim().isEmpty();
+    final boolean hasSecureValueParameter = secureValue != null && !secureValue.trim().isEmpty();
+
+    if (hasScenarioParameter) {
       try {
+        // pull scenario from database
         this.scenario = new ScenarioDao().getById(Integer.parseInt(scenarioID));
-      } catch (Exception e) {
-        LOGGER.info("get scenario error: \"" + scenarioID + "\"]", e);
+      } catch (Exception e) {}
+      if (this.scenario == null) {
+        LOGGER.info("CAN'T FIND SCENARIO WITH ID: [" + scenarioID + "]");
       }
     }
-
-    if (userID != null && secureValue != null && userIP != null && !userID.isEmpty()
-        && !secureValue.isEmpty()) {
+    if (hasUserIDParameter && hasSecureValueParameter) {
       if (Cfg.inst().getProp(MAIN_CONFIG, USE_MOODLE_LOGIN)) {
-        return isValid(userIP, userID, secureValue);
+        System.out.println("foo: " + new java.util.Date());
+        return Crypt.md5(this.userIP + this.secretIDString + this.userID).equals(this.secureValue);
       } else {
         return true;
       }
@@ -271,7 +271,7 @@ public class SessionObject {
    * @return
    */
   public String getScenarioParameter() {
-    return scenarioID;
+    return this.scenarioID;
   }
 
   /**
@@ -286,10 +286,8 @@ public class SessionObject {
    * @return the exerciseGroup
    */
   public ExerciseGroup getExerciseGroup() {
-    return exerciseGroup;
+    return this.exerciseGroup;
   }
-
-
 
   /**
    * @param exerciseGroup

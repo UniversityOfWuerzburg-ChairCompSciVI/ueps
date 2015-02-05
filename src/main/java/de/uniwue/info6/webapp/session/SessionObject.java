@@ -143,6 +143,7 @@ public class SessionObject {
     final boolean hasUserIDParameter = userID != null && !userID.trim().isEmpty();
     final boolean hasSecureValueParameter = secureValue != null && !secureValue.trim().isEmpty();
 
+    // ------------------------------------------------ //
     if (hasScenarioParameter) {
       try {
         // pull scenario from database
@@ -152,16 +153,18 @@ public class SessionObject {
         LOGGER.info("CAN'T FIND SCENARIO WITH ID: [" + scenarioID + "]");
       }
     }
+    // ------------------------------------------------ //
     if (hasUserIDParameter && hasSecureValueParameter) {
       if (Cfg.inst().getProp(MAIN_CONFIG, USE_MOODLE_LOGIN)) {
-        System.out.println("foo: " + new java.util.Date());
         return Crypt.md5(this.userIP + this.secretIDString + this.userID).equals(this.secureValue);
       } else {
         return true;
       }
     }
+    // ------------------------------------------------ //
     return false;
   }
+
 
   /**
    *

@@ -69,7 +69,7 @@ public class ExGroupController implements Serializable {
    */
   public ExGroupController() {
     // get current scenario
-    SessionObject so = SessionObject.pull();
+    SessionObject so = SessionObject.pullFromSession();
     scenario = so.getScenario();
     user = so.getUser();
 

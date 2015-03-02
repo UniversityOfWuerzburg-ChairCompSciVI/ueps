@@ -107,7 +107,7 @@ public class FileTransfer {
 
         if (move) {
           originExercise.setExerciseGroup(group);
-          exerciseDao.updateInstance(originExercise);
+          exerciseDao.updateInstanceP(originExercise);
 
           return originExercise;
         } else {
@@ -130,13 +130,13 @@ public class FileTransfer {
 
           // set original exercise
           newExercise.setExercise(originExercise);
-          exerciseDao.insertNewInstance(newExercise);
+          exerciseDao.insertNewInstanceP(newExercise);
 
           for (SolutionQuery s : orSol) {
             SolutionQuery qu = new SolutionQuery(newExercise, s.getQuery());
             qu.setUserEntry(s.getUserEntry());
             qu.setExplanation(s.getExplanation());
-            solutionDao.insertNewInstance(qu);
+            solutionDao.insertNewInstanceP(qu);
           }
 
           return newExercise;
@@ -170,7 +170,7 @@ public class FileTransfer {
 
         if (move) {
           originGroup.setScenario(scenario);
-          exGroupDao.updateInstance(originGroup);
+          exGroupDao.updateInstanceP(originGroup);
           return originGroup;
         } else {
           ExerciseGroup newGroup = new ExerciseGroup();
@@ -188,7 +188,7 @@ public class FileTransfer {
           }
           // original exercise-group
           newGroup.setExerciseGroup(originGroup);
-          exGroupDao.insertNewInstance(newGroup);
+          exGroupDao.insertNewInstanceP(newGroup);
 
           List<Exercise> exercises = exerciseDao.findByExGroup(originGroup);
           for (Exercise ex : exercises) {
@@ -233,7 +233,7 @@ public class FileTransfer {
         newScenario.setLastModified(new Date());
         newScenario.setScenario(originScenario);
 
-        scenarioDao.insertNewInstance(newScenario);
+        scenarioDao.insertNewInstanceP(newScenario);
 
         List<ExerciseGroup> groups = exGroupDao.findByScenario(originScenario);
         for (ExerciseGroup gr : groups) {

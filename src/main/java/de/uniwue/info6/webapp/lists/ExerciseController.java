@@ -26,7 +26,6 @@ package de.uniwue.info6.webapp.lists;
 
 import static de.uniwue.info6.misc.properties.PropertiesFile.DEF_LANGUAGE;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.ResultSetMetaData;
@@ -49,8 +48,6 @@ import javax.faces.context.FacesContext;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
-
-
 import de.uniwue.info6.comparator.RefLink;
 import de.uniwue.info6.comparator.SqlExecuter;
 import de.uniwue.info6.comparator.SqlQuery;
@@ -71,13 +68,11 @@ import de.uniwue.info6.database.map.daos.SolutionQueryDao;
 import de.uniwue.info6.database.map.daos.UserEntryDao;
 import de.uniwue.info6.database.map.daos.UserResultDao;
 import de.uniwue.info6.misc.StringTools;
-import de.uniwue.info6.misc.TicToc;
 import de.uniwue.info6.misc.properties.Cfg;
 import de.uniwue.info6.misc.properties.PropBool;
 import de.uniwue.info6.misc.properties.PropertiesFile;
 import de.uniwue.info6.parser.errors.Error;
 import de.uniwue.info6.webapp.admin.UserRights;
-import de.uniwue.info6.webapp.session.SessionBean;
 import de.uniwue.info6.webapp.session.SessionObject;
 
 /**
@@ -96,7 +91,7 @@ public class ExerciseController implements Serializable {
   private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(ExerciseController.class);
 
   @SuppressWarnings("unused")
-  private static final String error = "ERROR: Scenario not found", exerciseParam = "exercise";
+  private static final String error = "ERROR: Scenario not found!", exerciseParam = "exercise";
   private static final String RESOURCE_PATH_IMAGES = "scn_images";
 
   private SessionObject ac;
@@ -136,7 +131,7 @@ public class ExerciseController implements Serializable {
   private String mainRefLink;
   private LinkedList<RefLink> refLinks;
   private boolean userHasRights, debug = false, showFeedback, querySaved;
-  private UserRights rights;
+  private UserRights userRights;
   private String importScriptError;
 
   // user result table resources
@@ -297,26 +292,8 @@ public class ExerciseController implements Serializable {
       usedSolutionIndex = 0;
       Boolean setEntry = null;
       Boolean setSolution = null;
-      this.rights = new UserRights();
-      this.rights.initialize();
-
-      if (!debug) {
-        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-        Map<String, Object> sessionMap = externalContext.getSessionMap();
-        setEntry = (Boolean) sessionMap.get("show_entry");
-        setSolution = (Boolean) sessionMap.get("show_solution");
-        // get current scenario
-        ac = SessionObject.pull();
-        user = ac.getUser();
-        scenario = ac.getScenario();
-        // set up connection pool
-        connectionPool = ConnectionManager.instance();
-      }
-
-      this.resultVisible = false;
-      this.userResultVisible = false;
-      this.feedbackVisible = false;
-      this.syntaxError = false;
+      this.userRights = new UserRights();
+      this.userRights.initialize();
 
       // init hibernate daos
       exGroupDao = new ExerciseGroupDao();
@@ -326,168 +303,198 @@ public class ExerciseController implements Serializable {
       userResultDao = new UserResultDao();
       solutionQueryDao = new SolutionQueryDao();
 
-      if (scenario != null) {
-        // get exercise id
-        if (!debug) {
-          ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-          Map<String, String> requestParams = ec.getRequestParameterMap();
-          final int id = Integer.parseInt(requestParams.get(exerciseParam));
-          exercise = exerciseDao.getById(id);
+      if (!debug) {
+        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+        Map<String, Object> sessionMap = externalContext.getSessionMap();
+        setEntry = (Boolean) sessionMap.get("show_entry");
+        setSolution = (Boolean) sessionMap.get("show_solution");
+        // get current scenario
+        ac = SessionObject.pullFromSession();
+        user = ac.getUser();
+        if (user != null && user.getIsAdmin() != null) {
+          userHasRights = user.getIsAdmin();
         }
+        scenario = ac.getScenario();
+
+        // set up connection pool
+        connectionPool = ConnectionManager.instance();
+
+        // get exercise id
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        Map<String, String> requestParams = ec.getRequestParameterMap();
+        final int id = Integer.parseInt(requestParams.get(exerciseParam));
+        exercise = exerciseDao.getById(id);
 
         if (exercise != null) {
-          solutionQueries = new LinkedList<SqlQuery>();
-          solutions = exerciseDao.getSolutions(exercise);
           exerciseGroup = exGroupDao.getById(exercise.getExerciseGroup().getId());
+        }
+        if (exerciseGroup != null) {
+          final boolean scenarioMissing = (scenario == null);
+          scenario = scenarioDao.getById(exerciseGroup.getScenario().getId());
+          if (scenarioMissing) {
+            this.ac.setScenario(scenario);
+          }
+        }
+      }
 
-          if (exerciseGroup != null) {
-            try {
-              this.connectionPool.resetTables(scenario, user, true);
-            } catch (Exception e) {
-              LOGGER.error("COULD NOT RESET TABLES", e);
+      this.resultVisible = false;
+      this.userResultVisible = false;
+      this.feedbackVisible = false;
+      this.syntaxError = false;
+
+      if (scenario != null && exercise != null) {
+        solutionQueries = new LinkedList<SqlQuery>();
+        solutions = exerciseDao.getSolutions(exercise);
+
+        if (exerciseGroup != null) {
+          try {
+            this.connectionPool.resetTables(scenario, user);
+          } catch (Exception e) {
+            LOGGER.error("COULD NOT RESET TABLES", e);
+          }
+
+          // TODO: replace with a new table-field in exercisegroup
+          if (exerciseGroup.getDescription() == null
+              || exerciseGroup.getDescription().trim().isEmpty()) {
+            showFeedback = true;
+          } else if (exerciseGroup.getDescription().trim().equals("[NO_FEEDBACK]")) {
+            showFeedback = false;
+          }
+
+          if (!exerciseGroup.getScenario().getId().equals(scenario.getId())) {
+            scenario = scenarioDao.getById(exerciseGroup.getScenario().getId());
+            userHasRights = userRights.hasViewRights(user, scenario, exerciseGroup);
+            if (!debug && userHasRights) {
+              ac.setScenario(scenario);
             }
+          }
 
-            if (exerciseGroup.getDescription() == null
-                || exerciseGroup.getDescription().trim().isEmpty()) {
-              showFeedback = true;
-            } else if (exerciseGroup.getDescription().trim().equals("[NO_FEEDBACK]")) {
-              showFeedback = false;
-            }
-
-            if (!exerciseGroup.getScenario().getId().equals(scenario.getId())) {
-              scenario = scenarioDao.getById(exerciseGroup.getScenario().getId());
-              userHasRights = rights.hasViewRights(user, scenario, exerciseGroup);
-              if (!debug && userHasRights) {
-                ac.setScenario(scenario);
-              }
-            }
-
-            userHasRights = rights.hasViewRights(user, scenario, exerciseGroup);
-            if (debug) {
-              userHasRights = true;
-            }
-
-            diagramImage = scenario.getImagePath();
-            if (diagramImage != null) {
-              diagramImage = RESOURCE_PATH_IMAGES + "/" + scenario.getId() + "/" + diagramImage;
-            }
-
-            // get list of sql tables
-            availableTables = connectionPool.getScenarioTableNames(scenario);
-            if (availableTables == null || availableTables.isEmpty()) {
-              importScriptError = connectionPool.checkIfImportScriptExists(scenario);
-            }
-
-            tableContent = new HashMap<String, String>();
-
-            // relevant tables
-            tableColumns = new HashMap<String, List<String>>();
-            tableValues = new HashMap<String, List<TableEntry>>();
-
-            if (userHasRights) {
-              for (SolutionQuery qu : solutions) {
-                SqlQuery sqlQuery = new SqlQuery(qu.getQuery());
-                try {
-                  if (mainRefLink == null && sqlQuery != null) {
-                    RefLink ref = sqlQuery.getRefLink();
-                    mainRefLink = ref.getUrl();
-                  }
-                } catch (Exception e) {
-                }
-                solutionQueries.add(sqlQuery);
-              }
+          userHasRights = userRights.hasViewRights(user, scenario, exerciseGroup);
+          if (debug) {
+            userHasRights = true;
+          }
 
 
-              UserEntry entry = userEntryDao.getLastUserEntry(exercise, user);
+          diagramImage = scenario.getImagePath();
+          if (diagramImage != null) {
+            diagramImage = RESOURCE_PATH_IMAGES + "/" + scenario.getId() + "/" + diagramImage;
+          }
 
-              if (entry != null && setEntry != null && setEntry) {
-                userString = entry.getUserQuery();
-              } else if (setSolution != null && setSolution) {
-                if (entry != null) {
-                  UserResult result = userResultDao.getLastUserResultFromEntry(entry);
-                  SolutionQuery query = result.getSolutionQuery();
-                  query = solutionQueryDao.getById(query.getId());
-                  if (result != null && query != null) {
-                    String query_sol = query.getQuery();
-                    if (query_sol != null) {
-                      userString = query_sol;
-                    }
-                  }
-                } else {
-                  SolutionQuery example = new SolutionQuery();
-                  example.setExercise(exercise);
-                  List<SolutionQuery> solutions = solutionQueryDao.findByExample(example);
-                  if (solutions != null && !solutions.isEmpty()) {
-                    userString = solutions.get(0).getQuery();
-                  }
-                }
-              }
+          // get list of sql tables
+          availableTables = connectionPool.getScenarioTableNames(scenario);
+          if (availableTables == null || availableTables.isEmpty()) {
+            importScriptError = connectionPool.checkIfImportScriptExists(scenario);
+          }
 
-              Connection connection = null;
+          tableContent = new HashMap<String, String>();
+
+          // relevant tables
+          tableColumns = new HashMap<String, List<String>>();
+          tableValues = new HashMap<String, List<TableEntry>>();
+
+          if (userHasRights) {
+            for (SolutionQuery qu : solutions) {
+              SqlQuery sqlQuery = new SqlQuery(qu.getQuery());
               try {
-                relevantTables = new HashMap<String, String>();
-                connection = connectionPool.getConnection(scenario);
-                executer = new SqlExecuter(connection, user, scenario);
-
-                SqlQuery selectTable = null;
-
-                if (availableTables != null) {
-                  for (String table : availableTables) {
-                    String showTableCommand = "SELECT * FROM " + table + ";";
-                    selectTable = new SqlQuery(showTableCommand);
-                    executer.execute(selectTable);
-                    try {
-                      SqlResult result = selectTable.getResult();
-                      if (result != null) {
-                        String[][] data = result.getData();
-                        ResultSetMetaData metaData = result.getResultMetaData();
-                        List<String> clNames = new ArrayList<String>();
-                        if (metaData != null) {
-                          for (int i = 1; i <= metaData.getColumnCount(); i++) {
-                            String name = metaData.getColumnName(i);
-                            if (name != null && !name.trim().isEmpty()) {
-                              clNames.add(name);
-                            }
-                          }
-                          tableColumns.put(table, clNames);
-                        }
-                        if (data != null) {
-                          List<TableEntry> el = new ArrayList<TableEntry>();
-                          for (int i = 0; i < data.length; i++) {
-                            TableEntry en = new TableEntry(clNames);
-                            for (int z = 0; z < data[i].length; z++) {
-                              en.addValue(data[i][z], z);
-                            }
-                            el.add(en);
-                          }
-                          tableValues.put(table, el);
-                        }
-
-                        this.tableValuesOriginal = new HashMap<String, List<TableEntry>>(
-                          tableValues);
-                        currentTableFilter = new String[tableValues.size() + 2];
-                      }
-                    } catch (Exception e) {
-                      LOGGER.error("ERROR BUILDING RELEVANT TABLES", e);
-                    }
-                  }
-                }
-              } catch (SQLException e) {
-                String er = ExceptionUtils.getStackTrace(e);
-                if (er.length() > 500) {
-                  importScriptError = er.substring(0, 500) + " [...]";
-                } else {
-                  importScriptError = er;
+                if (mainRefLink == null && sqlQuery != null) {
+                  RefLink ref = sqlQuery.getRefLink();
+                  mainRefLink = ref.getUrl();
                 }
               } catch (Exception e) {
-                LOGGER.error("ERROR GETTING RELEVANT TABLES", e);
-              } finally {
-                if (connection != null) {
-                  try {
-                    connection.close();
-                  } catch (SQLException e) {
-                    e.printStackTrace();
+              }
+              solutionQueries.add(sqlQuery);
+            }
+
+
+            UserEntry entry = userEntryDao.getLastUserEntry(exercise, user);
+
+            if (entry != null && setEntry != null && setEntry) {
+              userString = entry.getUserQuery();
+            } else if (setSolution != null && setSolution) {
+              if (entry != null) {
+                UserResult result = userResultDao.getLastUserResultFromEntry(entry);
+                SolutionQuery query = result.getSolutionQuery();
+                query = solutionQueryDao.getById(query.getId());
+                if (result != null && query != null) {
+                  String query_sol = query.getQuery();
+                  if (query_sol != null) {
+                    userString = query_sol;
                   }
+                }
+              } else {
+                SolutionQuery example = new SolutionQuery();
+                example.setExercise(exercise);
+                List<SolutionQuery> solutions = solutionQueryDao.findByExample(example);
+                if (solutions != null && !solutions.isEmpty()) {
+                  userString = solutions.get(0).getQuery();
+                }
+              }
+            }
+
+            Connection connection = null;
+            try {
+              relevantTables = new HashMap<String, String>();
+              connection = connectionPool.getConnection(scenario);
+              executer = new SqlExecuter(connection, user, scenario);
+
+              SqlQuery selectTable = null;
+
+              if (availableTables != null) {
+                for (String table : availableTables) {
+                  String showTableCommand = "SELECT * FROM " + table + ";";
+                  selectTable = new SqlQuery(showTableCommand);
+                  executer.execute(selectTable);
+                  try {
+                    SqlResult result = selectTable.getResult();
+                    if (result != null) {
+                      String[][] data = result.getData();
+                      ResultSetMetaData metaData = result.getResultMetaData();
+                      List<String> clNames = new ArrayList<String>();
+                      if (metaData != null) {
+                        for (int i = 1; i <= metaData.getColumnCount(); i++) {
+                          String name = metaData.getColumnName(i);
+                          if (name != null && !name.trim().isEmpty()) {
+                            clNames.add(name);
+                          }
+                        }
+                        tableColumns.put(table, clNames);
+                      }
+                      if (data != null) {
+                        List<TableEntry> el = new ArrayList<TableEntry>();
+                        for (int i = 0; i < data.length; i++) {
+                          TableEntry en = new TableEntry(clNames);
+                          for (int z = 0; z < data[i].length; z++) {
+                            en.addValue(data[i][z], z);
+                          }
+                          el.add(en);
+                        }
+                        tableValues.put(table, el);
+                      }
+
+                      this.tableValuesOriginal = new HashMap<String, List<TableEntry>>(
+                        tableValues);
+                      currentTableFilter = new String[tableValues.size() + 2];
+                    }
+                  } catch (Exception e) {
+                    LOGGER.error("ERROR BUILDING RELEVANT TABLES", e);
+                  }
+                }
+              }
+            } catch (SQLException e) {
+              String er = ExceptionUtils.getStackTrace(e);
+              if (er.length() > 500) {
+                importScriptError = er.substring(0, 500) + " [...]";
+              } else {
+                importScriptError = er;
+              }
+            } catch (Exception e) {
+              LOGGER.error("ERROR GETTING RELEVANT TABLES", e);
+            } finally {
+              if (connection != null) {
+                try {
+                  connection.close();
+                } catch (SQLException e) {
+                  e.printStackTrace();
                 }
               }
             }
@@ -515,21 +522,10 @@ public class ExerciseController implements Serializable {
    * @return
    */
   public boolean showResults() {
-    if (exercise != null) {
-      if (!showFeedback) {
-        return false;
-      }
-      if (!isRated()) {
-        return true;
-      }
-      Date end = exerciseGroup.getEndTime();
-      if (end != null) {
-        if (end.before(new Date())) {
-          return true;
-        }
-      }
+    if (!showFeedback) {
+      return false;
     }
-    return false;
+    return this.userRights.showResults(exerciseGroup);
   }
 
   /**
@@ -546,7 +542,7 @@ public class ExerciseController implements Serializable {
    */
   public boolean hasEditingRights() {
     if (user != null && scenario != null) {
-      return rights.hasRights(user, scenario);
+      return userRights.hasRights(user, scenario);
     }
     return false;
   }
@@ -691,12 +687,19 @@ public class ExerciseController implements Serializable {
           usedQuery = solutions.get(index);
         }
 
-        if (!userString.trim().isEmpty() && (!isRated() || !showResults())) {
+        String msg = null;
+
+        if (
+          !userString.trim().isEmpty() &&
+          (
+            !isRated() || userRights.entriesCanBeEdited(exerciseGroup)
+          )
+        ) {
 
           entry = userEntryDao.getLastEntry(exercise, user);
-          String msg = "Ihre Abgabe wurde erfolgreich gespeichert.";
+          msg = Cfg.inst().getText("EX.SAVED_SUCCESSFUL");
           if (entry != null) {
-            msg = "Ihre Abgabe wurde erfolgreich überschrieben.";
+            msg = Cfg.inst().getText("EX.OVERWRITING_SUCCESSFUL");
           }
 
           if (Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG, PropBool.ONLY_SAVE_LAST_USER_QUERY)) {
@@ -727,16 +730,6 @@ public class ExerciseController implements Serializable {
             userEntryAvailable = userEntryDao.insertNewInstance(entry);
           }
 
-          if (isRated() && !debug) {
-            // show feedback message to user
-            Severity sev = FacesMessage.SEVERITY_INFO;
-            FacesMessage message1 = new FacesMessage(sev, "Server-Meldung:", msg);
-            FacesContext.getCurrentInstance().addMessage(null, message1);
-            // FacesMessage message2 = new FacesMessage("Gespeicherte Query:",
-            // StringTools.trimToLengthIndicator(userString, 100));
-            // FacesContext.getCurrentInstance().addMessage(null, message2);
-          }
-
           if (!showFeedback) {
             querySaved = true;
           }
@@ -748,6 +741,24 @@ public class ExerciseController implements Serializable {
             userResultDao.insertNewInstance(result);
           }
         }
+
+
+        if (isRated() && !debug) {
+          if (!userRights.entriesCanBeEdited(exerciseGroup)) {
+            msg = Cfg.inst().getText("EX.RATED_CLOSED");
+          }
+
+          if (msg != null) {
+            // show feedback message to user
+            Severity sev = FacesMessage.SEVERITY_INFO;
+            FacesMessage message1 = new FacesMessage(sev, Cfg.inst().getText("EX.SERVER_MESSAGE"), msg);
+            FacesContext.getCurrentInstance().addMessage(null, message1);
+            // FacesMessage message2 = new FacesMessage("Gespeicherte Query:",
+            // StringTools.trimToLengthIndicator(userString, 100));
+            // FacesContext.getCurrentInstance().addMessage(null, message2);
+          }
+        }
+
 
         if (feedbackVisible) {
           refLinks = comparator.getRefLinks();

@@ -142,12 +142,13 @@ public class ConnectionTools extends Thread {
 
         // TODO: DEBUG
         boolean debugMode = Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG, PropBool.DEBUG_MODE);
+        boolean showcaseMode = Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG, PropBool.SHOWCASE_MODE);
 
-        if (debugMode) {
+        if (debugMode || showcaseMode) {
           this.addSomeTestData();
         }
 
-        // log performance stats
+        // TODO: log performance stats
         // quick and dirty log, do not use in a productive environment
         boolean logPerformance = Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG, PropBool.LOG_PERFORMANCE);
         if (logPerformance) {
@@ -289,7 +290,7 @@ public class ConnectionTools extends Thread {
     UserRightDao userRightDao = new UserRightDao();
     String[] testUsers = new String[] {"dozent_1", "dozent_2", "student_1", "student_2"};
     User exampleLecturer = null;
-    User lastAdminUser = userDao.getRandom();
+    User lastAdminUser = userDao.getById("user_1");
     for (String testUserId : testUsers) {
       User testUser = userDao.getById(testUserId.trim());
       if (testUser == null) {
@@ -320,9 +321,9 @@ public class ConnectionTools extends Thread {
         }
         // ------------------------------------------------ //
         if (testUserId.equals("student_2")) {
-          Scenario scenario = new ScenarioDao().getById(1);
+          Scenario scenario = new ScenarioDao().getById(2);
           if (scenario != null && testUser != null && exampleLecturer != null) {
-            UserRight right = new UserRight(testUser, exampleLecturer, scenario, true, false, false);
+            UserRight right = new UserRight(testUser, lastAdminUser, scenario, true, true, true);
             userRightDao.insertNewInstance(right);
           }
         }

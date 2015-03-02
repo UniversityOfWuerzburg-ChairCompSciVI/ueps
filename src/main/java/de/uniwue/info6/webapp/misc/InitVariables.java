@@ -32,7 +32,10 @@ import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -44,9 +47,14 @@ import org.apache.log4j.Level;
 import org.apache.log4j.PatternLayout;
 
 import com.google.common.collect.ImmutableMap;
+import com.mchange.v2.c3p0.C3P0Registry;
+import com.mchange.v2.c3p0.ComboPooledDataSource;
+import com.mchange.v2.c3p0.DataSources;
+import com.mchange.v2.c3p0.PooledDataSource;
 
+import de.uniwue.info6.database.jdbc.ConnectionManager;
 import de.uniwue.info6.database.jdbc.ConnectionTools;
-import de.uniwue.info6.database.map.conf.HibernateUtil;
+import de.uniwue.info6.database.map.Scenario;
 import de.uniwue.info6.misc.StringTools;
 import de.uniwue.info6.misc.properties.Cfg;
 import de.uniwue.info6.misc.properties.PropBool;
@@ -83,20 +91,22 @@ public class InitVariables implements ServletContextListener, Serializable {
    *
    */
   private void setDebugVariables() {
-    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropString.MASTER_DBHOST, "127.0.0.1");
-    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropString.MASTER_DBPORT, "3306");
-    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropString.MASTER_DBNAME, "ueps_master");
-    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropString.MASTER_DBUSER, "test_user");
-    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropString.MASTER_DBPASS, "3ti4k4tm270kg");
+    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropString.MASTER_DBHOST,              "127.0.0.1");
+    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropString.MASTER_DBPORT,              "3306");
+    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropString.MASTER_DBNAME,              "ueps_master");
+    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropString.MASTER_DBUSER,              "test_user");
+    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropString.MASTER_DBPASS,              "3ti4k4tm270kg");
 
-    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropBool.IMPORT_DB_IF_EMPTY, true);
-    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropBool.IMPORT_EXAMPLE_SCENARIO, true);
-    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropBool.FORCE_RESET_DATABASE, true);
-    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropBool.USE_MOODLE_LOGIN, false);
-    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropBool.USE_FALLBACK_USER, true);
-    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropString.FALLBACK_USER, "user_1");
-    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropString.FALLBACK_SECUREVALUE, "d1ac3b14896c2faf640d1e00966fc065");
-    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropInteger.SESSION_TIMEOUT, 1000);
+    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropBool.IMPORT_DB_IF_EMPTY,           true);
+    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropBool.IMPORT_EXAMPLE_SCENARIO,      true);
+    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropBool.FORCE_RESET_DATABASE,         false);
+    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropBool.USE_MOODLE_LOGIN,             false);
+    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropBool.USE_FALLBACK_USER,            false);
+    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropBool.SHOWCASE_MODE,                true);
+
+    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropString.FALLBACK_USER_ID,           "user_1");
+    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropString.FALLBACK_ENCRYPTED_CODE,    "d1ac3b14896c2faf640d1e00966fc065");
+    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropInteger.SESSION_TIMEOUT,           600);
   }
 
   /**
@@ -104,8 +114,48 @@ public class InitVariables implements ServletContextListener, Serializable {
    */
   @Override
   public void contextDestroyed(final ServletContextEvent event) {
-    HibernateUtil.shutdown();
+    // ------------------------------------------------ //
+
     ConnectionTools.inst().cleanUp();
+
+    // ------------------------------------------------ //
+
+    C3P0Registry.getNumPooledDataSources();
+    PooledDataSource dataSource = null;
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    Iterator<Set> it = C3P0Registry.getPooledDataSources().iterator();
+    while (it.hasNext()) {
+      try {
+        dataSource = (PooledDataSource) it.next();
+        dataSource.close();
+      } catch (Exception e) {
+        LOGGER.error("Error deregistering driver %s", dataSource, e);
+      }
+    }
+
+    // ------------------------------------------------ //
+
+    final HashMap<Scenario, ComboPooledDataSource> pools = ConnectionManager.instance().getPools();
+    for (Scenario scenario : pools.keySet()) {
+      final String dbHost = scenario.getDbHost();
+      final String dbPort = scenario.getDbPort();
+      final String url = ConnectionManager.URL_PREFIX + dbHost + ":" + dbPort + "/";
+
+      Driver mariaDBDriver = null;
+      try {
+        final ComboPooledDataSource cpds = pools.get(scenario);
+        mariaDBDriver = DriverManager.getDriver(url);
+        if (mariaDBDriver != null) {
+          DriverManager.deregisterDriver(mariaDBDriver);
+        }
+        DataSources.destroy(cpds);
+      } catch (SQLException e) {
+      } catch (Exception e) {
+        LOGGER.error(String.format("Error deregistering driver %s", mariaDBDriver), e);
+      }
+    }
+
+    // ------------------------------------------------ //
 
     Enumeration<Driver> drivers = DriverManager.getDrivers();
     while (drivers.hasMoreElements()) {
@@ -117,7 +167,16 @@ public class InitVariables implements ServletContextListener, Serializable {
         LOGGER.error(String.format("Error deregistering driver %s", driver), e);
       }
     }
+
+    // ------------------------------------------------ //
+
+    // for (Thread thread : Thread.getAllStackTraces().keySet()) {
+    // }
+
+    // ------------------------------------------------ //
   }
+
+
 
   /**
    * @param event
@@ -226,6 +285,8 @@ public class InitVariables implements ServletContextListener, Serializable {
       ConsoleAppender console = new ConsoleAppender();
       console.setLayout(new PatternLayout(CONSOLE_PATTERN));
       console.setThreshold(Level.ERROR);
+      // console.setThreshold(Level.INFO);
+
       console.setTarget(ConsoleAppender.SYSTEM_ERR);
       console.activateOptions();
       logger.addAppender(console);

@@ -1,7 +1,16 @@
 # ÜPS
 **ÜPS** (**Ü**bungs-**P**rogramm für **S**QL) ist ein webbasiertes Trainingssystem zum Erlernen der Datenbanksprache SQL.
 
-![](http://kolbasa.github.io/ueps/screenshots/ueps_neu_02.png)
+<!--- http://ueps.ddnss.de:82/ueps/task.xhtml?userID=demo_admin&encryptedCode=showcase&scenarioID=1&exercise=1 -->
+
+
+<div style="text-align:center;display:block" markdown="1">
+ [![ÜPS Showcase](http://kolbasa.github.io/ueps/screenshots/showcase-button-student.png)](http://ueps.scienceontheweb.net?index=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=1) [![ÜPS Showcase](http://kolbasa.github.io/ueps/screenshots/showcase-button-admin.png)](http://ueps.scienceontheweb.net?index=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=1)
+</div>
+
+<!--- ![](http://kolbasa.github.io/ueps/screenshots/ueps_neu_02.png) -->
+
+
 
 ------
 
@@ -16,6 +25,7 @@
   5. [Aussehen/Text anpassen](#aussehentext-anpassen)
 4. [Deploy mit Maven](#deploy-mit-maven)
 5. [Quellcodedokumentation](#quellcodedokumentation)
+6. [Screenshots](#quellcodedokumentation)
 
 ------
 
@@ -172,7 +182,7 @@ Die Nutzer-Authentifizierung erfolgt über die Open-Source Lernplattform [Moodle
 
 [test](src/main/java/de/uniwue/info6/webapp/session/SessionObject.java#L141-L166)
 
-``http://[hosturl]``test``/?userID=[user_id]&secureValue=[secure_value]&scenarioID=[scenario_id]``
+``http://[hosturl]/?userID=[user_id]&secureValue=[secure_value]&scenarioID=[scenario_id]``
 
 Ausgefülltes Beispiel
 ``http://localhost:8080/ueps/?scenarioID=1&userID=user_1&secureValue=d1ac3b14896c2faf640d1e00966fc065``
@@ -237,7 +247,7 @@ Anschließend kann die Anwendung mit folgendem Skript deployed werden:<br/>
 
 ------
 
-### Quellcodedokumentation
+## Quellcodedokumentation
 <!--- TODO: -->
 [Doxygen Dokumentation](http://kolbasa.github.io/ueps/doxygen/)
 

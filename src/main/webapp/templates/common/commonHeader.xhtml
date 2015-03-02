@@ -22,7 +22,6 @@
   limitations under the License.
   #L%
   -->
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -39,7 +38,7 @@ xmlns:p="http://primefaces.org/ui">
    <tr style="height:35px">
     <td>
      <p class="links">
-      <h:link value="#{txt['HEADER.LINK1']}" outcome="home" rendered="#{rights.showExerciseLink()}"
+      <h:link value="#{txt['HEADER.LINK1']}" outcome="home" rendered="#{scenarioController.isValidScenario()}"
       class="lightshadow #{moveTo.getHeaderLinkStyle('index.xhtml')}" />
       <!-- -->
       <h:link value="#{txt['HEADER.LINK2']}" rendered="#{rights.hasUserAddingRights()}" outcome="rights"
@@ -65,6 +64,12 @@ xmlns:p="http://primefaces.org/ui">
       <h:outputText class="maincolor" value="'" rendered="#{userSession.hasUser()}" />
       <h:outputText rendered="#{rights.isAdmin()}" value=" - " />
       <h:outputText rendered="#{rights.isAdmin()}" class="admin-text" value="#{txt['RIGHTS.ADMIN']}" />
+      <h:outputText class="maincolor" value=" - " rendered="#{userSession.hasUser()}" />
+      <p:commandLink styleClass="maincolor"
+          rendered="#{userSession.hasUser()}" action="#{moveTo.logout()}">
+       <h:outputText value=" Abmelden" />
+      </p:commandLink>
+
       <h:outputText class="maincolor" rendered="#{userSession.hasUser()}" value=")" />
      </p>
     </td>

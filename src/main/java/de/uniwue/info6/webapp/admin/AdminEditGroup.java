@@ -24,7 +24,9 @@ package de.uniwue.info6.webapp.admin;
  * #L%
  */
 
+import static de.uniwue.info6.misc.properties.PropBool.SHOWCASE_MODE;
 import static de.uniwue.info6.misc.properties.PropertiesFile.DEF_LANGUAGE;
+import static de.uniwue.info6.misc.properties.PropertiesFile.MAIN_CONFIG;
 
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -40,9 +42,6 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
-
-
-
 
 import de.uniwue.info6.database.map.ExerciseGroup;
 import de.uniwue.info6.database.map.Scenario;
@@ -88,6 +87,9 @@ public class AdminEditGroup implements Serializable {
 
   private Integer rated;
   private Integer ratedOriginal;
+
+  private Integer autoRate;
+  private Integer autoRateOriginal;
 
   private Date startDate;
   private Date startDateOriginal;
@@ -135,6 +137,14 @@ public class AdminEditGroup implements Serializable {
         sev = FacesMessage.SEVERITY_ERROR;
       }
 
+      // ------------------------------------------------ //
+      final boolean showCaseMode = Cfg.inst().getProp(MAIN_CONFIG, SHOWCASE_MODE);
+      if (message == null && showCaseMode) {
+        message = Cfg.inst().getProp(DEF_LANGUAGE, "SHOWCASE_ERROR");
+        sev = FacesMessage.SEVERITY_ERROR;
+      }
+      // ------------------------------------------------ //
+
       if (message == null) {
         try {
           if (isNewGroup) {
@@ -146,23 +156,31 @@ public class AdminEditGroup implements Serializable {
           exerciseGroup.setEndTime(endDate);
           exerciseGroup.setName(groupName);
 
+          // ------------------------------------------------ //
           if (rated == 1) {
             exerciseGroup.setIsRated(false);
           } else if (rated == 2 || rated == 3) {
             exerciseGroup.setIsRated(true);
           }
-
+          // ------------------------------------------------ //
           if (rated == 3) {
             exerciseGroup.setDescription("[NO_FEEDBACK]");
           } else {
             exerciseGroup.setDescription(null);
           }
+          // ------------------------------------------------ //
+          if (autoRate == 0 || autoRate == 0) {
+            exerciseGroup.setAutoReleaseRating(false);
+          } else {
+            exerciseGroup.setAutoReleaseRating(true);
+          }
+          // ------------------------------------------------ //
 
           if (isNewGroup) {
-            exerciseGroupDao.insertNewInstance(exerciseGroup);
+            exerciseGroupDao.insertNewInstanceP(exerciseGroup);
             isNewGroup = false;
           } else {
-            exerciseGroupDao.updateInstance(exerciseGroup);
+            exerciseGroupDao.updateInstanceP(exerciseGroup);
           }
 
           sev = FacesMessage.SEVERITY_INFO;
@@ -190,7 +208,7 @@ public class AdminEditGroup implements Serializable {
     scenarioDao = new ScenarioDao();
     exerciseGroupDao = new ExerciseGroupDao();
     Map<String, String> requestParams = ec.getRequestParameterMap();
-    ac = SessionObject.pull();
+    ac = SessionObject.pullFromSession();
     user = ac.getUser();
     rights = new UserRights().initialize();
     userHasRights = false;
@@ -209,8 +227,10 @@ public class AdminEditGroup implements Serializable {
               scenario = scenarioDao.getById(exerciseGroup.getScenario().getId());
               groupName = exerciseGroup.getName();
               groupNameOriginal = groupName;
-              Boolean temp = exerciseGroup.getIsRated();
-              if (temp == null || !temp) {
+
+              // ------------------------------------------------ //
+              Boolean ratedTemp = exerciseGroup.getIsRated();
+              if (ratedTemp == null || !ratedTemp) {
                 rated = 1;
               } else {
                 if (exerciseGroup.getDescription() == null
@@ -220,7 +240,18 @@ public class AdminEditGroup implements Serializable {
                   rated = 3;
                 }
               }
+              // ------------------------------------------------ //
+              Boolean autoRateTemp = exerciseGroup.getAutoReleaseRating();
+              if (autoRateTemp == null || !autoRateTemp) {
+                autoRate = 0;
+              } else {
+                autoRate = 1;
+              }
+              // ------------------------------------------------ //
+
               ratedOriginal = rated;
+              autoRateOriginal = autoRate;
+
               startDate = exerciseGroup.getStartTime();
               startDateOriginal = startDate;
               endDate = exerciseGroup.getEndTime();
@@ -235,7 +266,7 @@ public class AdminEditGroup implements Serializable {
           String param = requestParams.get(SCENARIO_PARAM);
           final int id = Integer.parseInt(param);
           scenario = scenarioDao.getById(id);
-          if (scenario != null && rights.hasEditingRight(user, scenario)) {
+          if (scenario != null && rights.hasEditingRight(user, scenario, true)) {
             isNewGroup = true;
             userHasRights = true;
           }
@@ -261,6 +292,21 @@ public class AdminEditGroup implements Serializable {
       return Cfg.inst().getProp(DEF_LANGUAGE, "RATED");
     }
     return Cfg.inst().getProp(DEF_LANGUAGE, "EDIT_GROUP.RATED_NO_FEED");
+  }
+
+  /**
+   *
+   *
+   * @return
+   */
+  public String getAutoRateStatus() {
+    if (autoRate == null || autoRate == 0) {
+      return Cfg.inst().getText("EDIT_GROUP.NO_AUTO_RATING");
+    }
+    if (autoRate == 1) {
+      return Cfg.inst().getText("EDIT_GROUP.AUTO_RATING");
+    }
+    return null;
   }
 
   /**
@@ -401,6 +447,20 @@ public class AdminEditGroup implements Serializable {
   }
 
   /**
+   * @return the autoRate
+   */
+  public Integer getAutoRate() {
+    return autoRate;
+  }
+
+  /**
+   * @param autoRate the autoRate to set
+   */
+  public void setAutoRate(Integer autoRate) {
+    this.autoRate = autoRate;
+  }
+
+  /**
    * @return the startDate
    */
   public Date getStartDate() {
@@ -484,6 +544,7 @@ public class AdminEditGroup implements Serializable {
   public void resetFields(ActionEvent actionEvent) {
     groupName = groupNameOriginal;
     rated = ratedOriginal;
+    autoRate = autoRateOriginal;
     startDate = startDateOriginal;
     endDate = endDateOriginal;
   }

@@ -24,7 +24,9 @@ package de.uniwue.info6.webapp.admin;
  * #L%
  */
 
+import static de.uniwue.info6.misc.properties.PropBool.SHOWCASE_MODE;
 import static de.uniwue.info6.misc.properties.PropertiesFile.DEF_LANGUAGE;
+import static de.uniwue.info6.misc.properties.PropertiesFile.MAIN_CONFIG;
 
 import java.io.Serializable;
 import java.sql.Connection;
@@ -45,8 +47,6 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
-
-
 
 import org.primefaces.event.RowEditEvent;
 
@@ -130,7 +130,7 @@ public class AdminEditExercise implements Serializable {
     scenarioDao = new ScenarioDao();
     exerciseGroupDao = new ExerciseGroupDao();
     Map<String, String> requestParams = ec.getRequestParameterMap();
-    ac = SessionObject.pull();
+    ac = SessionObject.pullFromSession();
     user = ac.getUser();
     solutions = new ArrayList<SolutionQuery>();
     solutionsToDelete = new ArrayList<SolutionQuery>();
@@ -171,7 +171,7 @@ public class AdminEditExercise implements Serializable {
         if (exerciseGroup != null) {
           scenario = scenarioDao.getById(exerciseGroup.getScenario().getId());
           if (scenario != null) {
-            if (rights.hasEditingRight(user, scenario)) {
+            if (rights.hasEditingRight(user, scenario, true)) {
               userHasRights = true;
               availableTables = connectionPool.getScenarioTableNames(scenario);
               connectionPool.resetTables(scenario, user);
@@ -226,6 +226,14 @@ public class AdminEditExercise implements Serializable {
       }
     }
 
+    // ------------------------------------------------ //
+    final boolean showCaseMode = Cfg.inst().getProp(MAIN_CONFIG, SHOWCASE_MODE);
+    if (message == null && showCaseMode) {
+      message = Cfg.inst().getProp(DEF_LANGUAGE, "SHOWCASE_ERROR");
+      sev = FacesMessage.SEVERITY_ERROR;
+    }
+    // ------------------------------------------------ //
+
     if (message == null) {
       try {
         sev = FacesMessage.SEVERITY_INFO;
@@ -245,10 +253,10 @@ public class AdminEditExercise implements Serializable {
         exercise.setName(name);
         exercise.setLastModified(new Date());
         if (isNewExercise) {
-          exerciseDao.insertNewInstance(exercise);
+          exerciseDao.insertNewInstanceP(exercise);
           isNewExercise = false;
         } else {
-          exerciseDao.updateInstance(exercise);
+          exerciseDao.updateInstanceP(exercise);
         }
 
         for (SolutionQuery sol : solutions) {
@@ -256,10 +264,10 @@ public class AdminEditExercise implements Serializable {
           String qu = sol.getQuery();
           if (qu != null && !qu.trim().isEmpty()) {
             if (exists) {
-              solutionDao.updateInstance(sol);
+              solutionDao.updateInstanceP(sol);
             } else {
               sol.setExercise(exercise);
-              solutionDao.insertNewInstance(sol);
+              solutionDao.insertNewInstanceP(sol);
             }
           }
         }
@@ -267,7 +275,7 @@ public class AdminEditExercise implements Serializable {
         for (SolutionQuery sol : solutionsToDelete) {
           boolean exists = solutionDao.checkIfExists(sol);
           if (exists) {
-            solutionDao.deleteInstance(sol);
+            solutionDao.deleteInstanceP(sol);
           }
         }
         solutionsToDelete.clear();

@@ -13,9 +13,9 @@ package de.uniwue.info6.webapp.lists;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,6 +26,7 @@ package de.uniwue.info6.webapp.lists;
 
 import static de.uniwue.info6.misc.properties.PropertiesFile.DEF_LANGUAGE;
 
+import java.io.File;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -38,6 +39,7 @@ import java.util.Locale;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.event.ColumnResizeEvent;
@@ -62,6 +64,7 @@ import de.uniwue.info6.database.map.daos.UserResultDao;
 import de.uniwue.info6.misc.DateFormatTools;
 import de.uniwue.info6.misc.StringTools;
 import de.uniwue.info6.misc.properties.Cfg;
+import de.uniwue.info6.webapp.admin.UserRights;
 
 /**
  *
@@ -77,9 +80,14 @@ public class ExGroupTableBean implements Serializable {
    */
   private static final long serialVersionUID = 1L;
 
+  private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(ExGroupTableBean.class);
+
+  private UserRights userRights;
+
   /*
    * **************************************************************
-   * daos **************************************************************
+   * daos
+   * **************************************************************
    */
   private ExerciseDao exerciseDao;
   private UserEntryDao userEntryDao;
@@ -110,13 +118,14 @@ public class ExGroupTableBean implements Serializable {
   @PostConstruct
   public void init() {
     // get exercise list
-    exerciseDao = new ExerciseDao();
-    userEntryDao = new UserEntryDao();
-    userResultDao = new UserResultDao();
-    solutionQueryDao = new SolutionQueryDao();
+    this.exerciseDao = new ExerciseDao();
+    this.userEntryDao = new UserEntryDao();
+    this.userResultDao = new UserResultDao();
+    this.solutionQueryDao = new SolutionQueryDao();
 
-    exerciseMap = new HashMap<ExerciseGroup, List<Exercise>>();
-    selectedExercises = new ArrayList<Exercise>();
+    this.exerciseMap = new HashMap<ExerciseGroup, List<Exercise>>();
+    this.selectedExercises = new ArrayList<Exercise>();
+    this.userRights = new UserRights().initialize();
   }
 
   /**
@@ -185,6 +194,61 @@ public class ExGroupTableBean implements Serializable {
     }
     return score;
   }
+
+  /**
+   *
+   *
+   * @return
+   */
+  public String getRatedAndRunningDescription(ExerciseGroup group) {
+    String iconPath = "";
+    try {
+      iconPath = "/" + new File(FacesContext.getCurrentInstance().getExternalContext().getRealPath("/")).getName();
+    } catch (Exception e) {
+      LOGGER.error("CAN NOT GET CONTEXT PATH.", e);
+    }
+    iconPath += "/resources/img/ex-info.png";
+    String description = null;
+
+    if (userRights.entriesCanBeEdited(group)) {
+      final String endDate = "<span style='font-weight:bold'>" + getEndDate(group) + "</span>";
+      final String infoIcon = "<img src='" + iconPath + "' style='position:relative;top:3px;left:1px' alt='I'>";
+      final String maxPoints = "<span style='font-weight:bold;color:green'>" + String.valueOf(getMaxPoints(group) + "</span>");
+      description = Cfg.inst().getText("EX.RATED_DESCRIPTION", endDate, infoIcon);
+
+      if (group.getAutoReleaseRating() != null && group.getAutoReleaseRating()) {
+        description += " " + Cfg.inst().getText("EX.RATED_DESCRIPTION_AUTO", maxPoints);
+      } else {
+        description += " " + Cfg.inst().getText("EX.RATED_DESCRIPTION_MANUAL", maxPoints);
+      }
+    } else {
+      description = "Die Bewertungen wurden noch nicht freigeschaltet.<br/>Es sind keine weiteren Abgaben mehr möglich.";
+    }
+    return description;
+  }
+
+
+  /**
+   *
+   *
+   * @param group
+   * @return
+   */
+  public String getRatedAndClosedDescription() {
+    String iconPath = "";
+    try {
+      iconPath = "/" + new File(FacesContext.getCurrentInstance().getExternalContext().getRealPath("/")).getName();
+    } catch (Exception e) {
+      LOGGER.error("CAN NOT GET CONTEXT PATH.", e);
+    }
+    String description = null;
+    final String infoIcon1 = "<img src='" + iconPath + "/resources/img/ex-correct.png' style='position:relative;top:3px;left:1px' alt='C'>";
+    final String infoIcon2 = "<img src='" + iconPath + "/resources/img/ex-false.png' style='position:relative;top:3px;left:1px' alt='F'>";
+    final String infoIcon3 = "<img src='" + iconPath + "/resources/img/ex-empty.png' style='position:relative;top:3px;left:1px' alt='E'>";
+    description = Cfg.inst().getText("EX.RATED_DESCRIPTION2", infoIcon1, infoIcon2, infoIcon3);
+    return description;
+  }
+
 
   /**
    *
@@ -278,15 +342,19 @@ public class ExGroupTableBean implements Serializable {
     long diff[] = new long[] { 0, 0, 0, 0 };
     /* sec */diff[3] = (diffInSeconds >= 60 ? diffInSeconds % 60 : diffInSeconds);
     /* min */diff[2] = (diffInSeconds = (diffInSeconds / 60)) >= 60 ? diffInSeconds % 60
-        : diffInSeconds;
+                       : diffInSeconds;
     /* hours */diff[1] = (diffInSeconds = (diffInSeconds / 60)) >= 24 ? diffInSeconds % 24
-        : diffInSeconds;
+                         : diffInSeconds;
     /* days */diff[0] = (diffInSeconds = (diffInSeconds / 24));
 
-    return (" - [Noch "
-        + String.format("%d Tag%s, %d Stunde%s, %d Minute%s", diff[0], diff[0] > 1 ? "e" : "",
-            diff[1], diff[1] > 1 ? "n" : "", diff[2], diff[2] > 1 ? "n" : "") + "]").replace(
-        "0 Tag, ", "").replace("0 Stunde, ", "").replace(", 0 Minute", "");
+    if (diff[0] < 0 || diff[1] < 0 || diff[2] < 0 || diff[3] < 0) {
+      return Cfg.inst().getText("EX.CLOSED");
+    } else {
+      return (" - [Noch "
+              + String.format("%d Tag%s, %d Stunde%s, %d Minute%s", diff[0], diff[0] > 1 ? "e" : "",
+                              diff[1], diff[1] > 1 ? "n" : "", diff[2], diff[2] > 1 ? "n" : "") + "]").replace(
+               "0 Tag, ", "").replace("0 Stunde, ", "").replace(", 0 Minute", "");
+    }
   }
 
   /**
@@ -297,8 +365,8 @@ public class ExGroupTableBean implements Serializable {
   public String getGroupName(ExerciseGroup group) {
     if (group != null && group.getIsRated() != null) {
       return (group.getIsRated() ? Cfg.inst().getProp(DEF_LANGUAGE, "AC.EX_RA") : Cfg.inst().getProp(DEF_LANGUAGE, "AC.EX"))
-          + "-&#8195;" + StringTools.trimToLengthIndicator(group.getName(), 45)
-          + resultFeedback(group);
+             + "-&#8195;" + StringTools.trimToLengthIndicator(group.getName(), 45)
+             + resultFeedback(group);
     }
     return "ERROR";
   }
@@ -353,18 +421,17 @@ public class ExGroupTableBean implements Serializable {
    * @return
    */
   public boolean showResults(ExerciseGroup group) {
-    if (group != null) {
-      if (!group.getIsRated()) {
-        return true;
-      }
-      Date end = group.getEndTime();
-      if (end != null) {
-        if (end.before(new Date())) {
-          return true;
-        }
-      }
-    }
-    return false;
+    return this.userRights.showResults(group);
+  }
+
+  /**
+   *
+   *
+   * @param group
+   * @return
+   */
+  public boolean entriesCanBeEdited(ExerciseGroup group) {
+    return this.userRights.entriesCanBeEdited(group);
   }
 
   /**
@@ -374,7 +441,7 @@ public class ExGroupTableBean implements Serializable {
    * @return
    */
   public boolean hideResults(ExerciseGroup group) {
-    return !showResults(group);
+    return !this.userRights.showResults(group);
   }
 
   /**
@@ -541,7 +608,7 @@ public class ExGroupTableBean implements Serializable {
     UserEntry entry = userEntryDao.getLastUserEntry(ex);
     if (entry != null) {
       DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.FULL, new Locale(
-          "de", "DE"));
+                        "de", "DE"));
       return df.format(entry.getEntryTime());
     }
     return null;

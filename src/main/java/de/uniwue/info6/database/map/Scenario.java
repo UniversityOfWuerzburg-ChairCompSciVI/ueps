@@ -34,6 +34,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import de.uniwue.info6.database.map.daos.ScenarioDao;
 import de.uniwue.info6.misc.StringTools;
 
 /**
@@ -277,5 +278,9 @@ public class Scenario implements java.io.Serializable {
   @XmlTransient
   public void setScenarios(Set scenarios) {
     this.scenarios = scenarios;
+  }
+
+  public Scenario pull() {
+    return new ScenarioDao().getById(getId());
   }
 }

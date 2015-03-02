@@ -81,7 +81,7 @@ public class AutoCompleteUser {
     userEntryDao = new UserEntryDao();
     notFound = Cfg.inst().getProp(DEF_LANGUAGE, "RIGHTS.USER_NOT_FOUND");
 
-    SessionObject ac = SessionObject.pull();
+    SessionObject ac = SessionObject.pullFromSession();
     if (ac != null) {
       user = ac.getUser();
     }

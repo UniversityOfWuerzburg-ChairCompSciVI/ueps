@@ -36,8 +36,6 @@ xmlns:p="http://primefaces.org/ui">
     <span class="error">#{txt['SCENARIO']} #{txt['ADMINTREE.MENU_EDIT']}</span>
    </ui:define>
    <ui:define name="content">
-    <h:graphicImage class="permission_error" value="#{img['BASICS.MULTIPASS']}"
-    rendered="#{not edit_sc.userHasRights}" />
     <script type="text/javascript">
     <!-- ===================================== -->
     function context_tooltip() {
@@ -101,13 +99,13 @@ xmlns:p="http://primefaces.org/ui">
        <!-- ##################################### -->
        <!--  -->
        <!-- ##################################### -->
-       <h:outputLabel for="description" styleClass="boldPoints" >
+       <h:outputLabel for="description" styleClass="boldPoints" rendered="#{edit_sc.renderDBFields()}">
         <h:outputText value="#{txt['EDIT_SC.RIGHTS']}:" />
        </h:outputLabel>
-       <p:outputPanel id="description" style="text-align:justify">
+       <p:outputPanel id="description" style="text-align:justify" rendered="#{edit_sc.renderDBFields()}">
         <h:outputText escape="false" style="white-space:pre-wrap"
         value="#{txt['EDIT_SC.DESCRIPTION_TITLE']}" />
-    <h:outputText escape="false" id="add_rights_script" style="text-align:left;white-space:pre-wrap;font-size:12px;
+        <h:outputText escape="false" id="add_rights_script" style="text-align:left;white-space:pre-wrap;font-size:12px;
                 border:1px dashed black;display:block;padding:5px;margin-top:10px" styleClass="monospace"
         value="#{edit_sc.addRightsScripts}" />
         <br />
@@ -192,10 +190,10 @@ xmlns:p="http://primefaces.org/ui">
        <!-- ##################################### -->
        <!-- database-ip field -->
        <!-- ##################################### -->
-       <h:outputLabel style="width: 100px" for="scenario_dbhost" styleClass="boldPoints">
+       <h:outputLabel style="width: 100px" for="scenario_dbhost" styleClass="boldPoints" rendered="#{edit_sc.renderDBFields()}">
         <h:outputText value="#{txt['EDIT_SC.DB_HOST']}:" />
        </h:outputLabel>
-       <h:panelGroup>
+       <h:panelGroup rendered="#{edit_sc.renderDBFields()}">
         <h:outputText id="scenario_dbhost_original" escape="false"
         value="#{edit_sc.hasHost() ? edit_sc.dbHost : '---'}" />
         <br />
@@ -210,10 +208,10 @@ xmlns:p="http://primefaces.org/ui">
        <!-- ##################################### -->
        <!-- database-port field -->
        <!-- ##################################### -->
-       <h:outputLabel style="width: 100px" for="scenario_dbport" styleClass="boldPoints">
+       <h:outputLabel style="width: 100px" for="scenario_dbport" styleClass="boldPoints" rendered="#{edit_sc.renderDBFields()}">
         <h:outputText value="#{txt['EDIT_SC.DB_PORT']}:" />
        </h:outputLabel>
-       <h:panelGroup>
+       <h:panelGroup rendered="#{edit_sc.renderDBFields()}">
         <h:outputText id="scenario_dbport_original" escape="false"
         value="#{edit_sc.hasPort() ? edit_sc.dbPort : '---'}" />
         <br />
@@ -227,10 +225,10 @@ xmlns:p="http://primefaces.org/ui">
        <!-- ##################################### -->
        <!-- database-name field -->
        <!-- ##################################### -->
-       <h:outputLabel style="width: 100px" for="scenario_dbname" styleClass="boldPoints">
+       <h:outputLabel style="width: 100px" for="scenario_dbname" styleClass="boldPoints" rendered="#{edit_sc.renderDBFields()}">
         <h:outputText value="#{txt['EDIT_SC.DB_NAME']}:" />
        </h:outputLabel>
-       <h:panelGroup>
+       <h:panelGroup rendered="#{edit_sc.renderDBFields()}">
         <h:outputText id="scenario_dbname_original" escape="false"
         value="#{edit_sc.hasDBName() ? edit_sc.dbName : '---'}" />
         <br />
@@ -245,10 +243,10 @@ xmlns:p="http://primefaces.org/ui">
        <!-- ##################################### -->
        <!-- database-user field -->
        <!-- ##################################### -->
-       <h:outputLabel style="width: 100px" for="scenario_dbuser" styleClass="boldPoints">
+       <h:outputLabel style="width: 100px" for="scenario_dbuser" styleClass="boldPoints" rendered="#{edit_sc.renderDBFields()}">
         <h:outputText value="#{txt['EDIT_SC.DB_USER']}:" />
        </h:outputLabel>
-       <h:panelGroup>
+       <h:panelGroup rendered="#{edit_sc.renderDBFields()}">
         <h:outputText id="scenario_dbuser_original" escape="false"
         value="#{edit_sc.hasUser() ? edit_sc.dbUser : '---'}" />
         <br />
@@ -263,10 +261,10 @@ xmlns:p="http://primefaces.org/ui">
        <!-- ##################################### -->
        <!-- database-pass field -->
        <!-- ##################################### -->
-       <h:outputLabel style="width: 100px" for="scenario_dbpass" styleClass="boldPoints">
+       <h:outputLabel style="width: 100px" for="scenario_dbpass" styleClass="boldPoints" rendered="#{edit_sc.renderDBFields()}">
         <h:outputText value="#{txt['EDIT_SC.DB_PASS']}:" />
        </h:outputLabel>
-       <h:panelGroup>
+       <h:panelGroup rendered="#{edit_sc.renderDBFields()}">
         <h:outputText id="scenario_dbpass_original" escape="false" value="#{edit_sc.getPasswortString()}" />
         <br />
         <p:inplace style="color:green" id="scenario_dbpass" emptyLabel="Undefined" effectSpeed="fast"
@@ -420,7 +418,7 @@ actionListener="#{edit_sc.resetImageFile}">
      <h:panelGrid style="display:inline-table" columns="7" styleClass="admin_buttons">
       <p:commandButton value="#{txt['SAVE']}" styleClass="save_button" process="@all"
       update="admin_grid mod_time" actionListener="#{edit_sc.save}" icon="ui-icon-disk"
-      onclick="disableCloseConfirmationForever();window.scrollTo(0, 0);" />
+      onclick="disableCloseConfirmationForever();window.scrollTo(0, 0);" oncomplete="hide_message_timeout()" />
       <p:commandButton value="#{txt['EDIT_SC.CANCEL']}" ajax="false" action="admin" icon="ui-icon-trash" />
      </h:panelGrid>
     </h:form>

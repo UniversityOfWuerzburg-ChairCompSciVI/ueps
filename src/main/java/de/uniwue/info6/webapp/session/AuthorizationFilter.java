@@ -28,10 +28,14 @@ import static de.uniwue.info6.misc.properties.PropBool.FORCE_RESET_DATABASE;
 import static de.uniwue.info6.misc.properties.PropBool.IMPORT_DB_IF_EMPTY;
 import static de.uniwue.info6.misc.properties.PropBool.IMPORT_EXAMPLE_SCENARIO;
 import static de.uniwue.info6.misc.properties.PropBool.LOG_BROWSER_HISTORY;
+import static de.uniwue.info6.misc.properties.PropBool.SHOWCASE_MODE;
 import static de.uniwue.info6.misc.properties.PropBool.USE_FALLBACK_USER;
 import static de.uniwue.info6.misc.properties.PropInteger.SESSION_TIMEOUT;
 import static de.uniwue.info6.misc.properties.PropString.SCENARIO_RESOURCES_PATH;
 import static de.uniwue.info6.misc.properties.PropertiesFile.MAIN_CONFIG;
+import static de.uniwue.info6.webapp.session.SessionObject.DEMO_ADMIN;
+import static de.uniwue.info6.webapp.session.SessionObject.DEMO_STUDENT;
+import static de.uniwue.info6.webapp.session.SessionObject.SESSION_POSITION;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,6 +52,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Random;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -60,8 +65,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-
 
 import org.hibernate.internal.SessionFactoryImpl;
 
@@ -78,13 +81,11 @@ import de.uniwue.info6.database.map.UserEntry;
 import de.uniwue.info6.database.map.daos.ExerciseDao;
 import de.uniwue.info6.database.map.daos.ExerciseGroupDao;
 import de.uniwue.info6.database.map.daos.ScenarioDao;
-import de.uniwue.info6.database.map.daos.UserDao;
 import de.uniwue.info6.database.map.daos.UserEntryDao;
 import de.uniwue.info6.misc.StringTools;
 import de.uniwue.info6.misc.properties.Cfg;
 import de.uniwue.info6.misc.properties.PropString;
 import de.uniwue.info6.webapp.admin.UserRights;
-import de.uniwue.info6.webapp.lists.ScenarioController;
 
 /**
  *
@@ -101,11 +102,12 @@ public class AuthorizationFilter implements Filter, Serializable {
   LOGOUT_PAGE        = "logout",
   PERMISSION_PAGE    = "permission",
   PAGE_NOT_FOUND     = "404",
-  SESSION_POSITION   = "auth_controller",
   ERROR_PAGE         = "starterror",
   BROWSER_LOG_DIR    = "log",
   TEMP_SCENARIO_DIR  = "0",
+  INDEX_PAGE         = "/index.xhtml",
   ADMIN_PAGE         = "/admin.xhtml",
+  TASK_PAGE          = "/task.xhtml",
   EDIT_EXERCISE      = "/edit_ex.xhtml",
   EDIT_GROUP         = "/edit_group.xhtml",
   EDIT_SCENARIO      = "/edit_scenario.xhtml",
@@ -114,20 +116,27 @@ public class AuthorizationFilter implements Filter, Serializable {
   EDIT_RIGHTS        = "/user_rights.xhtml",
   SCENARIO_PARAM     = "scenario",
   GROUP_PARAM        = "group",
-  SUBMISSION_PARAM   = "submission";
+  SUBMISSION_PARAM   = "submission",
+  EXERCISE_PARAM     = "exercise";
 
-  private final static String userID = "userID", secureValue = "secureValue",
-                              scenarioID = "scenarioID";
+  private final static String
+  NEW_SCENARIO_PAR   = "new";
+
+  private final static String
+  userID             = "userID",
+  encryptedCode      = "encryptedCode",
+  scenarioID         = "scenarioID";
+
   private final static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd-HH_mm_ss");
 
   private final static String SCRIPT_PATH = StringTools.shortenUnixHomePathReverse(Cfg.inst()
       .getProp(MAIN_CONFIG, SCENARIO_RESOURCES_PATH));
   private final static String FALLBACK_USER = Cfg.inst().getProp(MAIN_CONFIG,
-      PropString.FALLBACK_USER);
-  private final static String FALLBACK_SECUREVALUE = Cfg.inst().getProp(MAIN_CONFIG,
-      PropString.FALLBACK_SECUREVALUE);
+      PropString.FALLBACK_USER_ID);
+  private final static String FALLBACK_ENCRYPTED_CODE = Cfg.inst().getProp(MAIN_CONFIG,
+      PropString.FALLBACK_ENCRYPTED_CODE);
 
-  private String[] id, sv, sc;
+  private String[] id, ec, sc;
 
   private User user;
   private Scenario scenario;
@@ -181,15 +190,17 @@ public class AuthorizationFilter implements Filter, Serializable {
       errorDescription = "<br/>";
 
       if (!checkDBConnection) {
-        errorDescription += "[problem creating connection to main database]<br/>"
-                            + (dbErrorMessage != null ? "LOG: " + dbErrorMessage : "")
-                            + "<br/><br/>";
+        errorDescription +=
+          "[problem creating connection to main database]<br/>"
+          + (dbErrorMessage != null ? "LOG: " + dbErrorMessage : "")
+          + "<br/><br/>";
       }
 
       if (!checkMainScenarioPath) {
-        errorDescription += "[problem finding main scenario path given by config.properties]<br/>"
-                            + (mainPathErrorMessage != null ? "LOG: " + mainPathErrorMessage : "")
-                            + "<br/>";
+        errorDescription +=
+          "[problem finding main scenario path given by config.properties]<br/>"
+          + (mainPathErrorMessage != null ? "LOG: " + mainPathErrorMessage : "")
+          + "<br/>";
       }
 
       LOGGER.error("NOT ALL RESOURCES FOUND, GOING TO SHOW ERRORPAGE");
@@ -343,19 +354,17 @@ public class AuthorizationFilter implements Filter, Serializable {
                                               .getSessionFactory();
       Properties props = sessionFactoryImpl.getProperties();
 
-      url = props.get("hibernate.connection.url").toString();
-      dbUser = props.get("hibernate.connection.username").toString();
-      Object optionalPass = props.get("hibernate.connection.password");
+      url                   = props.get("hibernate.connection.url").toString();
+      dbUser                = props.get("hibernate.connection.username").toString();
+      dbName                = props.get("hibernate.default_catalog").toString();
+      Object optionalPass   = props.get("hibernate.connection.password");
+
       if (optionalPass != null) {
         dbPass = optionalPass.toString();
       }
-      dbName = props.get("hibernate.default_catalog").toString();
 
-      // Class.forName("com.mysql.jdbc.Driver"); //Register JDBC Driver
-      // Class.forName("org.drizzle.jdbc.DrizzleDriver"); //Register JDBC Driver
       Class.forName("org.mariadb.jdbc.Driver"); // Register JDBC Driver
-      connection = DriverManager.getConnection(url, dbUser, dbPass); // Open a
-      // connection
+      connection = DriverManager.getConnection(url, dbUser, dbPass);
 
       resultSet = connection.getMetaData().getCatalogs();
       while (resultSet.next()) {
@@ -406,9 +415,9 @@ public class AuthorizationFilter implements Filter, Serializable {
    *
    */
   private void addSessionObject(HttpSession session) {
-    SessionObject ac = (SessionObject) session.getAttribute(SESSION_POSITION);
-    if (ac == null) {
-      new SessionObject(session);
+    final SessionObject sessionObject = (SessionObject) session.getAttribute(SESSION_POSITION);
+    if (sessionObject == null) {
+      new SessionObject(session).pushToSession();
     }
   }
 
@@ -423,14 +432,14 @@ public class AuthorizationFilter implements Filter, Serializable {
   @Override
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
   throws ServletException, IOException {
-    HttpServletRequest req = (HttpServletRequest) request;
-    HttpServletResponse res = (HttpServletResponse) response;
+    final HttpServletRequest req = (HttpServletRequest) request;
+    final HttpServletResponse res = (HttpServletResponse) response;
 
+    final String path = req.getServletPath();
     try {
       response.setCharacterEncoding("UTF-8");
       request.setCharacterEncoding("UTF-8");
 
-      // String url = req.getServletPath();
       HttpSession session = req.getSession(false);
 
       if (session == null) {
@@ -444,21 +453,33 @@ public class AuthorizationFilter implements Filter, Serializable {
           if (fatalError) {
             throwErrorPage(res, req);
           } else {
+            // ------------------------------------------------ //
+            final String[] credentials = getCredentials(req);
 
-            if (getCredentials(req) != null) {
-              boolean success = checkCredentials(req, session);
-              if (!success) {
+            final boolean relevantDocument =
+              path.contains(INDEX_PAGE)
+              || path.contains(TASK_PAGE)
+              || path.contains(EDIT_GROUP)
+              || path.contains(EDIT_SCENARIO)
+              || path.contains(EDIT_RIGHTS)
+              || path.contains(EDIT_EXERCISE)
+              || path.contains(EDIT_SUBMISSION)
+              || path.contains(SUBMISSION_PAGE);
+
+            if (credentials != null && relevantDocument) {
+              if (!checkCredentials(req, session, credentials)) {
                 SessionListener.removeSession(session);
               }
             }
+            // ------------------------------------------------ //
 
             if (!SessionListener.sessionExists(session)) {
               logoutUser(res, req);
             }
 
-            if (user != null && rights != null) {
-              String path = req.getServletPath();
+            // ------------------------------------------------ //
 
+            if (user != null && rights != null) {
               if (session != null) {
                 SessionObject ac = (SessionObject) session.getAttribute(SESSION_POSITION);
                 if (ac != null) {
@@ -469,57 +490,114 @@ public class AuthorizationFilter implements Filter, Serializable {
                 }
               }
 
-
               // ------------------------------------------------ //
+
               final Map<String, String[]> requestParams = request.getParameterMap();
               final String[] scID = requestParams.get(SCENARIO_PARAM);
               final String[] grID = requestParams.get(GROUP_PARAM);
               final String[] sbID = requestParams.get(SUBMISSION_PARAM);
+              final String[] exID = requestParams.get(EXERCISE_PARAM);
 
               // ------------------------------------------------ //
 
-              boolean editPermissionError = (path.contains(ADMIN_PAGE) || path.contains(EDIT_EXERCISE)
-                                             || path.contains(EDIT_GROUP) || path.contains(EDIT_SCENARIO))
-                                            && !rights.hasEditingRight(user);
-              if (scID != null && scID.length > 0 && !editPermissionError) {
+              // if an exercise id was given, get the scenario it belongs to
+              if (isValidGetParameter(exID, true)) {
+                final Exercise exercise = this.exerciseDao.getById(Integer.parseInt(exID[0]));
+                if (exercise != null && exercise.getExerciseGroup() != null) {
+                  final Scenario scenario = this.scenarioDao.getById(exercise.getExerciseGroup().getId());
+                  if (scenario != null) {
+                    this.scenario = scenario;
+                  }
+                }
+              }
+
+              // ------------------------------------------------ //
+
+              boolean editPermissionError =
+                (
+                  path.contains(ADMIN_PAGE) && !rights.hasEditingRight(user)
+                  || path.contains(EDIT_EXERCISE)
+                  || path.contains(EDIT_GROUP)
+                  || path.contains(EDIT_SCENARIO)
+                )
+                ;
+
+              // ------------------------------------------------ //
+
+              if (editPermissionError && path.contains(EDIT_SCENARIO) && isValidGetParameter(scID)) {
                 try {
                   final Scenario scenario = this.scenarioDao.getById(Integer.parseInt(scID[0]));
                   if (scenario != null) {
+                    this.scenario = scenario;
                     editPermissionError = !rights.hasEditingRight(user, scenario);
                   }
                 } catch (NumberFormatException e) {
-                  if (scID[0].trim().equals("new")) {
-                    if (!rights.isAdmin(user)) {
-                      editPermissionError = true;
-                    }
+                  if (scID[0].trim().equals(NEW_SCENARIO_PAR)) {
+                    editPermissionError = !rights.isAdmin(user);
                   }
-                }
-              }
-
-              if (grID != null && grID.length > 0 && !editPermissionError) {
-                final ExerciseGroup group = this.exerciseGroupDao.getById(Integer.parseInt(grID[0]));
-                if (group != null) {
-                  editPermissionError = !rights.hasEditingRight(user, group);
                 }
               }
 
               // ------------------------------------------------ //
-              boolean editSubmissionError = (path.contains(SUBMISSION_PAGE) || path.contains(EDIT_SUBMISSION))
-                                            && !rights.hasRatingRight(user);
-              if (sbID != null && sbID.length > 0 && !editSubmissionError) {
+
+              if (editPermissionError && path.contains(EDIT_GROUP)) {
+                if (isValidGetParameter(grID, true)) {
+                  final ExerciseGroup group = this.exerciseGroupDao.getById(Integer.parseInt(grID[0]));
+                  if (group != null) {
+                    editPermissionError = !rights.hasEditingRight(user, group);
+                  }
+                } else if (isValidGetParameter(scID, true)) {
+                  final Scenario scenario = this.scenarioDao.getById(Integer.parseInt(scID[0]));
+                  if (scenario != null) {
+                    editPermissionError = !rights.hasEditingRight(user, scenario, true);
+                  }
+                }
+              }
+
+              // ------------------------------------------------ //
+
+              if (editPermissionError && path.contains(EDIT_EXERCISE)) {
+                if (isValidGetParameter(exID, true)) {
+                  final Exercise exercise = this.exerciseDao.getById(Integer.parseInt(exID[0]));
+                  if (exercise != null) {
+                    editPermissionError = !rights.hasEditingRight(user, exercise);
+                  }
+                } else if (isValidGetParameter(grID, true)) {
+                  final ExerciseGroup group = this.exerciseGroupDao.getById(Integer.parseInt(grID[0]));
+                  if (group != null) {
+                    editPermissionError = !rights.hasEditingRight(user, group);
+                  }
+                }
+              }
+
+              // ------------------------------------------------ //
+
+              boolean editSubmissionError =
+                (
+                  path.contains(SUBMISSION_PAGE) && !rights.hasRatingRight(user)
+                  || path.contains(EDIT_SUBMISSION)
+                );
+
+              if (editSubmissionError && isValidGetParameter(sbID, true)) {
                 final UserEntry userEntry = this.userEntryDao.getById(Integer.parseInt(sbID[0]));
                 if (userEntry != null) {
                   final Exercise exercise = exerciseDao.getById(userEntry.getExercise().getId());
                   editSubmissionError = !rights.hasRatingRight(user, exercise);
                 }
               }
+
               // ------------------------------------------------ //
-              boolean editUserRightsError = path.contains(EDIT_RIGHTS) && !rights.hasUserAddingRights(user);
+
+              final boolean editUserRightsError = path.contains(EDIT_RIGHTS) && !rights.hasUserAddingRights(user);
+
               // ------------------------------------------------ //
 
+              final boolean viewingRightsError = path.contains(TASK_PAGE) && !rights.hasViewRights(user, scenario);
 
+              // ------------------------------------------------ //
 
-              if (editPermissionError || editSubmissionError || editUserRightsError) {
+              // System.out.println(editPermissionError + " " + editSubmissionError + " " + editUserRightsError + " " + viewingRightsError);
+              if (editPermissionError || editSubmissionError || editUserRightsError || viewingRightsError) {
                 throwPermissionError(res, req);
               }
 
@@ -538,10 +616,11 @@ public class AuthorizationFilter implements Filter, Serializable {
 
     try {
       chain.doFilter(request, response);
+    } catch (IndexOutOfBoundsException e) {
     } catch (FacesFileNotFoundException e) {
       this.throw404Error(res, req);
     } catch (Exception e) {
-      if (e.getMessage().contains("sendError()")) {
+      if (e.getMessage().contains("sendError()") || e.getMessage().contains("Broken pipe")) {
         LOGGER.info("UNEXPECTED ERROR WITH CHAINFILTER", e);
       } else {
         LOGGER.error("UNEXPECTED ERROR WITH CHAINFILTER", e);
@@ -554,14 +633,23 @@ public class AuthorizationFilter implements Filter, Serializable {
    *
    * @param session
    */
-  private boolean checkCredentials(ServletRequest request, HttpSession session) {
-    String[] id = getCredentials(request);
+  private boolean checkCredentials(HttpServletRequest request, HttpSession session, String[] credentials) {
     try {
-      if ((session != null && id != null)) {
+      if (session != null && credentials != null) {
+
+        final String sessionUserID = credentials[0];
+        final String sessionEncryptedCode = credentials[1];
+        final String sessionScenarioID = credentials[2];
+
         SessionObject sessionObject = (SessionObject) session.getAttribute(SESSION_POSITION);
 
         if (sessionObject != null) {
-          sessionObject = sessionObject.init(id[0], id[1], id[2], request.getRemoteAddr());
+          String ipAddress = request.getRemoteAddr();
+          if (ipAddress.equals("0:0:0:0:0:0:0:1")) {
+            ipAddress = "127.0.0.1";
+          }
+
+          sessionObject.init(sessionUserID, sessionEncryptedCode, sessionScenarioID, ipAddress);
 
           if (sessionObject.loginSuccessfull()) {
             this.user = sessionObject.getUser();
@@ -570,12 +658,16 @@ public class AuthorizationFilter implements Filter, Serializable {
               String userAgent = req.getHeader("User-Agent");
 
               if (Cfg.inst().getProp(MAIN_CONFIG, LOG_BROWSER_HISTORY)
-                  && !SessionListener.userExists(user) && !user.getId().equals(FALLBACK_USER)) {
+                  && !SessionListener.userExists(user)
+                  && !user.getId().equals(FALLBACK_USER)) {
                 logBrowser(user.getId() + "\t" + userAgent);
               }
 
-              SessionListener.addUser(session, user, scenario);
-              session.setMaxInactiveInterval(Cfg.inst().getProp(MAIN_CONFIG, SESSION_TIMEOUT));
+              SessionListener.addUser(session, this.user, scenario);
+
+              int timeout = Cfg.inst().getProp(MAIN_CONFIG, SESSION_TIMEOUT);
+              timeout = (timeout - 30 > 1) ? (timeout - 30) : timeout;
+              session.setMaxInactiveInterval(timeout);
             }
             return true;
           }
@@ -613,34 +705,114 @@ public class AuthorizationFilter implements Filter, Serializable {
       Map<String, String[]> requestParams = request.getParameterMap();
 
       id = requestParams.get(userID);
-      sv = requestParams.get(secureValue);
+      ec = requestParams.get(encryptedCode);
       sc = requestParams.get(scenarioID);
 
-      final boolean userIDMissing = !isValidGetParameter(id);
-      final boolean secureValueMissing = !isValidGetParameter(sv);
+      // ------------------------------------------------ //
 
-      if (Cfg.inst().getProp(MAIN_CONFIG, USE_FALLBACK_USER)) {
-        HttpServletRequest req = (HttpServletRequest) request;
-        HttpSession session = req.getSession(false);
-        if (!SessionListener.sessionExists(session)) {
-          if (userIDMissing) {
-            id = new String[] { FALLBACK_USER };
-          }
-          if (secureValueMissing) {
-            sv = new String[] { FALLBACK_SECUREVALUE };
+      boolean validID = isValidGetParameter(id);
+      boolean validEC = isValidGetParameter(ec);
+      boolean validSC = isValidGetParameter(sc, true);
+
+      // ------------------------------------------------ //
+
+      String idGET = validID ? String.valueOf(id[0]) : null;
+      String ecGET = validEC ? String.valueOf(ec[0]) : null;
+      String scGET = validSC ? String.valueOf(sc[0]) : null;
+
+      // ------------------------------------------------ //
+
+      final boolean fallbackUser = Cfg.inst().getProp(MAIN_CONFIG, USE_FALLBACK_USER);
+      final boolean showCaseMode = Cfg.inst().getProp(MAIN_CONFIG, SHOWCASE_MODE);
+
+      // ------------------------------------------------ //
+
+      final HttpServletRequest req = (HttpServletRequest) request;
+      final HttpSession session = req.getSession(false);
+      final User sessionUser = SessionListener.getUser(session);
+      final boolean sessionExists = SessionListener.sessionExists(session);
+
+      // ------------------------------------------------ //
+
+      final boolean showCaseUserPar =
+        validID &&
+        (
+          idGET.equals(DEMO_ADMIN) || idGET.equals(DEMO_STUDENT)
+        );
+
+      // ------------------------------------------------ //
+
+      final boolean showCaseUser =
+        sessionUser != null &&
+        (
+          sessionUser.getId().startsWith(DEMO_ADMIN)
+          || sessionUser.getId().startsWith(DEMO_STUDENT)
+        );
+
+      // ------------------------------------------------ //
+
+      final boolean credentialsFound =
+        validID && sessionUser != null &&
+        (
+          sessionUser.getId().equals(idGET) ||
+          (
+            showCaseUserPar && showCaseUser
+            && sessionUser.getId().startsWith(idGET)
+          )
+        );
+
+      // ------------------------------------------------ //
+
+      if (!sessionExists || !credentialsFound || validSC) {
+
+        // ------------------------------------------------ //
+        if (fallbackUser || showCaseMode) {
+          if (showCaseMode && !credentialsFound) {
+            if (showCaseUserPar) {
+              final Random random = new Random();
+              final int maxRandom = 10000;
+              String userIDPrefix = DEMO_STUDENT;
+
+              if (validID && idGET.equals(DEMO_ADMIN)) {
+                userIDPrefix = DEMO_ADMIN;
+              }
+
+              String userName = userIDPrefix + "_" + random.nextInt(maxRandom);
+              while (SessionListener.userExists(userName)) {
+                userName = userIDPrefix + "_" + random.nextInt(maxRandom);
+              }
+
+              idGET =  userName;
+              ecGET = String.valueOf(random.nextInt(maxRandom));
+              validID = true;
+              validEC = true;
+            }
+          } else if (!validID || !validEC) {
+            idGET = FALLBACK_USER;
+            ecGET = FALLBACK_ENCRYPTED_CODE;
+            validID = true;
+            validEC = true;
           }
         }
-      }
 
-      if (!userIDMissing && !secureValueMissing) {
-        if (isValidGetParameter(sc, true)) {
-          scenario = scenarioDao.getById(Integer.parseInt(sc[0]));
-          return new String[] { String.valueOf(id[0]), String.valueOf(sv[0]), String.valueOf(sc[0])};
-        } else {
-          return new String[] { String.valueOf(id[0]), String.valueOf(sv[0]), null};
+        // ------------------------------------------------ //
+
+        if (validID && validEC && !idGET.equals(DEMO_ADMIN)
+            && !idGET.equals(DEMO_STUDENT)) {
+          if (validSC) {
+            scenario = scenarioDao.getById(Integer.valueOf(scGET));
+            return new String[] { idGET, ecGET, scGET};
+          } else {
+            return new String[] { idGET, ecGET, null};
+          }
         }
-      }
+        // ------------------------------------------------ //
 
+      }
+      // ------------------------------------------------ //
+
+    } catch (NullPointerException e) {
+      // TODO:
     } catch (Exception e) {
       LOGGER.error("PROBLEM OCCURRED GETTING LOGIN PARAMETERS", e);
     }
@@ -654,7 +826,7 @@ public class AuthorizationFilter implements Filter, Serializable {
    * @param parameter
    * @return
    */
-  private boolean isValidGetParameter(String[] parameter) {
+  private boolean isValidGetParameter(final String[] parameter) {
     return isValidGetParameter(parameter, false);
   }
 
@@ -665,7 +837,7 @@ public class AuthorizationFilter implements Filter, Serializable {
    * @return
    */
   private boolean isValidGetParameter(final String[] parameter, boolean number) {
-    if (parameter == null || parameter.length == 0 || parameter[0] == null || parameter[0].isEmpty()) {
+    if (parameter == null || parameter.length == 0 || parameter[0] == null || parameter[0].trim().isEmpty()) {
       return false;
     }
     if (number) {

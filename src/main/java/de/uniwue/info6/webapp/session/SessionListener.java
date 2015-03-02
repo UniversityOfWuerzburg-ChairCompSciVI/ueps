@@ -78,7 +78,6 @@ public class SessionListener implements HttpSessionListener, Serializable {
   public static void addUser(HttpSession session, User user, Scenario scenario) {
     if (user != null) {
       try {
-        // lock.lock();
         if (users.containsValue(user)) {
           List<HttpSession> tmp = new ArrayList<HttpSession>();
           tmp.addAll(getKeysByValue(users, user));
@@ -97,8 +96,6 @@ public class SessionListener implements HttpSessionListener, Serializable {
         setSessionStat(String.valueOf(getTotalActiveSession()));
       } catch (Exception e) {
         LOGGER.error("error adding user to session object", e);
-      } finally {
-        // lock.unlock();
       }
     }
   }
@@ -110,7 +107,6 @@ public class SessionListener implements HttpSessionListener, Serializable {
    */
   public static void removeUser(User user) {
     try {
-      // lock.lock();
       if (users.containsValue(user)) {
         List<HttpSession> usersToRemove = new ArrayList<HttpSession>();
         for (HttpSession st : users.keySet()) {
@@ -126,8 +122,6 @@ public class SessionListener implements HttpSessionListener, Serializable {
       }
     } catch (Exception e) {
       LOGGER.error("error removing user to session object", e);
-    } finally {
-      // lock.unlock();
     }
   }
 
@@ -138,14 +132,11 @@ public class SessionListener implements HttpSessionListener, Serializable {
    */
   public static void removeSession(HttpSession session) {
     try {
-      // lock.lock();
       if (users.containsKey(session)) {
         users.remove(session);
       }
     } catch (Exception e) {
       LOGGER.error("error removing user from user list", e);
-    } finally {
-      // lock.unlock();
     }
   }
 
@@ -176,9 +167,9 @@ public class SessionListener implements HttpSessionListener, Serializable {
    */
   public boolean showIEError() {
     try {
-      SessionObject ac = SessionObject.pull();
+      SessionObject ac = SessionObject.pullFromSession();
       if (ac != null) {
-        return ac.getShowIEError();
+        return ac.getShowInternetExplorerWarning();
       }
     } catch (Exception e) {
       //
@@ -192,7 +183,7 @@ public class SessionListener implements HttpSessionListener, Serializable {
    */
   public void disableIEError() {
     try {
-      SessionObject ac = SessionObject.pull();
+      SessionObject ac = SessionObject.pullFromSession();
       if (ac != null) {
         ac.setShowIEError(false);
       }
@@ -257,6 +248,21 @@ public class SessionListener implements HttpSessionListener, Serializable {
   /**
    *
    *
+   * @param user
+   * @return
+   */
+  public static boolean userExists(String userID) {
+    if (users != null) {
+      for (User user : users.values()) {
+        return user.getId().equals(userID);
+      }
+    }
+    return false;
+  }
+
+  /**
+   *
+   *
    * @param map
    * @param value
    * @return
@@ -286,6 +292,19 @@ public class SessionListener implements HttpSessionListener, Serializable {
   }
 
   /**
+   *
+   *
+   * @param session
+   * @return
+   */
+  public static User getUser(final HttpSession session) {
+    if (session != null && users != null && users.containsKey(session)) {
+      return users.get(session);
+    }
+    return null;
+  }
+
+  /**
    * @return the users
    */
   public static ConcurrentHashMap<HttpSession, User> getUsers() {
@@ -308,7 +327,9 @@ public class SessionListener implements HttpSessionListener, Serializable {
 
   @Override
   public void sessionCreated(HttpSessionEvent arg0) {
-    arg0.getSession().setMaxInactiveInterval(Cfg.inst().getProp(MAIN_CONFIG, SESSION_TIMEOUT));
+    int timeout = Cfg.inst().getProp(MAIN_CONFIG, SESSION_TIMEOUT);
+    timeout = (timeout - 30 > 1) ? (timeout - 30) : timeout;
+    arg0.getSession().setMaxInactiveInterval(timeout);
   }
 
   @Override

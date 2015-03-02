@@ -40,6 +40,8 @@ import javax.faces.event.ActionEvent;
 
 
 
+
+
 import org.primefaces.event.NodeCollapseEvent;
 import org.primefaces.event.NodeExpandEvent;
 import org.primefaces.event.NodeSelectEvent;
@@ -61,6 +63,8 @@ import de.uniwue.info6.database.map.daos.UserDao;
 import de.uniwue.info6.database.map.daos.UserEntryDao;
 import de.uniwue.info6.misc.FileTransfer;
 import de.uniwue.info6.misc.properties.Cfg;
+import de.uniwue.info6.misc.properties.PropBool;
+import de.uniwue.info6.misc.properties.PropertiesFile;
 import de.uniwue.info6.webapp.session.SessionBean;
 import de.uniwue.info6.webapp.session.SessionObject;
 
@@ -124,7 +128,7 @@ public class AdminTreeBean implements Serializable {
     transferController = new FileTransfer();
     connectionPool = ConnectionManager.instance();
 
-    SessionObject ac = SessionObject.pull();
+    SessionObject ac = SessionObject.pullFromSession();
     user = ac.getUser();
     updateTree(null);
   }
@@ -402,11 +406,14 @@ public class AdminTreeBean implements Serializable {
    *
    */
   public void copyNode() {
-    if (exerciseNode != null) {
-      if (exerciseNode.isExerciseGroup()) {
-        copyExercise(true);
-      } else if (exerciseNode.isScenario()) {
-        copyGroup(true);
+    final boolean showCaseMode = Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG, PropBool.SHOWCASE_MODE);
+    if (!showCaseMode) {
+      if (exerciseNode != null) {
+        if (exerciseNode.isExerciseGroup()) {
+          copyExercise(true);
+        } else if (exerciseNode.isScenario()) {
+          copyGroup(true);
+        }
       }
     }
   }
@@ -438,30 +445,33 @@ public class AdminTreeBean implements Serializable {
    *
    */
   public void deleteNode() {
-    try {
-      if (exerciseNode != null) {
-        if (exerciseNode.isExercise()) {
-          exerciseDao.deleteInstance(exerciseNode.getExercise());
-        } else if (exerciseNode.isExerciseGroup()) {
-          for (Exercise exercise : exerciseDao.findByExGroup(exerciseNode.getGroup())) {
-            exerciseDao.deleteInstance(exercise);
-          }
-          exgroupDao.deleteInstance(exerciseNode.getGroup());
-        } else if (exerciseNode.isScenario()) {
-          for (ExerciseGroup group : exgroupDao.findByScenario(exerciseNode.getScenario())) {
-            for (Exercise exercise : exerciseDao.findByExGroup(group)) {
-              exerciseDao.deleteInstance(exercise);
+    final boolean showCaseMode = Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG, PropBool.SHOWCASE_MODE);
+    if (!showCaseMode) {
+      try {
+        if (exerciseNode != null) {
+          if (exerciseNode.isExercise()) {
+            exerciseDao.deleteInstanceP(exerciseNode.getExercise());
+          } else if (exerciseNode.isExerciseGroup()) {
+            for (Exercise exercise : exerciseDao.findByExGroup(exerciseNode.getGroup())) {
+              exerciseDao.deleteInstanceP(exercise);
             }
-            exgroupDao.deleteInstance(group);
+            exgroupDao.deleteInstanceP(exerciseNode.getGroup());
+          } else if (exerciseNode.isScenario()) {
+            for (ExerciseGroup group : exgroupDao.findByScenario(exerciseNode.getScenario())) {
+              for (Exercise exercise : exerciseDao.findByExGroup(group)) {
+                exerciseDao.deleteInstanceP(exercise);
+              }
+              exgroupDao.deleteInstanceP(group);
+            }
+            scenarioDao.deleteInstanceP(exerciseNode.getScenario());
+            connectionPool.updateScenarios();
           }
-          scenarioDao.deleteInstance(exerciseNode.getScenario());
-          connectionPool.updateScenarios();
+          hideSelectedNode(selectedNode);
+          updateSelectedNode();
         }
-        hideSelectedNode(selectedNode);
-        updateSelectedNode();
+      } catch (Exception e) {
+        LOGGER.error("FAILED UPDATING SCENARIOS IN ADMIN TREEBEAN", e);
       }
-    } catch (Exception e) {
-      LOGGER.error("FAILED UPDATING SCENARIOS IN ADMIN TREEBEAN", e);
     }
   }
 
@@ -470,30 +480,33 @@ public class AdminTreeBean implements Serializable {
    *
    */
   public void duplicateNode() {
-    try {
-      if (exerciseNode != null) {
-        if (exerciseNode.isExercise()) {
-          copyExercise(false);
-        } else if (exerciseNode.isExerciseGroup()) {
-          copyGroup(false);
-        } else if (exerciseNode.isScenario()) {
-          Scenario scenario = exerciseNode.getScenario();
-          Scenario newScenario = transferController.copy(scenario);
+    final boolean showCaseMode = Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG, PropBool.SHOWCASE_MODE);
+    if (!showCaseMode) {
+      try {
+        if (exerciseNode != null) {
+          if (exerciseNode.isExercise()) {
+            copyExercise(false);
+          } else if (exerciseNode.isExerciseGroup()) {
+            copyGroup(false);
+          } else if (exerciseNode.isScenario()) {
+            Scenario scenario = exerciseNode.getScenario();
+            Scenario newScenario = transferController.copy(scenario);
 
-          TreeNode scenarioNode = new DefaultTreeNode(new ExerciseNode(newScenario), selectedNode.getParent());
-          List<ExerciseGroup> groups = exgroupDao.findByScenario(newScenario);
-          for (ExerciseGroup group : groups) {
-            TreeNode groupNode = new DefaultTreeNode(new ExerciseNode(group), scenarioNode);
-            List<Exercise> exercises = exerciseDao.findByExGroup(group);
-            for (Exercise ex : exercises) {
-              new DefaultTreeNode(new ExerciseNode(ex), groupNode);
+            TreeNode scenarioNode = new DefaultTreeNode(new ExerciseNode(newScenario), selectedNode.getParent());
+            List<ExerciseGroup> groups = exgroupDao.findByScenario(newScenario);
+            for (ExerciseGroup group : groups) {
+              TreeNode groupNode = new DefaultTreeNode(new ExerciseNode(group), scenarioNode);
+              List<Exercise> exercises = exerciseDao.findByExGroup(group);
+              for (Exercise ex : exercises) {
+                new DefaultTreeNode(new ExerciseNode(ex), groupNode);
+              }
             }
           }
         }
-      }
 
-    } catch (Exception e) {
-      LOGGER.error("FAILED DUPLICATING NODE IN ADMIN TREEBEAN", e);
+      } catch (Exception e) {
+        LOGGER.error("FAILED DUPLICATING NODE IN ADMIN TREEBEAN", e);
+      }
     }
   }
 
@@ -631,7 +644,6 @@ public class AdminTreeBean implements Serializable {
    * @return
    */
   public boolean renderExportMenu() {
-    // if (exerciseNode != null && (exerciseNode.isRootNode() || exerciseNode.isScenario())) {
     if (exerciseNode != null && exerciseNode.isScenario()) {
       return true;
     }
@@ -669,7 +681,13 @@ public class AdminTreeBean implements Serializable {
    */
   public boolean renderEditMenu() {
     if (exerciseNode != null && !exerciseNode.isRootNode()) {
-      return true;
+      if (exerciseNode.isScenario()) {
+        return rights.hasEditingRight(user, exerciseNode.getScenario());
+      } else if (exerciseNode.isExerciseGroup()) {
+        return rights.checkIfExerciseGroupCanBeEdited(exerciseNode.getGroup());
+      } else if (exerciseNode.isExercise()) {
+        return rights.hasEditingRight(user, exerciseNode.getExercise().getExerciseGroup());
+      }
     }
     return false;
   }
@@ -682,9 +700,7 @@ public class AdminTreeBean implements Serializable {
   public boolean renderDuplicateMenu() {
     if (exerciseNode != null) {
       if (exerciseNode.isScenario()) {
-        if (rights.isAdmin(user)) {
-          return true;
-        }
+        return rights.isAdmin(user);
       } else if (!exerciseNode.isRootNode()) {
         return true;
       }
@@ -704,15 +720,39 @@ public class AdminTreeBean implements Serializable {
           return rights.checkIfScenarioCanBeEdited(exerciseNode.getScenario());
         }
       } else if (exerciseNode.isExerciseGroup()) {
-        return rights.checkIfExerciseGroupCanBeEdited(exerciseNode.getGroup());
+        final ExerciseGroup exerciseGroup = exerciseNode.getGroup();
+        if (rights.hasEditingRight(user, exerciseGroup)) {
+          return rights.checkIfExerciseGroupCanBeEdited(exerciseGroup);
+        }
       } else if (exerciseNode.isExercise()) {
-        return rights.checkIfExerciseCanBeEdited(exerciseNode.getExercise());
+        final Exercise exercise = exerciseNode.getExercise();
+        final ExerciseGroup exerciseGroup = exercise.getExerciseGroup();
+        if (rights.hasEditingRight(user, exerciseGroup)) {
+          return rights.checkIfExerciseCanBeEdited(exerciseNode.getExercise());
+        }
       } else {
         return true;
       }
     }
     return false;
   }
+
+
+  /**
+   *
+   *
+   * @return
+   */
+  public boolean renderPermissionError() {
+    if (exerciseNode != null) {
+      if (exerciseNode.isExercise()) {
+        return false;
+      }
+      return true;
+    }
+    return false;
+  }
+
 
   /**
    *

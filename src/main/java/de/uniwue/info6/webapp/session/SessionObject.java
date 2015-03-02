@@ -24,20 +24,18 @@ package de.uniwue.info6.webapp.session;
  * #L%
  */
 
+import static de.uniwue.info6.misc.properties.PropBool.SHOWCASE_MODE;
 import static de.uniwue.info6.misc.properties.PropBool.USE_MOODLE_LOGIN;
-import static de.uniwue.info6.misc.properties.PropString.SECRET_ID_STRING;
+import static de.uniwue.info6.misc.properties.PropString.SECRET_PHRASE;
 import static de.uniwue.info6.misc.properties.PropertiesFile.MAIN_CONFIG;
 
+import java.io.Serializable;
 import java.util.Date;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
-
-
-
+import de.uniwue.info6.database.jdbc.ConnectionManager;
 import de.uniwue.info6.database.map.ExerciseGroup;
 import de.uniwue.info6.database.map.Scenario;
 import de.uniwue.info6.database.map.User;
@@ -45,93 +43,79 @@ import de.uniwue.info6.database.map.daos.ScenarioDao;
 import de.uniwue.info6.database.map.daos.UserDao;
 import de.uniwue.info6.misc.Crypt;
 import de.uniwue.info6.misc.properties.Cfg;
+import de.uniwue.info6.webapp.admin.UserRights;
 
 /**
  *
  *
  * @author Michael
  */
-public class SessionObject {
-  private String userID, secureValue, scenarioID, userIP, secretIDString;
-  private final static String sessionPosition = "auth_controller";
+public class SessionObject  implements Serializable {
+  /**
+   *
+   */
+  private static final long serialVersionUID = -1080188490640321456L;
+  public final static String SESSION_POSITION = "SESS_USER";
+
+  public final static String DEMO_STUDENT = "demo_student";
+  public final static String DEMO_ADMIN = "demo_admin";
+
+  private String userID, encryptedCode, scenarioID, userIP, secretPhrase;
   private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(SessionObject.class);
   private User user;
   private HttpSession session;
   private Scenario scenario;
   private ExerciseGroup exerciseGroup;
-  private Boolean validCredentials, logedIn, showIEError;
-  private static final Lock lock = new ReentrantLock();
-
-
-  @SuppressWarnings("unused")
-  private SessionObject() {
-    // ---
-  }
+  private boolean validCredentials, showInternetExplorerWarning;
+  private UserDao userDao;
+  private UserRights userRights;
+  private boolean useMoodleLogin;
 
   /**
    *
    */
   public SessionObject(HttpSession session) {
     this.session = session;
-    saveToSession();
+    this.pushToSession();
   }
 
   /**
    *
    *
    * @param userID
-   * @param secureValue
+   * @param encryptedCode
    * @param scenario
    * @param session
    */
-  public SessionObject init(String userID, String secureValue, String scenarioID, String ip) {
+  public boolean init(String userID, String encryptedCode, String scenarioID, String userIP) {
+    this.scenarioID = scenarioID;
+    this.useMoodleLogin = Cfg.inst().getProp(MAIN_CONFIG, USE_MOODLE_LOGIN);
+
+    if (((userID == null || encryptedCode == null || userIP == null) ||
+         (userID.equals(this.userID) && encryptedCode.equals(this.encryptedCode)
+          && userIP.equals(this.userIP))) && this.useMoodleLogin) {
+      return this.validCredentials;
+    }
+
+    this.userID           = userID;
+    this.encryptedCode    = encryptedCode;
+    this.userIP           = userIP;
+
     this.user = null;
-    this.showIEError = true;
-
-    if (userID != null) {
-      this.userID = userID.trim();
-    }
-    if (secureValue != null) {
-      this.secureValue = secureValue.trim();
-    }
-    if (scenarioID != null) {
-      this.scenarioID = scenarioID.trim();
-    }
-
-    this.userIP = ip;
+    this.scenario = null;
+    this.showInternetExplorerWarning = true;
+    this.userDao = new UserDao();
+    this.userRights = new UserRights().initialize();
+    this.secretPhrase = Cfg.inst().getProp(MAIN_CONFIG, SECRET_PHRASE);
     this.validCredentials = checkCredentials();
-    this.secretIDString = Cfg.inst().getProp(MAIN_CONFIG, SECRET_ID_STRING);
 
     if (validCredentials) {
       loadUser();
     } else {
-      LOGGER.info("FALSE CREDENTIALS [\"" + userID + ":" + secureValue + "\"]");
+      LOGGER.info("FALSE CREDENTIALS [\"" + userID + ":" + encryptedCode + "\"]");
     }
-    return this;
+    return this.validCredentials;
   }
-
-  /**
-   *
-   *
-   * @return
-   */
-  public static SessionObject pull() {
-    try {
-      FacesContext facesContext = FacesContext.getCurrentInstance();
-      if (facesContext != null) {
-        HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(false);
-        SessionObject ac = null;
-        if (session != null) {
-          ac = (SessionObject) session.getAttribute(sessionPosition);
-        }
-        return ac;
-      }
-    } catch (Exception e) {
-      LOGGER.error("problem getting saved session user object", e);
-    }
-    return null;
-  }
-
 
   /**
    *
@@ -141,22 +125,36 @@ public class SessionObject {
   private boolean checkCredentials() {
     final boolean hasScenarioParameter = scenarioID != null && !scenarioID.trim().isEmpty();
     final boolean hasUserIDParameter = userID != null && !userID.trim().isEmpty();
-    final boolean hasSecureValueParameter = secureValue != null && !secureValue.trim().isEmpty();
+    final boolean hasSecureValueParameter = encryptedCode != null && !encryptedCode.trim().isEmpty();
 
     // ------------------------------------------------ //
     if (hasScenarioParameter) {
       try {
         // pull scenario from database
-        this.scenario = new ScenarioDao().getById(Integer.parseInt(scenarioID));
+        this.setScenario(new ScenarioDao().getById(Integer.parseInt(scenarioID)));
       } catch (Exception e) {}
       if (this.scenario == null) {
         LOGGER.info("CAN'T FIND SCENARIO WITH ID: [" + scenarioID + "]");
       }
     }
+
     // ------------------------------------------------ //
     if (hasUserIDParameter && hasSecureValueParameter) {
       if (Cfg.inst().getProp(MAIN_CONFIG, USE_MOODLE_LOGIN)) {
-        return Crypt.md5(this.userIP + this.secretIDString + this.userID).equals(this.secureValue);
+
+        final String calculatedEncryptedCode = Crypt.md5(this.userIP + this.secretPhrase + this.userID);
+        final boolean validCredentials = calculatedEncryptedCode.equals(this.encryptedCode);
+
+        LOGGER.info(
+          "\nUser Login:\n" +
+          "User IP:\t\t\t"                + this.userIP + "\n" +
+          "Secret phrase:\t\t\t"          + this.secretPhrase + "\n" +
+          "User id:\t\t\t"                + this.userID + "\n" +
+          "Calculated encrypted code:\t"  + calculatedEncryptedCode + "\n" +
+          "Valid credentials:\t\t"        + validCredentials
+        );
+
+        return validCredentials;
       } else {
         return true;
       }
@@ -173,36 +171,43 @@ public class SessionObject {
   private synchronized boolean loadUser() {
     boolean userFound = false;
     try {
-      // lock.lock();
-      UserDao dao = new UserDao();
-      this.user = dao.getById(userID);
+      this.user = userDao.getById(userID);
 
       // if user was not found in the db, so insert him
       if (this.user == null) {
-        User newUser = new User(userID, new Date());
-        newUser.setIsAdmin(false);
-        dao.insertNewInstance(newUser);
-        try {
-          Thread.sleep(50);
-        } catch (InterruptedException e) {
-          e.printStackTrace();
+        final User newUser = new User(userID, new Date());
+        final boolean showCaseMode = Cfg.inst().getProp(MAIN_CONFIG, SHOWCASE_MODE);
+        if (showCaseMode && userID.startsWith(DEMO_ADMIN)) {
+          newUser.setIsAdmin(true);
+        } else {
+          newUser.setIsAdmin(false);
         }
+        userDao.insertNewInstance(newUser);
       }
 
       // try again
-      this.user = dao.getById(userID);
+      this.user = userDao.getById(userID);
 
       if (this.user == null) {
         LOGGER.error("USER WITH ID: \"" + userID + "\" COULD NOT SAVED TO DB!");
       } else {
+
+        if (scenario != null) {
+          ConnectionManager connectionPool = ConnectionManager.instance();
+          try {
+            connectionPool.resetTables(scenario, user, true);
+          } catch (Exception e) {
+            LOGGER.error("COULD NOT RESET TABLES", e);
+          }
+        }
+
         LOGGER.info("USER WITH ID: \"" + userID + "\" INSERTED INTO DB!");
         userFound = true;
       }
+
     } catch (Exception e) {
       LOGGER.info("ERROR LOADING USER: [\"" + userID + "\"]");
       return false;
-    } finally {
-      // lock.unlock();
     }
     return userFound;
   }
@@ -210,9 +215,38 @@ public class SessionObject {
   /**
    *
    *
+   * @return
    */
-  private void saveToSession() {
-    session.setAttribute(sessionPosition, this);
+  public static SessionObject pullFromSession() {
+    try {
+      final FacesContext facesContext = FacesContext.getCurrentInstance();
+      if (facesContext != null) {
+        final HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(false);
+        SessionObject sessionObject = null;
+        if (session != null) {
+          sessionObject = (SessionObject) session.getAttribute(SESSION_POSITION);
+        }
+        return sessionObject;
+      }
+    } catch (Exception e) {
+      LOGGER.error("PROBLEM GETTING SAVED SESSION USER OBJECT", e);
+    }
+    return null;
+  }
+
+  /**
+   *
+   *
+   */
+  public void pushToSession() {
+    this.session.setAttribute(SESSION_POSITION, this);
+  }
+
+  /**
+  *
+  */
+  public void removeFromSession() {
+    this.session.removeAttribute(SESSION_POSITION);
   }
 
   /**
@@ -238,7 +272,6 @@ public class SessionObject {
     return scenario;
   }
 
-
   /**
    *
    *
@@ -248,7 +281,6 @@ public class SessionObject {
     return this.userIP;
 
   }
-
 
   /**
    *
@@ -265,7 +297,7 @@ public class SessionObject {
    * @return
    */
   public String getSecureValueParameter() {
-    return this.secureValue;
+    return this.encryptedCode;
   }
 
   /**
@@ -275,6 +307,16 @@ public class SessionObject {
    */
   public String getScenarioParameter() {
     return this.scenarioID;
+  }
+
+  /**
+   *
+   *
+   * @param scenarioParameter
+   * @return
+   */
+  public String setScenarioParameter(String scenarioParameter) {
+    return this.scenarioID = scenarioParameter;
   }
 
   /**
@@ -318,8 +360,8 @@ public class SessionObject {
   /**
    * @return the showIEError
    */
-  public Boolean getShowIEError() {
-    return showIEError;
+  public Boolean getShowInternetExplorerWarning() {
+    return showInternetExplorerWarning;
   }
 
   /**
@@ -327,7 +369,7 @@ public class SessionObject {
    *          the showIEError to set
    */
   public void setShowIEError(Boolean showIEError) {
-    this.showIEError = showIEError;
+    this.showInternetExplorerWarning = showIEError;
   }
 
 }

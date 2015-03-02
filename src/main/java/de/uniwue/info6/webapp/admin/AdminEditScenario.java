@@ -24,6 +24,7 @@ package de.uniwue.info6.webapp.admin;
  * #L%
  */
 
+import static de.uniwue.info6.misc.properties.PropBool.SHOWCASE_MODE;
 import static de.uniwue.info6.misc.properties.PropString.MASTER_DBHOST;
 import static de.uniwue.info6.misc.properties.PropString.MASTER_DBPORT;
 import static de.uniwue.info6.misc.properties.PropString.SCENARIO_RESOURCES_PATH;
@@ -83,8 +84,7 @@ public class AdminEditScenario implements Serializable {
   private static final String SCENARIO_PARAM = "scenario";
   private static final String EMPTY_FIELD = "---";
 
-
-
+  private static final boolean renderDatabaseFieldsForNonAdmins = false;
 
   private static String scriptSystemPath = Cfg.inst().getProp(MAIN_CONFIG, SCENARIO_RESOURCES_PATH);
 
@@ -121,6 +121,20 @@ public class AdminEditScenario implements Serializable {
   private boolean userHasRights;
   private UserRights rights;
   private boolean databaseChanged;
+  private boolean isAdmin;
+
+  /**
+   *
+   *
+   * @return
+   */
+  public boolean renderDBFields() {
+    if (isAdmin || renderDatabaseFieldsForNonAdmins) {
+      return true;
+    }
+    return false;
+  }
+
 
   /**
    *
@@ -182,11 +196,15 @@ public class AdminEditScenario implements Serializable {
     scenarioDao = new ScenarioDao();
     exerciseGroupDao = new ExerciseGroupDao();
     Map<String, String> requestParams = ec.getRequestParameterMap();
-    ac = SessionObject.pull();
+    ac = SessionObject.pullFromSession();
     user = ac.getUser();
     connectionPool = ConnectionManager.instance();
     uploader = new FileTransfer();
     rights = new UserRights().initialize();
+
+    if (user != null) {
+      this.isAdmin = rights.isAdmin(user);
+    }
 
     if (!requestParams.isEmpty()) {
       try {
@@ -210,7 +228,17 @@ public class AdminEditScenario implements Serializable {
               imagePath = scenario.getImagePath();
               dbHost = scenario.getDbHost();
               dbUser = scenario.getDbUser();
-              dbPass = scenario.getDbPass();
+
+              // ------------------------------------------------ //
+              final boolean showCaseMode = Cfg.inst().getProp(MAIN_CONFIG, SHOWCASE_MODE);
+              if (showCaseMode) {
+                // don't show the actual password
+                dbPass = StringTools.generatePassword(64, 32);
+              } else {
+                dbPass = scenario.getDbPass();
+              }
+              // ------------------------------------------------ //
+
               dbPort = scenario.getDbPort();
               dbName = scenario.getDbName();
               startDate = scenario.getStartTime();
@@ -411,6 +439,7 @@ public class AdminEditScenario implements Serializable {
     Scenario tempScenario = null;
     databaseChanged = false;
 
+
     boolean hasCreateRights = true;
 
     try {
@@ -494,6 +523,14 @@ public class AdminEditScenario implements Serializable {
           sev = FacesMessage.SEVERITY_ERROR;
         }
       }
+
+      // ------------------------------------------------ //
+      final boolean showCaseMode = Cfg.inst().getProp(MAIN_CONFIG, SHOWCASE_MODE);
+      if (message == null && showCaseMode) {
+        message = Cfg.inst().getProp(DEF_LANGUAGE, "SHOWCASE_ERROR");
+        sev = FacesMessage.SEVERITY_ERROR;
+      }
+      // ------------------------------------------------ //
 
       if (message == null) {
         sev = FacesMessage.SEVERITY_INFO;
@@ -583,7 +620,7 @@ public class AdminEditScenario implements Serializable {
         if (newScenario) {
           if (message == null) {
             if (tempScenario != null) {
-              scenarioDao.insertNewInstance(tempScenario);
+              scenarioDao.insertNewInstanceP(tempScenario);
             }
             List<Scenario> tempScenarios = scenarioDao.findByExample(tempScenario);
             Scenario temp = null;
@@ -607,7 +644,7 @@ public class AdminEditScenario implements Serializable {
         } else {
           if (scenario != null) {
             connectionPool.removeScenario(scenario, databaseChanged);
-            scenarioDao.updateInstance(tempScenario);
+            scenarioDao.updateInstanceP(tempScenario);
           }
         }
 
@@ -621,7 +658,7 @@ public class AdminEditScenario implements Serializable {
           sev = FacesMessage.SEVERITY_ERROR;
           scenario = tempScenario;
           if (scenario != null) {
-            scenarioDao.updateInstance(scenario);
+            scenarioDao.updateInstanceP(scenario);
           }
         } else {
           sev = FacesMessage.SEVERITY_INFO;
@@ -643,7 +680,7 @@ public class AdminEditScenario implements Serializable {
 
       scenario = tempScenario;
       if (scenario != null) {
-        scenarioDao.updateInstance(scenario);
+        scenarioDao.updateInstanceP(scenario);
       }
     }
 
@@ -1042,6 +1079,20 @@ public class AdminEditScenario implements Serializable {
    */
   public void setUserHasRights(boolean userHasRights) {
     this.userHasRights = userHasRights;
+  }
+
+  /**
+   * @return the isAdmin
+   */
+  public boolean getIsAdmin() {
+    return isAdmin;
+  }
+
+  /**
+   * @param isAdmin the isAdmin to set
+   */
+  public void setIsAdmin(boolean isAdmin) {
+    this.isAdmin = isAdmin;
   }
 
   /**

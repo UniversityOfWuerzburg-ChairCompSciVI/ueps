@@ -63,13 +63,15 @@ fi
 # -- Install primefaces with table fix
 # ---------------------------------------------------- #
 
-if $INSTALL_DEPENDENCIES ; then
-  mvn install:install-file -Dfile="$PRIMEFACES_BINARY" \
-         -DgroupId=org.primefaces \
-         -DartifactId=primefaces \
-         -Dversion=4.0 \
-         -Dpackaging=jar | egrep -v "(^\[WARNING\])"
+if [ -f "$PRIMEFACES_BINARY" ]; then
+  if $INSTALL_DEPENDENCIES ; then
+    mvn install:install-file -Dfile="$PRIMEFACES_BINARY" \
+           -DgroupId=org.primefaces \
+           -DartifactId=primefaces \
+           -Dversion=4.0 \
+           -Dpackaging=jar | egrep -v "(^\[WARNING\])"
 
-  # check if errors occured
-  if [ ${PIPESTATUS[0]} -ne "0" ]; then exit 1; fi
+    # check if errors occured
+    if [ ${PIPESTATUS[0]} -ne "0" ]; then exit 1; fi
+  fi
 fi

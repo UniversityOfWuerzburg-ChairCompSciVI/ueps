@@ -26,10 +26,7 @@ package de.uniwue.info6.database.map.conf;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.c3p0.internal.C3P0ConnectionProvider;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
-import org.hibernate.internal.SessionFactoryImpl;
 import org.hibernate.service.ServiceRegistry;
 
 import de.uniwue.info6.misc.properties.Cfg;
@@ -98,52 +95,11 @@ public class HibernateUtil {
   }
 
 
-  // public static void stopConnectionProvider(SessionFactory sessionFactory) {
-  //     final SessionFactoryImplementor sessionFactoryImplementor = (SessionFactoryImplementor) sessionFactory;
-  //   @SuppressWarnings("deprecation")
-  //   ConnectionProvider connectionProvider = sessionFactoryImplementor.getConnectionProvider();
-  //     if (Stoppable.class.isInstance(connectionProvider)) {
-  //         ((Stoppable) connectionProvider).stop();
-  //     }
-  // }
-
-  /**
-   *
-   * Workaround for memory-leak-error.
-   * https://hibernate.atlassian.net/browse/HHH-8896
-   * ---------------------------------------------------------
-   * SEVERE: The web application [/ueps] appears to have started a thread named
-   * [C3P0PooledConnectionPoolManager[...]
-   * but has failed to stop it. This is very likely to create a memory leak.
-   * ---------------------------------------------------------
-   * @param sessionFactory
-   */
-  @SuppressWarnings("deprecation")
-  private static boolean closeSessionFactoryIfC3P0ConnectionProvider(SessionFactory factory) {
-    boolean done = false;
-    if (factory instanceof SessionFactoryImpl) {
-      SessionFactoryImpl sf = (SessionFactoryImpl)factory;
-      ConnectionProvider conn = sf.getConnectionProvider();
-      if (conn instanceof C3P0ConnectionProvider) {
-        ((C3P0ConnectionProvider)conn).close();
-        try {
-          Thread.sleep(2000);
-        } catch (InterruptedException e) {
-          e.printStackTrace();
-        }
-        done = true;
-      }
-    }
-    factory.close();
-    return done;
-  }
-
   /**
    *
    *
    */
   public static void shutdown() {
     getSessionFactory().close();
-    closeSessionFactoryIfC3P0ConnectionProvider(getSessionFactory());
   }
 }

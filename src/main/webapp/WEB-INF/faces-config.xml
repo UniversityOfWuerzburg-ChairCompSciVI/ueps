@@ -41,6 +41,9 @@
       <base-name>config</base-name>
       <var>config</var>
     </resource-bundle>
+    <resource-handler>
+      de.uniwue.info6.webapp.misc.CDNResourceHandler
+    </resource-handler>
   </application>
   <factory>
     <exception-handler-factory>org.omnifaces.exceptionhandler.FullAjaxExceptionHandlerFactory</exception-handler-factory>

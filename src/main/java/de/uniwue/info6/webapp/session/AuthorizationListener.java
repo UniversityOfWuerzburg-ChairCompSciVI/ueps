@@ -60,7 +60,7 @@ public class AuthorizationListener implements PhaseListener, Serializable {
    */
   public void afterPhase(PhaseEvent event) {
     // redirect user on ajax request if session is invalid
-    SessionObject ac = SessionObject.pull();
+    SessionObject ac = SessionObject.pullFromSession();
     if (ac == null) {
       loginUser(event.getFacesContext());
     }

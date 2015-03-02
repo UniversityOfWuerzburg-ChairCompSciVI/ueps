@@ -70,7 +70,7 @@ public class AutoCompleteScenario {
   public void init() {
     scenarioDao = new ScenarioDao();
     this.rights = new UserRights().initialize();
-    SessionObject ac = SessionObject.pull();
+    SessionObject ac = SessionObject.pullFromSession();
     if (ac != null) {
       user = ac.getUser();
     }

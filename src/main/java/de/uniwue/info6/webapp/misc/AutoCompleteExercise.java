@@ -77,7 +77,7 @@ public class AutoCompleteExercise {
     this.notFound = Cfg.inst().getProp(DEF_LANGUAGE, "ASSERTION.NO_EX");
     this.rights = new UserRights().initialize();
 
-    SessionObject ac = SessionObject.pull();
+    SessionObject ac = SessionObject.pullFromSession();
     if (ac != null) {
       user = ac.getUser();
     }

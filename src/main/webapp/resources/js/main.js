@@ -1,7 +1,6 @@
 /** ------------------------------------------------------------ */
 var block = false;
 var synctime = true;
-
 var edit_url = "";
 
 function setEditUrl(url) {
@@ -11,17 +10,22 @@ function setEditUrl(url) {
   });
 }
 
-// jQuery('.relevant_table_popup').dialog({
-//  modal: true,
-//  height: 'auto',
-//  width: 'auto'
-// });
+function hide_message_timeout(){
+  setTimeout(function() { jQuery('.ui-messages').fadeOut(500); }, 10000);
+}
 
 jQuery(document).ready(function() {
+  // http://manos.malihu.gr/jquery-custom-content-scroller
+  jQuery(".question-text-scrollpanel").mCustomScrollbar({theme:"minimal-dark", scrollInertia:500, autoExpandScrollbar:true });
+
+  jQuery("select").blur();
+
   var delay = parseInt(jQuery("[id*=sessionTime]").html());
+
   function countdown() {
     delay = parseInt(jQuery("[id*=sessionTime]").html());
     setTimeout(countdown, 1000);
+
     delay--;
     if (delay < 0) {
       delay = 0;
@@ -30,8 +34,151 @@ jQuery(document).ready(function() {
     }
   }
   countdown();
+
+  jQuery(function() {
+    // jQuery('.dialog-fix').css("min-width", "800px");
+    // jQuery('.dialog-fix').css("min-height", "270px");
+    // jQuery('.dialog-fix').css("top", "69px !important");
+    // jQuery('.er_diagram_popup').css('top', '50px', 'important');
+    // jQuery('.dialog-fix2').css("width", "500px");
+    // dialog.jq.css("left",Math.max(0, ((jQuery(window).width() - jQuery(dialog).outerWidth()) / 2) + jQuery(window).scrollLeft()) + "px");
+  });
+
+
 });
 
+function closeAllDialog() {
+   for (var propertyName in PrimeFaces.widgets) {
+     if (PrimeFaces.widgets[propertyName] instanceof PrimeFaces.widget.Dialog ||
+         PrimeFaces.widgets[propertyName] instanceof PrimeFaces.widget.LightBox) {
+         PrimeFaces.widgets[propertyName].hide();
+     }
+   }
+}
+
+
+function formatDialog(className, user_result, solution_dialog, er_diagram) {
+  // add custom scrollbar
+  jQuery(".ui-dialog-content").mCustomScrollbar(
+    {theme:"minimal-dark", scrollInertia:500, axis:"yx", autoExpandScrollbar:"true"});
+
+  var dialogClassName = "." + className;
+  var dialogContentClassName = dialogClassName + ' .ui-dialog-content';
+
+  // ------------------------------------------------ //
+  // -- Calculate width
+  // ------------------------------------------------ //
+  var widthOffset = 45;
+  var defaultWidth = 850;
+  var width = 0;
+  if (er_diagram){
+    width = jQuery(dialogClassName + " img").width() + widthOffset;
+  } else {
+    width = jQuery(dialogClassName + " .ui-datatable").width() + widthOffset;
+  }
+  if (solution_dialog) {
+    width = Math.max(jQuery(dialogClassName + " .solution_table").width(), 
+                     jQuery(dialogClassName + " .solution_carousel").width()) + widthOffset;
+  }
+  var windowWidth = jQuery(window).width();
+  var minWidth = 100;
+  var maxWidth = windowWidth - 100;
+
+  if (width < minWidth + 100) {
+    width = minWidth + 100;
+  }
+
+  if (width < maxWidth) {
+    maxWidth = width;
+  }
+
+  if (width < defaultWidth) {
+    defaultWidth = width;
+  }
+
+  jQuery(dialogClassName).css("min-width", minWidth + "px");
+  jQuery(dialogClassName + ' .mCSB_container').css("min-width", minWidth + "px");
+  jQuery(dialogClassName + ' .mCSB_container').css("margin","auto");
+  jQuery(dialogClassName + ' .ui-paginator').css("min-width","240px");
+  jQuery(dialogContentClassName).css("max-width", maxWidth + "px", "important");
+  jQuery(dialogContentClassName).css("min-width", (minWidth + 15) + "px");
+  jQuery(dialogContentClassName).css("width", defaultWidth + "px", 'important');
+  // jQuery(dialogClassName).css("width", defaultWidth + "px", 'important');
+  jQuery(dialogClassName).css("max-width", maxWidth + "px", "important");
+
+  // ------------------------------------------------ //
+  // -- Calculate height 
+  // ------------------------------------------------ //
+  var heightOffset = 105;
+  var defaultHeight = 450;
+  var height = 0; 
+  if (er_diagram){
+    height = jQuery(dialogClassName + " img").height() + heightOffset + 20;
+  } else {
+    height = jQuery(dialogClassName + " .ui-datatable").height() + heightOffset; 
+  }
+  if (solution_dialog) {
+    height = jQuery(dialogClassName + " .solution_table").height() 
+             + jQuery(dialogClassName + " .solution_carousel").height() + heightOffset - 30;
+  }
+  var windowHeight = jQuery(window).height();
+  var minHeight = 100;
+  var maxHeight = windowHeight - 100;
+
+
+  if (height < minHeight) {
+    height = minHeight;
+  }
+  if (height < maxHeight) {
+    maxHeight = height;
+    if (solution_dialog) {
+      maxHeight += 100;
+    }
+  }
+
+  if (height < defaultHeight) {
+    defaultHeight = height;
+  }
+
+  jQuery(dialogClassName).css("min-height", minHeight + "px");
+  jQuery(dialogClassName + ' .mCSB_container').css("min-height", minHeight + "px");
+  jQuery(dialogContentClassName).css("max-height", (maxHeight - 32) + "px", "important");
+  jQuery(dialogContentClassName).css("min-height", (minHeight + 15) + "px");
+  jQuery(dialogContentClassName).css("height", defaultHeight + "px", 'important');
+  jQuery(dialogClassName).css("height", (defaultHeight + 37) + "px", 'important');
+  jQuery(dialogClassName).css("max-height", maxHeight + "px", "important");
+
+  // ------------------------------------------------ //
+  // -- Positioning
+  // ------------------------------------------------ //
+
+  var randomNumberLeft = Math.floor(Math.random() * 41) - 20;
+  var randomNumberTop = Math.floor(Math.random() * 41) - 20;
+
+  var pageOffsetLeft = jQuery('#content').offset().left;
+  var pageOffsetTop = jQuery('#content').offset().top;
+
+  jQuery(dialogClassName).css("top", (pageOffsetTop + 30 + randomNumberTop) + "px", "important");
+
+  if (user_result || solution_dialog) {
+    jQuery(dialogClassName).css("left", (pageOffsetLeft + 200 + randomNumberLeft) + "px", "important");
+  }
+  else {
+    jQuery(dialogClassName).css("left", (pageOffsetLeft + 30 + randomNumberLeft) + "px", "important");
+  }
+
+
+  // ------------------------------------------------ //
+  // -- 
+  // ------------------------------------------------ //
+
+  // jQuery('.' + className).resize(function() {
+    // var prevHeight = jQuery('.' + className).height();
+    // alert(jQuery('.' + className).offset().left);
+    // jQuery('.' + className).css("left", "613px", "important");
+    // jQuery('.' + className).offset({ left: 613 })
+  // });
+}
 
 jQuery.ajaxSetup({
   error : handleXhrError,

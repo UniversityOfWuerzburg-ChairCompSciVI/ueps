@@ -140,7 +140,7 @@ public class SubmissionController implements Serializable {
     userResultDao = new UserResultDao();
     userDao = new UserDao();
 
-    ac = SessionObject.pull();
+    ac = SessionObject.pullFromSession();
     user = ac.getUser();
 
     rights = new UserRights().initialize();
@@ -529,8 +529,7 @@ public class SubmissionController implements Serializable {
     boolean deleted = false;
 
     if (userEntry != null) {
-
-      deleted = userEntryDao.deleteInstance(userEntry);
+      deleted = userEntryDao.deleteInstanceP(userEntry);
     }
 
     if (deleted) {
@@ -631,8 +630,7 @@ public class SubmissionController implements Serializable {
               if (index < solutions.size()) {
                 userResult.setSolutionQuery(solutionsOrig.get(index));
               }
-
-              userResultDao.updateInstance(userResult);
+              userResultDao.updateInstanceP(userResult);
             }
           }
           this.forceAssertionComplete();

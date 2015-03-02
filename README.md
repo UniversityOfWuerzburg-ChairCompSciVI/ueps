@@ -18,7 +18,7 @@
   5. [Aussehen/Text anpassen](#aussehentext-anpassen)
 4. [Deploy mit Maven](#deploy-mit-maven)
 5. [Quellcodedokumentation](#quellcodedokumentation)
-6. [Screenshots](#quellcodedokumentation)
+6. [Screenshots](#screenshots)
 
 ------
 
@@ -168,7 +168,7 @@ Wenn eine automatische Installation nicht erwünscht ist, so benötigt die Anwen
 In der Konfigurationsdatei sollte mindestens ein [Adminstrator-Nutzer](src/main/resources/config.properties#L96) festgelegt werden. Mehrere Nutzer sollten mit Semikolon getrennt werden (z.B. ``admin_id1;admin_id2;``).
 Admins können auch zur Laufzeit hinzugefügt werden, hierfür muss man jedoch den Datenbankeintrag für den Nutzer abändern ([Tabelle: "user", Spalte: "is_admin"](http://kolbasa.github.io/ueps/screenshots/admin-db-er-diagram.png)).
 
-ÜPS besitzt keine eigene Nutzerverwaltung. Die Nutzer-Authentifizierung erfolgt über die Open-Source Lernplattform [Moodle](https://moodle.org/). 
+ÜPS besitzt keine eigene Nutzerverwaltung. Die Nutzer-Authentifizierung erfolgt über die Open-Source Lernplattform [Moodle](https://moodle.org/) mithilfe der [``Externe URL``](https://docs.moodle.org/27/de/Link/URL_konfigurieren)-Funktion.
 
 > Dieses Kennwort wird benutzt, um einen verschlüsselten Code zu generieren, der als Parameter an andere Server übermittelt werden kann. Der verschlüsselte Code wird über einen md5-Wert der aktuellen IP-Adresse in Verbindung mit dem Kennwort erzeugt, d.h. code = md5(IP.secretphrase). Bitte beachten Sie, dass dies nicht zuverlässig ist, weil die IP-Adresse wechseln oder an andere Computer weitergegeben werden kann. Das Standardkennwort wird automatisch generiert.
 
@@ -270,5 +270,4 @@ TODO :: TODO :: TODO :: TODO
 TODO :: TODO :: TODO :: TODO
 
 ## Screenshots
-
-![](http://kolbasa.github.io/ueps/screenshots/ueps_neu_02.png "Test")
+![](http://kolbasa.github.io/ueps/screenshots/ueps_neu_02.png)

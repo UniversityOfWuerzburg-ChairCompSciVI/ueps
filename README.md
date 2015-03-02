@@ -169,9 +169,9 @@ In der Konfigurationsdatei sollte mindestens ein [Adminstrator-Nutzer](src/main/
 Admins können auch zur Laufzeit hinzugefügt werden, hierfür muss man jedoch den Datenbankeintrag für den Nutzer abändern ([Tabelle: "user", Spalte: "is_admin"](http://kolbasa.github.io/ueps/screenshots/admin-db-er-diagram.png)).
 
 ÜPS besitzt keine eigene Nutzerverwaltung. Die Nutzer-Authentifizierung erfolgt über die Open-Source Lernplattform [Moodle](https://moodle.org/) mithilfe der "[Externe URL](https://docs.moodle.org/27/de/Link/URL_konfigurieren)"-Funktion.
-Für die Anmeldung werden zwei GET-Paramater übergeben: die Nutzer-ID und ein verschlüsseltes Kennwort (encryptedCode);
+Für die Anmeldung werden zwei GET-Paramater übergeben: die **Nutzer-ID** und ein **verschlüsseltes Kennwort** (encryptedCode);
 
-> Dieses Kennwort wird benutzt, um einen verschlüsselten Code zu generieren, der als Parameter an andere Server übermittelt werden kann. Der verschlüsselte Code wird über einen md5-Wert der aktuellen IP-Adresse in Verbindung mit dem Kennwort erzeugt, d.h. code = md5(IP.secretphrase).
+> Dieses Kennwort wird benutzt, um einen verschlüsselten Code zu generieren, der als Parameter an andere Server übermittelt werden kann. Der verschlüsselte Code wird über einen md5-Wert der aktuellen IP-Adresse in Verbindung mit dem Kennwort erzeugt, d.h. ``code = md5(IP.secretphrase)``.
 
 Die Implementierung in ÜPS sieht [folgendermaßen](src/main/java/de/uniwue/info6/webapp/session/SessionObject.java#L141-L166) aus.
 

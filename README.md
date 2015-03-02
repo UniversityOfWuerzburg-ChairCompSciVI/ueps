@@ -7,10 +7,6 @@
 
 [![ÜPS Showcase](http://kolbasa.github.io/ueps/screenshots/showcase-button-student.png)](http://ueps.scienceontheweb.net?index=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=1) [![ÜPS Showcase](http://kolbasa.github.io/ueps/screenshots/showcase-button-admin.png)](http://ueps.scienceontheweb.net?index=xhtml&userID=demo_admin&encryptedCode=showcase&scenarioID=1)
 
-
-
-------
-
 # Inhaltsverzeichnis
 1. [Systemanforderungen](#systemanforderungen)
 2. [Kurzanleitung zur Installation](#kurzanleitung-zur-installation)
@@ -176,13 +172,12 @@ Admins können auch zur Laufzeit hinzugefügt werden, hierfür muss man jedoch d
 
 > Dieses Kennwort wird benutzt, um einen verschlüsselten Code zu generieren, der als Parameter an andere Server übermittelt werden kann. Der verschlüsselte Code wird über einen md5-Wert der aktuellen IP-Adresse in Verbindung mit dem Kennwort erzeugt, d.h. code = md5(IP.secretphrase). Bitte beachten Sie, dass dies nicht zuverlässig ist, weil die IP-Adresse wechseln oder an andere Computer weitergegeben werden kann. Das Standardkennwort wird automatisch generiert.
 
+[Auszug aus dem Quellcode](src/main/java/de/uniwue/info6/webapp/session/SessionObject.java#L141-L166)
 
-[test](src/main/java/de/uniwue/info6/webapp/session/SessionObject.java#L141-L166)
+``http://[hosturl]/?userID=[user_id]&encryptedCode=[secure_value]&scenarioID=[scenario_id]``
 
-``http://[hosturl]/?userID=[user_id]&secureValue=[secure_value]&scenarioID=[scenario_id]``
-
-Ausgefülltes Beispiel
-``http://localhost:8080/ueps/?scenarioID=1&userID=user_1&secureValue=d1ac3b14896c2faf640d1e00966fc065``
+Ausgefülltes Beispiel:
+[``http://ueps.ddnss.de:82/ueps/index.xhtml?userID=demo_admin&encryptedCode=showcase&scenarioID=1``](http://ueps.ddnss.de:82/ueps/index.xhtml?userID=demo_admin&encryptedCode=showcase&scenarioID=1)
 
 #### Pfadangaben
 Es lassen sich zwei Pfade konfigurieren (optional).

@@ -56,6 +56,9 @@
         <property name="isRated" type="java.lang.Boolean">
             <column name="is_rated" />
         </property>
+        <property name="autoReleaseRating" type="java.lang.Boolean">
+            <column name="auto_release_rating" />
+        </property>
         <set name="exercises" table="exercise" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="exercise_group_id" />

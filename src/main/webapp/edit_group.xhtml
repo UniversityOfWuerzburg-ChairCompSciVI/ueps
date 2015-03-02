@@ -110,13 +110,29 @@ xmlns:p="http://primefaces.org/ui">
        <h:panelGroup>
         <h:outputText id="group_rated_original" escape="false" value="#{edit_gr.getType()}" />
         <br />
-        <p:inplace style="color:green" rendered="#{edit_gr.hasEditingRights()}" id="group_rated"
+        <p:inplace style="color:green" id="group_rated"
         effectSpeed="fast" editor="true" label="[#{txt['EDIT']}]">
          <p:ajax event="save" update="group_rated_original" />
          <h:selectOneMenu value="#{edit_gr.rated}" immediate="true">
           <f:selectItem itemLabel="#{txt['UNRATED']}" itemValue="1" />
           <f:selectItem itemLabel="#{txt['RATED']}" itemValue="2" />
           <f:selectItem itemLabel="#{txt['EDIT_GROUP.RATED_NO_FEED']}" itemValue="3" />
+         </h:selectOneMenu>
+        </p:inplace>
+       </h:panelGroup>
+       <!-- ##################################### -->
+       <!-- group type selection -->
+       <!-- ##################################### -->
+       <h:outputLabel for="auto_rate" styleClass="boldPoints" value="#{txt['EDIT_GROUP.AUTO_RATING_LAB']}" />
+       <h:panelGroup>
+        <h:outputText id="auto_rate_original" escape="false" value="#{edit_gr.getAutoRateStatus()}" />
+        <br />
+        <p:inplace style="color:green" id="auto_rate"
+        effectSpeed="fast" editor="true" label="[#{txt['EDIT']}]">
+         <p:ajax event="save" update="auto_rate_original" />
+         <h:selectOneMenu value="#{edit_gr.autoRate}" immediate="true">
+          <f:selectItem itemLabel="#{txt['EDIT_GROUP.NO_AUTO_RATING']}" itemValue="0" />
+          <f:selectItem itemLabel="#{txt['EDIT_GROUP.AUTO_RATING']}" itemValue="1" />
          </h:selectOneMenu>
         </p:inplace>
        </h:panelGroup>

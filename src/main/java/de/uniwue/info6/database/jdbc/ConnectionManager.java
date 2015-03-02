@@ -78,16 +78,18 @@ public class ConnectionManager implements Serializable {
 
   private static final String
   ORIGINAL_SCRIPTS  = "sql",
-  DRIVER            = "org.mariadb.jdbc.Driver",
-  URL_PREFIX        = "jdbc:mariadb://",
   DRIVER_PARAMETERS = "useUnicode=true&characterEncoding=UTF8&autoReconnect=true&interactiveClient=true",
   OFFLINE_MODE_MSG  = "INFO (ueps): Offline mode";
+
+  public static final String
+  DRIVER            = "org.mariadb.jdbc.Driver",
+  URL_PREFIX        = "jdbc:mariadb://";
 
   private HashMap<Scenario, ArrayList<String>> scenarioScripts;
   private HashMap<Scenario, HashMap<String, String>> autoIncrements, scenarioTablesWithHash;
 
   private String scriptPath;
-  private HashMap<Scenario, ComboPooledDataSource> newPools;
+  private HashMap<Scenario, ComboPooledDataSource> pools;
   private HashMap<Scenario, String> errors;
   private ArrayList<Scenario> hasForeignKeys, originalTableDeleted;
 
@@ -130,9 +132,9 @@ public class ConnectionManager implements Serializable {
     this.scriptPath = this.config
                       .getProp(MAIN_CONFIG, SCENARIO_RESOURCES_PATH);
     this.scriptPath = StringTools.shortenUnixHomePathReverse(this.scriptPath);
-    this.ac = SessionObject.pull();
+    this.ac = SessionObject.pullFromSession();
 
-    this.newPools                 = new HashMap<Scenario, ComboPooledDataSource>();
+    this.pools                 = new HashMap<Scenario, ComboPooledDataSource>();
     this.errors                   = new HashMap<Scenario, String>();
     this.scenarioScripts          = new HashMap<Scenario, ArrayList<String>>();
     this.scenarioTablesWithHash   = new HashMap<Scenario, HashMap<String, String>>();
@@ -270,7 +272,8 @@ public class ConnectionManager implements Serializable {
       }
 
       // the settings below are optional -- c3p0 can work with defaults
-      newAdminDataSource.setMinPoolSize(5);
+      newAdminDataSource.setMinPoolSize(0);
+      newAdminDataSource.setInitialPoolSize(0);
       newAdminDataSource.setAcquireIncrement(5);
       newAdminDataSource.setMaxPoolSize(20);
 
@@ -438,7 +441,8 @@ public class ConnectionManager implements Serializable {
       cpds.setUser(dbUser);
       cpds.setPassword(dbPass);
 
-      cpds.setMinPoolSize(5);
+      cpds.setMinPoolSize(0);
+      cpds.setInitialPoolSize(0);
       cpds.setAcquireIncrement(5);
       cpds.setMaxPoolSize(20);
 
@@ -447,7 +451,7 @@ public class ConnectionManager implements Serializable {
       cpds.setUnreturnedConnectionTimeout(160);
 
       if (cpds != null) {
-        newPools.put(scenario, cpds);
+        pools.put(scenario, cpds);
       }
 
     } catch (Exception e) {
@@ -608,7 +612,7 @@ public class ConnectionManager implements Serializable {
           }
         }
 
-        if (!newPools.containsKey(sc)) {
+        if (!pools.containsKey(sc)) {
           instance.addDB(sc);
         }
       }
@@ -616,7 +620,7 @@ public class ConnectionManager implements Serializable {
       List<Scenario> scenariosToRemove = new ArrayList<Scenario>();
 
       // remove scenarios if necessary
-      for (Scenario sc : newPools.keySet()) {
+      for (Scenario sc : pools.keySet()) {
         if (!scenarios.contains(sc)) {
           scenariosToRemove.add(sc);
         }
@@ -633,7 +637,7 @@ public class ConnectionManager implements Serializable {
    * @param scenario
    */
   public void removeScenario(Scenario scenario, boolean deleteDatabase) {
-    if (scenario != null && newPools != null) {
+    if (scenario != null && pools != null) {
       if (ac != null) {
         Scenario currentScenario = ac.getScenario();
         if (scenario.equals(currentScenario)) {
@@ -641,8 +645,8 @@ public class ConnectionManager implements Serializable {
         }
       }
 
-      if (newPools.containsKey(scenario)) {
-        newPools.remove(scenario);
+      if (pools.containsKey(scenario)) {
+        pools.remove(scenario);
       }
 
       if (scenarioScripts.containsKey(scenario)) {
@@ -689,9 +693,9 @@ public class ConnectionManager implements Serializable {
   public synchronized Connection getConnection(Scenario scenario) throws SQLException {
     Connection connection = null;
     if (scenario != null) {
-      if (newPools.containsKey(scenario)) {
+      if (pools.containsKey(scenario)) {
         try {
-          ComboPooledDataSource pool = newPools.get(scenario);
+          ComboPooledDataSource pool = pools.get(scenario);
           connection = pool.getConnection();
           connection.setCatalog(scenario.getDbName());
         } catch (Exception exception) {
@@ -714,8 +718,8 @@ public class ConnectionManager implements Serializable {
   public synchronized ComboPooledDataSource getDataSource(Scenario scenario) throws SQLException {
     ComboPooledDataSource dataSource = null;
     if (scenario != null) {
-      if (newPools.containsKey(scenario)) {
-        dataSource = newPools.get(scenario);
+      if (pools.containsKey(scenario)) {
+        dataSource = pools.get(scenario);
       }
     }
     return dataSource;
@@ -727,8 +731,8 @@ public class ConnectionManager implements Serializable {
    * @param scenario
    */
   public synchronized void removeDB(Scenario scenario) {
-    if (newPools.containsKey(scenario)) {
-      newPools.remove(scenario);
+    if (pools.containsKey(scenario)) {
+      pools.remove(scenario);
     }
   }
 
@@ -1456,6 +1460,13 @@ public class ConnectionManager implements Serializable {
    */
   public void setResourcePath(String resourcePath) {
     this.resourcePath = resourcePath;
+  }
+
+  /**
+   * @return the pools
+   */
+  public HashMap<Scenario, ComboPooledDataSource> getPools() {
+    return pools;
   }
 
   /**

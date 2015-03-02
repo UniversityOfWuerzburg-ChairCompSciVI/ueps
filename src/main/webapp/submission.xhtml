@@ -133,7 +133,7 @@ xmlns:p="http://primefaces.org/ui">
         <f:facet name="header">#{txt['ASSERTION.QUERY']}</f:facet>
         <h:outputText value="#{row.isEntry ? row.userEntry.userQuery :
                            (row.isExercise ? row.getExerciseText() : '')}"
-style="white-space:normal;#{sub.getStyle(row)}" class="#{sub.getStyleClass(row)}" />
+        style="white-space:normal;#{sub.getStyle(row)}" class="#{sub.getStyleClass(row)}" />
        </p:column>
        <p:column style="width:10%; text-align:center;">
         <f:facet name="header">#{txt['ASSERTION.POINTS']}</f:facet>

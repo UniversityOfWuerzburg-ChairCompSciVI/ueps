@@ -136,7 +136,7 @@ public class SubmissionEditor implements Serializable {
     try {
       Map<String, String> requestParams = ec.getRequestParameterMap();
 
-      ac = SessionObject.pull();
+      ac = SessionObject.pullFromSession();
       user = ac.getUser();
 
       solutions = new ArrayList<SolutionQuery>();
@@ -260,7 +260,7 @@ public class SubmissionEditor implements Serializable {
         }
       }
       if (message == null) {
-        saved = userResultDao.updateInstance(userResult);
+        saved = userResultDao.updateInstanceP(userResult);
       }
     }
 
@@ -378,7 +378,7 @@ public class SubmissionEditor implements Serializable {
         newQuery.setStatus((byte) 2); // 0 initial, 1 user used, 2 user
         // unused
 
-        boolean saved = solutionDao.insertNewInstance(newQuery);
+        boolean saved = solutionDao.insertNewInstanceP(newQuery);
 
         if (saved) {
 
@@ -485,7 +485,7 @@ public class SubmissionEditor implements Serializable {
                   userResult.setSolutionQuery(solutionsOrig
                                               .get(index));
                 }
-                userResultDao.updateInstance(userResult);
+                userResultDao.updateInstanceP(userResult);
               }
             }
           }
@@ -493,7 +493,7 @@ public class SubmissionEditor implements Serializable {
 
         newQuery.setStatus((byte) 1); // 0 initial, 1 user used, 2 user
         // unused
-        solutionDao.updateInstance(newQuery);
+        solutionDao.updateInstanceP(newQuery);
         userResult = userResultDao
                      .getLastUserResultFromEntry(userEntry);
 

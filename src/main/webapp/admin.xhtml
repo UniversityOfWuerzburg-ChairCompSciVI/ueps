@@ -40,29 +40,29 @@ xmlns:p="http://primefaces.org/ui">
      <!-- -->
      <script type="text/javascript">
      <!-- -->
-     jQuery(function() {
+     jQuery(function() { 
      <!-- -->
-     jQuery( ".scenario_class" ).tipsy({fallback: "#{txt['ADMINTREE.SCENARIO']}", gravity: 'w' });
+     jQuery( ".scenario_class" ).tipsy({fallback: "#{txt['ADMINTREE.SCENARIO']}", gravity: 'w' }); 
      <!-- -->
-     jQuery( ".group_class").tipsy({fallback: "#{txt['ADMINTREE.EX_NOT_RATED']}", gravity: 'w' });
+     jQuery( ".group_class").tipsy({fallback: "#{txt['ADMINTREE.EX_NOT_RATED']}", gravity: 'w' }); 
      <!-- -->
-     jQuery( ".rated_group_class").tipsy({fallback: "#{txt['ADMINTREE.EX_RATED']}", gravity: 'w' });
+     jQuery( ".rated_group_class").tipsy({fallback: "#{txt['ADMINTREE.EX_RATED']}", gravity: 'w' }); 
      <!-- -->
-     });
+     }); 
      <!-- -->
-     function context_tooltip() {
+     function context_tooltip() { 
      <!-- -->
-     jQuery( ".menu_export").tipsy({fallback: "#{txt['ADMINTREE.EXPORT']}", gravity: 'w' });
+     jQuery( ".menu_export").tipsy({fallback: "#{txt['ADMINTREE.EXPORT']}", gravity: 'w' }); 
      <!-- -->
-     jQuery( ".menu_cut_copy").tipsy({fallback: "#{txt['ADMINTREE.CUT_COPY']}", gravity: 'w' });
+     jQuery( ".menu_cut_copy").tipsy({fallback: "#{txt['ADMINTREE.CUT_COPY']}", gravity: 'w' }); 
      <!-- -->
-     jQuery( ".menu_delete").tipsy({fallback: "#{txt['ADMINTREE.DELETE']}", gravity: 'w' });
+     jQuery( ".menu_delete").tipsy({fallback: "#{txt['ADMINTREE.DELETE']}", gravity: 'w' }); 
      <!-- -->
-     }
+     } 
      <!-- -->
-     function start() { statusDialog.show(); }
+     function start() { statusDialog.show(); } 
      <!-- -->
-     function stop() { statusDialog.hide(); }
+     function stop() { statusDialog.hide(); } 
      <!-- --></script>
      <!-- ##################################### -->
      <!-- download loading popup -->
@@ -142,7 +142,8 @@ xmlns:p="http://primefaces.org/ui">
      <!-- ##################################### -->
      <p:contextMenu for="exerciseTree" id="tableMenu" widgetVar="tableMenuWX">
       <!-- -->
-      <p:menuitem value="#{t.renderAddMenu() ? t.getChildName().concat(txt['ADMINTREE.MENU_ADD']) : txt['ADMINTREE.NO_SC_EDIT_RIGHT']}"
+      <p:menuitem rendered="#{t.renderPermissionError()}" 
+      value="#{t.renderAddMenu() ? t.getChildName().concat(txt['ADMINTREE.MENU_ADD']) : txt['ADMINTREE.NO_SC_EDIT_RIGHT']}"
       update="exerciseTree" icon="ui-icon-plus" action="#{moveTo.edit(t.getSelection(), true)}" ajax="false"
       disabled="false" style="color:#004188" />
       <!-- -->
@@ -193,7 +194,8 @@ xmlns:p="http://primefaces.org/ui">
       <p:treeNode collapsedIcon="#{t.getIcon(node, true)}" expandedIcon="#{t.getIcon(node, false)}">
        <!-- -->
        <span class="tree_doubleclick" onclick="jQuery(this).css( 'white-space', 'normal' );">
-        <h:outputText class="#{node.getStyleClass()}" value="#{node.getMessage()}" />
+        <h:outputText class="#{node == null ? '---' : node.getStyleClass()}"
+        value="#{node == null ? '---' : node.getMessage()}" />
         <!-- <p:commandButton value="test" onclick="tableMenuWX.show(currentEvent)" /> -->
        </span>
       </p:treeNode>
@@ -206,7 +208,7 @@ xmlns:p="http://primefaces.org/ui">
       <p style="display:inline;color:#004188;
                 font-size:15px;font-weight:bold">
       <!-- -->
-      #{txt['ADMINTREE.RIGHTCLICK']}
+      #{txt['ADMINTREE.RIGHTCLICK']} 
       <br />#{txt['ADMINTREE.DOUBLECLICK']}</p>
       <!-- -->
      </p:outputPanel>

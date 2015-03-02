@@ -22,15 +22,11 @@
   limitations under the License.
   #L%
   -->
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-xmlns:f="http://java.sun.com/jsf/core"
-xmlns:h="http://java.sun.com/jsf/html"
-xmlns:ui="http://java.sun.com/jsf/facelets"
-xmlns:a4j="http://richfaces.org/a4j"
-xmlns:rich="http://richfaces.org/rich"
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html" xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich"
 xmlns:p="http://primefaces.org/ui">
  <META HTTP-EQUIV="refresh" CONTENT="15" />
  <h:body>
@@ -40,28 +36,40 @@ xmlns:p="http://primefaces.org/ui">
     <span>#{txt['HEADER.TASK_HEADER']}</span>
    </ui:define>
    <ui:define name="content">
-    <h:graphicImage class="permission_error"
-    value="#{img['BASICS.MULTIPASS']}"
-    rendered="#{not e.userHasRights}" />
+
+     <!-- ************************************************************************ -->
+     <h:panelGroup id="session_expired_button" rendered="#{not e.userHasRights}">
+       <p id="session_expired_button">
+       <h:graphicImage class="multi-pass-required" value="/resources/img/#{config['IMG.MULTIPASS']}" />
+       <br />
+       <span class="multi-pass-required-text">#{txt['SESSION.PERMISSION_DETAILS']}</span>
+       </p>
+     </h:panelGroup>
+    <!-- ************************************************************************ -->
+
     <!-- -->
     <script type="text/javascript">
+    function context_tooltip() {
     <!-- -->
-    jQuery(function() {
+    jQuery(".tipsy").remove();
     <!-- -->
-    jQuery( ".mysql_help_button" ).tipsy({fallback:
-    "#{txt['QUE.MYSQL_DOC']}", gravity: 'n' });
+    jQuery(function() { 
     <!-- -->
-    jQuery( ".dia_button" ).tipsy({fallback:
-    "#{txt['QUE.DIA_HELP']}", gravity: 'n' });
+    jQuery( ".mysql_help_button" ).tipsy({fallback: "#{txt['QUE.MYSQL_DOC']}", gravity: 'n' }); 
     <!-- -->
-    });
+    jQuery( ".dia_button" ).tipsy({fallback: "#{txt['QUE.DIA_HELP']}", gravity: 'n' }); 
     <!-- -->
-    function mysql_tooltip() {
-    <!-- -->
-    jQuery( ".custom_mysql").tipsy({fallback:
-    "#{txt['QUE.CUSTOM_MYSQL']}", gravity: 'n' });
+    }); 
     <!-- -->
     }
+    <!-- -->
+    jQuery(document).ready(function() { context_tooltip(); });
+    <!-- -->
+    function mysql_tooltip() { 
+    <!-- -->
+    jQuery( ".custom_mysql").tipsy({fallback: "#{txt['QUE.CUSTOM_MYSQL']}", gravity: 'n' }); 
+    <!-- -->
+    } 
     <!-- --></script>
     <h:form id="usertask" rendered="#{e.userHasRights}">
      <p:growl id="messages" showDetail="true" life="8000" />
@@ -71,15 +79,11 @@ xmlns:p="http://primefaces.org/ui">
       <!-- e := ExerciseController.class -->
       <!-- ##################################### -->
       <p:row>
-       <p:column colspan="1"
-       style="text-align:center;border-right:none;">
-        <h:outputText value="#{txt['QUE']}: #{e.getExercise().getId()}"
-        styleClass="boldPoints" />
+       <p:column colspan="1" style="text-align:center;border-right:none;">
+        <h:outputText value="#{txt['QUE']}: #{e.getExercise().getId()}" styleClass="boldPoints" />
        </p:column>
-       <p:column colspan="1"
-       style="text-align:center;border-left:none">
-        <h:outputText value="#{txt['QUE.INPUT']}:"
-        styleClass="boldPoints" />
+       <p:column colspan="1" style="text-align:center;border-left:none">
+        <h:outputText value="#{txt['QUE.INPUT']}:" styleClass="boldPoints" />
        </p:column>
       </p:row>
       <p:row>
@@ -88,14 +92,10 @@ xmlns:p="http://primefaces.org/ui">
        <!-- ##################################### -->
        <p:column rowspan="1" colspan="1"
        style="font-size:16px;text-align:center;border:1px dashed gray !important;width:428px">
-
-        <p:scrollPanel mode="native"
-        style="max-height:180px;border:none;padding-right:10px;padding-left:10px">
-
+        <p:scrollPanel mode="native" styleClass="question-text-scrollpanel"
+            style="max-height:180px;border:none;padding-right:10px;padding-left:10px;">
          <p>
-          <h:outputText escape="false"
-          value="#{e.getExercise().getQuestion()}"
-          styleClass="boldPoints" />
+          <h:outputText escape="false" value="#{e.getExercise().getQuestion()}" styleClass="boldPoints" />
          </p>
          <!-- difficulty level -->
          <p>
@@ -106,13 +106,10 @@ xmlns:p="http://primefaces.org/ui">
          </p>
          <!-- debug, showing correct result  -->
          <p>
-          <h:outputText value="#{txt['QUE.CORRECT_QUERY']}: "
-          style="font-size:13px;color:grey" styleClass="boldPoints"
-          rendered="#{e.adminSolutionVisible()}" />
+          <h:outputText value="#{txt['QUE.CORRECT_QUERY']}: " style="font-size:13px;color:grey"
+          styleClass="boldPoints" rendered="#{e.adminSolutionVisible()}" />
           <br />
-          <h:outputText escape="false"
-          rendered="#{e.adminSolutionVisible()}"
-          value="#{e.getResultStrings()}"
+          <h:outputText escape="false" rendered="#{e.adminSolutionVisible()}" value="#{e.getResultStrings()}"
           style="font-size:13px;color:white" />
          </p>
         </p:scrollPanel>
@@ -121,45 +118,33 @@ xmlns:p="http://primefaces.org/ui">
        <!-- input field and get-feedback-button -->
        <!-- minQueryLength="2" queryDelay="500" multiple="true"-->
        <!-- ##################################### -->
-       <p:column colspan="1"
-       style="border:1px dashed gray !important; padding: 10px;">
-        <p:inputTextarea value="#{e.userString}" id="userInputArea"
-        rows="7" cols="35"></p:inputTextarea>
-        <p:commandButton immediate="false" id="get_feedback"
-        oncomplete="mysql_tooltip();pulsateButton();"
-        icon="ui-icon-circle-triangle-e" style="width:100%;"
-        value="#{txt['QUE.VALIDATE']}"
+       <p:column colspan="1" style="border:1px dashed gray !important; padding: 10px;">
+        <p:inputTextarea value="#{e.userString}" id="userInputArea" rows="7" cols="35"></p:inputTextarea>
+        <p:commandButton immediate="false" id="get_feedback" oncomplete="mysql_tooltip();pulsateButton();"
+        icon="ui-icon-circle-triangle-e" style="width:100%;" value="#{txt['QUE.VALIDATE']}"
         update="feedback_box feedback result_panel result_table user_result_table
                 refLinks solution_carousel user_result_widget result_table_widget
-				messages"
-        onclick="startAjaxStatus()" />
+        messages" onclick="startAjaxStatus()" />
        </p:column>
       </p:row>
       <p:row>
        <!-- ##################################### -->
        <!-- feedback-box -->
        <!-- ##################################### -->
-       <p:column styleClass="feedback_column" colspan="1"
-       style="vertical-align:top">
+       <p:column styleClass="feedback_column" colspan="1" style="vertical-align:top">
         <h:panelGroup id="feedback">
-         <p:accordionPanel activeIndex="-1" id="feedback_accordion"
-         rendered="#{e.feedbackVisible}"
+         <p:accordionPanel activeIndex="-1" id="feedback_accordion" rendered="#{e.feedbackVisible}"
          styleClass="#{e.isSolutionCorrect() ? 'result_correct' : 'result_error'} feedback_box"
-         widgetVar="intro" global="true" dynamic="false"
-         cache="false" collapsible="true">
+         widgetVar="intro" global="true" dynamic="false" cache="false" collapsible="true">
           <!-- first tab: introduction-text -->
           <p:tab title="#{e.isSolutionCorrect() ? txt['QUE.CORRECT'] : txt['QUE.NOT_CORRECT']}">
-
-           <p:dataList styleClass="feedback_box"
-           style="text-align:justify" value="#{e.feedbackList}"
+           <p:dataList styleClass="feedback_box" style="text-align:justify" value="#{e.feedbackList}"
            var="userFeedback" itemType="disc">
-            <h:outputText class="boldPoints"
-            value="#{userFeedback.title}: " />
+            <h:outputText class="boldPoints" value="#{userFeedback.title}: " />
             <h:outputText class="#{userFeedback.hasOriginalFeedback() ? 'originalText' : ''}"
             value="#{userFeedback.feedback}" />
             <br />
-            <h:outputText style="font-size:13px;color:grey"
-            rendered="#{userFeedback.hasOriginalFeedback()}"
+            <h:outputText style="font-size:13px;color:grey" rendered="#{userFeedback.hasOriginalFeedback()}"
             value="(#{txt['QUE.ORIGINAL_ERROR']}: '#{userFeedback.originalFeedback})'" />
            </p:dataList>
           </p:tab>
@@ -169,24 +154,18 @@ xmlns:p="http://primefaces.org/ui">
        <!-- ##################################### -->
        <!-- feedback-buttons -->
        <!-- ##################################### -->
-       <p:column styleClass="feedback_buttons_column"
-       style="text-align:center; vertical-align:top">
+       <p:column styleClass="feedback_buttons_column" style="text-align:center; vertical-align:top">
         <h:panelGroup id="result_panel">
-         <p:commandButton value="#{txt['QUE.CORRECT_QUERY']}"
-         icon="ui-icon-circle-zoomin"
+         <p:commandButton value="#{txt['QUE.CORRECT_QUERY']}" icon="ui-icon-circle-zoomin"
          style="#{e.userResultVisible ? 'width:50%' : 'width:100%' };
-                 background-color:#EDEFFF !important;
-                 margin-top:-10px;position:relative;top:13px"
-         id="result_button" rendered="#{e.resultVisible}"
-         styleClass="result_button"
-         onclick="result_table_widget.show();return false;" />
-         <p:commandButton value="#{txt['QUE.USER_QUERY']}"
-         icon="ui-icon-circle-zoomin"
+                background-color:#EDEFFF !important;
+                margin-top:-10px;position:relative;top:13px" id="result_button" rendered="#{e.resultVisible}"
+         styleClass="result_button" onclick="result_table_widget.show();formatDialog('solution_result_table_popup', false, true, false);return false;" />
+         <p:commandButton value="#{txt['QUE.USER_QUERY']}" icon="ui-icon-circle-zoomin"
          style="#{e.resultVisible ? 'width:49%' : 'width:100%' };
-                 background-color:#EDEFFF !important; margin-top:-10px;position:relative;top:13px"
-         id="user_result_button" rendered="#{e.userResultVisible}"
-         styleClass="user_result_button"
-         onclick="user_result_widget.show();return false;" />
+                background-color:#EDEFFF !important; margin-top:-10px;position:relative;top:13px"
+                id="user_result_button" rendered="#{e.userResultVisible}" styleClass="user_result_button"
+                onclick="user_result_widget.show();formatDialog('user_result_table_popup', true, false, false);return false;" />
         </h:panelGroup>
        </p:column>
       </p:row>
@@ -195,66 +174,65 @@ xmlns:p="http://primefaces.org/ui">
        <!-- relevant table buttons -->
        <!-- ##################################### -->
        <p:column colspan="2" style="padding-bottom:0px">
-        <h:outputText value="#{txt['QUE.TABLES']} "
-        class="boldPoints" />
+        <h:outputText value="#{txt['QUE.TABLES']} " class="boldPoints" />
         <h:outputText value="(#{txt['QUE.RESULT_DETAILS']}):" />
-
-        <p:dataList var="table" value="#{e.availableTables}"
-        emptyMessage="#{e.getSQLError()}"
+        <p:dataList var="table" value="#{e.availableTables}" emptyMessage="#{e.getSQLError()}"
         styleClass="relevant_tables_list" id="relevant_tables_list">
-         <p:commandButton styleClass="table_button" ajax="false"
-         value="#{table}"
-         onclick="relevent_tables_dialog_wid_#{table}.show();return false;" />
+         <p:commandButton styleClass="table_button" ajax="false" value="#{table}"
+             onclick="relevent_tables_dialog_wid_#{table}.show();formatDialog('relevant_table_popup_#{table}', false, false, false);return false;" /> 
         </p:dataList>
-
-        <p:dataList var="table" emptyMessage=""
-        value="#{e.availableTables}" rowIndexVar="rowIndex"
+        <p:dataList var="table" emptyMessage="" value="#{e.availableTables}" rowIndexVar="rowIndex"
         styleClass="relevant_tables_list">
-         <p:dialog closeOnEscape="true"
-         styleClass="relevant_table_popup" header="#{table}"
-         showEffect="fade" hideEffect="fade" style="overflow-y:auto"
-         resizable="true"
-         widgetVar="relevent_tables_dialog_wid_#{table}">
-          <script type="text/javascript">
-          <!-- -->
-          function filter_tooltip() {
-          <!-- -->
-          jQuery(".tipsy").remove();
-          <!-- -->
-          jQuery( ".filter_textfield" ).tipsy({fallback:
-          "#{txt['FILTER.DESCRIPTION']}", gravity: 's' });
-          <!-- -->
-          }
-          <!-- -->
-          filter_tooltip();</script>
-          <p:inputText placeholder=" Filter (z.B.: 'Spaltenname=Suchstring')"
-          styleClass="filter_textfield"
-          value="#{e.currentTableFilter[rowIndex]}"
-          id="current_relevant_table_filter"
-		  onkeypress="if (event.keyCode == 13) { jQuery('.button_wid_#{table}').click(); filter_tooltip(); return false; }" />
-          <!-- -->
-          <p:commandButton styleClass="filter_textfield_button button_wid_#{table}"
-          value="Filtern" oncomplete="filter_tooltip()"
-          update="@this,current_relevant_table current_relevant_table_filter"
-          actionListener="#{e.setCurrentTable(table, rowIndex)}" />
-          <!-- -->
-          <p:commandButton styleClass="filter_textfield_button"
-          value="Reset" oncomplete="filter_tooltip()"
-          actionListener="#{e.resetCurrentTable(table, rowIndex)}"
-          update="@this,current_relevant_table current_relevant_table_filter" />
-          <!-- -->
-          <p:dataTable var="entry" paginatorAlwaysVisible="false"
-          emptyMessage="#{txt['QUE.NO_ENTRIES']}"
-          rowsPerPageTemplate="2,4,10,20" paginator="true" rows="4"
-          value="#{e.tableValues.get(table)}"
-          id="current_relevant_table" style="margin-top:5px"
-          widgetVar="relevent_table_wid_#{table}">
-           <p:columns styleClass="relevant_table_data"
-           value="#{e.tableColumns.get(table)}" var="column"
+
+        <p:dialog closeOnEscape="true" styleClass="relevant_table_popup_#{table}" header="#{table}" 
+            showEffect="fade" hideEffect="fade" resizable="true"
+         widgetVar="relevent_tables_dialog_wid_#{table}" appendTo="@(body)" minWidth="150" minHeight="150">
+
+          <!-- <script type="text/javascript">                                                                                       -->
+          <!-- [> <]                                                                                                                 -->
+          <!-- function filter_tooltip() {                                                                                           -->
+          <!-- [> <]                                                                                                                 -->
+          <!-- jQuery(".tipsy").remove();                                                                                            -->
+          <!-- [> <]                                                                                                                 -->
+          <!-- jQuery( ".filter_textfield" ).tipsy({fallback: "#{txt['FILTER.DESCRIPTION']}", gravity: 's' });                       -->
+          <!-- [> <]                                                                                                                 -->
+          <!-- }                                                                                                                     -->
+          <!-- [> <]                                                                                                                 -->
+          <!-- filter_tooltip();</script>                                                                                            -->
+          <!-- [> ************************************************************************ <]                                        -->
+          <!-- <p:inputText placeholder=" Filter (z.B.: 'Spaltenname=Suchstring')" styleClass="filter_textfield" binding="#{input1}" -->
+          <!-- value="#{e.currentTableFilter[rowIndex]}" id="current_relevant_table_filter" immediate="true" modal="true"            -->
+          <!-- onkeypress="if (event.keyCode == 13) { jQuery('.button_wid_#{table}').click(); filter_tooltip(); return false; }" />  -->
+          <!-- [> <]                                                                                                                 -->
+          <!-- <p:commandButton styleClass="filter_textfield_button button_wid_#{table}" value="Filtern"                             -->
+          <!--     oncomplete="filter_tooltip();" update="@this,current_relevant_table"                                              -->
+          <!-- actionListener="#{e.setCurrentTable(table, rowIndex)}" />                                                             -->
+          <!-- [> <]                                                                                                                 -->
+          <!-- <p:commandButton styleClass="filter_textfield_button" value="Reset" oncomplete="filter_tooltip()"                     -->
+          <!-- actionListener="#{e.resetCurrentTable(table, rowIndex)}"                                                              -->
+          <!-- update="@this,current_relevant_table" />                                                                              -->
+          <!-- [> <]                                                                                                                 -->
+
+          <!-- <p:inputText value="" style="float:left" styleClass="test"></p:inputText> -->
+
+          <p onclick="relevent_tables_dialog_wid_#{table}.hide()" style="margin:5px 0px 3px 0px;">
+            <h:outputText value="Fenster schließen" style="font-size:11px;text-decoration:underlined;font-weight:bold;cursor:pointer;color:#969696;"/>
+          </p>
+
+          <p:dataTable var="entry" paginatorAlwaysVisible="false" emptyMessage="#{txt['QUE.NO_ENTRIES']}"
+          paginator="true" rows="10" value="#{e.tableValues.get(table)}" pageLinks="5"
+          id="current_relevant_table" style="margin:10px" widgetVar="relevent_table_wid_#{table}">
+           <p:columns styleClass="relevant_table_data" value="#{e.tableColumns.get(table)}" var="column"
            columnIndexVar="colIndex">
-           <f:facet name="header">
-           #{column}</f:facet>#{entry.getValue(colIndex)}</p:columns>
+           <f:facet name="header">#{column}</f:facet>#{entry.getValue(colIndex)}</p:columns>
           </p:dataTable>
+
+          <p onclick="relevent_tables_dialog_wid_#{table}.hide()" style="margin:3px 0px 15px 0px;">
+            <h:outputText value="Fenster schließen" style="font-size:11px;text-decoration:underlined;font-weight:bold;cursor:pointer;color:#969696;"/>
+          </p>
+
+          <!-- ************************************************************************ -->
+
          </p:dialog>
         </p:dataList>
        </p:column>
@@ -264,31 +242,29 @@ xmlns:p="http://primefaces.org/ui">
       <!-- ##################################### -->
       <p:row>
        <p:column colspan="2" style="padding-top:0px">
-        <p:dataList var="ref" value="#{e.refLinks}" id="refLinks"
-        emptyMessage="" styleClass="relevant_tables_list">
+        <p:dataList var="ref" value="#{e.refLinks}" id="refLinks" emptyMessage=""
+        styleClass="relevant_tables_list">
          <p:commandButton onclick="window.open('#{ref.url}');return false"
-         styleClass="table_button custom_mysql" ajax="false"
-         value="#{ref.name}"
+         styleClass="table_button custom_mysql" ajax="false" value="#{ref.name}"
          style="position:relative;top:-12px;float:left; background-color: #DB9D9D !important" />
         </p:dataList>
         <p:commandButton styleClass="mysql_help_button table_button"
         style="background-color:#D7DBFF !important;position:relative;left:-6px;top:-12px;margin-left:6px"
-        onclick="window.open('#{e.mainRefLink}');return false"
-        value="#{txt['QUE.MYSQL']}" />
-        <p:commandButton styleClass="dia_button table_button"
-        disabled="false"
+        onclick="window.open('#{e.mainRefLink}');return false" value="#{txt['QUE.MYSQL']}" />
+        <p:commandButton styleClass="dia_button table_button" disabled="false"
         style="background-color:#D7DBFF !important;position:relative;left:-6px;top:-12px"
-        value="#{txt['QUE.DIA']}" onclick="db_diagram.show()"
+        value="#{txt['QUE.DIA']}" onclick="db_diagram.show();formatDialog('er_diagram_popup', false, false, true)"
         rendered="#{e.diagramImage != null}" />
+        <p:commandButton styleClass="table_button" disabled="false"
+        style="background-color:#D7DBFF !important;position:relative;left:-6px;top:-12px"
+        value="Alle Fenster schließen" onclick="closeAllDialog();return false"/>
        </p:column>
       </p:row>
       <p:row>
        <p:column style="vertical-align:top" id="feedback_box">
         <p:outputPanel style="font-size:15px!important;font-weight:bold;
-                color:green;margin-left:11px;margin-bottom:5px"
-        rendered="#{e.querySaved}">
-         <span id="saved_query_box"
-         style="border:1px dashed gray !important;padding:10px 60px 10px 60px">
+                color:green;margin-left:11px;margin-bottom:5px" rendered="#{e.querySaved}">
+         <span id="saved_query_box" style="border:1px dashed gray !important;padding:10px 60px 10px 60px">
          #{txt['QUE.QUERY_SAVED']}</span>
         </p:outputPanel>
        </p:column>
@@ -299,13 +275,11 @@ xmlns:p="http://primefaces.org/ui">
        <!-- ##################################### -->
        <p:column colspan="2">
         <h:commandButton rendered="#{moveTo.deadEndPrevious(e.getExercise())}"
-        action="#{moveTo.previousExercise(e.getExercise())}"
-        onclick="startAjaxStatus()" image="/resources/img/#{config['IMG.NAV_LEFT']}"
-        class="leftButton" />
+        action="#{moveTo.previousExercise(e.getExercise())}" onclick="startAjaxStatus()"
+        image="/resources/img/#{config['IMG.NAV_LEFT']}" class="leftButton" />
         <h:commandButton rendered="#{moveTo.deadEndNext(e.getExercise())}"
-        action="#{moveTo.nextExercise(e.getExercise())}"
-        onclick="startAjaxStatus()" image="/resources/img/#{config['IMG.NAV_RIGHT']}"
-        class="rightButton" />
+        action="#{moveTo.nextExercise(e.getExercise())}" onclick="startAjaxStatus()"
+        image="/resources/img/#{config['IMG.NAV_RIGHT']}" class="rightButton" />
        </p:column>
       </p:row>
      </p:panelGrid>
@@ -313,82 +287,67 @@ xmlns:p="http://primefaces.org/ui">
      <!-- hidden table dialogs -->
      <!-- ##################################### -->
      <!-- diagram -->
-     <p:dialog closeOnEscape="true" appendTo="@(body)"
-     header="Datenbank-Diagramm" showEffect="fade" hideEffect="fade"
-     widgetVar="db_diagram" styleClass="relevant_table_popup"
-     resizable="false">
-      <p:scrollPanel style="width:1000px;height:500px" mode="native">
-       <h:outputLink value="#{e.diagramImage}" target="_blank">
-        <h:graphicImage value="#{e.diagramImage}" />
-       </h:outputLink>
-      </p:scrollPanel>
+     <p:dialog closeOnEscape="true" appendTo="@(body)" header="#{txt['QUE.DIA']}" showEffect="fade"
+     hideEffect="fade" widgetVar="db_diagram" styleClass="er_diagram_popup" resizable="true" width="900"
+     height="500" minWidth="400" minHeight="400" onShow="context_tooltip()" position="center top" >
+      <p onclick="db_diagram.hide()" style="margin:10px 0px 3px 0px;">
+        <h:outputText value="Fenster schließen" style="font-size:11px;text-decoration:underlined;font-weight:bold;cursor:pointer;color:#969696;"/>
+      </p>
+      <h:outputLink value="#{e.diagramImage}" target="_blank" onclick="db_diagram.hide()">
+        <h:outputText value="Dieses Bild in einem neuen Tab öffnen." style="float:left;text-decoration:underline;font-weight:bold; position:relative; top:-19px; left:20px" />
+      </h:outputLink>
+      <br/>
+      <h:graphicImage class="er-diagram longtap" value="#{e.diagramImage}"  style="margin:-20px 5px 20px 5px; padding:20px"/>
+      <p onclick="db_diagram.hide()" style="margin:-10px 0px 23px 0px;">
+        <h:outputText value="Fenster schließen" style="font-size:11px;text-decoration:underlined;font-weight:bold;cursor:pointer;color:#969696;"/>
+      </p>
      </p:dialog>
+     <!-- ************************************************************************ -->
      <!-- correct solution table -->
-     <p:dialog rendered="#{e.showResults()}" closeOnEscape="true"
-     header="#{txt['QUE.CORRECT_QUERY']}" showEffect="fade"
-     hideEffect="fade" style="overflow-y:auto"
-     widgetVar="result_table_widget" id="result_table_widget"
-     styleClass="relevant_table_popup">
-      <p:dataTable var="sol" emptyMessage="#{txt['QUE.NO_ENTRIES']}"
-      paginator="true" rows="1" value="#{e.solutions}"
-      paginatorAlwaysVisible="false" paginatorPosition="top"
-      id="solution_carousel" first="#{e.usedSolutionIndex}">
-       <p:column>#{sol.getQuery()}</p:column>
-      </p:dataTable>
-      <p:inputText placeholder=" Filter (z.B.: 'Spaltenname=Suchstring')"
-      styleClass="filter_textfield" id="solution_table_filter"
-      value="#{e.solutionQueryFilter}"
-	  onkeypress="if (event.keyCode == 13) { jQuery('.solution_filter_button').click(); return false; }"
-      rendered="#{e.renderSolutionQueryFilter()}" />
-      <p:commandButton styleClass="filter_textfield_button solution_filter_button"
-      value="Filtern" update="result_table"
-      rendered="#{e.renderSolutionQueryFilter()}" />
-      <p:commandButton styleClass="filter_textfield_button"
-      value="Reset" actionListener="#{e.resetSolutionFilter()}"
-      update="solution_table_filter result_table"
-      rendered="#{e.renderSolutionQueryFilter()}" />
-      <p:dataTable var="entry" id="result_table" style="margin-top:5px"
-      emptyMessage="#{txt['QUE.NO_ENTRIES']}"
-      rowsPerPageTemplate="2,4,10,20" paginator="true" rows="4"
-      value="#{e.solutionQueryValues}" paginatorAlwaysVisible="false"
-      filteredValue="#{e.filteredSolutionQueryValues}">
-       <p:columns styleClass="relevant_table_data"
-       value="#{e.solutionQueryMColumns}" var="column"
-       columnIndexVar="colIndex" sortFunction="#{e.sortByModel}">
-       <f:facet name="header">
-       #{column.header}</f:facet>#{entry[column.indexVariable]}</p:columns>
-      </p:dataTable>
+     <p:dialog rendered="#{e.showResults()}" closeOnEscape="true" header="#{txt['QUE.CORRECT_QUERY']}"
+     showEffect="fade" hideEffect="fade" widgetVar="result_table_widget"
+     id="result_table_widget" styleClass="relevant_table_popup solution_result_table_popup" appendTo="@(body)" minWidth="150" minHeight="150">
+        <p onclick="result_table_widget.hide()" style="margin:5px 0px 3px 0px;">
+          <h:outputText value="Fenster schließen" style="font-size:11px;text-decoration:underlined;font-weight:bold;cursor:pointer;color:#969696;"/>
+        </p>
+        <p:dataTable var="sol" emptyMessage="#{txt['QUE.NO_ENTRIES']}" paginator="true" rows="1"
+        value="#{e.solutions}" paginatorAlwaysVisible="false" paginatorPosition="top" id="solution_carousel"
+        first="#{e.usedSolutionIndex}" styleClass="solution_carousel">
+         <p:column>#{sol.getQuery()}</p:column>
+        </p:dataTable>
+        <p:dataTable var="entry" id="result_table" style="margin-top:5px"
+        emptyMessage="#{txt['QUE.NO_ENTRIES']}" paginator="true" rows="10"
+        value="#{e.solutionQueryValues}" paginatorAlwaysVisible="false"
+        filteredValue="#{e.filteredSolutionQueryValues}" styleClass="solution_table">
+         <p:columns styleClass="relevant_table_data" value="#{e.solutionQueryMColumns}" var="column"
+         columnIndexVar="colIndex" sortFunction="#{e.sortByModel}">
+         <f:facet name="header">#{column.header}</f:facet>#{entry[column.indexVariable]}</p:columns>
+        </p:dataTable>
+        <p onclick="result_table_widget.hide()" style="margin:3px 0px 5px 0px;">
+          <h:outputText value="Fenster schließen" style="font-size:11px;text-decoration:underlined;font-weight:bold;cursor:pointer;color:#969696;"/>
+        </p>
      </p:dialog>
-     <!-- user solution table -->
-     <p:dialog closeOnEscape="true" header="#{txt['QUE.USER_QUERY']}"
-     showEffect="fade" style="overflow-y:auto" hideEffect="fade"
-     widgetVar='user_result_widget' id="user_result_widget"
-     styleClass="relevant_table_popup">
-      <p:inputText placeholder=" Filter (z.B.: 'Spaltenname=Suchstring')"
-      styleClass="filter_textfield" id="user_query_filter"
-      value="#{e.userQueryFilter}"
-      onkeypress="if (event.keyCode == 13) { jQuery('.user_filter_button').click(); return false }"
-      rendered="#{e.renderUserQueryFilter()}" />
-      <p:commandButton styleClass="filter_textfield_button user_filter_button"
-      value="Filtern" update="user_result_table"
-      rendered="#{e.renderUserQueryFilter()}" />
-      <p:commandButton styleClass="filter_textfield_button"
-      value="Reset" actionListener="#{e.resetUserFilter()}"
-      update="user_query_filter user_result_table"
-      rendered="#{e.renderUserQueryFilter()}" />
-      <p:dataTable id="user_result_table" var="entry" style="margin-top:5px"
-      emptyMessage="#{txt['QUE.NO_ENTRIES']}"
-      rowsPerPageTemplate="2,4,10,20" paginator="true" rows="4"
+     <!-- ************************************************************************ -->
+     <p:dialog closeOnEscape="true" header="#{txt['QUE.USER_QUERY']}" showEffect="fade"
+     hideEffect="fade" widgetVar='user_result_widget' id="user_result_widget"
+     styleClass="relevant_table_popup user_result_table_popup" appendTo="@(body)" minWidth="150" minHeight="150">
+      <p onclick="user_result_widget.hide()" style="margin:5px 0px 3px 0px;">
+        <h:outputText value="Fenster schließen" style="font-size:11px;text-decoration:underlined;font-weight:bold;cursor:pointer;color:#969696;"/>
+      </p>
+      <p:dataTable id="user_result_table" var="entry"
+      emptyMessage="#{txt['QUE.NO_ENTRIES']}" paginator="true" rows="10"
       value="#{e.userQueryValues}" paginatorAlwaysVisible="false"
       filteredValue="#{e.filteredUserQueryValues}">
-       <p:columns styleClass="relevant_table_data"
-       filterMatchMode="exact" sortFunction="#{e.sortByModel}"
-       value="#{e.userQueryMColumns}" var="column"
-       columnIndexVar="colIndex">
-       <f:facet name="header">
-       #{column.header}</f:facet>#{entry[column.indexVariable]}</p:columns>
+       <p:columns styleClass="relevant_table_data" filterMatchMode="exact" sortFunction="#{e.sortByModel}"
+       value="#{e.userQueryMColumns}" var="column" columnIndexVar="colIndex">
+       <f:facet name="header">#{column.header}</f:facet>#{entry[column.indexVariable]}</p:columns>
       </p:dataTable>
+      <p onclick="user_result_widget.hide()" style="margin:3px 0px 5px 0px;">
+        <h:outputText value="Fenster schließen" style="font-size:11px;text-decoration:underlined;font-weight:bold;cursor:pointer;color:#969696;"/>
+      </p>
+      <p/>
      </p:dialog>
+     <!-- ************************************************************************ -->
     </h:form>
    </ui:define>
   </ui:composition>

@@ -41,8 +41,6 @@ xmlns:p="http://primefaces.org/ui">
     jQuery(function() { jQuery( ".ui-icon-flag" ).tipsy({fallback: "#{txt['ASSERTION.SOLUTION_USED']}",
     gravity: 'w' }); });
     <!-- --></script>
-    <h:graphicImage style="position:relative;left:220px;top:20px" value="#{img['BASICS.MULTIPASS']}"
-    rendered="#{edit_sub.userNotHasRights()}" />
     <h:form id="form" style="text-align:center" rendered="#{edit_sub.userHasRights()}">
      <p:panel header="#{txt['ASSERTION.EDIT']}">
       <p:growl id="messages_popup" showDetail="true" />

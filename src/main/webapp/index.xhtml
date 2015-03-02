@@ -46,16 +46,16 @@ xmlns:p="http://primefaces.org/ui">
     jQuery(function() {
     <!-- -->
     jQuery( ".toggler_empty div" ).tipsy({fallback:
-    "#{txt['TOOLTIP.SOLUTION1']}", gravity: 'e' });
+    "#{txt['TOOLTIP.SOLUTION1']}", gravity: 'n' });
     <!-- -->
     jQuery( ".toggler_correct div" ).tipsy({fallback:
-    "#{txt['TOOLTIP.SOLUTION2']}", gravity: 'e' });
+    "#{txt['TOOLTIP.SOLUTION2']}", gravity: 'n' });
     <!-- -->
     jQuery( ".toggler_false div" ).tipsy({fallback:
-    "#{txt['TOOLTIP.SOLUTION3']}", gravity: 'e' });
+    "#{txt['TOOLTIP.SOLUTION3']}", gravity: 'n' });
     <!-- -->
     jQuery( ".toggler_info div" ).tipsy({fallback:
-    "#{txt['TOOLTIP.SOLUTION4']}", gravity: 'e' });
+    "#{txt['TOOLTIP.SOLUTION4']}", gravity: 'n' });
     <!-- -->
     jQuery( ".user_entry_text" ).tipsy({fallback:
     "#{txt['TOOLTIP.SOLUTION_LINK']}" });
@@ -83,6 +83,7 @@ xmlns:p="http://primefaces.org/ui">
     .toggler_info div { background: url(#{resource['img/ex-info.png']})
     !important; }
     <!-- --></style>
+
     <!-- ######################################################################### -->
     <!-- box for scenario introduction text -->
     <!-- dynamic means tabs are being loaded through ajax -->
@@ -124,18 +125,22 @@ xmlns:p="http://primefaces.org/ui">
           <span style="color:#{overview.showResults(exerciseGroup) ? 'red' : 'green'}">
           #{overview.getEndDate(exerciseGroup)}</span>
          </h3>
-         <p:outputPanel rendered="#{overview.hideResults(exerciseGroup)}">
-         #{txt['EX.RATED_DESCRIPTION']}</p:outputPanel>
+         <p:outputPanel rendered="#{overview.hideResults(exerciseGroup)}" escape="false">
+          <h:outputText value="#{overview.getRatedAndRunningDescription(exerciseGroup)}"
+          escape="false" />
+          </p:outputPanel>
          <h3>
           <p:outputPanel rendered="#{overview.showResults(exerciseGroup)}">
-      #{txt['EX.RESULT_CREDITS']}:
+          #{txt['EX.RESULT_CREDITS']}:
           <span style="color:green">
           #{overview.getAchievedPoints(exerciseGroup)} /
           #{overview.getMaxPoints(exerciseGroup)} -
           #{overview.getScoreInPercent(exerciseGroup)}</span></p:outputPanel>
          </h3>
          <p:outputPanel rendered="#{overview.showResults(exerciseGroup)}">
-         #{txt['EX.RATED_DESCRIPTION2']}</p:outputPanel>
+          <h:outputText value="#{overview.getRatedAndClosedDescription()}"
+          escape="false" />
+         </p:outputPanel>
          <br />
         </p:outputPanel>
         <!-- ######################################################################### -->
@@ -210,7 +215,7 @@ xmlns:p="http://primefaces.org/ui">
              action="#{moveTo.exerciseModuleWithEntry(exercise)}"
              ajax="false" onclick="startAjaxStatus()"
              style="float:right;padding:0px"
-             value="#{overview.showResults(exerciseGroup) ? txt['TOGGLER.TEST'] : txt['TOGGLER.EDIT']}" />
+             value="#{overview.entriesCanBeEdited(exerciseGroup) ? txt['TOGGLER.EDIT'] : txt['TOGGLER.TEST']}" />
             </p:column>
            </p:row>
            <p:row style="border:none"

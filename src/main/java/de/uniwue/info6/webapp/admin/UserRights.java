@@ -33,9 +33,6 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.view.ViewScoped;
 
-
-
-
 import de.uniwue.info6.database.map.Exercise;
 import de.uniwue.info6.database.map.ExerciseGroup;
 import de.uniwue.info6.database.map.Scenario;
@@ -106,7 +103,7 @@ public class UserRights implements Serializable {
    */
   private boolean validSession() {
     if (session == null) {
-      session = SessionObject.pull();
+      session = SessionObject.pullFromSession();
     }
     if (session != null) {
       return true;
@@ -132,7 +129,7 @@ public class UserRights implements Serializable {
    * @return
    */
   public boolean hasRights(User user, Scenario scenario) {
-    return hasEditingRight(user, scenario) || hasRatingRight(user, scenario);
+    return hasEditingRight(user, scenario, true) || hasEditingRight(user, scenario, false) || hasRatingRight(user, scenario);
   }
 
   /**
@@ -170,11 +167,43 @@ public class UserRights implements Serializable {
    *
    * @param user
    * @param scenario
+   * @return
+   */
+  public boolean hasViewRights(User user, Scenario scenario) {
+    boolean userHasRights = true;
+    if (isAdmin(user)) {
+      return true;
+    }
+
+    if (user != null && scenario != null) {
+      if (scenario != null) {
+        if (scenario.getStartTime() != null && scenario.getStartTime().after(new Date())) {
+          userHasRights = false;
+        }
+        if (scenario.getEndTime() != null && scenario.getEndTime().before(new Date())) {
+          userHasRights = false;
+        }
+      }
+    } else {
+      userHasRights = false;
+    }
+    return userHasRights;
+  }
+
+  /**
+   *
+   *
+   * @param user
+   * @param scenario
    * @param exerciseGroup
    * @return
    */
   public boolean hasViewRights(User user, Scenario scenario, ExerciseGroup exerciseGroup) {
     boolean userHasRights = true;
+    if (isAdmin(user)) {
+      return true;
+    }
+
     if (exerciseGroup != null && scenario != null && user != null) {
       if (!hasRights(user, scenario)) {
         if (scenario.getId().equals(exerciseGroup.getScenario().getId())) {
@@ -194,6 +223,71 @@ public class UserRights implements Serializable {
       userHasRights = false;
     }
     return userHasRights;
+  }
+
+
+  /**
+   *
+   *
+   * @param group
+   * @return
+   */
+  public boolean showResults(ExerciseGroup group) {
+    if (group != null) {
+      // if exercise group is not rated
+      if (group.getIsRated() != null && !group.getIsRated()) {
+        return true;
+      }
+
+      if (!entriesCanBeEdited(group) && group.getAutoReleaseRating() != null && group.getAutoReleaseRating()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+
+  /**
+   *
+   *
+   * @param group
+   * @return
+   */
+  public boolean entriesCanBeEdited(ExerciseGroup group) {
+    if (group != null) {
+      if (group.getIsRated() != null && !group.getIsRated()) {
+        return true;
+      }
+
+      Date end = group.getEndTime();
+      if (end != null) {
+        if (end.before(new Date())) {
+          return false;
+        }
+      } else {
+        return true;
+      }
+    }
+    return true;
+  }
+
+
+  /**
+   *
+   *
+   * @param group
+   * @return
+   */
+  public boolean canAcceptEntries(ExerciseGroup group) {
+    if (group != null) {
+      Date end = group.getEndTime();
+      if (end != null) {
+        if (new Date().before(end)) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   // ------------------------------------------------ //
@@ -325,7 +419,7 @@ public class UserRights implements Serializable {
    */
   public boolean hasEditingRight(User user, Scenario scenario, boolean groupsOnly) {
     if (user != null) {
-      user = userDao.getById(user.getId());
+      user.pull();
       if (isAdmin(user)) {
         return true;
       }
@@ -352,9 +446,9 @@ public class UserRights implements Serializable {
    * @param group
    * @return
    */
-  public boolean hasEditingRight(User user, ExerciseGroup group) {
+  public boolean hasEditingRight(final User user, final ExerciseGroup group) {
     if (group != null) {
-      return hasEditingRight(user, group.getScenario(), true);
+      return hasEditingRight(user, group.pull().getScenario(), true);
     }
     return false;
   }
@@ -367,9 +461,12 @@ public class UserRights implements Serializable {
    * @param exercise
    * @return
    */
-  public boolean hasEditingRight(User user, Exercise exercise) {
+  public boolean hasEditingRight(final User user, final Exercise exercise) {
     if (user != null && exercise != null) {
-      return hasEditingRight(user, exercise.getExerciseGroup());
+      final ExerciseGroup exerciseGroup = exercise.getExerciseGroup();
+      if (exerciseGroup != null) {
+        return hasEditingRight(user, exerciseGroupDao.getById(exerciseGroup.getId()));
+      }
     }
     return false;
   }
@@ -603,7 +700,7 @@ public class UserRights implements Serializable {
    * @return
    */
   public boolean isLecturer(User user) {
-    if (user.getIsLecturer() != null && user.getIsLecturer()) {
+    if (user != null && user.getIsLecturer() != null && user.getIsLecturer()) {
       return true;
     } else {
       return false;
@@ -681,31 +778,33 @@ public class UserRights implements Serializable {
    */
   public boolean isAdmin(User user) {
     boolean admin = false;
-    try {
-      // TODO: necessary?
-      user = userDao.getById(user.getId());
-      String admins = Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG,
-                                         PropString.ADMINS);
-      String[] adminArray = null;
+    if (user != null) {
+      try {
+        // TODO: necessary?
+        user = userDao.getById(user.getId());
+        String admins = Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG,
+                                           PropString.ADMINS);
+        String[] adminArray = null;
 
-      if (admins != null) {
-        adminArray = admins.split(";");
-      }
-
-      if (user != null) {
-        if (user.getIsAdmin() != null) {
-          admin = user.getIsAdmin();
+        if (admins != null) {
+          adminArray = admins.split(";");
         }
-        if (adminArray != null) {
-          for (String ad : adminArray) {
-            if (user.getId().equals(ad)) {
-              admin = true;
+
+        if (user != null) {
+          if (user.getIsAdmin() != null) {
+            admin = user.getIsAdmin();
+          }
+          if (adminArray != null) {
+            for (String ad : adminArray) {
+              if (user.getId().equals(ad)) {
+                admin = true;
+              }
             }
           }
         }
+      } catch (Exception e) {
+        LOGGER.error("ERROR CHECKING ADMIN RIGHTS: [" + user + "]", e);
       }
-    } catch (Exception e) {
-      LOGGER.error("ERROR CHECKING ADMIN RIGHTS: [" + user + "]", e);
     }
     return admin;
   }

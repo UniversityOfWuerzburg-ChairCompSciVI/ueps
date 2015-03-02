@@ -40,9 +40,6 @@ xmlns:p="http://primefaces.org/ui">
     <span class="error">#{txt['EXERCISE']} #{txt['ADMINTREE.MENU_EDIT']}</span>
   </ui:define>
    <ui:define name="content">
-    <h:graphicImage class="permission_error"
-    value="#{img['BASICS.MULTIPASS']}"
-    rendered="#{not edit_ex.userHasRights}" />
     <h:form id="form" style="text-align:center"
     rendered="#{edit_ex.userHasRights}">
      <p:growl id="messages_popup" showDetail="true" />
@@ -189,3 +186,4 @@ actionListener="#{edit_ex.delete(solution)}" />
   </ui:composition>
  </h:body>
 </html>
+

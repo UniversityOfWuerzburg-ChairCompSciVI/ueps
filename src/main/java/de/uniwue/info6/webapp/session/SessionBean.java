@@ -33,10 +33,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
-
-
 
 import de.uniwue.info6.database.map.User;
 
@@ -67,8 +65,8 @@ public class SessionBean implements Serializable {
       // warning: sessions are not serializable
       HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(false);
       if (session != null) {
-        sessionTime = session.getMaxInactiveInterval()
-                      - ((System.currentTimeMillis() - session.getLastAccessedTime()) / 1000);
+        setSessionTime(session.getMaxInactiveInterval()
+                       - ((System.currentTimeMillis() - session.getLastAccessedTime()) / 1000));
       }
     } catch (Exception e) {
       LOGGER.info("problem with updating server time", e);
@@ -81,7 +79,7 @@ public class SessionBean implements Serializable {
    * @return
    */
   public User getUser() {
-    SessionObject ac = SessionObject.pull();
+    SessionObject ac = SessionObject.pullFromSession();
     User user = null;
     if (ac != null) {
       user = ac.getUser();
@@ -143,5 +141,22 @@ public class SessionBean implements Serializable {
   public void warnMessage(String title, String msg) {
     FacesContext.getCurrentInstance().addMessage(null,
         new FacesMessage(FacesMessage.SEVERITY_WARN, title, msg));
+  }
+
+  /**
+   *
+   *
+   */
+  public void logout() {
+    User user = getUser();
+    if (user != null) {
+      SessionListener.removeUser(user);
+    }
+    try {
+      ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+      ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 }

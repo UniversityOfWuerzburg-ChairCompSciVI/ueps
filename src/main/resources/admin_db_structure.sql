@@ -25,7 +25,7 @@
 --
 -- Host: localhost    Database: admin_db
 -- ------------------------------------------------------
--- Server version	10.0.15-MariaDB-log
+-- Server version 10.0.15-MariaDB-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -78,6 +78,7 @@ CREATE TABLE `exercise_group` (
   `start_time` timestamp NULL DEFAULT NULL,
   `end_time` timestamp NULL DEFAULT NULL,
   `is_rated` tinyint(1) DEFAULT '0',
+  `auto_release_rating` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `scenario_id` (`scenario_id`),
   KEY `exercise_group_ibfk_2` (`copied_from_id`),

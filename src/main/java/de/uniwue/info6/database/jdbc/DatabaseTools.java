@@ -127,7 +127,7 @@ public class DatabaseTools {
   public static void createDatabase(Connection connection, String dbName)
   throws SQLException {
     final String query = "CREATE DATABASE IF NOT EXISTS `" + dbName + "` CHARACTER SET utf8;";
-    System.err.println("INFO (ueps): creating database `" + dbName + "`");
+    System.err.println("INFO (ueps): Creating database `" + dbName + "`");
     simpleExecute(connection, query);
   }
 
@@ -143,7 +143,7 @@ public class DatabaseTools {
   public static void dropDatabase(Connection connection, String dbName)
   throws SQLException {
     final String query = "DROP DATABASE IF EXISTS `" + dbName + "`;";
-    System.err.println("INFO (ueps): dropping database `" + dbName + "`");
+    System.err.println("INFO (ueps): Dropping database `" + dbName + "`");
     simpleExecute(connection, query);
   }
 

@@ -28,12 +28,12 @@ xsi:schemaLocation="http://ocpsoft.org/schema/rewrite-config-prettyfaces http://
   <rewrite inbound="false" outbound="true" match="(?i)^(.*);jsessionid=w+(.*)" substitute="$1$2" />
   <!-- http://ocpsoft.org/docs/prettyfaces/3.3.3/en-US/html/GettingStarted.html#getstarted.webxml -->
   <url-mapping id="main">
-      <pattern value="/moodle/#{userID}/#{secureValue}/#{scenarioID}" />
+      <pattern value="/moodle/#{userID}/#{encryptedCode}/#{scenarioID}" />
       <view-id value="/index.xhtml" />
   </url-mapping>
 
   <url-mapping id="main">
-      <pattern value="/moodle/#{userID}/#{secureValue}" />
+      <pattern value="/moodle/#{userID}/#{encryptedCode}" />
       <view-id value="/index.xhtml" />
   </url-mapping>
 

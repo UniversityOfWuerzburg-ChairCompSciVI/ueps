@@ -70,12 +70,6 @@ xmlns:p="http://primefaces.org/ui">
      <!-- -->
      }
      <!-- -->
-     function hide_message_timeout(){
-     <!-- -->
-     setTimeout(function() { jQuery('.ui-messages').fadeOut(500); }, 10000);
-     <!-- -->
-     }
-     <!-- -->
      jQuery(document).ready(function() {
      <!-- -->
      context_tooltip();
@@ -119,14 +113,6 @@ xmlns:p="http://primefaces.org/ui">
        oncomplete="context_tooltip()" />
       </p:column>
       <!-- ######################################################################### -->
-      <p:column headerText="#{txt['RIGHTS.CAN_ASSERT']}" sortBy="#{right.hasRatingRights}"
-      style="text-align:center;">
-       <p:commandButton update="rights" action="#{rights_bean.toggleAssertRight(right)}"
-       icon="#{right.hasRatingRights ? 'ui-icon-circle-check' : 'ui-icon-circle-close'}"
-       styleClass="#{right.hasRatingRights ? 'remove_right_button' : 'give_right_button'} "
-       oncomplete="context_tooltip()" disabled="#{rights_bean.disableToggleButtons(right)}" />
-      </p:column>
-      <!-- ######################################################################### -->
       <p:column headerText="#{txt['RIGHTS.CAN_EDIT_GROUPS']}" sortBy="#{right.hasGroupEditingRights}"
       style="text-align:center;">
        <p:commandButton action="#{rights_bean.toggleGroupEditingRight(right)}"
@@ -134,6 +120,14 @@ xmlns:p="http://primefaces.org/ui">
        styleClass="#{right.hasGroupEditingRights ? 'remove_right_button' : 'give_right_button'} "
        oncomplete="context_tooltip();" update="rights"
        disabled="#{rights_bean.disableToggleButtons(right)}" />
+      </p:column>
+      <!-- ######################################################################### -->
+      <p:column headerText="#{txt['RIGHTS.CAN_ASSERT']}" sortBy="#{right.hasRatingRights}"
+      style="text-align:center;">
+       <p:commandButton update="rights" action="#{rights_bean.toggleAssertRight(right)}"
+       icon="#{right.hasRatingRights ? 'ui-icon-circle-check' : 'ui-icon-circle-close'}"
+       styleClass="#{right.hasRatingRights ? 'remove_right_button' : 'give_right_button'} "
+       oncomplete="context_tooltip()" disabled="#{rights_bean.disableToggleButtons(right)}" />
       </p:column>
       <!-- ######################################################################### -->
       <!-- TODO: -->
@@ -182,8 +176,9 @@ xmlns:p="http://primefaces.org/ui">
       <!-- -->
      </p:outputPanel>
      <p:outputPanel style="text-align:center;
-                         position:relative;top:20px">
-      <p style="font-size:15px;font-weight:bold">#{txt['RIGHTS.INFO']}</p>
+                         position:relative;top:20px;margin-bottom:15px">
+      <h:outputText value="#{txt['RIGHTS.INFO']}"
+          escape="false" style="font-size:15px;font-weight:bold"/> 
      </p:outputPanel>
      <!-- ######################################################################### -->
      <!-- add scenario specific right -->
@@ -210,17 +205,23 @@ xmlns:p="http://primefaces.org/ui">
         <f:selectItems var="sce" value="#{rights_bean.scenarios}" itemLabel="#{sce.name}"
         itemValue="#{sce.id}" itemLabelEscaped="true" />
        </p:selectOneMenu>
-       <!---->
+       <!-- -->
        <h:outputText for="canAssert" value="#{txt['RIGHTS.CAN_ASSERT']}" />
        <p:selectBooleanCheckbox id="canAssert" disabled="#{rights_bean.disableAssert}"
        value="#{rights_bean.canAssert}" />
+       <!-- -->
        <h:outputText for="canEditGroups" value="#{txt['RIGHTS.CAN_EDIT_GROUPS']}" />
        <p:selectBooleanCheckbox id="canEditGroups" disabled="#{rights_bean.disableEditGroups}"
-       value="#{rights_bean.canEditGroups}" />
+       value="#{rights_bean.canEditGroups}" >
+       <p:ajax event="change" update="canEditScenario" listener="#{rights_bean.handleDialogGroupChange}" />
+       </p:selectBooleanCheckbox>
+       <!-- -->
        <h:outputText for="canEditScenario" value="#{txt['RIGHTS.CAN_EDIT_SCENARIO']}"
        rendered="#{rights.isAdmin()}" />
        <p:selectBooleanCheckbox id="canEditScenario" disabled="#{rights_bean.disableEditScenario}"
-       value="#{rights_bean.canEditScenario}" rendered="#{rights.isAdmin()}" />
+       value="#{rights_bean.canEditScenario}" rendered="#{rights.isAdmin()}" >
+       <p:ajax event="change" update="canEditGroups" listener="#{rights_bean.handleDialogScenarioChange}" />
+       </p:selectBooleanCheckbox>
        <!---->
       </h:panelGrid>
       <p:commandButton id="insertBut" value="#{txt['RIGHTS.INSERT']}" update="rights"

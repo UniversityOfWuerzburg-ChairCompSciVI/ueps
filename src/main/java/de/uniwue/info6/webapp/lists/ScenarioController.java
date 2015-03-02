@@ -25,7 +25,9 @@ package de.uniwue.info6.webapp.lists;
  */
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -33,14 +35,13 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.servlet.http.HttpServletRequest;
 
-
-
-
 import de.uniwue.info6.database.jdbc.ConnectionManager;
 import de.uniwue.info6.database.map.Scenario;
 import de.uniwue.info6.database.map.User;
 import de.uniwue.info6.database.map.daos.ScenarioDao;
+import de.uniwue.info6.misc.DateFormatTools;
 import de.uniwue.info6.misc.properties.Cfg;
+import de.uniwue.info6.webapp.admin.UserRights;
 import de.uniwue.info6.webapp.session.SessionObject;
 
 /**
@@ -61,10 +62,11 @@ public class ScenarioController implements Serializable {
   private SessionObject ac;
   private final String error = Cfg.inst().getText("SCENARIO_NOT_FOUND");
   private Scenario scenario;
-  private String scenarioParameter, userIDParameter, secureValueParameter;
+  private User user;
+  private String scenarioParameter, userIDParameter, encryptedCodeParameter;
   private ScenarioDao scenarioDao;
+  private UserRights userRights;
   private List<Scenario> scenarios;
-  public static String NO_SCENARIO_SELECTED_PARAMETER = "NO_SCENARIO";
 
   /**
    *
@@ -78,24 +80,29 @@ public class ScenarioController implements Serializable {
    */
   @PostConstruct
   public void init() {
-    this.ac = SessionObject.pull();
+    this.ac = SessionObject.pullFromSession();
 
-    this.scenario             = this.ac.getScenario();
-    this.scenarioParameter    = this.ac.getScenarioParameter();
-    this.userIDParameter      = this.ac.getUserIDParameter();
-    this.secureValueParameter = this.ac.getSecureValueParameter();
+    if (this.ac != null) {
+      this.scenario               = this.ac.getScenario();
+      this.user                   = this.ac.getUser();
+      this.scenarioParameter      = this.ac.getScenarioParameter();
 
-    this.scenarioDao = new ScenarioDao();
-    this.scenarios = this.scenarioDao.findAll();
+      this.userIDParameter        = this.ac.getUserIDParameter();
+      this.encryptedCodeParameter = this.ac.getSecureValueParameter();
+      this.userRights             = new UserRights().initialize();
 
-    final ConnectionManager pool = ConnectionManager.instance();
-    if (!pool.getOriginalTableDeleted().contains(scenario)) {
-      User user = ac.getUser();
-      if (pool != null && scenario != null && user != null) {
-        try {
-          pool.resetTables(scenario, user);
-        } catch (Exception e) {
-          LOGGER.error("ERROR RESETTING TABLES", e);
+      this.scenarioDao            = new ScenarioDao();
+      this.scenarios              = this.scenarioDao.findAll();
+
+      final ConnectionManager pool = ConnectionManager.instance();
+      if (!pool.getOriginalTableDeleted().contains(scenario)) {
+        User user = ac.getUser();
+        if (pool != null && scenario != null && user != null) {
+          try {
+            pool.resetTables(scenario, user);
+          } catch (Exception e) {
+            LOGGER.error("ERROR RESETTING TABLES", e);
+          }
         }
       }
     }
@@ -110,16 +117,18 @@ public class ScenarioController implements Serializable {
     if (ac != null) {
       if (scenario != null) {
         String temp = scenario.getDescription();
-        if (temp != null) {
+        boolean canBeAccessedByUser = false;
+        if (scenario != null && user != null) {
+          canBeAccessedByUser = this.userRights.hasViewRights(user, scenario);
+        }
+        if (temp != null && canBeAccessedByUser) {
           return true;
         }
-      } else if (scenarioParameter != null &&
-                 scenarioParameter.equals(NO_SCENARIO_SELECTED_PARAMETER)) {
-        return false;
       }
     }
     return false;
   }
+
 
   /**
    *
@@ -127,30 +136,63 @@ public class ScenarioController implements Serializable {
    * @return
    */
   public String getIntroductionText() {
+    boolean canBeAccessedByUser = false;
+    if (scenario != null && user != null) {
+      canBeAccessedByUser = this.userRights.hasViewRights(user, scenario);
+    }
     if (isValidScenario()) {
       return scenario.getDescription();
-    } else if (scenarioParameter != null && scenarioParameter.equals(NO_SCENARIO_SELECTED_PARAMETER)) {
+    } else if (scenarioParameter == null || !canBeAccessedByUser) {
       final StringBuilder listScenarios = new StringBuilder();
-
-
       final FacesContext ctx = FacesContext.getCurrentInstance();
       if (ctx != null) {
         final HttpServletRequest servletRequest = (HttpServletRequest) ctx.getExternalContext().getRequest();
         final String contextURL = servletRequest.getRequestURL().toString().replace(servletRequest.getRequestURI().substring(0), "") +
                                   servletRequest.getContextPath();
+        final User user = this.ac.getUser();
 
-        if (scenarios != null && !scenarios.isEmpty()) {
-          listScenarios.append("Es wurde kein Szenario gewählt. Folgende Szenarien stehen zur Verfügung:<br/>");
+        if (scenario != null && !canBeAccessedByUser) {
+          listScenarios.append("<span style='color:darkred; font-size:14px'>Das Szenario mit der ID:[" + scenario.getId()
+                               + "] steht momentan nicht zur Verfügung!</span><br/><br/>");
+          this.ac.setScenario(null);
+        }
+        listScenarios.append("<span class='scenario-overview'>");
+
+        if (scenarios != null && !scenarios.isEmpty() && user != null) {
+          listScenarios.append("Folgende Szenarien stehen zur Verfügung:<br/>");
           if (servletRequest != null) {
-
-            if (userIDParameter != null && secureValueParameter != null) {
+            if (userIDParameter != null && encryptedCodeParameter != null) {
               listScenarios.append("<ul>");
               for (Scenario sc : scenarios) {
+                canBeAccessedByUser = this.userRights.hasViewRights(user, sc);
                 listScenarios.append("<li>");
-                listScenarios.append("<a href='" + contextURL + "/moodle/");
-                listScenarios.append(userIDParameter + "/");
-                listScenarios.append(secureValueParameter + "/");
-                listScenarios.append(sc.getId() + "'>[ID: " + sc.getId() + "] " + sc.getName() + "</a>");
+                if (canBeAccessedByUser) {
+                  listScenarios.append("<a href='" + contextURL + "/moodle/");
+                  listScenarios.append(userIDParameter + "/");
+                  listScenarios.append(encryptedCodeParameter + "/");
+                  listScenarios.append(sc.getId() + "'>");
+                }
+                listScenarios.append("[ID: " + sc.getId() + "] " + sc.getName());
+                if (canBeAccessedByUser) {
+                  listScenarios.append("</a>");
+                }
+
+                if (sc.getStartTime() != null) {
+                  listScenarios.append("<br><span style='font-size:13px'>Verfügbar ab ");
+                  listScenarios.append(DateFormatTools.getGermanFormat(sc.getStartTime()));
+                  listScenarios.append(".</span>");
+                }
+
+                if (sc.getEndTime() != null) {
+                  listScenarios.append("<br><span style='font-size:13px'>Verfügbar bis ");
+                  listScenarios.append(DateFormatTools.getGermanFormat(sc.getEndTime()));
+                  listScenarios.append(".</span>");
+                }
+
+                if (!canBeAccessedByUser) {
+                  listScenarios.append("<br><span style='font-size:13px;color:darkred'>(Momentan nicht verfügbar)</span>");
+                }
+
                 listScenarios.append("</li>");
               }
               listScenarios.append("</ul>");
@@ -164,22 +206,16 @@ public class ScenarioController implements Serializable {
           listScenarios.append("'-Bereich erstellt werden.");
         }
       }
+      listScenarios.append("</span>");
 
       return listScenarios.toString();
     }
+
+    this.ac.setScenario(null);
+    this.ac.setScenarioParameter(null);
+
     return error;
   }
-
-
-// public String openScenario() {
-//   if (ac != null && scenario != null) {
-//     ac.setScenario(scenario);
-//   }
-//   if (scenario != null) {
-//     return ".";
-//   }
-//   return null;
-// }
 
   /**
    *

@@ -1,5 +1,7 @@
 package de.uniwue.info6.database.map;
 
+import de.uniwue.info6.database.map.daos.UserRightDao;
+
 /*
  * #%L
  * ************************************************************************
@@ -165,4 +167,7 @@ public class UserRight implements java.io.Serializable {
     this.hasScenarioEditingRights = hasScenarioEditingRights;
   }
 
+  public UserRight pull() {
+    return new UserRightDao().getById(getId());
+  }
 }

@@ -37,6 +37,7 @@ import javax.faces.application.FacesMessage.Severity;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
 
 import de.uniwue.info6.database.map.Scenario;
 import de.uniwue.info6.database.map.User;
@@ -108,7 +109,7 @@ public class UserRightsBean implements Serializable {
   @PostConstruct
   public void init() {
 
-    this.ac = SessionObject.pull();
+    this.ac = SessionObject.pullFromSession();
     this.loggedInUser = ac.getUser();
 
     this.userRightDao = new UserRightDao();
@@ -256,6 +257,27 @@ public class UserRightsBean implements Serializable {
     return "";
   }
 
+  /**
+   *
+   *
+   * @param event
+   */
+  public void handleDialogGroupChange() {
+    if (!canEditGroups) {
+      setCanEditScenario(false);
+    }
+  }
+
+  /**
+   *
+   *
+   */
+  public void handleDialogScenarioChange() {
+    if (canEditScenario) {
+      setCanEditGroups(true);
+    }
+  }
+
 
   /**
    *
@@ -321,7 +343,7 @@ public class UserRightsBean implements Serializable {
     if (this.selectedLecturer != null) {
       this.selectedLecturer.setIsLecturer(false);
 
-      if (userDao.updateInstance(this.selectedLecturer)) {
+      if (userDao.updateInstanceP(this.selectedLecturer)) {
         sev = FacesMessage.SEVERITY_INFO;
         message = Cfg.inst().getProp(DEF_LANGUAGE, "RIGHTS.LECTURER_REMOVED");
       } else {
@@ -350,7 +372,7 @@ public class UserRightsBean implements Serializable {
     boolean error = false;
 
     if (selectedRight != null) {
-      if (userRightDao.deleteInstance(selectedRight)) {
+      if (userRightDao.deleteInstanceP(selectedRight)) {
         rights.remove(selectedRight);
         selectedRight = null;
 
@@ -426,7 +448,6 @@ public class UserRightsBean implements Serializable {
     FacesMessage msg = null;
 
     if (userToSave != null) {
-
       Scenario selectedScenario = scenarioDao.getById(scenarioId);
 
       // you can't add scenario rights to an admin {{{
@@ -456,7 +477,7 @@ public class UserRightsBean implements Serializable {
       }
 
       if (message == null) {
-        if (userRightDao.insertNewInstance(rightsToSave)) {
+        if (userRightDao.insertNewInstanceP(rightsToSave)) {
           rights.add(rightsToSave);
           sev = FacesMessage.SEVERITY_INFO;
           message = Cfg.inst().getProp(DEF_LANGUAGE, "SAVED.SUCCESS") + ".";
@@ -499,7 +520,7 @@ public class UserRightsBean implements Serializable {
         if ( userToInsert.getIsLecturer() == null || !userToInsert.getIsLecturer()) {
           userToInsert.setIsLecturer(true);
 
-          if (userDao.updateInstance(userToInsert)) {
+          if (userDao.updateInstanceP(userToInsert)) {
             sev = FacesMessage.SEVERITY_INFO;
             message = Cfg.inst().getProp(DEF_LANGUAGE, "SAVED.SUCCESS") + ".";
             this.lecturerList = userRights.getLecturers();
@@ -528,8 +549,13 @@ public class UserRightsBean implements Serializable {
    */
   public void toggleGroupEditingRight(UserRight rightToModify) {
     if (rightToModify != null && !userRights.isAdmin(rightToModify.getUser()) && !userRights.isLecturer(rightToModify.getUser())) {
-      rightToModify.setHasGroupEditingRights(!rightToModify.getHasGroupEditingRights());
-      userRightDao.updateInstance(rightToModify);
+      boolean newValue = !rightToModify.getHasGroupEditingRights();
+      rightToModify.setHasGroupEditingRights(newValue);
+
+      if (!newValue) {
+        rightToModify.setHasScenarioEditingRights(false);
+      }
+      userRightDao.updateInstanceP(rightToModify);
     }
   }
 
@@ -541,7 +567,7 @@ public class UserRightsBean implements Serializable {
   public void toggleAssertRight(UserRight rightToModify) {
     if (rightToModify != null && !userRights.isAdmin(rightToModify.getUser()) && !userRights.isLecturer(rightToModify.getUser())) {
       rightToModify.setHasRatingRights(!rightToModify.getHasRatingRights());
-      userRightDao.updateInstance(rightToModify);
+      userRightDao.updateInstanceP(rightToModify);
     }
   }
 
@@ -552,8 +578,14 @@ public class UserRightsBean implements Serializable {
    */
   public void toggleScenarioEditingRight(UserRight rightToModify) {
     if (rightToModify != null) {
-      rightToModify.setHasScenarioEditingRights(!rightToModify.getHasScenarioEditingRights());
-      userRightDao.updateInstance(rightToModify);
+      boolean newValue = !rightToModify.getHasScenarioEditingRights();
+      rightToModify.setHasScenarioEditingRights(newValue);
+
+      if (newValue) {
+        rightToModify.setHasGroupEditingRights(true);
+      }
+
+      userRightDao.updateInstanceP(rightToModify);
     }
   }
 
@@ -570,7 +602,7 @@ public class UserRightsBean implements Serializable {
       selectedRight.setHasRatingRights(!selectedRight.getHasRatingRights());
     }
 
-    userRightDao.updateInstance(selectedRight);
+    userRightDao.updateInstanceP(selectedRight);
     selectedRight = null;
 
   }

@@ -22,11 +22,25 @@
  * #L%
  */
 
-/*
- * -------------------------------------------------------------
- * MAIN TEMPLATE
- * -------------------------------------------------------------
- */
+
+html, body {position: relative !important}
+
+/* main colors {{{ */
+
+.maincolor{
+  color: #5A5757;
+}
+
+.mainfont{
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font: normal 14px'trebuchet ms', arial, sans-serif !important;
+}
+
+.secondcolor{
+  color: #004188;
+}
+
+/*  }}} */
 
 /* header elements {{{ */
 
@@ -261,15 +275,15 @@
   overflow-y:hidden;
 }
 
-#usertask .filter_textfield_button span {
-  padding:1px 5px 1px 5px;
+.relevant_table_popup .filter_textfield_button span {
+  padding:1px 5px 1px 5px !important;
 }
 
-#usertask .filter_textfield {
+.relevant_table_popup .filter_textfield {
   padding:0px 5px 0px 5px !important;
   height:21px;
-  width:365px;
-  margin-right:5px;
+  width:365px !important;
+  margin-right:5px !important;
 }
 
 #form\:filter_fields input {
@@ -331,11 +345,6 @@ table th {
   height: 60px !important;
 }
 
-.mainfont{
-  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-  font: normal 14px'trebuchet ms', arial, sans-serif !important;
-}
-
 .darkshadow{
   text-shadow: 0px 1px 2px #969696;
   -moz-text-shadow: 0px 1px 2px #969696;
@@ -344,8 +353,6 @@ table th {
 
 .ui-dialog {
   width: auto !important;
-  max-width:100% !important;
-  max-height:100% !important;
   overflow-y:hidden !important;
 }
 
@@ -370,14 +377,6 @@ table th {
 
 button:last-of-type .reflink_button {
   margin-right: 5px;
-}
-
-.maincolor{
-  color: #5A5757;
-}
-
-.secondcolor{
-  color: #004188;
 }
 
 .adminFont {
@@ -613,8 +612,6 @@ span.intoduction_text {
   display:inline;
 }
 
-
-
 .relevant_tables_list ul {
   padding: 0px;
   margin: 3px 0px 0px -3px;
@@ -696,6 +693,15 @@ span.intoduction_text {
   border-collapse: separate;
   border-spacing: 8px;
 }
+
+.ui-datatable table {
+  border-collapse: separate !important;
+}
+
+.ui-dialog .mCustomScrollbar {
+  padding: 0px 0px 0px 0px !important;
+}
+
 
 .table_button {
   background-color: #f2f2f2 !important;
@@ -823,6 +829,15 @@ span.dialog_text{
    */
 }
 
+.solution_carousel{
+    /* table-layout: fixed; */
+}
+td.relevant_table_data{
+    max-width: 150px; 
+    overflow: hidden;
+    word-wrap:break-word
+}
+
 .exercise_class {
   display:block;
   max-width: 800px;
@@ -830,6 +845,19 @@ span.dialog_text{
   overflow:hidden;
 }
 
+/* scenario overview*/
+.scenario-overview {
+  font-size:16px;
+  font-weight:bold;
+}
+
+.scenario-overview ul{
+  font-weight:normal;
+}
+
+.scenario-overview li{
+  margin-top:10px;
+}
 
 .solutionList td{
   white-space: normal !important;
@@ -958,28 +986,31 @@ img.open_task {
 }
 
 
-#footer .ui-clock {
-  font-weight: bold;
-  background: none;
-  color:#5A5757;
+.ui-clock {
+  font-weight: bold !important;
+  background: none !important;
+  color:#969696;
   border: none;
   position:relative;
-  right:-10px;
   padding-left:0px;
-  font-size: 13px !important;
+  float: left;
+  font-size: 12px !important;
+  top: 7px;
+  right:-15px;
 }
-
 
 #session_timer {
   position:relative;
   top: 1px;
   font-size: 12px !important;
+  color: #969696;
 }
 
 #online_counter{
   position:relative;
   top: 1px;
   font-size: 12px !important;
+  color: #969696;
 }
 
 #session_expired_button {
@@ -990,6 +1021,40 @@ img.open_task {
 .ui-inputfield{
   background-color:white !important;
 }
+
+.er_diagram_popup .ui-dialog-content {
+    /* width: 900px;  */
+    /* height: 500px; */
+}
+
+.er_diagram_popup {
+  /* top: 50px !important; */
+}
+
+.question-text-scrollpanel {
+
+}
+
+/* ::-webkit-scrollbar {                                                                                   */
+/*     width: 14px;                                                                                        */
+/*     height: 14px;                                                                                       */
+/* }                                                                                                       */
+/* ::-webkit-scrollbar-thumb {                                                                             */
+/*     height: 6px;                                                                                        */
+/*     border: 4px solid rgba(0, 0, 0, 0);                                                                 */
+/*     background-clip: padding-box;                                                                       */
+/*     -webkit-border-radius: 7px;                                                                         */
+/*     background-color: #a8a8a8;                                                                          */
+/*     -webkit-box-shadow: inset -1px -1px 0px rgba(0, 0, 0, 0.05), inset 1px 1px 0px rgba(0, 0, 0, 0.05); */
+/* }                                                                                                       */
+/* ::-webkit-scrollbar-button {                                                                            */
+/*     width: 0;                                                                                           */
+/*     height: 0;                                                                                          */
+/*     display: none;                                                                                      */
+/* }                                                                                                       */
+/* ::-webkit-scrollbar-corner {                                                                            */
+/*     background-color: transparent;                                                                      */
+/*   }                                                                                                     */
 
 /*
  * -------------------------------------------------------------
@@ -1012,3 +1077,31 @@ img.open_task {
 #page-not-found-text {
   font-size: 20px;
 }
+
+.rights_table .ui-datatable-header {
+  width: 824px;
+  position: relative;
+  left: 2px;
+  top: 2px;
+}
+
+.solutionList .ui-datatable-tablewrapper {
+  width: 854px;
+  position: relative;
+  left: -2px;
+  top: -2px;
+}
+
+.solutionList table thead {
+  display: none;
+}
+
+.solutionList table tr {
+  background: none !important;
+}
+
+.solutionList table tr.ui-state-highlight {
+  border: 1px solid #004188 !important;
+}
+
+

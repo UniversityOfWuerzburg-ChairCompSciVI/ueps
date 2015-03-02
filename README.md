@@ -172,11 +172,11 @@ Admins können auch zur Laufzeit hinzugefügt werden, hierfür muss man jedoch d
 
 > Dieses Kennwort wird benutzt, um einen verschlüsselten Code zu generieren, der als Parameter an andere Server übermittelt werden kann. Der verschlüsselte Code wird über einen md5-Wert der aktuellen IP-Adresse in Verbindung mit dem Kennwort erzeugt, d.h. code = md5(IP.secretphrase). Bitte beachten Sie, dass dies nicht zuverlässig ist, weil die IP-Adresse wechseln oder an andere Computer weitergegeben werden kann. Das Standardkennwort wird automatisch generiert.
 
-[Auszug aus dem Quellcode](src/main/java/de/uniwue/info6/webapp/session/SessionObject.java#L141-L166)
+Die Implementierung in ÜPS sieht [folgendermaßen](src/main/java/de/uniwue/info6/webapp/session/SessionObject.java#L141-L166) aus.
 
 ``http://[hosturl]/?userID=[user_id]&encryptedCode=[secure_value]&scenarioID=[scenario_id]``
 
-Ausgefülltes Beispiel:
+Ausgefülltes Beispiel:<br/>
 [``http://ueps.ddnss.de:82/ueps/index.xhtml?userID=demo_admin&encryptedCode=showcase&scenarioID=1``](http://ueps.ddnss.de:82/ueps/index.xhtml?userID=demo_admin&encryptedCode=showcase&scenarioID=1)
 
 #### Pfadangaben

@@ -145,7 +145,7 @@ public class SessionObject  implements Serializable {
         final String calculatedEncryptedCode = Crypt.md5(this.userIP + this.secretPhrase + this.userID);
         final boolean validCredentials = calculatedEncryptedCode.equals(this.encryptedCode);
 
-        LOGGER.info(
+        LOGGER.debug(
           "\nUser Login:\n" +
           "User IP:\t\t\t"                + this.userIP + "\n" +
           "Secret phrase:\t\t\t"          + this.secretPhrase + "\n" +

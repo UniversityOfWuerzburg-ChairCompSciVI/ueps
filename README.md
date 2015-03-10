@@ -184,11 +184,14 @@ Die URL zusammen mit den Anmeldeparametern sieht folgendermaßen aus:
 
 ```
 http://%HOST_URL%/index.xhtml?
-  userID=%USER_ID%&encryptedCode=%ENCRYPTED_CODE%&scenarioID=%SCENARIO_ID%
+userID=%USER_ID%&encryptedCode=%ENCRYPTED_CODE%&scenarioID=%SCENARIO_ID%
 ```
 
 Ausgefülltes Beispiel:<br/>
-[```http://ueps.ddnss.de:82/ueps/index.xhtml?userID=demo_admin&encryptedCode=showcase&scenarioID=1```](http://ueps.ddnss.de:82/ueps/index.xhtml?userID=demo_admin&encryptedCode=showcase&scenarioID=1)
+```
+http://ueps.ddnss.de:82/ueps/index.xhtml
+?userID=demo_admin&encryptedCode=showcase&scenarioID=1
+```
 
 #### Pfadangaben
 Es lassen sich zwei Pfade konfigurieren (optional).

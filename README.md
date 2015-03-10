@@ -178,9 +178,11 @@ Der verschlüsselte Code wird über einen md5-Wert der aktuellen Client-IP-Adres
 encryptedCode = md5(userIP + secretPhrase + userID)
 ```
 
-Die Implementierung in ÜPS sieht [folgendermaßen](src/main/java/de/uniwue/info6/webapp/session/SessionObject.java#L141-L166) aus.
+Die Implementierung in ÜPS findet man [hier](src/main/java/de/uniwue/info6/webapp/session/SessionObject.java#L141-L166).
 
-``http://[hosturl]/?userID=[user_id]&encryptedCode=[secure_value]&scenarioID=[scenario_id]``
+Die URL zusammen mit den Anmeldeparametern sieht folgendermaßen aus:
+
+``http://$HOST_URL$/?userID=$USER_ID$&encryptedCode=$ENCRYPTED_CODE$&scenarioID=$SCENARIO_ID$``
 
 Ausgefülltes Beispiel:<br/>
 [``http://ueps.ddnss.de:82/ueps/index.xhtml?userID=demo_admin&encryptedCode=showcase&scenarioID=1``](http://ueps.ddnss.de:82/ueps/index.xhtml?userID=demo_admin&encryptedCode=showcase&scenarioID=1)

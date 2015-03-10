@@ -57,8 +57,8 @@
   Die aufgelisteten Rechte müssen für die unter [``MASTER_DBNAME``](src/main/resources/config.properties#L42) angegebene Datenbank sowie für neu erstellte Datenbanken gelten. Eine Rechteskript könnte beispielsweise folgendermaßen aussehen:
   ```
   GRANT SELECT, INSERT, UPDATE, DELETE, ALTER, CREATE, DROP,
-  GRANT OPTION, LOCK TABLES, ON *.* TO '$MASTER_DBUSER$'@'$MASTER_DBHOST$'
-  IDENTIFIED BY '$MASTER_DBPASS$';
+  GRANT OPTION, LOCK TABLES, ON *.* TO '%MASTER_DBUSER%'@'%MASTER_DBHOST%'
+  IDENTIFIED BY '%MASTER_DBPASS%';
   ```
   <!--- ` -->
 
@@ -133,8 +133,8 @@ angegeben durch [``MASTER_DBNAME``](src/main/resources/config.properties#L42).
 
 Beispiel MySQL-Rechte-Skript:
 ```
-GRANT SELECT, INSERT, UPDATE, DELETE ON $MASTER_DBNAME$.*
-TO '$MASTER_DBUSER$'@'$MASTER_DBHOST$' IDENTIFIED BY '$MASTER_DBPASS$';
+GRANT SELECT, INSERT, UPDATE, DELETE ON %MASTER_DBNAME%.*
+TO '%MASTER_DBUSER%'@'%MASTER_DBHOST%' IDENTIFIED BY '%MASTER_DBPASS%';
 ```
 
 Ausgefüllt mit den oberen Beispiel-Daten:
@@ -158,8 +158,8 @@ Für jede Szenario-Datenbank wird ebenfalls ein Datenbank-Nutzer mit beschränkt
 Ein vollständiges Rechte-Skript würde also folgendermaßen aussehen:
 ```
 GRANT SELECT, INSERT, UPDATE, DELETE, ALTER, CREATE, DROP, GRANT OPTION,
-LOCK TABLES, ON *.* TO '$MASTER_DBUSER$'@'$MASTER_DBHOST$'
-IDENTIFIED BY '$MASTER_DBPASS$';
+LOCK TABLES, ON *.* TO '%MASTER_DBUSER%'@'%MASTER_DBHOST%'
+IDENTIFIED BY '%MASTER_DBPASS%';
 ```
 
 Wenn eine automatische Installation nicht erwünscht ist, so benötigt die Anwendung im laufenden Betrieb nur ``SELECT, INSERT, UPDATE, DELETE`` Rechte.
@@ -183,8 +183,8 @@ Die Implementierung in ÜPS findet man [hier](src/main/java/de/uniwue/info6/weba
 Die URL zusammen mit den Anmeldeparametern sieht folgendermaßen aus:
 
 ```
-http://$HOST_URL$/index.xhtml?
-userID=$USER_ID$&encryptedCode=$ENCRYPTED_CODE$&scenarioID=$SCENARIO_ID$
+http://%HOST_URL%/index.xhtml?
+  userID=%USER_ID%&encryptedCode=%ENCRYPTED_CODE%&scenarioID=%SCENARIO_ID%
 ```
 
 Ausgefülltes Beispiel:<br/>

@@ -110,7 +110,7 @@ Für die ``slave``-Datenbanken werden jeweils folgende Datenbanknutzer mit besch
 
 ## Konfiguration mit 'config.properties'
 Bevor man die Anwendung startet sollte man zunächst einen Blick in die Konfigurationsdatei
-[``config.properties``](src/main/resources/config.properties)
+[``config.properties``](src/main/resources/config.properties#L40-L44)
 unter ``src/main/resources/``
 werfen und Angaben zum Datenbank-Server überschreiben.
 
@@ -150,7 +150,7 @@ Die Installation wird nur gestartet, wenn keine Datenbank mit dem Namen [``MASTE
 
 Möchte man die zusätzlichen Rechte nicht vergeben, so kann man die Datenbank auch manuell importieren. Das zugehörige MySQL-Skript findet sich unter [``src/main/resources/admin_db_structure.sql``](src/main/resources/admin_db_structure.sql).
 
-Möchte man die Datenbank zurücksetzen, so lässt sich dies mit der Option [``FORCE_RESET_DATABASE``](src/main/resources/config.properties#L84) bewerkstelligen. Diese Option wird nach einem erfolgreichen Reset von der Anwendung selbst auf 'false' gesetzt, sodass ein Server-Neustart die Datenbank nicht erneut zurücksetzt.
+Möchte man die Datenbank zurücksetzen, so lässt sich dies mit der Option [``FORCE_RESET_DATABASE``](src/main/resources/config.properties#L84) bewerkstelligen. Diese Option wird nach einem erfolgreichen Reset von der Anwendung selbst auf ``false`` gesetzt, sodass ein Server-Neustart die Datenbank nicht erneut zurücksetzt.
 
 Möchte man noch zusätzlich zwei Beispielszenarien importieren, so kann man das über die Option [``IMPORT_EXAMPLE_SCENARIO``](src/main/resources/config.properties#L75) aktivieren. Es wird für jedes Szenario eine neue Datenbank unter [``MASTER_DBHOST``](src/main/resources/config.properties#L40) erstellt.
 Für jede Szenario-Datenbank wird ebenfalls ein Datenbank-Nutzer mit beschränkten Rechten erstellt. Hierfür benötigt der [``MASTER_DBUSER``](src/main/resources/config.properties#L43) jedoch zusätzlich ``GRANT OPTION``-Rechte.
@@ -165,7 +165,7 @@ IDENTIFIED BY '%MASTER_DBPASS%';
 Wenn eine automatische Installation nicht erwünscht ist, so benötigt die Anwendung im laufenden Betrieb nur ``SELECT, INSERT, UPDATE, DELETE`` Rechte.
 
 #### Nutzer-Authentifizierung
-In der Konfigurationsdatei sollte mindestens ein [Adminstrator-Nutzer](src/main/resources/config.properties#L96) festgelegt werden. Mehrere Nutzer sollten mit Semikolon getrennt werden (z.B. ``admin_id1;admin_id2;``).
+In der Konfigurationsdatei sollte mindestens ein [Adminstrator-Nutzer](src/main/resources/config.properties#L96) festgelegt werden. Mehrere Nutzer sollten mit einem Semikolon getrennt werden (z.B. ``admin_id1;admin_id2;``).
 Admins können auch zur Laufzeit hinzugefügt werden, hierfür muss man jedoch den Datenbankeintrag für den Nutzer abändern ([Tabelle: "user", Spalte: "is_admin"](http://kolbasa.github.io/ueps/screenshots/admin-db-er-diagram.png)).
 
 ÜPS besitzt keine eigene Nutzerverwaltung. Die Nutzer-Authentifizierung erfolgt über die Open-Source Lernplattform [Moodle](https://moodle.org/) mithilfe der "[Externe URL](https://docs.moodle.org/27/de/Link/URL_konfigurieren)"-Funktion.
@@ -272,11 +272,23 @@ TODO :: TODO :: TODO :: TODO
 ------
 
 ## Rollen und Rechte
-TODO :: TODO :: TODO :: TODO
+Um den Zugriff auf die Funktionen von ÜPS zu kontrollen, wurden drei verschiedene Rollen eingeführt: Student, Dozent und Admin.
+
 ### Rolle 'Admin'
-TODO :: TODO :: TODO :: TODO
+Der 'Admin' verfügt über umfassende Rechte im ganzen System:
+- globale Benutzerverwaltung z.B. Bestimmung von Dozenten und deren Zuweisung zu Szenarien
+- globale Verwaltung der Szenarien, sowie Rolle 'Dozent' in allen Szenarien
+
 ### Rolle 'Dozent'
-TODO :: TODO :: TODO :: TODO
+Die Rolle 'Dozent' priviligiert einen Benutzer dazu folgende Funktionalitäten innerhalb eines Szenarios zu nutzen:
+- Zuweisung von Rechten für Benutzer innerhalb des Szenarios
+- Änderung des Szenarion
+- Erstellung und Änderung von Übungsblättern und Übungsaufgaben des Szenarios
+- Einsicht und Bewertung von abgebenen Lösungen innerhalb des Szenarios
+
+### Rolle 'Student'
+- Durchführung von Übungsaufgaben
+- Einsicht in die Korrektur der eigenen Abgaben
 
 ------
 

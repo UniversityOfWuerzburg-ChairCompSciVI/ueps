@@ -113,46 +113,59 @@ public class ConnectionTools extends Thread {
   @Override
   public void run() {
     this.currentThread = Thread.currentThread();
+
+    // ------------------------------------------------ //
+    // --
+    // ------------------------------------------------ //
+
+    User user = userDao.getById(dummyUser);
+    if (user == null) {
+      user = new User();
+      user.setId(dummyUser);
+      user.setIsAdmin(false);
+      userDao.insertNewInstance(user);
+    }
+
+    // add admin users if not found in database {{{
+    String[] admins = new UserRights().initialize().getAdminsFromConfigFile();
+    User lastAdminUser = null;
+    for (String adminId : admins) {
+      lastAdminUser = userDao.getById(adminId.trim());
+      if (lastAdminUser == null) {
+        lastAdminUser = new User();
+        lastAdminUser.setId(adminId);
+        lastAdminUser.setIsAdmin(true);
+        userDao.insertNewInstance(lastAdminUser);
+        System.err.println("INFO (ueps): Admin user with id: \"" + adminId + "\" added");
+      }
+    }
+    // }}}
+
+    // ------------------------------------------------ //
+    // --
+    // ------------------------------------------------ //
+
+    // TODO: DEBUG
+    boolean debugMode = Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG, PropBool.DEBUG_MODE);
+    boolean showcaseMode = Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG, PropBool.SHOWCASE_MODE);
+
+    if (debugMode || showcaseMode) {
+      this.addSomeTestData();
+    }
+
+    // ------------------------------------------------ //
+    // --
+    // ------------------------------------------------ //
+
+    boolean logPerformance = Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG, PropBool.LOG_PERFORMANCE);
     while (!currentThread.isInterrupted()) {
       try {
-        User user = userDao.getById(dummyUser);
-        if (user == null) {
-          user = new User();
-          user.setId(dummyUser);
-          user.setIsAdmin(false);
-          userDao.insertNewInstance(user);
-        }
+        userDao.getById(dummyUser);
+        LOGGER.info("AUTO RECONNECT TO DATABASE: " + new Date());
 
-        // add admin users if not found in database {{{
-        String[] admins = new UserRights().initialize().getAdminsFromConfigFile();
-        User lastAdminUser = null;
-        for (String adminId : admins) {
-          lastAdminUser = userDao.getById(adminId.trim());
-          if (lastAdminUser == null) {
-            lastAdminUser = new User();
-            lastAdminUser.setId(adminId);
-            lastAdminUser.setIsAdmin(true);
-            userDao.insertNewInstance(lastAdminUser);
-            System.err.println("INFO (ueps): Admin user with id: \"" + adminId + "\" added");
-          }
-        }
-        // }}}
-
-        // ------------------------------------------------ //
-        // --
-        // ------------------------------------------------ //
-
-        // TODO: DEBUG
-        boolean debugMode = Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG, PropBool.DEBUG_MODE);
-        boolean showcaseMode = Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG, PropBool.SHOWCASE_MODE);
-
-        if (debugMode || showcaseMode) {
-          this.addSomeTestData();
-        }
 
         // TODO: log performance stats
         // quick and dirty log, do not use in a productive environment
-        boolean logPerformance = Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG, PropBool.LOG_PERFORMANCE);
         if (logPerformance) {
           // initStatsLog();
 
@@ -172,13 +185,8 @@ public class ConnectionTools extends Thread {
           //   sessionMap.clear();
           // }
         }
-
-        LOGGER.info("AUTO RECONNECT TO DATABASE: " + new Date());
-
         Thread.sleep(1000 * 60 * 60);
-      } catch (InterruptedException e) {
-        break;
-      } catch (NullPointerException e) {
+      } catch (NullPointerException | InterruptedException e) {
         break;
       } catch (Exception e) {
         LOGGER.error("PROBLEM WITH RECONNECTING TO DATABASE", e);

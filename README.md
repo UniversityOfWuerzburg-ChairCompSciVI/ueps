@@ -190,7 +190,6 @@ http://%HOST_URL%/index.xhtml?
 Ausgefülltes Beispiel:<br/>
 [```http://ueps.ddnss.de:82/ueps/index.xhtml?userID=demo_admin&encryptedCode=showcase&scenarioID=1```](http://ueps.ddnss.de:82/ueps/index.xhtml?userID=demo_admin&encryptedCode=showcase&scenarioID=1)
 
-
 #### Pfadangaben
 Es lassen sich zwei Pfade konfigurieren (optional).
 

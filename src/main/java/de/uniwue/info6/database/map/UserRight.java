@@ -41,8 +41,6 @@ public class UserRight implements java.io.Serializable {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((id == null) ? 0 : id.hashCode());
-    result = prime * result + ((scenario == null) ? 0 : scenario.hashCode());
-    result = prime * result + ((user == null) ? 0 : user.hashCode());
     return result;
   }
 
@@ -63,20 +61,6 @@ public class UserRight implements java.io.Serializable {
         return false;
       }
     } else if (!id.equals(other.id)) {
-      return false;
-    }
-    if (scenario == null) {
-      if (other.scenario != null) {
-        return false;
-      }
-    } else if (!scenario.equals(other.scenario)) {
-      return false;
-    }
-    if (user == null) {
-      if (other.user != null) {
-        return false;
-      }
-    } else if (!user.equals(other.user)) {
       return false;
     }
     return true;

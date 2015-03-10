@@ -31,6 +31,8 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 
 import de.uniwue.info6.database.map.Exercise;
@@ -60,12 +62,12 @@ public class AutoCompleteUser {
   private String exerciseID;
   private UserEntryDao userEntryDao;
   private User user;
-  private boolean rightsMode;
 
   /**
    *
    */
   public AutoCompleteUser() {
+    //
   }
 
   /**
@@ -74,7 +76,6 @@ public class AutoCompleteUser {
    */
   @PostConstruct
   public void init() {
-    rightsMode = false;
     rights = new UserRights().initialize();
     dao = new UserDao();
     exerciseDao = new ExerciseDao();
@@ -85,6 +86,7 @@ public class AutoCompleteUser {
     if (ac != null) {
       user = ac.getUser();
     }
+    this.rightsInit();
   }
 
   /**
@@ -93,25 +95,23 @@ public class AutoCompleteUser {
    * @param exerciseID
    * @return
    */
-  public AutoCompleteUser rightsInit() {
-    rightsMode = true;
-    List<User> temp = dao.findAll();
+  public void rightsInit() {
+    if (users == null && user != null) {
+      List<User> temp = dao.findAll();
 
-    // remove current user from list
-    if (user != null) {
+      // remove current user from list
       temp.remove(user);
-    }
 
-    users = new ArrayList<User>();
+      users = new ArrayList<User>();
 
-    if (temp != null) {
-      for (User us : temp) {
-        if (us != null && !us.getId().equals("DEBUG_USER")) {
-          users.add(us);
+      if (temp != null) {
+        for (User us : temp) {
+          if (us != null && !us.getId().equals("DEBUG_USER")) {
+            users.add(us);
+          }
         }
       }
     }
-    return this;
   }
 
   /**
@@ -120,8 +120,8 @@ public class AutoCompleteUser {
    * @param exerciseID
    * @return
    */
-  public AutoCompleteUser exerciseInit(String exerciseID) {
-    if (user != null) {
+  public void exerciseInit(String exerciseID) {
+    if (users == null && user != null) {
       users = new ArrayList<User>();
       List<User> temp = null;
 
@@ -148,7 +148,6 @@ public class AutoCompleteUser {
         }
       }
     }
-    return this;
   }
 
   /**
@@ -158,8 +157,14 @@ public class AutoCompleteUser {
    * @return
    */
   public List<String> complete(String query) {
+    FacesContext context = FacesContext.getCurrentInstance();
+    String exerciseID = (String) UIComponent.getCurrentComponent(context).getAttributes().get("exerciseID");
     List<String> results = new ArrayList<String>();
-    if (!rightsMode) {
+
+    if (exerciseID != null) {
+      this.exerciseInit(exerciseID);
+    } else {
+      this.rightsInit();
       results.add("[" + Cfg.inst().getProp(DEF_LANGUAGE, "ASSERTION.EMPTY_FIELD") + "]");
     }
 

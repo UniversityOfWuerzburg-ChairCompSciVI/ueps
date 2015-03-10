@@ -29,6 +29,7 @@ import java.security.SecureRandom;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -527,5 +528,20 @@ public class StringTools {
    */
   public static StringBuffer removeFirstCharacters(StringBuffer stringBuffer, int places) {
     return stringBuffer.replace(0, places, "");
+  }
+
+
+  /**
+   *
+   *
+   * @param original
+   * @return
+   */
+  public static String forgetOneWord(final String original) {
+    final String[] originalParts = original.split("\\s");
+    final Random random = new Random();
+    final String originalPart = originalParts[random.nextInt(originalParts.length - 1)];
+    final int index = original.indexOf(originalPart);
+    return original.substring(0, index) + original.substring(index + originalPart.length(), original.length());
   }
 }

@@ -95,7 +95,7 @@ public class ScenarioExporter {
       File scenarioXmlConflict = new File(saveDir, baseName + "_" + conflict + ".xml");
       File scenarioXsd = new File(saveDir, baseName + ".xsd");
       File scenarioXsdConflict = new File(saveDir, baseName + "_" + conflict + ".xsd");
-      File scenarioMain = new File(base, "0" + File.separator + "schema_latest.xsd");
+      File scenarioMain = new File(scriptSystemPath, "reference_schema.xsd");
       File scenarioMainConflict = new File(saveDir, baseName + "_" + "REFERENCE_SCHEMA.xsd");
 
       JAXBContext jaxbContext = JAXBContext.newInstance(Scenario.class);
@@ -107,6 +107,18 @@ public class ScenarioExporter {
 
       SchemaOutputResolver sor = new CustomOutputResolver(saveDir, baseName + ".xsd");
       jaxbContext.generateSchema(sor);
+
+      if (!scenarioMain.exists()) {
+        LOGGER.error("REFERENCE SCHEMA IS MISSING: " + scenarioMain);
+      }
+
+      if (!scenarioXsd.exists()) {
+        LOGGER.error("GENERATED XSD IS MISSING: " + scenarioXsd);
+      }
+
+      if (!scenarioXml.exists()) {
+        LOGGER.error("GENERATED XML IS MISSING: " + scenarioXml);
+      }
 
       if (scenarioMain.exists() && scenarioXsd.exists() && scenarioXml.exists()) {
         String referenceMD5 = calculateMD5FromFile(scenarioMain);

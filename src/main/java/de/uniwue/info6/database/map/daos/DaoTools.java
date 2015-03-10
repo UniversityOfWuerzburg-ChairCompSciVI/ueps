@@ -220,8 +220,7 @@ public class DaoTools<T> implements Serializable {
   public synchronized SessionFactory getSessionFactory() {
     SessionFactory fac = null;
     try {
-      fac = (SessionFactory) new InitialContext()
-            .lookup("SessionFactory");
+      fac = (SessionFactory) new InitialContext().lookup("SessionFactory");
       if (fac == null) {
         throw new NullPointerException(FACT_ERROR + " [hibernate]");
       }

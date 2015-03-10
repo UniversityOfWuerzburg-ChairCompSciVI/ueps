@@ -78,6 +78,7 @@ import de.uniwue.info6.database.map.ExerciseGroup;
 import de.uniwue.info6.database.map.Scenario;
 import de.uniwue.info6.database.map.User;
 import de.uniwue.info6.database.map.UserEntry;
+import de.uniwue.info6.database.map.conf.HibernateUtil;
 import de.uniwue.info6.database.map.daos.ExerciseDao;
 import de.uniwue.info6.database.map.daos.ExerciseGroupDao;
 import de.uniwue.info6.database.map.daos.ScenarioDao;
@@ -350,8 +351,9 @@ public class AuthorizationFilter implements Filter, Serializable {
 
     try {
       String dbUser = "", dbPass = "", dbName = "", url = "";
-      SessionFactoryImpl sessionFactoryImpl = (SessionFactoryImpl) new ScenarioDao()
-                                              .getSessionFactory();
+      // SessionFactoryImpl sessionFactoryImpl = (SessionFactoryImpl) new ScenarioDao()
+      //                                         .getSessionFactory();
+      SessionFactoryImpl sessionFactoryImpl = (SessionFactoryImpl) HibernateUtil.getSessionFactory();
       Properties props = sessionFactoryImpl.getProperties();
 
       url                   = props.get("hibernate.connection.url").toString();
@@ -760,6 +762,13 @@ public class AuthorizationFilter implements Filter, Serializable {
             && sessionUser.getId().startsWith(idGET)
           )
         );
+
+      // ------------------------------------------------ //
+
+      if (showCaseUser && credentialsFound) {
+        idGET = sessionUser.getId();
+        validID = true;
+      }
 
       // ------------------------------------------------ //
 

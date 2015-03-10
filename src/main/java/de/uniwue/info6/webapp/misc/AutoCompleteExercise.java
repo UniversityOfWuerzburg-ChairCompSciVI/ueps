@@ -31,6 +31,8 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 
 import de.uniwue.info6.database.map.Exercise;
@@ -90,7 +92,7 @@ public class AutoCompleteExercise {
    * @return
    */
   public AutoCompleteExercise groupInit(String groupID) {
-    if (user != null) {
+    if (user != null && exercises == null) {
       if (groupID != null && !groupID.isEmpty() && (this.groupID == null || !this.groupID.equals(groupID))) {
         this.groupID = StringTools.extractIDFromAutoComplete(groupID);
         if (this.groupID != null) {
@@ -100,7 +102,6 @@ public class AutoCompleteExercise {
           }
         }
       }
-
       if (exercises == null) {
         ExerciseGroup ratedExample = new ExerciseGroup();
         ratedExample.setIsRated(true);
@@ -126,6 +127,10 @@ public class AutoCompleteExercise {
    * @return
    */
   public List<String> complete(String query) {
+    FacesContext context = FacesContext.getCurrentInstance();
+    String groupID = (String) UIComponent.getCurrentComponent(context).getAttributes().get("groupID");
+    this.groupInit(groupID);
+
     if (query.startsWith("0")) {
       query = query.replaceFirst("[0]+", "");
     }

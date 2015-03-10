@@ -72,22 +72,59 @@ xmlns:p="http://primefaces.org/ui">
     <!-- -->
     });
     <!-- -->
-    function start() { statusDialog.show(); pbAjax.start(); }
+    function startAssert() { assertStatusDialog.show(); pbAjax1.start(); }
     <!-- -->
-    function stop() { statusDialog.hide(); }
-    <!-- --></script>
+    function stopAssert()  { setTimeout("assertStatusDialog.hide();pbAjax2.cancel();", 2000); }
+    <!-- -->
+    function startExport() { exportStatusDialog.show(); pbAjax2.start(); }
+    <!-- -->
+    function stopExport()  { setTimeout("exportStatusDialog.hide();pbAjax2.cancel();", 2000); }
+    <!-- -->
+    function startFilter() { pbAjax3.cancel(); filterStatusDialog.show(); pbAjax3.start(); }
+    <!-- -->
+    function stopFilter()  { filterStatusDialog.hide(); pbAjax3.cancel(); }
+    <!-- -->
+    </script>
+    <!-- -->
     <p:outputPanel style="text-align:center">
      <h:form id="form">
       <p:growl id="messages" showDetail="true" life="10000" />
-      <p:dialog modal="true" widgetVar="statusDialog" header="Status" draggable="true" closable="true"
+      <!-- ************************************************************************ -->
+      <p:dialog modal="false" widgetVar="assertStatusDialog" header="Status" draggable="true" closable="false"
       resizable="false">
-      #{txt['ASSERTION.DIALOG_LOADING']}
-      <br />
-      <br />
-      <p:progressBar widgetVar="pbAjax" ajax="true" styleClass="animated" interval="2000" value="#{sub.assertionProgress}" labelTemplate="{value}%">
-        <p:ajax event="complete" listener="#{sub.forceAssertionComplete}" update="messages" />
-      </p:progressBar>
-    </p:dialog>
+        #{txt['ASSERTION.DIALOG_LOADING']}
+        <br />
+        <br />
+        <p:progressBar widgetVar="pbAjax1" ajax="true" styleClass="animated" interval="1000" 
+            value="#{sub.assertionProgress}" labelTemplate="{value}%">
+          <p:ajax event="complete" listener="#{sub.forceAssertionComplete}" update="messages" />
+        </p:progressBar>
+      </p:dialog>
+      <!-- ************************************************************************ -->
+      <p:dialog modal="false" widgetVar="exportStatusDialog" header="Status" draggable="true" closable="false"
+      resizable="false">
+        #{txt['ASSERTION.DIALOG_LOADING']}
+        <br />
+        <br />
+        <p:progressBar widgetVar="pbAjax2" ajax="true" styleClass="animated" interval="1000" 
+            value="#{sub.exportProgress}" labelTemplate="{value}%">
+          <p:ajax event="complete" listener="#{sub.exportComplete}" 
+              update="messages" oncomplete="stopExport()"/>
+        </p:progressBar>
+      </p:dialog>
+      <!-- ************************************************************************ -->
+      <p:dialog modal="false" widgetVar="filterStatusDialog" header="Status" draggable="true" closable="false"
+      resizable="false">
+        #{txt['ASSERTION.DIALOG_LOADING']}
+        <br />
+        <br />
+        <p:progressBar widgetVar="pbAjax3" ajax="true" styleClass="animated" interval="1000" 
+            value="#{sub.filterProgress}" labelTemplate="{value}%">
+          <p:ajax event="complete" listener="#{sub.filterComplete}" 
+              update="messages" oncomplete="stopFilter()"/>
+        </p:progressBar>
+      </p:dialog>
+      <!-- ************************************************************************ -->
       <h:panelGrid columns="5" cellpadding="2" id="filter_fields">
        <!-- -->
        <p:autoComplete id="scenarioID" value="#{sub.scenarioID}" dropdown="true" forceSelection="true"
@@ -97,27 +134,31 @@ xmlns:p="http://primefaces.org/ui">
        </p:autoComplete>
        <!-- -->
        <p:autoComplete id="groupID" value="#{sub.groupID}" cache="true" dropdown="true" forceSelection="true"
-       maxResults="25" completeMethod="#{group_names.scenarioInit(sub.scenarioID).complete}"
+       maxResults="25" completeMethod="#{group_names.complete}"
        placeholder="#{txt['EXERCISE_GROUP']}">
         <p:ajax event="itemSelect" listener="#{sub.handleGroupSelect}" update="exID groupID" />
+        <f:attribute name="scenarioID" value="#{sub.scenarioID}" />
        </p:autoComplete>
        <!-- -->
        <p:autoComplete id="exID" value="#{sub.exID}" cache="true" dropdown="true"
        placeholder="#{txt['EXERCISE']}" forceSelection="true" maxResults="25"
-       completeMethod="#{exercise_names.groupInit(sub.groupID).complete}">
+       completeMethod="#{exercise_names.complete}">
         <p:ajax event="itemSelect" listener="#{sub.handleExerciseSelect}" update="userID exID" />
+        <f:attribute name="groupID" value="#{sub.groupID}" />
        </p:autoComplete>
        <!-- -->
        <p:autoComplete id="userID" value="#{sub.userID}" cache="true" placeholder="#{txt['USERID']}"
        forceSelection="true" maxResults="15" dropdown="true"
-       completeMethod="#{user_names.exerciseInit(sub.exID).complete}">
+       completeMethod="#{user_names.complete}">
         <p:ajax event="itemSelect" listener="#{sub.handleUserSelect}" update="userID" />
+        <f:attribute name="exerciseID" value="#{sub.exID}" />
        </p:autoComplete>
        <!-- -->
        <p:commandButton value="#{txt['ASSERTION.FILTER0']}" update="treetable messages error_display"
-       actionListener="#{sub.reloadTree()}" oncomplete="context_tooltip()" />
+       actionListener="#{sub.reloadTree()}" onclick="startFilter();" oncomplete="context_tooltip()" />
       </h:panelGrid>
-      <h:outputText id="error_display" value="#{sub.errorText}" style="color:red" />
+      <h:outputText id="error_display" value="#{sub.errorText}" 
+          style="color:red;margin:10px;display:inline-table;font-weight:bold" />
       <br />
       <!-- -->
       <p:treeTable id="treetable" value="#{sub.root}" var="row" resizableColumns="true"
@@ -161,20 +202,24 @@ xmlns:p="http://primefaces.org/ui">
          <p:commandButton value="#{txt['ASSERTION.ABORT']}" styleClass="ui-confirmdialog-no confirmbutton"
          style="padding: 0px 5px 0px 5px !important" onclick="del.hide()" />
         </p:confirmDialog>
+        <!-- ************************************************************************ -->
         <p:confirmDialog message="#{txt['ASSERTION.ASK_RECALC']}"
         header="#{txt['ASSERTION.ASK_RECALC_TITLE2']}" widgetVar="recalc" severity="alert">
-         <p:commandButton value="#{txt['ASSERTION.ASK_RECALC_TITLE2']}" onclick="recalc.hide(); start()"
-         oncomplete="stop(); context_tooltip()" styleClass="ui-confirmdialog-yes confirmbutton"
-         actionListener="#{sub.forceExerciseAssertion()}" update="treetable"
-         style="padding: 0px 5px 0px 5px !important" />
+         <p:commandButton value="#{txt['ASSERTION.ASK_RECALC_TITLE2']}" onclick="recalc.hide(); startAssert()"
+          oncomplete="stopAssert(); context_tooltip();" styleClass="ui-confirmdialog-yes confirmbutton"
+          actionListener="#{sub.forceExerciseAssertion()}" update="treetable"
+          style="padding: 0px 5px 0px 5px !important" />
          <p:commandButton value="#{txt['ASSERTION.ABORT']}" styleClass="ui-confirmdialog-no confirmbutton"
          onclick="recalc.hide()" style="padding: 0px 5px 0px 5px !important" />
         </p:confirmDialog>
+        <!-- ************************************************************************ -->
         <p:commandButton rendered="#{row.isExGroup}" title="#{txt['ASSERTION.EXPORT_RESULTS']}"
         styleClass="downloader" style="background-color:#E5E8FF !important" ajax="false"
-        icon="ui-icon-document" onclick="PrimeFaces.monitorDownload(start, stop)">
+        icon="ui-icon-document" actionListener="#{sub.generateExport(row.exGroup)}" 
+        onclick="startExport();">
          <p:fileDownload value="#{sub.getExport(row.exGroup)}" />
         </p:commandButton>
+        <!-- ************************************************************************ -->
         <p:commandButton rendered="#{row.isExercise}" styleClass="recalc2" ajax="true"
         icon="ui-icon-calculator" onclick="recalc.show()" actionListener="#{sub.setRecalcRow(row)}" />
         <p:commandButton rendered="#{row.canBeRemoved}" styleClass="remove_rating" ajax="true"

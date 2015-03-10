@@ -13,9 +13,9 @@ package de.uniwue.info6.comparator;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -96,7 +96,7 @@ public class SqlQueryComparator {
         int minDist = 9999;
         for (SqlQuery tmpQuery : solutionQueries) {
           int curDist = LevenshteinDistance.computeLevenshteinDistance(tmpQuery.getPlainContent().toLowerCase(),
-              userQuery.getPlainContent().toLowerCase());
+                        userQuery.getPlainContent().toLowerCase());
           if (curDist < minDist) {
             solutionQuery = tmpQuery;
             minDist = curDist;
@@ -156,7 +156,7 @@ public class SqlQueryComparator {
         statsString = "compare_stat\t" + ((endTime - startTime) / 1000000);
         SessionListener.setExecuterStat(statsString);
 
-      } catch (SQLParserException e2){
+      } catch (SQLParserException e2) {
         messages.add(new JavaError("", e2.getMessage()));
       } catch (Exception e) {
         messages.add(new JavaError("", e.getMessage()));
@@ -180,13 +180,13 @@ public class SqlQueryComparator {
     RootVisitor userParsed = visitorBased ? userVisitor : userQuery.getParsedContent();
     RootVisitor solutionParsed = visitorBased ? solutionVisitor : solutionQuery.getParsedContent();
 
-    if(userParsed == null || solutionParsed == null)
+    if (userParsed == null || solutionParsed == null)
       return;
 
     //Main Keyword
     if (!userParsed.getMainKeyWord().equals(solutionParsed.getMainKeyWord())) {
       messages.add(new SemanticError(msgPrefix + Cfg.inst().getProp(DEF_LANGUAGE, "COMPARATOR.SEMANTIC_ERROR"),
-          getStringForKeyWord(1, userParsed.getMainKeyWord(), solutionParsed.getMainKeyWord())));
+                                     getStringForKeyWord(1, userParsed.getMainKeyWord(), solutionParsed.getMainKeyWord())));
       return;
 
     }
@@ -211,12 +211,12 @@ public class SqlQueryComparator {
         }
       } else {
         messages.add(new SemanticError(msgPrefix + Cfg.inst().getProp(DEF_LANGUAGE, "COMPARATOR.SEMANTIC_ERROR"),
-            getStringForKeyWord(0, "WHERE", "")));
+                                       getStringForKeyWord(0, "WHERE", "")));
       }
     } else {
       if (userParsed.getWhereConditions() != null) {
         messages.add(new SemanticError(msgPrefix + Cfg.inst().getProp(DEF_LANGUAGE, "COMPARATOR.SEMANTIC_ERROR"),
-            getStringForKeyWord(2, "WHERE", "")));
+                                       getStringForKeyWord(2, "WHERE", "")));
       }
     }
 
@@ -228,12 +228,12 @@ public class SqlQueryComparator {
         }
       } else {
         messages.add(new SemanticError(msgPrefix + Cfg.inst().getProp(DEF_LANGUAGE, "COMPARATOR.SEMANTIC_ERROR"),
-            getStringForKeyWord(0, "HAVING", "")));
+                                       getStringForKeyWord(0, "HAVING", "")));
       }
     } else {
       if (userParsed.getHavingConditions() != null) {
         messages.add(new SemanticError(msgPrefix + Cfg.inst().getProp(DEF_LANGUAGE, "COMPARATOR.SEMANTIC_ERROR"),
-            getStringForKeyWord(2, "HAVING", "")));
+                                       getStringForKeyWord(2, "HAVING", "")));
       }
     }
 
@@ -266,7 +266,7 @@ public class SqlQueryComparator {
 
     if (visitorBased) {
       messages.add(new ResultError(Cfg.inst().getProp(DEF_LANGUAGE, "COMPARATOR.DYN_RESULT"),
-            Cfg.inst().getProp(DEF_LANGUAGE, "COMPARATOR.DYN_RESULT.FAIL"), false));
+                                   Cfg.inst().getProp(DEF_LANGUAGE, "COMPARATOR.DYN_RESULT.FAIL"), false));
       return false;
     }
 
@@ -277,12 +277,12 @@ public class SqlQueryComparator {
         SqlResult solutionResult = solutionQuery.getResult();
         LinkedList<Error> tmp = userResult.equals(solutionResult);
 
-        if(tmp.size() == 0){
+        if (tmp.size() == 0) {
           messages.add(new ResultError(Cfg.inst().getProp(DEF_LANGUAGE, "COMPARATOR.DYN_RESULT"),
-                Cfg.inst().getProp(DEF_LANGUAGE, "COMPARATOR.DYN_RESULT.SUC"), true));
+                                       Cfg.inst().getProp(DEF_LANGUAGE, "COMPARATOR.DYN_RESULT.SUC"), true));
         } else {
           messages.add(new ResultError(Cfg.inst().getProp(DEF_LANGUAGE, "COMPARATOR.DYN_RESULT"),
-                Cfg.inst().getProp(DEF_LANGUAGE, "COMPARATOR.DYN_RESULT.FAIL"), false));
+                                       Cfg.inst().getProp(DEF_LANGUAGE, "COMPARATOR.DYN_RESULT.FAIL"), false));
         }
 
         setMessages(tmp);
@@ -291,12 +291,12 @@ public class SqlQueryComparator {
 
       } else {
         messages.add(new ResultError(Cfg.inst().getProp(DEF_LANGUAGE, "COMPARATOR.DYN_RESULT"),
-              Cfg.inst().getProp(DEF_LANGUAGE, "COMPARATOR.DYN_RESULT.FAIL"), false));
+                                     Cfg.inst().getProp(DEF_LANGUAGE, "COMPARATOR.DYN_RESULT.FAIL"), false));
         return false;
       }
     } catch (Exception e) {
       messages.add(new ResultError(Cfg.inst().getProp(DEF_LANGUAGE, "COMPARATOR.DYN_RESULT"),
-            Cfg.inst().getProp(DEF_LANGUAGE, "COMPARATOR.DYN_RESULT.FAIL"), false));
+                                   Cfg.inst().getProp(DEF_LANGUAGE, "COMPARATOR.DYN_RESULT.FAIL"), false));
       return false;
     }
   }
@@ -310,7 +310,7 @@ public class SqlQueryComparator {
   }
 
   private void compareLists(LinkedList<? extends Structure> userList, LinkedList<? extends Structure> solList,
-      String keyWord) throws Exception {
+                            String keyWord) throws Exception {
 
     LinkedList<Structure> missings = new LinkedList<Structure>();
     LinkedList<Structure> surplus = new LinkedList<Structure>();
@@ -357,23 +357,23 @@ public class SqlQueryComparator {
 
           if (post)
             messages.add(new SemanticError(msgPrefix + keyWord, getStringForKeyWord(1, keyWord,
-                item.toString())));
+                                           item.toString())));
 
         }
 
         for (Structure item : surplus) {
           messages.add(new SemanticError(msgPrefix + keyWord,
-              getStringForKeyWord(2, keyWord, item.toString())));
+                                         getStringForKeyWord(2, keyWord, item.toString())));
         }
 
         for (Structure item : mistaken) {
           messages.add(new SemanticError(msgPrefix + keyWord,
-              getStringForKeyWord(3, keyWord, item.toString())));
+                                         getStringForKeyWord(3, keyWord, item.toString())));
         }
 
       } else {
         messages.add(new SemanticError(msgPrefix + Cfg.inst().getProp(DEF_LANGUAGE, "COMPARATOR.SEMANTIC_ERROR"),
-            getStringForKeyWord(0, keyWord, "")));
+                                       getStringForKeyWord(0, keyWord, "")));
       }
     }
   }
@@ -439,10 +439,11 @@ public class SqlQueryComparator {
       else if (num == 2)
         return fillPropertyString(Cfg.inst().getProp(DEF_LANGUAGE, "COMPARATOR.COND_SURPLUS"), new String[] { keyWord });
     } else if (keyWord.equals("SELECT") || keyWord.equals("INSERT") || keyWord.equals("UPDATE")
-        || keyWord.equals("DELETE")) {
+               || keyWord.equals("DELETE")) {
       if (num == 1)
         return fillPropertyString(Cfg.inst().getProp(DEF_LANGUAGE, "COMPARATOR.KEYWORD_WRONG"), new String[] { keyWord,
-            customText });
+                                  customText
+                                                                                                             });
     } else if (keyWord.equals("LIMIT")) {
       if (num == 1)
         return Cfg.inst().getProp(DEF_LANGUAGE, "COMPARATOR.LIM_OFFSET_WRONG");
@@ -476,3 +477,4 @@ public class SqlQueryComparator {
   }
 
 }
+

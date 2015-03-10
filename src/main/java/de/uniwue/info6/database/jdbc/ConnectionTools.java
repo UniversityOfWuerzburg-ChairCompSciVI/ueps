@@ -33,25 +33,27 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import de.uniwue.info6.database.map.Exercise;
+import de.uniwue.info6.database.map.ExerciseGroup;
 import de.uniwue.info6.database.map.Scenario;
+import de.uniwue.info6.database.map.SolutionQuery;
 import de.uniwue.info6.database.map.User;
-import de.uniwue.info6.database.map.UserEntry;
-import de.uniwue.info6.database.map.UserResult;
 import de.uniwue.info6.database.map.UserRight;
 import de.uniwue.info6.database.map.daos.ExerciseDao;
+import de.uniwue.info6.database.map.daos.ExerciseGroupDao;
 import de.uniwue.info6.database.map.daos.ScenarioDao;
-import de.uniwue.info6.database.map.daos.SolutionQueryDao;
 import de.uniwue.info6.database.map.daos.UserDao;
-import de.uniwue.info6.database.map.daos.UserEntryDao;
-import de.uniwue.info6.database.map.daos.UserResultDao;
 import de.uniwue.info6.database.map.daos.UserRightDao;
+import de.uniwue.info6.misc.StringTools;
 import de.uniwue.info6.misc.properties.Cfg;
 import de.uniwue.info6.misc.properties.PropBool;
 import de.uniwue.info6.misc.properties.PropertiesFile;
 import de.uniwue.info6.webapp.admin.UserRights;
+import de.uniwue.info6.webapp.lists.ExerciseController;
 
 public class ConnectionTools extends Thread {
 
@@ -281,6 +283,65 @@ public class ConnectionTools extends Thread {
       this.currentThread.interrupt();
   }
 
+  /**
+   *
+   *
+   */
+  public void addSomeTestStudents() {
+    final ScenarioDao scenarioDao = new ScenarioDao();
+    final ExerciseGroupDao groupDao = new ExerciseGroupDao();
+    final ExerciseDao exerciseDao = new ExerciseDao();
+
+    final List<Scenario> scenarios = scenarioDao.findAll();
+    // ------------------------------------------------ //
+
+    for (int i = 0; i < 20; i++) {
+      String userID = "student_" + new Random().nextInt(10000);
+      User userToInsert = new User();
+      userToInsert.setId(userID);
+      userToInsert.setIsAdmin(false);
+      if (userDao.getById(userID) == null) {
+        userDao.insertNewInstance(userToInsert);
+      }
+    }
+
+    final Random random = new Random();
+    for (Scenario scenario : scenarios) {
+      // ------------------------------------------------ //
+      for (ExerciseGroup group : groupDao.findByScenario(scenario)) {
+        if (group.getIsRated()) {
+          List<Exercise> exercises = exerciseDao.findByExGroup(group);
+
+          // ------------------------------------------------ //
+          for (Exercise exercise : exercises) {
+            for (int i = 0; i < random.nextInt(10); i++) {
+              User user = userDao.getRandom();
+              if (!user.getId().equals(dummyUser)) {
+                try {
+                  List<SolutionQuery> solutions = new ExerciseDao().getSolutions(exercise);
+                  String solution = solutions.get(0).getQuery();
+
+                  if (random.nextInt(3) == 2) {
+                    solution = StringTools.forgetOneWord(solution);
+                  }
+                  ConnectionManager.instance();
+                  ExerciseController exc = new ExerciseController().init_debug(scenario, exercise,
+                      user);
+                  exc.setUserString(solution);
+                } catch (Exception e) {
+                } finally {
+                }
+              }
+            }
+          }
+          // ------------------------------------------------ //
+        }
+      }
+    }
+
+  }
+
+
 
   /**
    *
@@ -333,36 +394,38 @@ public class ConnectionTools extends Thread {
       }
     }
 
-    UserEntryDao userEntryDao = new UserEntryDao();
-    UserResultDao userResultDao = new UserResultDao();
-    ExerciseDao exerciseDao = new ExerciseDao();
-    SolutionQueryDao solutionQueryDao = new SolutionQueryDao();
+    // UserEntryDao userEntryDao = new UserEntryDao();
+    // UserResultDao userResultDao = new UserResultDao();
+    // ExerciseDao exerciseDao = new ExerciseDao();
+    // SolutionQueryDao solutionQueryDao = new SolutionQueryDao();
 
-    for (int i = 1; i < 100; i++) {
-      try {
-        Exercise testExercise = exerciseDao.getById(i);
-        if (testExercise != null) {
-          UserEntry testEntry = new UserEntry();
-          // testEntry.setExercise(exerciseDao.getById(4));
-          testEntry.setExercise(testExercise);
-          testEntry.setUser(userDao.getById("student_2"));
-          testEntry.setUserQuery("SELECT title, author, price FROM books JOIN publishers ON publisher_id=publishers.id WHERE publishers.name=\"Carlsen\"");
-          testEntry.setEntryTime(new Date());
-          testEntry.setResultMessage("");
-          userEntryDao.insertNewInstance(testEntry);
+    // for (int i = 1; i < 100; i++) {
+    //   try {
+    //     Exercise testExercise = exerciseDao.getById(i);
+    //     if (testExercise != null) {
+    //       UserEntry testEntry = new UserEntry();
+    //       // testEntry.setExercise(exerciseDao.getById(4));
+    //       testEntry.setExercise(testExercise);
+    //       testEntry.setUser(userDao.getById("student_2"));
+    //       testEntry.setUserQuery("SELECT title, author, price FROM books JOIN publishers ON publisher_id=publishers.id WHERE publishers.name=\"Carlsen\"");
+    //       testEntry.setEntryTime(new Date());
+    //       testEntry.setResultMessage("");
+    //       userEntryDao.insertNewInstance(testEntry);
 
-          UserResult testResult = new UserResult();
-          testResult.setUserEntry(testEntry);
-          testResult.setSolutionQuery(solutionQueryDao.getById(4));
-          testResult.setCredits((byte) 0);
-          testResult.setComment("");
-          testResult.setLastModified(new Date());
-          userResultDao.insertNewInstance(testResult);
-        }
-      } catch (Exception e) {
-        // TODO: logging
-        e.printStackTrace();
-      }
-    }
+    //       UserResult testResult = new UserResult();
+    //       testResult.setUserEntry(testEntry);
+    //       testResult.setSolutionQuery(solutionQueryDao.getById(4));
+    //       testResult.setCredits((byte) 0);
+    //       testResult.setComment("");
+    //       testResult.setLastModified(new Date());
+    //       userResultDao.insertNewInstance(testResult);
+    //     }
+    //   } catch (Exception e) {
+    //     // TODO: logging
+    //     e.printStackTrace();
+    //   }
+    // }
+
+    this.addSomeTestStudents();
   }
 }

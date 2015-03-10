@@ -125,7 +125,7 @@ public class SessionObject  implements Serializable {
   private boolean checkCredentials() {
     final boolean hasScenarioParameter = scenarioID != null && !scenarioID.trim().isEmpty();
     final boolean hasUserIDParameter = userID != null && !userID.trim().isEmpty();
-    final boolean hasSecureValueParameter = encryptedCode != null && !encryptedCode.trim().isEmpty();
+    final boolean hasEncryptedCodeParameter = encryptedCode != null && !encryptedCode.trim().isEmpty();
 
     // ------------------------------------------------ //
     if (hasScenarioParameter) {
@@ -139,7 +139,7 @@ public class SessionObject  implements Serializable {
     }
 
     // ------------------------------------------------ //
-    if (hasUserIDParameter && hasSecureValueParameter) {
+    if (hasUserIDParameter && hasEncryptedCodeParameter) {
       if (Cfg.inst().getProp(MAIN_CONFIG, USE_MOODLE_LOGIN)) {
 
         final String calculatedEncryptedCode = Crypt.md5(this.userIP + this.secretPhrase + this.userID);

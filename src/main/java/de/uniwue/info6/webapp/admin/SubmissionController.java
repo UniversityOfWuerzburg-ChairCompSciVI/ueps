@@ -89,6 +89,7 @@ public class SubmissionController implements Serializable {
   private static final String EMPTY_GR = Cfg.inst().getProp(DEF_LANGUAGE, "ASSERTION.NO_GROUP");
   private static final String EMPTY_EX = Cfg.inst().getProp(DEF_LANGUAGE, "ASSERTION.NO_EX");
   private static final String EMPTY_US = Cfg.inst().getProp(DEF_LANGUAGE, "RIGHTS.USER_NOT_FOUND");
+  private static final String CSV_DELIMITER = ";";
 
   private UserEntryDao userEntryDao;
 
@@ -108,12 +109,18 @@ public class SubmissionController implements Serializable {
   private UserRights rights;
   private int countEntries;
   private String errorText;
-  private int assertionProgress;
+
+  private int assertionProgress, exportProgress, filterProgress;
 
   private String userID, scenarioID, groupID, exID;
   private Integer scenarioIDInt, groupIDInt, exIDInt;
 
   private static final String EXERCISE_TAG = "EX-";
+  private static final long SUBMISSION_TIMEOUT = 120000;
+
+  private String tmpTxt;
+  private FacesMessage filterMessage;
+
 
   /**
    * {@inheritDoc}
@@ -167,9 +174,9 @@ public class SubmissionController implements Serializable {
       sev = FacesMessage.SEVERITY_INFO;
     }
 
-    FacesMessage message = new FacesMessage(sev, Cfg.inst().getProp(DEF_LANGUAGE, "ASSERTION.FILTER1"), msg);
-    FacesContext.getCurrentInstance().addMessage(null, message);
+    this.filterMessage = new FacesMessage(sev, Cfg.inst().getProp(DEF_LANGUAGE, "ASSERTION.FILTER1"), msg);
   }
+
 
   /**
    *
@@ -177,11 +184,10 @@ public class SubmissionController implements Serializable {
    */
   private void initTree() {
     try {
-      long maxTime = 45000;
       boolean filter = scenarioIDInt != null || groupIDInt != null || exIDInt != null || userID != null;
 
       root = new DefaultTreeNode("Root", null);
-      List<Scenario> scenarios = scenarioDao.findAll();
+      final List<Scenario> scenarios = scenarioDao.findAll();
 
       long starttime = 0;
       countEntries = 0;
@@ -193,87 +199,121 @@ public class SubmissionController implements Serializable {
         TreeNode node0 = new DefaultTreeNode(new SubmissionRow(Cfg.inst().getProp(DEF_LANGUAGE, "SCENARIO")), root);
         node0.setExpanded(true);
 
+        double localProgress = 0.0;
+
+        // ------------------------------------------------ //
+        final List<Scenario> filteredScenarios = new ArrayList<Scenario>();
         for (Scenario scenario : scenarios) {
           boolean scenarioFilter = (scenarioIDInt == null || scenario.getId().equals(scenarioIDInt));
           if (rights.hasRatingRight(user, scenario) && scenarioFilter) {
+            filteredScenarios.add(scenario);
+          }
+        }
+        double scenarioJump = 100d / (double) filteredScenarios.size();
+        this.setFilterProgress(localProgress);
+        // ------------------------------------------------ //
 
-            TreeNode node1 = new DefaultTreeNode(new SubmissionRow(scenario), node0);
-            if (groupIDInt != null || exIDInt != null || userID != null) {
-              node1.setExpanded(true);
+        for (int i = 0; i < filteredScenarios.size(); i++) {
+          final Scenario scenario = filteredScenarios.get(i);
+          TreeNode node1 = new DefaultTreeNode(new SubmissionRow(scenario), node0);
+          if (groupIDInt != null || exIDInt != null || userID != null) {
+            node1.setExpanded(true);
+          }
+          ExerciseGroup ratedExample = new ExerciseGroup();
+          ratedExample.setScenario(scenario);
+          ratedExample.setIsRated(true);
+          List<ExerciseGroup> groups = exgroupDao.findByExample(ratedExample);
+
+
+          // ------------------------------------------------ //
+          final List<ExerciseGroup> filteredGroups = new ArrayList<ExerciseGroup>();
+          for (ExerciseGroup group : groups) {
+            boolean groupFilter = (groupIDInt == null || group.getId().equals(groupIDInt));
+            if (groupFilter) {
+              filteredGroups.add(group);
             }
-            ExerciseGroup ratedExample = new ExerciseGroup();
-            ratedExample.setScenario(scenario);
-            ratedExample.setIsRated(true);
-            List<ExerciseGroup> groups = exgroupDao.findByExample(ratedExample);
+          }
+          final double groupJump = scenarioJump / (double) filteredGroups.size();
+          // ------------------------------------------------ //
 
-            for (ExerciseGroup group : groups) {
-              boolean groupFilter = (groupIDInt == null || group.getId().equals(groupIDInt));
+          for (ExerciseGroup group : filteredGroups) {
+            List<Exercise> exercises = exerciseDao.findByExGroup(group);
 
-              if (groupFilter) {
-                List<Exercise> exercises = exerciseDao.findByExGroup(group);
+            if (exercises != null) {
+              TreeNode node2 = new DefaultTreeNode(new SubmissionRow(group), node1);
+              if (exIDInt != null || userID != null) {
+                node2.setExpanded(true);
+              }
 
-                if (exercises != null) {
 
-                  TreeNode node2 = new DefaultTreeNode(new SubmissionRow(group), node1);
-                  if (exIDInt != null || userID != null) {
-                    node2.setExpanded(true);
-                  }
+              // ------------------------------------------------ //
+              final List<Exercise> filteredExercises = new ArrayList<Exercise>();
+              for (Exercise ex : exercises) {
+                boolean exerciseFilter = (exIDInt == null || ex.getId().equals(exIDInt));
+                if (exerciseFilter) {
+                  filteredExercises.add(ex);
+                }
+              }
+              final double exJump = groupJump / (double) filteredExercises.size();
+              // ------------------------------------------------ //
 
-                  for (Exercise ex : exercises) {
-                    boolean exerciseFilter = (exIDInt == null || ex.getId().equals(exIDInt));
-                    if (exerciseFilter) {
-                      List<UserEntry> userEntries = null;
-
-                      if (ex != null) {
-                        if (userID == null) {
-                          userEntries = userEntryDao.getLastEntriesForExercise(ex);
-                        } else {
-                          userEntries = new ArrayList<UserEntry>();
-                          User tempUser = userDao.getById(userID);
-                          if (tempUser != null) {
-                            UserEntry temp = userEntryDao.getLastEntry(ex, tempUser);
-                            if (temp != null) {
-                              userEntries.add(temp);
-                            }
-                          }
-                        }
-                      }
-
-                      if (System.currentTimeMillis() - starttime > maxTime) {
-                        errorText = Cfg.inst().getProp(DEF_LANGUAGE, "ASSERTION.PERF_ERROR");
-                        break;
-                      }
-
-                      if (userEntries != null && !userEntries.isEmpty()) {
-                        SubmissionRow tmpRow = new SubmissionRow(ex, scenario);
-                        double sumCredits = 0;
-                        int countResults = 0;
-                        TreeNode node3 = new DefaultTreeNode(tmpRow, node2);
-
-                        if (userID != null) {
-                          node3.setExpanded(true);
-                        }
-
-                        for (UserEntry userEntry : userEntries) {
-                          countEntries++;
-                          UserResult userResult = userResultDao
-                                                  .getLastUserResultFromEntry(userEntry);
-
-                          if (userResult != null) {
-                            new DefaultTreeNode(
-                              new SubmissionRow(userEntry, userResult, ex), node3);
-                            countResults++;
-                            sumCredits += userResult.getCredits();
-                          }
-                        }
-                        tmpRow.setAvgCredits((double) sumCredits / (double) countResults, ex);
+              for (Exercise ex : filteredExercises) {
+                List<UserEntry> userEntries = null;
+                if (ex != null) {
+                  if (userID == null) {
+                    userEntries = userEntryDao.getLastEntriesForExercise(ex);
+                  } else {
+                    userEntries = new ArrayList<UserEntry>();
+                    User tempUser = userDao.getById(userID);
+                    if (tempUser != null) {
+                      UserEntry temp = userEntryDao.getLastEntry(ex, tempUser);
+                      if (temp != null) {
+                        userEntries.add(temp);
                       }
                     }
                   }
                 }
+
+                if (System.currentTimeMillis() - starttime > SUBMISSION_TIMEOUT) {
+                  errorText = Cfg.inst().getProp(DEF_LANGUAGE, "ASSERTION.PERF_ERROR");
+                  break;
+                }
+
+                if (userEntries != null && !userEntries.isEmpty()) {
+                  SubmissionRow tmpRow = new SubmissionRow(ex, scenario);
+                  double sumCredits = 0;
+                  int countResults = 0;
+                  TreeNode node3 = new DefaultTreeNode(tmpRow, node2);
+
+                  if (userID != null) {
+                    node3.setExpanded(true);
+                  }
+
+                  final double entryJump = exJump / (double) userEntries.size();
+                  for (UserEntry userEntry : userEntries) {
+                    countEntries++;
+                    UserResult userResult = userResultDao
+                                            .getLastUserResultFromEntry(userEntry);
+                    if (userResult != null) {
+                      new DefaultTreeNode(
+                        new SubmissionRow(userEntry, userResult, ex), node3);
+                      countResults++;
+                      sumCredits += userResult.getCredits();
+                    }
+                    // ------------------------------------------------ //
+                    localProgress = localProgress + entryJump;
+                    this.setFilterProgress(localProgress);
+                    // ------------------------------------------------ //
+                  }
+                  tmpRow.setAvgCredits((double) sumCredits / (double) countResults, ex);
+                }
               }
             }
+            localProgress = localProgress + groupJump;
+            this.setFilterProgress(localProgress);
           }
+          localProgress = scenarioJump * (i + 1);
+          this.setFilterProgress(localProgress);
         }
 
         // ---------------------------------------------------------
@@ -312,6 +352,8 @@ public class SubmissionController implements Serializable {
     } catch (Exception e) {
       LOGGER.error("error initializing submission-treebean", e);
     }
+
+    this.setFilterProgress(100);
   }
 
   /**
@@ -474,6 +516,37 @@ public class SubmissionController implements Serializable {
 
   }
 
+
+  /**
+   *
+   *
+   * @param exGroup
+   */
+  public void generateExport(ExerciseGroup exGroup) {
+    this.setExportProgress(0);
+    final StringBuilder csvBuilder = new StringBuilder();
+    csvBuilder.append("ex_id" + CSV_DELIMITER + "user_id" + CSV_DELIMITER + "points" + CSV_DELIMITER + "max_points" + "\n");
+    final List<Exercise> exercises = exerciseDao.findByExGroup(exGroup);
+    final int exercisesSize = exercises.size();
+    int countEntries = 0;
+
+    for (Exercise ex : exercises) {
+      int percent = (int) Math.ceil(((double) countEntries++ / (double) exercisesSize) * 100);
+      this.setExportProgress(percent);
+      final List<UserEntry> userEntries = userEntryDao.getLastUserEntryForAllUsers(ex);
+      if (userEntries != null) {
+        for (UserEntry userEntry : userEntries) {
+          final UserResult userResult = userResultDao.getLastUserResultFromEntry(userEntry);
+          csvBuilder.append(ex.getId() + CSV_DELIMITER + userEntry.getUser().getId()
+                            + CSV_DELIMITER + userResult.getCredits() + CSV_DELIMITER + ex.getCredits() + "\n");
+        }
+      }
+
+    }
+    this.tmpTxt = csvBuilder.toString();
+    this.setExportProgress(100);
+  }
+
   /**
    *
    *
@@ -482,26 +555,6 @@ public class SubmissionController implements Serializable {
    */
   public StreamedContent getExport(ExerciseGroup exGroup) {
     try {
-      String delim = ";";
-      String tmpTxt = "ex_id" + delim + "user_id" + delim + "points" + delim + "max_points" + "\n";
-      List<Exercise> exercises = exerciseDao.findByExGroup(exGroup);
-      for (Exercise ex : exercises) {
-
-        List<UserEntry> userEntries = userEntryDao.getLastUserEntryForAllUsers(ex);
-
-        if (userEntries != null) {
-
-          for (UserEntry userEntry : userEntries) {
-
-            UserResult userResult = userResultDao.getLastUserResultFromEntry(userEntry);
-
-            tmpTxt += ex.getId() + delim + userEntry.getUser().getId() + delim + userResult.getCredits()
-                      + delim + ex.getCredits() + "\n";
-
-          }
-        }
-      }
-
       InputStream stream = new ByteArrayInputStream(tmpTxt.getBytes());
       StreamedContent file = new DefaultStreamedContent(stream, "text/csv", "results_"
           + StringTools.normalize(exGroup.getScenario().getName() + "-" + exGroup.getId()) + ".csv");
@@ -529,7 +582,7 @@ public class SubmissionController implements Serializable {
     boolean deleted = false;
 
     if (userEntry != null) {
-      deleted = userEntryDao.deleteInstanceP(userEntry);
+      deleted = userEntryDao.deleteInstance(userEntry);
     }
 
     if (deleted) {
@@ -630,7 +683,7 @@ public class SubmissionController implements Serializable {
               if (index < solutions.size()) {
                 userResult.setSolutionQuery(solutionsOrig.get(index));
               }
-              userResultDao.updateInstanceP(userResult);
+              userResultDao.updateInstance(userResult);
             }
           }
           this.forceAssertionComplete();
@@ -656,8 +709,21 @@ public class SubmissionController implements Serializable {
     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Server-Meldung", "Neubewertung abgeschlossen!"));
   }
 
-  public StreamedContent getExport2(ExerciseGroup exGroup) {
-    return null;
+  public void exportComplete() {
+    this.setExportProgress(0);
+    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Server-Meldung", "Generierung abgeschlossen!"));
+  }
+
+  /**
+   *
+   *
+   */
+  public void filterComplete() {
+    this.setFilterProgress(0);
+    if (this.filterMessage != null) {
+      FacesContext.getCurrentInstance().addMessage(null, this.filterMessage);
+      this.filterMessage = null;
+    }
   }
 
   public SubmissionRow getDelRow() {
@@ -791,6 +857,44 @@ public class SubmissionController implements Serializable {
    */
   public void setErrorText(String errorText) {
     this.errorText = errorText;
+  }
+
+  /**
+   * @return the exportProgress
+   */
+  public int getExportProgress() {
+    return exportProgress;
+  }
+
+  /**
+   * @param exportProgress the exportProgress to set
+   */
+  public void setExportProgress(int exportProgress) {
+    this.exportProgress = exportProgress;
+  }
+
+  /**
+   * @return the filterProgress
+   */
+  public int getFilterProgress() {
+    return filterProgress;
+  }
+
+
+  /**
+   *
+   *
+   * @param filterProgress
+   */
+  public void setFilterProgress(double filterProgress) {
+    this.filterProgress = (int) Math.floor(filterProgress);
+  }
+
+  /**
+   * @param filterProgress the filterProgress to set
+   */
+  public void setFilterProgress(int filterProgress) {
+    this.filterProgress = filterProgress;
   }
 
   /**

@@ -497,6 +497,9 @@ public class UserRights implements Serializable {
   public boolean hasRatingRight(User user) {
     try {
       if (user != null) {
+        if (this.scenarioList == null) {
+          this.scenarioList = scenarioDao.findAll();
+        }
         for (Scenario sc : scenarioList) {
           if (hasRatingRight(user, sc)) {
             return true;
@@ -594,7 +597,9 @@ public class UserRights implements Serializable {
         }
 
         boolean hasRights = false;
-        final List<Scenario> scenarioList = scenarioDao.findAll();
+        if (this.scenarioList == null) {
+          this.scenarioList = scenarioDao.findAll();
+        }
         for (Scenario sc : scenarioList) {
           if (hasUserAddingRights(user, sc)) {
             hasRights = true;

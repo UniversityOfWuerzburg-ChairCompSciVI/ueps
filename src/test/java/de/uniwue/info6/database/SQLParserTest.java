@@ -47,11 +47,17 @@ import de.uniwue.info6.database.map.daos.ExerciseGroupDao;
 import de.uniwue.info6.database.map.daos.ScenarioDao;
 import de.uniwue.info6.database.map.daos.UserDao;
 import de.uniwue.info6.misc.EquivalenceLock;
+import de.uniwue.info6.misc.StringTools;
 import de.uniwue.info6.misc.properties.Cfg;
 import de.uniwue.info6.webapp.lists.ExerciseController;
 
 public class SQLParserTest {
   public static void main(String[] args) throws Exception {
+    String test = "Dies ist ein einfacher Test";
+    System.out.println(StringTools.forgetOneWord(test));
+
+
+    System.exit(0);
     // SimpleTupel<String, Integer> test1 =  new SimpleTupel<String, Integer>("test1", 1);
     // SimpleTupel<String, Integer> test2 =  new SimpleTupel<String, Integer>("test1", 12);
 

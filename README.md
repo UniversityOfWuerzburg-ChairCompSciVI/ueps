@@ -296,4 +296,5 @@ Die Rolle 'Dozent' priviligiert einen Benutzer dazu folgende Funktionalitäten i
 TODO :: TODO :: TODO :: TODO
 
 ## Screenshots
-![](http://kolbasa.github.io/ueps/screenshots/ueps_neu_02.png)
+
+[![Index](http://kolbasa.github.io/ueps/screenshots/index-01-small.png)](http://kolbasa.github.io/ueps/screenshots/index-01.png)

@@ -299,11 +299,19 @@ TODO :: TODO :: TODO :: TODO
 ## Screenshots
 
 #### Startseite
-[![Index](http://kolbasa.github.io/ueps/screenshots/scenario-select-screen-01-small.png)](http://kolbasa.github.io/ueps/screenshots/scenario-select-screen-01.png) [![Index](http://kolbasa.github.io/ueps/screenshots/index-01-small.png)](http://kolbasa.github.io/ueps/screenshots/index-01.png)
+[![Index](http://kolbasa.github.io/ueps/screenshots/index-01-small.png)](http://kolbasa.github.io/ueps/screenshots/index-01.png) [![Index](http://kolbasa.github.io/ueps/screenshots/index-02-small.png)](http://kolbasa.github.io/ueps/screenshots/index-02.png)
 
 -
 
 #### Übungsbereich
-[![Index](http://kolbasa.github.io/ueps/screenshots/task-01-small.png)](http://kolbasa.github.io/ueps/screenshots/task-01.png) [![Index](http://kolbasa.github.io/ueps/screenshots/task-02-small.png)](http://kolbasa.github.io/ueps/screenshots/task-02.png)
+[![Index](http://kolbasa.github.io/ueps/screenshots/rights-01-small.png)](http://kolbasa.github.io/ueps/screenshots/task-01.png) [![Index](http://kolbasa.github.io/ueps/screenshots/task-02-small.png)](http://kolbasa.github.io/ueps/screenshots/task-02.png)
+
+[![Index](http://kolbasa.github.io/ueps/screenshots/task-03-small.png)](http://kolbasa.github.io/ueps/screenshots/task-03.png) [![Index](http://kolbasa.github.io/ueps/screenshots/task-04-small.png)](http://kolbasa.github.io/ueps/screenshots/task-04.png)
 
 -
+
+#### Rechteverwaltung
+[![Index](http://kolbasa.github.io/ueps/screenshots/rights-01-small.png)](http://kolbasa.github.io/ueps/screenshots/rights-01.png) [![Index](http://kolbasa.github.io/ueps/screenshots/rights-02-small.png)](http://kolbasa.github.io/ueps/screenshots/rights-02.png)
+
+-
+

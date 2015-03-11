@@ -261,7 +261,6 @@ Anschließend kann die Anwendung mit folgendem Skript deployed werden:<br/>
 
 ## Szenarien erstellen/bearbeiten
 TODO :: TODO :: TODO :: TODO
-![](http://kolbasa.github.io/ueps/screenshots/ueps_10.png)
 
 ### Aufgabengruppe erstellen
 TODO :: TODO :: TODO :: TODO
@@ -299,12 +298,12 @@ TODO :: TODO :: TODO :: TODO
 
 ## Screenshots
 
-#### Startseite:
-[![Index](http://kolbasa.github.io/ueps/screenshots/index-01-small.png)](http://kolbasa.github.io/ueps/screenshots/index-01.png)
+#### Startseite
+[![Index](http://kolbasa.github.io/ueps/screenshots/scenario-select-screen-01-small.png)](http://kolbasa.github.io/ueps/screenshots/scenario-select-screen-01.png) [![Index](http://kolbasa.github.io/ueps/screenshots/index-01-small.png)](http://kolbasa.github.io/ueps/screenshots/index-01.png)
 
 -
 
-#### Übungsbereich:
-[![Index](http://kolbasa.github.io/ueps/screenshots/task-01-small.png)](http://kolbasa.github.io/ueps/screenshots/task-01.png)
+#### Übungsbereich
+[![Index](http://kolbasa.github.io/ueps/screenshots/task-01-small.png)](http://kolbasa.github.io/ueps/screenshots/task-01.png) [![Index](http://kolbasa.github.io/ueps/screenshots/task-02-small.png)](http://kolbasa.github.io/ueps/screenshots/task-02.png)
 
 -

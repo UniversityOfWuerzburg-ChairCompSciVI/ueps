@@ -299,7 +299,12 @@ TODO :: TODO :: TODO :: TODO
 
 ## Screenshots
 
-Startseite:<br/>
+#### Startseite:
 [![Index](http://kolbasa.github.io/ueps/screenshots/index-01-small.png)](http://kolbasa.github.io/ueps/screenshots/index-01.png)
+
+-
+
+#### Übungsbereich:
+[![Index](http://kolbasa.github.io/ueps/screenshots/task-01-small.png)](http://kolbasa.github.io/ueps/screenshots/task-01.png)
 
 -

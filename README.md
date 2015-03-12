@@ -5,7 +5,7 @@
 
 ## Showcase
 
-[**Demo - Student**](http://ueps.scienceontheweb.net?index=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=1)
+[**Demo 1 (Student)**](http://ueps.scienceontheweb.net?index=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=1) [**Demo 2 (Admin)**](http://ueps.scienceontheweb.net?index=xhtml&userID=demo_admin&encryptedCode=showcase&scenarioID=1)
 
 [![ÜPS Showcase](http://kolbasa.github.io/ueps/screenshots/showcase-button-student.png)](http://ueps.scienceontheweb.net?index=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=1) [![ÜPS Showcase](http://kolbasa.github.io/ueps/screenshots/showcase-button-admin.png)](http://ueps.scienceontheweb.net?index=xhtml&userID=demo_admin&encryptedCode=showcase&scenarioID=1)
 

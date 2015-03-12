@@ -1,5 +1,5 @@
 # ÜPS
-**ÜPS** (**Ü**bungs-**P**rogramm für **S**QL) ist ein webbasiertes Trainingssystem zum Erlernen der Datenbanksprache SQL.
+**ÜPS** (**Ü**bungs-**P**rogramm für **S**QL) ist ein webbasiertes Trainingssystem zum Erlernen der Datenbanksprache SQL ([**Screenshots**](#screenshots)).
 
 <!--- http://ueps.ddnss.de:82/ueps/task.xhtml?userID=demo_admin&encryptedCode=showcase&scenarioID=1&exercise=1 -->
 
@@ -12,7 +12,6 @@ Link          | Rolle          | Szenario
 [**Demo 3**](http://ueps.scienceontheweb.net?index=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=2) | Student | Fussball WM 2010 
 [**Demo 4**](http://ueps.scienceontheweb.net?index=xhtml&userID=demo_admin&encryptedCode=showcase&scenarioID=2) | Admin | Fussball WM 2010
 
-[**Screenshots**](#screenshots)
 
 
 # Inhaltsverzeichnis

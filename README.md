@@ -303,8 +303,10 @@ TODO :: TODO :: TODO :: TODO
 
 ## Screenshots
 
-#### Startseite
-[![Index](http://kolbasa.github.io/ueps/screenshots/index-01-small.png)](http://kolbasa.github.io/ueps/screenshots/index-01.png) [![Index](http://kolbasa.github.io/ueps/screenshots/index-02-small.png)](http://kolbasa.github.io/ueps/screenshots/index-02.png)
+Startseite    | &nbsp;
+------------- | ------------- 
+Beschreibung und Auflistung <br/>der Übungsaufgaben | [![Index](http://kolbasa.github.io/ueps/screenshots/index-01-small.png)](http://kolbasa.github.io/ueps/screenshots/index-01.png)
+Auflistung der Szenarien <br/>falls keine ``scenarioID`` per <br/>GET-Paramater übergeben wurde | [![Index](http://kolbasa.github.io/ueps/screenshots/index-02-small.png)](http://kolbasa.github.io/ueps/screenshots/index-02.png)
 
 -
 
@@ -331,6 +333,3 @@ TODO :: TODO :: TODO :: TODO
 [![Index](http://kolbasa.github.io/ueps/screenshots/submission-03-small.png)](http://kolbasa.github.io/ueps/screenshots/submission-03.png) [![Index](http://kolbasa.github.io/ueps/screenshots/submission-04-small.png)](http://kolbasa.github.io/ueps/screenshots/submission-04.png)
 
 
-&nbsp;         &nbsp;
-------------- | ------------- 
-Test Test Test Test <br/>Test| [![](http://kolbasa.github.io/ueps/screenshots/submission-03-small.png)](http://kolbasa.github.io/ueps/screenshots/submission-03.png)

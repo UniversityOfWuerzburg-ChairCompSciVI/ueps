@@ -336,4 +336,4 @@ TODO :: TODO :: TODO :: TODO
 
 Link          | Rolle         
 ------------- | ------------- 
-Test Test Test Test Test Test Test | [![](http://kolbasa.github.io/ueps/screenshots/submission-03-small.png)](http://kolbasa.github.io/ueps/screenshots/submission-03.png)
+Test Test Test Test | [![](http://kolbasa.github.io/ueps/screenshots/submission-03-small.png)](http://kolbasa.github.io/ueps/screenshots/submission-03.png)

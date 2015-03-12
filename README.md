@@ -305,13 +305,17 @@ TODO :: TODO :: TODO :: TODO
 
 Startseite    | &nbsp;
 ------------- | ------------- 
-Beschreibung und Auflistung <br/>der Übungsaufgaben | [![Index](http://kolbasa.github.io/ueps/screenshots/index-01-small.png)](http://kolbasa.github.io/ueps/screenshots/index-01.png)
-Auflistung der Szenarien <br/>falls keine ``scenarioID`` per <br/>GET-Paramater übergeben wurde | [![Index](http://kolbasa.github.io/ueps/screenshots/index-02-small.png)](http://kolbasa.github.io/ueps/screenshots/index-02.png)
+Beschreibung und Auflistung <br/>der Übungsaufgaben | [![](http://kolbasa.github.io/ueps/screenshots/index-01-small.png index.html)](http://kolbasa.github.io/ueps/screenshots/index-01.png)
+Auflistung der Szenarien <br/>falls keine ``scenarioID`` per <br/>GET-Paramater übergeben wurde | [![](http://kolbasa.github.io/ueps/screenshots/index-02-small.png)](http://kolbasa.github.io/ueps/screenshots/index-02.png)
 
 -
 
+Übungsbereich | &nbsp;
+------------- | ------------- 
+Übungsbereich für die Studenten | [![](http://kolbasa.github.io/ueps/screenshots/task-01-small.png task.xhtml)](http://kolbasa.github.io/ueps/screenshots/task-01.png)
+
 #### Übungsbereich
-[![Index](http://kolbasa.github.io/ueps/screenshots/task-01-small.png)](http://kolbasa.github.io/ueps/screenshots/task-01.png) [![Index](http://kolbasa.github.io/ueps/screenshots/task-02-small.png)](http://kolbasa.github.io/ueps/screenshots/task-02.png)
+[![](http://kolbasa.github.io/ueps/screenshots/task-01-small.png)](http://kolbasa.github.io/ueps/screenshots/task-01.png) [![Index](http://kolbasa.github.io/ueps/screenshots/task-02-small.png)](http://kolbasa.github.io/ueps/screenshots/task-02.png)
 
 [![Index](http://kolbasa.github.io/ueps/screenshots/task-03-small.png)](http://kolbasa.github.io/ueps/screenshots/task-03.png) [![Index](http://kolbasa.github.io/ueps/screenshots/task-04-small.png)](http://kolbasa.github.io/ueps/screenshots/task-04.png)
 

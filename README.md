@@ -5,15 +5,10 @@
 
 ## Showcase
 
-* [**Demo 1**](http://ueps.scienceontheweb.net?index=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=1) (Rolle: 'Student' - Szenario: 'Amazon Buchdatenbank') 
-* [**Demo 2**](http://ueps.scienceontheweb.net?index=xhtml&userID=demo_admin&encryptedCode=showcase&scenarioID=1) (Rolle: 'Admin' - Szenario: 'Amazon Buchdatenbank')
-* [**Demo 3**](http://ueps.scienceontheweb.net?index=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=2) (Rolle: 'Student' - Szenario: 'Fussball WM 2010') 
-* [**Demo 4**](http://ueps.scienceontheweb.net?index=xhtml&userID=demo_admin&encryptedCode=showcase&scenarioID=2) (Rolle: 'Admin' - Szenario: 'Fussball WM 2010')
-
-First Header  | Second Header
-------------- | -------------
-Content Cell  | Content Cell
-Content Cell  | Content Cell
+[**Demo 1**](http://ueps.scienceontheweb.net?index=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=1) | Rolle: 'Student' | Szenario: 'Amazon Buchdatenbank') 
+[**Demo 2**](http://ueps.scienceontheweb.net?index=xhtml&userID=demo_admin&encryptedCode=showcase&scenarioID=1) | Rolle: 'Admin' | Szenario: 'Amazon Buchdatenbank')
+[**Demo 3**](http://ueps.scienceontheweb.net?index=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=2) | Rolle: 'Student' | Szenario: 'Fussball WM 2010') 
+[**Demo 4**](http://ueps.scienceontheweb.net?index=xhtml&userID=demo_admin&encryptedCode=showcase&scenarioID=2) | Rolle: 'Admin' | Szenario: 'Fussball WM 2010')
 
 # Inhaltsverzeichnis
 1. [Systemanforderungen](#systemanforderungen)

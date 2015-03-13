@@ -297,12 +297,12 @@ TODO :: TODO :: TODO :: TODO
 ------
 
 ## Screenshots
-[scr]:      http://kolbasa.github.io/ueps/screenshots/
+[base]:      http://kolbasa.github.io/ueps/screenshots/
 
-[i1]:  [scr]index-01.png
-[i1t]: [scr]index-01-small.png
-[i2]:  [scr]index-02.png
-[i2t]: [scr]index-02-small.png
+[i1]:  [base]index-01.png
+[i1t]: [base]index-01-small.png
+[i2]:  [base]index-02.png
+[i2t]: [base]index-02-small.png
 
 **Startseite** | &nbsp;
 -------------- | --------------
@@ -311,14 +311,14 @@ Auflistung der Szenarien falls keine <br>``scenarioID`` per GET-Paramater überg
 
 -
 
-[t1]:  [scr]task-01.png
-[t1t]: [scr]task-01-small.png
-[t2]:  [scr]task-02.png
-[t2t]: [scr]task-02-small.png
-[t3]:  [scr]task-03.png
-[t3t]: [scr]task-03-small.png
-[t4]:  [scr]task-04.png
-[t4t]: [scr]task-04-small.png
+[t1]:  [base]task-01.png
+[t1t]: [base]task-01-small.png
+[t2]:  [base]task-02.png
+[t2t]: [base]task-02-small.png
+[t3]:  [base]task-03.png
+[t3t]: [base]task-03-small.png
+[t4]:  [base]task-04.png
+[t4t]: [base]task-04-small.png
 
 **Startseite** | &nbsp;
 -------------- | ------------------

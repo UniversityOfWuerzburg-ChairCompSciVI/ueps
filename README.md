@@ -273,16 +273,15 @@ Anschließend kann die Anwendung mit folgendem Skript deployed werden:<br/>
 ### Übungsmaterial erstellen/bearbeiten
 
 ```
-├── configure
-├── configure.in
-├── Demo
-│   ├── cgi
-│   │   ├── cgi0.sh
-│   │   ├── cgi1.py
-│   │   ├── cgi2.py
-│   │   ├── cgi3.py
-│   │   ├── README
-│   │   └── wiki.py
+├── Szenario 01
+│   ├── Aufgabengruppe 01 
+│   │   ├── Aufgabe 01 
+│   │   ├── Aufgabe 02 
+│   ├── Aufgabengruppe 02 
+│   │   ├── ...
+│   ├── ... 
+├── Szenario 02
+│   ├── ...
 ```
 
 

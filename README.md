@@ -269,13 +269,16 @@ Anschließend kann die Anwendung mit folgendem Skript deployed werden:<br/>
 
 -
 
-## Szenarien erstellen/bearbeiten
+## Übungsmaterial erstellen/bearbeiten
 TODO :: TODO :: TODO :: TODO
 
-### Aufgabengruppe erstellen
+#### Szenarien erstellen
 TODO :: TODO :: TODO :: TODO
 
-### Aufgabe erstellen
+#### Aufgabengruppe erstellen
+TODO :: TODO :: TODO :: TODO
+
+#### Aufgabe erstellen
 TODO :: TODO :: TODO :: TODO
 
 -
@@ -283,19 +286,19 @@ TODO :: TODO :: TODO :: TODO
 ## Rollen und Rechte
 Um den Zugriff auf die Funktionen von ÜPS zu kontrollieren, wurden drei verschiedene Rollen eingeführt: Student, Dozent und Admin.
 
-### Rolle 'Admin'
+#### Rolle 'Admin'
 Der 'Admin' verfügt über umfassende Rechte im ganzen System:
 - globale Benutzerverwaltung z.B. Bestimmung von Dozenten und deren Zuweisung zu Szenarien
 - globale Verwaltung der Szenarien, sowie Rolle 'Dozent' in allen Szenarien
 
-### Rolle 'Dozent'
+#### Rolle 'Dozent'
 Die Rolle 'Dozent' priviligiert einen Benutzer dazu folgende Funktionalitäten **innerhalb eines Szenarios** (festgelegt von einem Admin) zu nutzen:
 - Zuweisung von Rechten für Benutzer innerhalb des Szenarios
 - Änderung des Szenarios (wobei die Optionen zum Datenbank-Server und Datenbank-Nutzer nur von einem Admin geändert werden können)
 - Erstellung und Änderung von Übungsblättern und Übungsaufgaben des Szenarios
 - Einsicht und Bewertung von abgebenen Lösungen innerhalb des Szenarios
 
-### Rolle 'Student'
+#### Rolle 'Student'
 - Durchführung von Übungsaufgaben
 - Einsicht in die Korrektur der eigenen Abgaben
 

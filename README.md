@@ -344,17 +344,17 @@ Hinzufügen von Rechten            | [![][r2t]][r2]
 [e1t]: http://kolbasa.github.io/ueps/screenshots/edit-scenario-01-small.png
 [e2]:  http://kolbasa.github.io/ueps/screenshots/edit-scenario-02.png
 [e2t]: http://kolbasa.github.io/ueps/screenshots/edit-scenario-02-small.png
-[e3]:  http://kolbasa.github.io/ueps/screenshots/edit-ex-02.png
-[e3t]: http://kolbasa.github.io/ueps/screenshots/edit-ex-02-small.png
-[e4]:  http://kolbasa.github.io/ueps/screenshots/edit-group-02.png
-[e4t]: http://kolbasa.github.io/ueps/screenshots/edit-group-02-small.png
+[e3]:  http://kolbasa.github.io/ueps/screenshots/edit-group-02.png
+[e3t]: http://kolbasa.github.io/ueps/screenshots/edit-group-02-small.png
+[e4]:  http://kolbasa.github.io/ueps/screenshots/edit-ex-02.png
+[e4t]: http://kolbasa.github.io/ueps/screenshots/edit-ex-02-small.png
 
 Szenarien erstellen/bearbeiten     | &nbsp;
 ---------------------------------- | ----------------------------------
 Kontextmenü-Einträge      | [![][e1t]][e1]
 Szenario bearbeiten       | [![][e2t]][e2]
-Übungsaufgabe bearbeiten  | [![][e3t]][e3]
-Übungsblatt bearbeiten    | [![][e4t]][e4]
+Übungsblatt bearbeiten    | [![][e3t]][e3]
+Übungsaufgabe bearbeiten  | [![][e4t]][e4]
 
 -
 

@@ -308,7 +308,7 @@ TODO :: TODO :: TODO :: TODO
 Beschreibung und Auflistung <br/>der Übungsaufgaben zu <br/> einem Szenario | [![](http://kolbasa.github.io/ueps/screenshots/index-01-small.png)](http://kolbasa.github.io/ueps/screenshots/index-01.png)
 Auflistung der Szenarien <br/>falls keine ``scenarioID`` per <br/>GET-Paramater übergeben wurde | [![](http://kolbasa.github.io/ueps/screenshots/index-02-small.png)](http://kolbasa.github.io/ueps/screenshots/index-02.png)
 
---
+---
 
 
 **Startseite** | &nbsp;
@@ -318,7 +318,7 @@ Anzeige des ER-Diagramms | [![](http://kolbasa.github.io/ueps/screenshots/task-0
 Anzeige von Tabellen | [![](http://kolbasa.github.io/ueps/screenshots/task-03-small.png)](http://kolbasa.github.io/ueps/screenshots/task-03.png)
 Feedback-Generierung | [![](http://kolbasa.github.io/ueps/screenshots/task-04-small.png)](http://kolbasa.github.io/ueps/screenshots/task-04.png)
 
---
+---
 
 
 **Rechteverwaltung** | &nbsp;
@@ -326,7 +326,7 @@ Feedback-Generierung | [![](http://kolbasa.github.io/ueps/screenshots/task-04-sm
 Auflistung der <br/>vergebenen Rechte | [![](http://kolbasa.github.io/ueps/screenshots/rights-01-small.png)](http://kolbasa.github.io/ueps/screenshots/rights-01.png)
 Hinzufügen von Rechten | [![](http://kolbasa.github.io/ueps/screenshots/rights-02-small.png)](http://kolbasa.github.io/ueps/screenshots/rights-02.png)
 
---
+---
 
 
 [![](http://kolbasa.github.io/ueps/screenshots/rights-01-small.png)](http://kolbasa.github.io/ueps/screenshots/rights-01.png) [![](http://kolbasa.github.io/ueps/screenshots/rights-02-small.png)](http://kolbasa.github.io/ueps/screenshots/rights-02.png)

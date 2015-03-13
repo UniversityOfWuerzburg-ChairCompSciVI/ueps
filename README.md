@@ -21,7 +21,7 @@ Link          | Rolle          | Szenario
   4. [Pfadangaben](#pfadangaben)
   5. [Aussehen/Text anpassen](#aussehentext-anpassen)
 4. [Deploy mit Maven](#deploy-mit-maven)
-5. [Bedienung]
+5. [Bedienung](#bedienung)
   1. [Übungsmaterial erstellen/bearbeiten](#%C3%9Cbungsmaterial-erstellenbearbeiten)
   2. [Rollen und Rechte](#rollen-und-rechte)
   3. [Abgaben bewerten](#abgaben-bewerten)
@@ -268,7 +268,9 @@ Anschließend kann die Anwendung mit folgendem Skript deployed werden:<br/>
 
 -
 
-## Übungsmaterial erstellen/bearbeiten
+## Bedienung
+
+### Übungsmaterial erstellen/bearbeiten
 TODO :: TODO :: TODO :: TODO
 
 #### Szenarien erstellen
@@ -282,7 +284,7 @@ TODO :: TODO :: TODO :: TODO
 
 -
 
-## Rollen und Rechte
+### Rollen und Rechte
 Um den Zugriff auf die Funktionen von ÜPS zu kontrollieren, wurden drei verschiedene Rollen eingeführt: Student, Dozent und Admin.
 
 #### Rolle 'Admin'
@@ -304,7 +306,7 @@ Die Rolle 'Dozent' priviligiert einen Benutzer dazu folgende Funktionalitäten *
 
 -
 
-## Abgaben bewerten
+### Abgaben bewerten
 TODO :: TODO :: TODO :: TODO
 
 -

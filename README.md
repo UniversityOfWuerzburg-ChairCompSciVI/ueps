@@ -304,7 +304,8 @@ Baumdarstellung.
 Besitzt der angemeldete Nutzer **Editierrechte**, so kann er Aufgaben komfortabel 
 über die *Editieren*-Seite bearbeiten. Hierfür muss der Nutzer einen 
 gewünschten Knoten im Baum auswählen, das Kontextmenü mit einem Rechtsklick 
-öffnen und auf *Bearbeiten* klicken.
+öffnen und auf *Bearbeiten* klicken 
+([Screenshot](#szenarien-erstellenbearbeiten)).
 
 #### Szenarien erstellen
 TODO :: TODO :: TODO :: TODO

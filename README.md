@@ -297,42 +297,46 @@ TODO :: TODO :: TODO :: TODO
 ------
 
 ## Screenshots
-[base]: http://kolbasa.github.io/ueps/screenshots/
 
-[i1]:  [base]index-01.png
-[i1t]: [base]index-01-small.png
-[i2]:  [base]index-02.png
-[i2t]: [base]index-02-small.png
+[i1]:  http://kolbasa.github.io/ueps/screenshots/index-01.png
+[i1t]: http://kolbasa.github.io/ueps/screenshots/index-01-small.png
+[i2]:  http://kolbasa.github.io/ueps/screenshots/index-02.png
+[i2t]: http://kolbasa.github.io/ueps/screenshots/index-02-small.png
 
-**Startseite** | &nbsp;
+**Startseite** |
 -------------- | --------------
 Beschreibung und Auflistung der <br>Übungsaufgaben zu einem Szenario                        | [![][i1t]][i1]
 Auflistung der Szenarien falls keine <br>``scenarioID`` per GET-Paramater übergeben wurde   | [![][i2t]][i2]
 
 -
 
-[tsk-01]:    http://kolbasa.github.io/ueps/screenshots/task-01.png
-[tsk-01-th]: http://kolbasa.github.io/ueps/screenshots/task-01-small.png
-[tsk-02]:    http://kolbasa.github.io/ueps/screenshots/task-02.png
-[tsk-02-th]: http://kolbasa.github.io/ueps/screenshots/task-02-small.png
-[tsk-03]:    http://kolbasa.github.io/ueps/screenshots/task-03.png
-[tsk-03-th]: http://kolbasa.github.io/ueps/screenshots/task-03-small.png
-[tsk-04]:    http://kolbasa.github.io/ueps/screenshots/task-04.png
-[tsk-04-th]: http://kolbasa.github.io/ueps/screenshots/task-04-small.png
+[t1]:  http://kolbasa.github.io/ueps/screenshots/task-01.png
+[t1t]: http://kolbasa.github.io/ueps/screenshots/task-01-small.png
+[t2]:  http://kolbasa.github.io/ueps/screenshots/task-02.png
+[t2t]: http://kolbasa.github.io/ueps/screenshots/task-02-small.png
+[t3]:  http://kolbasa.github.io/ueps/screenshots/task-03.png
+[t3t]: http://kolbasa.github.io/ueps/screenshots/task-03-small.png
+[t4]:  http://kolbasa.github.io/ueps/screenshots/task-04.png
+[t4t]: http://kolbasa.github.io/ueps/screenshots/task-04-small.png
 
 **Startseite** | &nbsp;
--------------- | :------------------:
-Übungsbereich für die Studenten   | [![][tsk-01-th]][tsk-01]
-Anzeige des ER-Diagramms          | [![][tsk-02-th]][tsk-02]
-Anzeige von Tabellen              | [![][tsk-03-th]][tsk-03]
-Feedback-Generierung              | [![][tsk-04-th]][tsk-04]
+-------------- | --------------
+Übungsbereich für die Studenten   | [![][t1t]][t1]
+Anzeige des ER-Diagramms          | [![][t2t]][t2]
+Anzeige von Tabellen              | [![][t3t]][t3]
+Feedback-Generierung              | [![][t4t]][t4]
 
 -
 
+[r1]:  http://kolbasa.github.io/ueps/screenshots/rights-01.png
+[r1t]: http://kolbasa.github.io/ueps/screenshots/rights-01-small.png
+[r2]:  http://kolbasa.github.io/ueps/screenshots/rights-02.png
+[r2t]: http://kolbasa.github.io/ueps/screenshots/rights-02-small.png
+
 **Rechteverwaltung** | &nbsp;
--------------------- | :------------------:
-Auflistung der vergebenen Rechte | [![](http://kolbasa.github.io/ueps/screenshots/rights-01-small.png)](http://kolbasa.github.io/ueps/screenshots/rights-01.png)
-Hinzufügen von Rechten | [![](http://kolbasa.github.io/ueps/screenshots/rights-02-small.png)](http://kolbasa.github.io/ueps/screenshots/rights-02.png)
+-------------------- | --------------------
+Auflistung der vergebenen Rechte  | [![][r1t]][r1]
+Hinzufügen von Rechten            | [![][r1t]][r1]
 
 ---
 

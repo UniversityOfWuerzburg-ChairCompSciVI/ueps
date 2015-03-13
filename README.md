@@ -314,6 +314,7 @@ Anzeige von Tabellen | [![](http://kolbasa.github.io/ueps/screenshots/task-03-sm
 Feedback-Generierung | [![](http://kolbasa.github.io/ueps/screenshots/task-04-small.png)](http://kolbasa.github.io/ueps/screenshots/task-04.png)
 **Rechteverwaltung** | &nbsp;
 Auflistung der <br/>vergebenen Rechte | [![](http://kolbasa.github.io/ueps/screenshots/rights-01-small.png)](http://kolbasa.github.io/ueps/screenshots/rights-01.png)
+Hinzufügen von Rechten | [![](http://kolbasa.github.io/ueps/screenshots/rights-02-small.png)](http://kolbasa.github.io/ueps/screenshots/rights-02.png)
 -
 
 [![](http://kolbasa.github.io/ueps/screenshots/rights-01-small.png)](http://kolbasa.github.io/ueps/screenshots/rights-01.png) [![](http://kolbasa.github.io/ueps/screenshots/rights-02-small.png)](http://kolbasa.github.io/ueps/screenshots/rights-02.png)

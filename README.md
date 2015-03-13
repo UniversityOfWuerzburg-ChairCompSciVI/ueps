@@ -204,7 +204,7 @@ encryptedCode = md5(userIP + secretPhrase + userID)
 
 [encCode]: src/main/java/de/uniwue/info6/webapp/session/SessionObject.java#L141-L166
 
-Bei einer Benutzeranmeldung [``berechnet ÜPS``][encCode] ebenfalls einen solchen ``encryptedCode`` und vergleicht ihn mit dem übermittelten. Sind beide Kennwörter identisch, so ist der Benutzer authentifiziert, andernfalls bekommt er eine Fehlermeldung zu sehen.
+Bei einer Benutzeranmeldung [berechnet ÜPS][encCode] ebenfalls einen solchen ``encryptedCode`` und vergleicht ihn mit dem übermittelten. Sind beide Kennwörter identisch, so ist der Benutzer authentifiziert, andernfalls bekommt er eine Fehlermeldung zu sehen.
 
 **WICHTIG:** ``SECRET_PHRASE`` sollte aufgrund seiner Rolle **nicht** den [voreingestellten](src/main/resources/config.properties#L112) Wert beibehalten.
 

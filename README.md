@@ -190,7 +190,7 @@ Für die Anmeldung werden zwei GET-Paramater übergeben: die **Nutzer-ID** (``us
 In der config.properties wird zusätzlich ein [``SECRET_PHRASE``](src/main/resources/config.properties#L112) festgelegt. Dieses ``SECRET_PHRASE`` wirds benutzt, um den ``encryptedCode`` zu generieren, der als Parameter an den ÜPS-Server übermittelt wird. 
 
 Der verschlüsselte Code wird über einen md5-Wert der aktuellen Client-IP-Adresse in Verbindung mit dem ``SECRET_PHRASE`` und der Nutzer-ID erzeugt, d.h. 
-```
+```java
 encryptedCode = md5(userIP + secretPhrase + userID)
 ```
 

@@ -301,10 +301,10 @@ Aufgabengruppen zu Szenarien:
 Siehe auch [Screenshots](#szenarien-erstellenbearbeiten) der eigentlichen 
 Baumdarstellung.
 
-Besitzt der angemeldete Nutzer Editierrechte, so kann er Aufgaben komfortabel 
-über die *Editieren*-Seite bearbeiten.<br>
-Hierfür muss der Nutzer einen gewünschten Knoten im Baum auswählen, das 
-Kontextmenü mit einem Rechtsklick öffnen und auf *Bearbeiten* klicken.
+Besitzt der angemeldete Nutzer **Editierrechte**, so kann er Aufgaben komfortabel 
+über die *Editieren*-Seite bearbeiten. Hierfür muss der Nutzer einen 
+gewünschten Knoten im Baum auswählen, das Kontextmenü mit einem Rechtsklick 
+öffnen und auf *Bearbeiten* klicken.
 
 #### Szenarien erstellen
 TODO :: TODO :: TODO :: TODO
@@ -318,7 +318,8 @@ TODO :: TODO :: TODO :: TODO
 -
 
 #### Rollen und Rechte
-Um den Zugriff auf die Funktionen von ÜPS zu kontrollieren, wurden drei verschiedene Rollen eingeführt: **Student**, **Dozent** und **Admin**.
+Um den Zugriff auf die Funktionen von ÜPS zu kontrollieren, wurden drei 
+verschiedene Rollen eingeführt: **Student**, **Dozent** und **Admin**.
 
 ##### Rolle 'Admin'
 Der 'Admin' verfügt über umfassende Rechte im ganzen System:

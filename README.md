@@ -211,7 +211,7 @@ Bei einer Benutzeranmeldung [berechnet ÜPS][encCode] ebenfalls einen solchen ``
 
 **WICHTIG:** ``SECRET_PHRASE`` sollte aufgrund seiner Rolle **nicht** den [voreingestellten](src/main/resources/config.properties#L112) Wert beibehalten.
 
-Zusätzlich zu den Anmeldeparametern sollte man noch die Kennung des zu bearbeitenden Szenarios ``scenarioID`` angeben ([weitere Infos zu Szenarien](#%C3%9Cbungsmaterial-erstellenbearbeiten)).
+Zusätzlich zu den Anmeldeparametern sollte man noch die Kennung des zu bearbeitenden Szenarios ``scenarioID`` angeben ([weitere Infos zu Szenarios](#%C3%9Cbungsmaterial-erstellenbearbeiten)).
 Die fertige URL sieht dann folgendermaßen aus:
 
 ```
@@ -283,7 +283,7 @@ Anschließend kann die Anwendung mit folgendem Skript deployed werden:<br/>
 
 #### Übungsmaterial erstellen/bearbeiten
 ÜPS fasst einzelne SQL-Übungsaufgaben zusammen zu Aufgabengruppen und 
-Aufgabengruppen zu Szenarien:
+Aufgabengruppen zu "Szenarios":
 
 ```
 ├── Szenario 01
@@ -307,8 +307,8 @@ gewünschten Knoten im Baum auswählen, das Kontextmenü mit einem Rechtsklick
 öffnen und auf *Bearbeiten* klicken 
 ([Screenshot](#szenarien-erstellenbearbeiten)).
 
-#### Szenarien erstellen
-TODO :: TODO :: TODO :: TODO
+#### Szenarios erstellen
+Szenarios
 
 #### Aufgabengruppe erstellen
 TODO :: TODO :: TODO :: TODO
@@ -324,9 +324,9 @@ verschiedene Rollen eingeführt: **Student**, **Dozent** und **Admin**.
 
 ##### Rolle 'Admin'
 Der 'Admin' verfügt über umfassende Rechte im ganzen System:
-- globale Benutzerverwaltung z.B. Bestimmung von Dozenten und deren Zuweisung zu Szenarien
-- globale Verwaltung der Szenarien, sowie Rolle 'Dozent' in allen Szenarien<br>
-  (Admins sind die einzigen Nutzer, die neue Szenarien erstellen können)
+- globale Benutzerverwaltung z.B. Bestimmung von Dozenten und deren Zuweisung zu Szenarios
+- globale Verwaltung der Szenarios, sowie Rolle 'Dozent' in allen Szenarios<br>
+  (Admins sind die einzigen Nutzer, die neue Szenarios erstellen können)
 
 ##### Rolle 'Dozent'
 Die Rolle 'Dozent' priviligiert einen Benutzer dazu folgende Funktionalitäten **innerhalb eines Szenarios** (festgelegt von einem Admin) zu nutzen:
@@ -383,7 +383,7 @@ ex_id ; user_id    ; points ; max_points
 [![][i5t]][i5] | Eine **bewertete** und noch **aktive** Übungsgruppe aufgeklappt
 [![][i3t]][i3] | Eine **bewertete** und bereits **abgelaufene** Übungsgruppe aufgeklappt
 [![][i4t]][i4] | Eine einzelne Bewertung mit Kommentar vom Korrektor aufgeklappt
-[![][i2t]][i2] | Auflistung der Szenarien falls keine <br>``scenarioID`` per GET-Paramater übergeben <br>wurde
+[![][i2t]][i2] | Auflistung der Szenarios falls keine <br>``scenarioID`` per GET-Paramater übergeben <br>wurde
 
 -
 
@@ -408,7 +408,7 @@ ex_id ; user_id    ; points ; max_points
 
 -
 
-#### Szenarien erstellen/bearbeiten
+#### Szenarios erstellen/bearbeiten
 
 &nbsp;         | &nbsp;
 -------------- | --------------

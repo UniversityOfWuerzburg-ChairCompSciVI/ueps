@@ -182,19 +182,19 @@ Wenn eine automatische Installation nicht erwünscht ist, so benötigt die Anwen
 
 #### Nutzer-Authentifizierung
 In der Konfigurationsdatei sollte mindestens ein [Adminstrator-Nutzer](src/main/resources/config.properties#L96) festgelegt werden. Mehrere Nutzer sollten mit einem Semikolon getrennt werden (z.B. ``admin_id1;admin_id2;``).
-Admins können auch zur Laufzeit hinzugefügt werden, hierfür muss man jedoch den Datenbankeintrag für den Nutzer abändern ([Tabelle: ``user``, Spalte: "is_admin"](http://kolbasa.github.io/ueps/screenshots/admin-db-er-diagram.png)).
+Admins können auch zur Laufzeit hinzugefügt werden, hierfür muss man jedoch den Datenbankeintrag für den Nutzer abändern ([Tabelle: ``user``, Spalte: ``is_admin``](http://kolbasa.github.io/ueps/screenshots/admin-db-er-diagram.png)).
 
-ÜPS besitzt keine eigene Nutzerverwaltung. Die Nutzer-Authentifizierung erfolgt über die Open-Source Lernplattform [Moodle](https://moodle.org/) mithilfe der "[Externe URL](https://docs.moodle.org/27/de/Link/URL_konfigurieren)"-Funktion.
+ÜPS besitzt keine eigene Nutzerverwaltung. Die Nutzer-Authentifizierung erfolgt über die Open-Source Lernplattform [Moodle](https://moodle.org/) mithilfe der "[Externe URL](https://docs.moodle.org/27/de/Link/URL_konfigurieren)"-Funktion. Diese Form der Anmeldung setzt voraus, dass die Option [``USE_MOODLE_LOGIN``](src/main/resources/config.properties#L111) auf ``true`` steht
 
 Für die Anmeldung werden zwei GET-Paramater übergeben: die **Nutzer-ID** (``userID``) und ein **verschlüsseltes Kennwort** (``encryptedCode``).
-In der config.properties wird zusätzlich ein [``SECRET_PHRASE``](src/main/resources/config.properties#L112) festgelegt. Dieses ``SECRET_PHRASE`` wirds benutzt, um den ``encryptedCode`` zu generieren, der als Parameter an den ÜPS-Server übermittelt wird. 
+In der config.properties wird zusätzlich ein [``SECRET_PHRASE``](src/main/resources/config.properties#L112) festgelegt. Dieses ``SECRET_PHRASE`` wirds benutzt, um den ``encryptedCode`` zu generieren, der als Parameter an den ÜPS-Server übermittelt wird.
 
 Der verschlüsselte Code wird über einen md5-Wert der aktuellen Client-IP-Adresse in Verbindung mit dem ``SECRET_PHRASE`` und der Nutzer-ID erzeugt, d.h. 
 ```java
 encryptedCode = md5(userIP + secretPhrase + userID)
 ```
 
-Die Implementierung in ÜPS findet man [hier](src/main/java/de/uniwue/info6/webapp/session/SessionObject.java#L141-L166).
+Die Implementierung in ÜPS findet man [hier](src/main/java/de/uniwue/info6/webapp/session/SessionObject.java#L141-L166). ``SECRET_PHRASE`` sollte aufgrund seiner Rolle den [voreingestellten](src/main/resources/config.properties#L112) Wert **nicht** beibehalten.
 
 Die URL zusammen mit den Anmeldeparametern sieht folgendermaßen aus:
 

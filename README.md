@@ -362,16 +362,15 @@ ex_id ; user_id    ; points ; max_points
 ## Screenshots
 
 #### Startseite
-
 &nbsp;         | &nbsp;
 -------------- | --------------
 [![][i1t]][i1] | Beschreibung und Auflistung der <br>Übungsaufgaben zu einem Szenario <br><a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=1" target="_blank">Showcase</a>
+[![][i6t]][i6] | Eine Übungsgruppe aufgeklappt
 [![][i2t]][i2] | Auflistung der Szenarien falls keine <br>``scenarioID`` per GET-Paramater übergeben <br>wurde
 
 -
 
 #### Übungsseite
-
 &nbsp;         | &nbsp;
 -------------- | --------------
 [![][t1t]][t1] | Übungsbereich für die Studenten <br><a href="http://ueps.scienceontheweb.net?task=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=1&exercise=1" target="_blank">Showcase</a>
@@ -382,7 +381,6 @@ ex_id ; user_id    ; points ; max_points
 -
 
 #### Rechteverwaltung
-
 &nbsp;         | &nbsp;
 -------------- | --------------
 [![][r1t]][r1] | Auflistung der vergebenen Rechte <br><a href="http://ueps.scienceontheweb.net?user_rights=xhtml&userID=demo_admin&encryptedCode=showcase" target="_blank">Showcase</a>
@@ -419,7 +417,7 @@ ex_id ; user_id    ; points ; max_points
 
 -
 
-
+<!--- {{{ -->
 [csv1]: http://kolbasa.github.io/ueps/screenshots/csv-export-01.png
 [csv2]: http://kolbasa.github.io/ueps/screenshots/csv-export-02.png
 
@@ -469,4 +467,4 @@ ex_id ; user_id    ; points ; max_points
 [r1t]:  http://kolbasa.github.io/ueps/screenshots/rights-01-small.png
 [r2]:   http://kolbasa.github.io/ueps/screenshots/rights-02.png
 [r2t]:  http://kolbasa.github.io/ueps/screenshots/rights-02-small.png
-
+<!--- }}} -->

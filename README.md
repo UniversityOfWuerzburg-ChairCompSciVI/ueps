@@ -453,6 +453,8 @@ ex_id ; user_id    ; points ; max_points
 [t3t]:  http://kolbasa.github.io/ueps/screenshots/task-03-small.png
 [t4]:   http://kolbasa.github.io/ueps/screenshots/task-04.png
 [t4t]:  http://kolbasa.github.io/ueps/screenshots/task-04-small.png
+[t5]:   http://kolbasa.github.io/ueps/screenshots/task-05.png
+[t5t]:  http://kolbasa.github.io/ueps/screenshots/task-05-small.png
 
 [i1]:   http://kolbasa.github.io/ueps/screenshots/index-01.png
 [i1t]:  http://kolbasa.github.io/ueps/screenshots/index-01-small.png

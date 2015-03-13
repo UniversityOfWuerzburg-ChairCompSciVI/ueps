@@ -341,6 +341,7 @@ Hinzufügen von Rechten            | [![][r2t]][r2]
 -
 
 [e0]:  http://kolbasa.github.io/ueps/screenshots/admin-01.png
+[e0t]: http://kolbasa.github.io/ueps/screenshots/admin-01-small.png
 [e1]:  http://kolbasa.github.io/ueps/screenshots/edit-scenario-01.png
 [e1t]: http://kolbasa.github.io/ueps/screenshots/edit-scenario-01-small.png
 [e2]:  http://kolbasa.github.io/ueps/screenshots/edit-scenario-02.png

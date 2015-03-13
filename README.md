@@ -52,13 +52,15 @@ Link          | Rolle          | Szenario
    MASTER_DBNAME = ueps_master
    MASTER_DBUSER = test_user
    MASTER_DBPASS = 3ti4k4tm270kg
-   ``` <!--- ` -->
+   ```
+   <!--- ` -->
 
    Der unter [``MASTER_DBUSER``](src/main/resources/config.properties#L43) festgelegte Nutzer sollte folgende Rechte besitzen:
 
   ```
   SELECT, INSERT, UPDATE, DELETE, ALTER, CREATE, DROP, GRANT OPTION, LOCK TABLES
-  ```<!--- ` -->
+  ```
+  <!--- ` -->
 
   Die aufgelisteten Rechte müssen für die unter [``MASTER_DBNAME``](src/main/resources/config.properties#L42) angegebene Datenbank sowie für neu erstellte Datenbanken gelten. Eine Rechteskript könnte beispielsweise folgendermaßen aussehen:
 
@@ -66,7 +68,8 @@ Link          | Rolle          | Szenario
   GRANT SELECT, INSERT, UPDATE, DELETE, ALTER, CREATE, DROP,
   GRANT OPTION, LOCK TABLES, ON *.* TO '%MASTER_DBUSER%'@'%MASTER_DBHOST%'
   IDENTIFIED BY '%MASTER_DBPASS%';
-  ```<!--- ` -->
+  ```
+  <!--- ` -->
 
 6. Anschließend kann die Anwendung kompiliert werden:
    * *Unter Linux*<br/>
@@ -97,7 +100,8 @@ Link          | Rolle          | Szenario
     INFO (ueps): Importing database
     INFO (ueps): Creating database 'ueps_master'
     INFO (ueps): Admin user with id: 'user_1' added
-  ```<!--- ` -->
+  ```
+  <!--- ` -->
 
 ---
 

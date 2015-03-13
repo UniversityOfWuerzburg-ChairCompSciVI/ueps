@@ -380,6 +380,7 @@ ex_id ; user_id    ; points ; max_points
 [![][t2t]][t2] | Anzeige des ER-Diagramms
 [![][t3t]][t3] | Anzeige von Tabellen (die Fenster lassen sich <br>ziehen und vergrößern/verkleinern)
 [![][t4t]][t4] | Feedback-Generierung
+[![][t5t]][t5] | Servermeldung bei einer Studentenabgabe für eine **bewertete** Aufgabe
 
 -
 

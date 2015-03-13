@@ -179,7 +179,7 @@ Möchte man die zusätzlichen Rechte nicht vergeben, so kann man die Datenbank a
 
 Möchte man die Datenbank zurücksetzen, so lässt sich dies mit der Option [``FORCE_RESET_DATABASE``](src/main/resources/config.properties#L84) bewerkstelligen. Diese Option wird nach einem erfolgreichen Reset von der Anwendung selbst auf ``false`` gesetzt, sodass ein Server-Neustart die Datenbank nicht erneut zurücksetzt.
 
-Möchte man noch zusätzlich zwei Beispielszenarien importieren, so kann man das über die Option [``IMPORT_EXAMPLE_SCENARIO``](src/main/resources/config.properties#L75) aktivieren. Es wird für jedes Szenario eine neue Datenbank unter [``MASTER_DBHOST``](src/main/resources/config.properties#L40) erstellt.
+Möchte man noch zusätzlich zwei Beispielszenarios importieren, so kann man das über die Option [``IMPORT_EXAMPLE_SCENARIO``](src/main/resources/config.properties#L75) aktivieren. Es wird für jedes Szenario eine neue Datenbank unter [``MASTER_DBHOST``](src/main/resources/config.properties#L40) erstellt.
 Für jede Szenario-Datenbank wird ebenfalls ein Datenbank-Nutzer mit beschränkten Rechten erstellt. Hierfür benötigt der [``MASTER_DBUSER``](src/main/resources/config.properties#L43) jedoch zusätzlich ``GRANT OPTION``-Rechte.
 
 Ein vollständiges Rechte-Skript würde also folgendermaßen aussehen:
@@ -281,7 +281,7 @@ Anschließend kann die Anwendung mit folgendem Skript deployed werden:<br/>
 
 ## Bedienung
 
-#### Übungsmaterial erstellen/bearbeiten ([Screenshots](#szenarien-erstellenbearbeiten))
+#### Übungsmaterial erstellen/bearbeiten ([Screenshots](#szenarios-erstellenbearbeiten))
 ÜPS fasst einzelne SQL-Übungsaufgaben zusammen zu Aufgabengruppen und 
 Aufgabengruppen zu "Szenarios":
 
@@ -302,7 +302,7 @@ Besitzt der angemeldete Nutzer **Editierrechte**, so kann er Aufgaben komfortabe
 über die *Editieren*-Seite bearbeiten. Hierfür muss der Nutzer einen 
 gewünschten Knoten im Baum auswählen, das Kontextmenü mit einem Rechtsklick 
 öffnen und auf *Bearbeiten* klicken 
-([Screenshot](#szenarien-erstellenbearbeiten)).
+([Screenshot](#szenarios-erstellenbearbeiten)).
 
 #### Szenarios erstellen ([Screenshot](#edit-scenario))
 Ein einzelnes Szenario stellt eine SQL Datenbank dar. Auf dieser Datenbank werden

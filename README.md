@@ -205,7 +205,7 @@ encryptedCode = md5(userIP + secretPhrase + userID)
 Die Implementierung in ÜPS findet man [hier](src/main/java/de/uniwue/info6/webapp/session/SessionObject.java#L141-L166).<br>
 **WICHTIG:** ``SECRET_PHRASE`` sollte aufgrund seiner Rolle **nicht** den [voreingestellten](src/main/resources/config.properties#L112) Wert beibehalten.
 
-Zusätzlich zu den Anmeldeparametern sollte man noch die Kennung der zu bearbeitenden Szenarios ``scenarioID`` angeben.
+Zusätzlich zu den Anmeldeparametern sollte man noch die Kennung der zu bearbeitenden Szenarios ``scenarioID`` angeben ([weitere Infos zu Szenarien](#%C3%9Cbungsmaterial-erstellenbearbeiten)].
 Die fertige URL sieht folgendermaßen aus:
 
 ```

@@ -327,10 +327,10 @@ TODO :: TODO :: TODO :: TODO
 
 &nbsp;         | &nbsp;
 -------------- | --------------
-Übungsbereich für die Studenten | [![][t1t]][t1]
-Anzeige des ER-Diagramms | [![][t2t]][t2]
-Anzeige von Tabellen (die Fenster lassen sich <br>ziehen und vergrößern/verkleinern) | [![][t3t]][t3]
-Feedback-Generierung | [![][t4t]][t4]
+[![][t1t]][t1] | Übungsbereich für die Studenten
+[![][t2t]][t2] | Anzeige des ER-Diagramms
+[![][t3t]][t3] | Anzeige von Tabellen (die Fenster lassen sich <br>ziehen und vergrößern/verkleinern)
+[![][t4t]][t4] | Feedback-Generierung
 
 #### Rechteverwaltung
 
@@ -342,8 +342,8 @@ Feedback-Generierung | [![][t4t]][t4]
 
 &nbsp;         | &nbsp;
 -------------- | --------------
-Auflistung der vergebenen Rechte  | [![][r1t]][r1]
-Hinzufügen von Rechten            | [![][r2t]][r2]
+[![][r1t]][r1] | Auflistung der vergebenen Rechte
+[![][r2t]][r2] | Hinzufügen von Rechten
 
 
 #### Szenarien erstellen/bearbeiten
@@ -361,11 +361,11 @@ Hinzufügen von Rechten            | [![][r2t]][r2]
 
 &nbsp;         | &nbsp;
 -------------- | --------------
-Aufgabenliste als Baumstruktur | [![][e0t]][e0]
-Kontextmenü-Einträge (wird durch einen <br>Rechtsklick auf einen Knoten geöffnet) | [![][e1t]][e1]
-Szenario bearbeiten | [![][e2t]][e2]
-Übungsblatt bearbeiten | [![][e3t]][e3]
-Übungsaufgabe bearbeiten | [![][e4t]][e4]
+[![][e0t]][e0] | Aufgabenliste als Baumstruktur
+[![][e1t]][e1] | Kontextmenü-Einträge (wird durch einen <br>Rechtsklick auf einen Knoten geöffnet)
+[![][e2t]][e2] | Szenario bearbeiten
+[![][e3t]][e3] | Übungsblatt bearbeiten
+[![][e4t]][e4] | Übungsaufgabe bearbeiten
 
 #### Abgaben bewerten
 
@@ -380,7 +380,7 @@ Szenario bearbeiten | [![][e2t]][e2]
 
 &nbsp;         | &nbsp;
 -------------- | --------------
-Abgaben lassen sich nach dem Szenario, <br>dem Übungsblatt, der Übungsaufgabe <br>oder nach der User-ID sortieren <br>(oder nach einer Kombination dieser <br>Parameter) | [![][s1t]][s1]
-Auflistung der Nutzereinträge in einer <br>Baumstruktur | [![][s2t]][s2]
-Nutzerabgabe bearbeiten | [![][s3t]][s3]
-Kommentar abgeben | [![][s4t]][s4]
+[![][s1t]][s1] | Abgaben lassen sich nach dem Szenario, <br>dem Übungsblatt, der Übungsaufgabe <br>oder nach der User-ID sortieren <br>(oder nach einer Kombination dieser <br>Parameter)
+[![][s2t]][s2] | Auflistung der Nutzereinträge in einer <br>Baumstruktur
+[![][s3t]][s3] | Nutzerabgabe bearbeiten
+[![][s4t]][s4] | Kommentar abgeben

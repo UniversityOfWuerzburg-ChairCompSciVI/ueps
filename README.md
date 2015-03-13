@@ -271,7 +271,12 @@ Anschließend kann die Anwendung mit folgendem Skript deployed werden:<br/>
 ## Bedienung
 
 ### Übungsmaterial erstellen/bearbeiten
-TODO :: TODO :: TODO :: TODO
+
++-- _Szenario 1
+|   +-- begin-with-the-crazy-ideas.textile
+|   +-- on-simplicity-in-technology.markdown
++-- _Szenario 2
+
 
 #### Szenarien erstellen
 TODO :: TODO :: TODO :: TODO
@@ -312,7 +317,6 @@ TODO :: TODO :: TODO :: TODO
 -
 
 ## Screenshots
-&nbsp;
 
 #### Startseite
 

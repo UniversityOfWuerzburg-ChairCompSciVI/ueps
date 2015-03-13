@@ -326,8 +326,10 @@ ein Student eins seiner Tabellen, so wird **ausschließlich** diese mithilfe des
 SQL-Skripts wieder auf den Ursprungszustand zurückgesetzt. Es werden also nur 
 die Inserts für diese Tabelle aus dem Skript verwendet.
 
-Optional kann auch ein Entity-Relationship-Diagramm (im JPEG/PNG-Format) 
-bereitgestellt werden.
+Wenn das Szenario gespeichert wurde, so sollte man unbedingt überprüfen, ob 
+alle Tabellen [rightig erkannt][e5] wurden. Wenn ein Skript syntaktisch korrekt 
+ist aber nicht right geparst werden konnte, dann verfassen Sie bitte ein 
+Bug-report [hier][bug].
 
 Aus Sicherheitsgründen werden alle MySQL-Anfragen der Studenten mit einem
 MySQL-Nutzer mit beschränkten Zugriffsrechten ausgeführt.
@@ -342,6 +344,9 @@ muss hierfür leer sein und der Nutzer unter "Datenbank-User" muss
 ``SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, ALTER, LOCK TABLES``-Rechte
 **ausschließlich** für die neue Datenbank besitzen. Als Hilfe wird ein 
 Rechteskript am Anfang der Seite generiert ([Screenshot](#edit-scenario)).
+
+Optional kann auch ein Entity-Relationship-Diagramm (im JPEG/PNG-Format) 
+bereitgestellt werden.
 
 #### Aufgabengruppe erstellen ([Screenshot](#edit-group))
 Es gibt zwei Arten von Aufgabengruppen, **bewertete** und **unbewertete**. Unbewertete 
@@ -517,6 +522,7 @@ ex_id ; user_id    ; points ; max_points
 [e3t]:            http://kolbasa.github.io/ueps/screenshots/edit-group-02-small.png
 [e4]:             http://kolbasa.github.io/ueps/screenshots/edit-ex-02.png
 [e4t]:            http://kolbasa.github.io/ueps/screenshots/edit-ex-02-small.png
+[e5]:             http://kolbasa.github.io/ueps/screenshots/edit-scenario-03.png
 
 [t1]:             http://kolbasa.github.io/ueps/screenshots/task-01.png
 [t1t]:            http://kolbasa.github.io/ueps/screenshots/task-01-small.png
@@ -551,5 +557,6 @@ ex_id ; user_id    ; points ; max_points
 [squ]:            http://squirrel-sql.sourceforge.net/
 [php]:            http://www.phpmyadmin.net/
 
+[bug]:            https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/issues
 [MASTER_DB_USER]: src/main/resources/config.properties#L43
 <!--- }}} -->

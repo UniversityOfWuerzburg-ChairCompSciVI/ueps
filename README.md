@@ -382,5 +382,5 @@ TODO :: TODO :: TODO :: TODO
 -------------- | --------------
 [![][s1t]][s1] | Abgaben lassen sich nach dem Szenario, <br>dem Übungsblatt, der Übungsaufgabe <br>oder nach der User-ID sortieren <br>(oder nach einer Kombination dieser <br>Parameter) <br><a href="http://ueps.scienceontheweb.net?submission=xhtml&userID=demo_admin&encryptedCode=showcase&scenarioID=1" target="_blank">Showcase</a>
 [![][s2t]][s2] | Auflistung der Nutzereinträge in einer <br>Baumstruktur
-[![][s3t]][s3] | Nutzerabgabe bearbeiten
+[![][s3t]][s3] | Nutzerabgabe bearbeiten <br><a href="http://ueps.scienceontheweb.net?edit_submission=xhtml&userID=demo_admin&encryptedCode=showcase&submission=1" target="_blank">Showcase</a>
 [![][s4t]][s4] | Kommentar abgeben

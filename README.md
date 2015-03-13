@@ -1,3 +1,15 @@
+[csv1]: http://kolbasa.github.io/ueps/screenshots/csv-export-01.png
+[csv2]: http://kolbasa.github.io/ueps/screenshots/csv-export-02.png
+
+[s1]:   http://kolbasa.github.io/ueps/screenshots/submission-01.png
+[s1t]:  http://kolbasa.github.io/ueps/screenshots/submission-01-small.png
+[s2]:   http://kolbasa.github.io/ueps/screenshots/submission-02.png
+[s2t]:  http://kolbasa.github.io/ueps/screenshots/submission-02-small.png
+[s3]:   http://kolbasa.github.io/ueps/screenshots/submission-03.png
+[s3t]:  http://kolbasa.github.io/ueps/screenshots/submission-03-small.png
+[s4]:   http://kolbasa.github.io/ueps/screenshots/submission-04.png
+[s4t]:  http://kolbasa.github.io/ueps/screenshots/submission-04-small.png
+
 # ÜPS
 **ÜPS** (**Ü**bungs-**P**rogramm für **S**QL) ist ein webbasiertes Trainingssystem zum Erlernen der Datenbanksprache SQL ([**Screenshots**](#screenshots)).
 
@@ -329,14 +341,13 @@ Die Rolle 'Dozent' priviligiert einen Benutzer dazu folgende Funktionalitäten *
 -
 
 ### Abgaben bewerten
+
 Nutzer mit Bewertungsrechten können Studentenabgaben aufrufen und gegebenenfalls korrigieren. Wenn manuelle Korrekturen vorgenommen wurden, so wird die ``userID`` des Korrektors gespeichert.
-Einzelne Studentenabgaben können ebenfalls kommentiert werden und nach Freigabe der Ergebnisse von den Nutzern eingesehen werden.
+Einzelne Studentenabgaben können ebenfalls kommentiert werden ([Screenshot](#abgaben-bewerten-1))und nach Freigabe der Ergebnisse von den Nutzern eingesehen werden.
 
 Um endgültige Bewertungen an Moodle zu übertragen, können sich Nutzer mit Bewertungsrechten zu den einzelnen Aufgabengruppen CSV-Dateien generieren.
 
-[csv1]: http://kolbasa.github.io/ueps/screenshots/csv-export-01.png
-[csv2]: http://kolbasa.github.io/ueps/screenshots/csv-export-02.png
-Anleitung:<br>
+**Anleitung:**<br>
 *Bewerten* &#8594; *Nach gesuchtem Übungsblatt filtern* &#8594; *Export-Symbol klicken*<br>
 [Screenshot 1][csv1] | [Screenshot 2][csv2]
 
@@ -435,15 +446,6 @@ ex_id ; user_id    ; points ; max_points
 -
 
 #### Abgaben bewerten
-
-[s1]:   http://kolbasa.github.io/ueps/screenshots/submission-01.png
-[s1t]:  http://kolbasa.github.io/ueps/screenshots/submission-01-small.png
-[s2]:   http://kolbasa.github.io/ueps/screenshots/submission-02.png
-[s2t]:  http://kolbasa.github.io/ueps/screenshots/submission-02-small.png
-[s3]:   http://kolbasa.github.io/ueps/screenshots/submission-03.png
-[s3t]:  http://kolbasa.github.io/ueps/screenshots/submission-03-small.png
-[s4]:   http://kolbasa.github.io/ueps/screenshots/submission-04.png
-[s4t]:  http://kolbasa.github.io/ueps/screenshots/submission-04-small.png
 
 &nbsp;         | &nbsp;
 -------------- | --------------

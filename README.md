@@ -322,9 +322,9 @@ Es wird also von jeder Tabelle eine Kopie für jeden individuellen Nutzer erstel
 So wird verhindert, dass sich die Nutzer gegenseitig stören, wenn sie die Tabellen
 modifizieren.<br>
 Von den originalen Tabellen wird jeweils ein Hashwert gespeichert. Modifiziert
-ein Student eins seiner Tabellen, so wird **allein** diese mithilfe des SQL-Skripts 
-wieder auf den Ursprungszustand zurückgesetzt. Es wird also nur die Inserts für 
-diese Tabelle aus dem Skript extrahiert.
+ein Student eins seiner Tabellen, so wird **ausschließlich** diese mithilfe des 
+SQL-Skripts wieder auf den Ursprungszustand zurückgesetzt. Es werden also nur 
+die Inserts für diese Tabelle aus dem Skript verwendet.
 
 Optional kann auch ein Entity-Relationship-Diagramm (im JPEG/PNG-Format) 
 bereitgestellt werden.

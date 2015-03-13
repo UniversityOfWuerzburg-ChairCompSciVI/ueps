@@ -313,8 +313,12 @@ hochladen. Hierfür muss ein eigenes externes Tool verwendet werden (z.B.
 
 Man sollte darauf achten, dass dieses Skript nicht zu groß wird (am besten unter 
 200KB). Eine Tabelle braucht für Lehrzwecke keine 10.000 Einträge.
-``DROP``-und ``CREATE``-Statements benötigen viel Laufzeit, deutlich mehr als 
-die üblichen und optimierten ``SELECT, UPDATE, DELETE, INSERT``-Statements.
+``DROP``-und ``CREATE``-Statements benötigen viel Laufzeit, um ein Vielfaches mehr 
+als die üblichen und optimierten ``SELECT, UPDATE, DELETE, INSERT``-Statements.
+
+Für jeden eingeloggten Studenten wird das komplette Skript einmal ausgeführt.
+Es wird also von jeder Tabelle eine Kopie für jeden individuellen Nutzer erstellt
+(hierfür wird einfach bei jeder Tabelle die Moodle-``userID`` als Präfix benutzt).
 
 Optional kann auch ein Entity-Relationship-Diagramm (im JPEG/PNG-Format) 
 bereitgestellt werden.

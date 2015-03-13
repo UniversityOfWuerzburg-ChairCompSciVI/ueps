@@ -342,7 +342,7 @@ TODO :: TODO :: TODO :: TODO
 
 &nbsp;         | &nbsp;
 -------------- | --------------
-[![][r1t]][r1] | Auflistung der vergebenen Rechte <br><a href="http://ueps.scienceontheweb.net?edit_rights=xhtml&userID=demo_admin&encryptedCode=showcase" target="_blank">Showcase</a>
+[![][r1t]][r1] | Auflistung der vergebenen Rechte <br><a href="http://ueps.scienceontheweb.net?user_rights=xhtml&userID=demo_admin&encryptedCode=showcase" target="_blank">Showcase</a>
 [![][r2t]][r2] | Hinzufügen von Rechten
 
 

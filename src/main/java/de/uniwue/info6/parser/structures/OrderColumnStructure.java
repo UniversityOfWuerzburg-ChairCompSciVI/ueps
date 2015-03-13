@@ -34,6 +34,7 @@ package de.uniwue.info6.parser.structures;
 public class OrderColumnStructure extends ColumnStructure {
 
 	private boolean isAscending = true;
+	private boolean explicit = true;
 
 	public OrderColumnStructure(Structure value2, String tableName,
 			boolean isAscending) {
@@ -45,6 +46,20 @@ public class OrderColumnStructure extends ColumnStructure {
 			boolean isAscending) {
 		super(value, tableName);
 		this.isAscending = isAscending;
+	}
+	
+	public OrderColumnStructure(Structure value2, String tableName,
+			boolean isAscending, boolean explicit) {
+		super(value2, tableName);
+		this.isAscending = isAscending;
+		this.explicit = explicit;
+	}
+
+	public OrderColumnStructure(String value, String tableName,
+			boolean isAscending, boolean explicit) {
+		super(value, tableName);
+		this.isAscending = isAscending;
+		this.explicit = explicit;
 	}
 
 	public boolean isAcending() {
@@ -65,7 +80,7 @@ public class OrderColumnStructure extends ColumnStructure {
 
 	@Override
 	public String toString() {
-		return super.toString() + (isAscending ? " ASC" : " DESC");
+		return super.toString() + (isAscending ? (explicit ? " ASC" : "") : " DESC");
 	}
 
 }

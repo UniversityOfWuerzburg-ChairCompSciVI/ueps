@@ -317,10 +317,12 @@ hochladen. Hierfür muss ein eigenes externes Tool verwendet werden (z.B.
 
 
 #### Aufgabengruppe erstellen
+[Screenshot](#edit-group) der Bearbeitungsseite mit allen Optionen.<br><br>
+
 Es gibt zwei Arten von Aufgabengruppen, 'bewertete' und 'unbewertete'.
 
 #### Aufgabe erstellen
-TODO :: TODO :: TODO :: TODO
+[Screenshot](#edit-exercise) der Bearbeitungsseite mit allen Optionen.<br><br>
 
 -
 
@@ -421,8 +423,8 @@ ex_id ; user_id    ; points ; max_points
 [![][e0t]][e0] | Aufgabenliste als Baumstruktur <br><a href="http://ueps.scienceontheweb.net?admin=xhtml&userID=demo_admin&encryptedCode=showcase&scenarioID=1" target="_blank">Showcase</a>
 [![][e1t]][e1] | Kontextmenü-Einträge (wird durch einen <br>Rechtsklick auf einen Knoten geöffnet)
 <a name="edit-scenario">[![][e2t]][e2] | </a>Szenario bearbeiten <br><a href="http://ueps.scienceontheweb.net?edit_scenario=xhtml&userID=demo_admin&encryptedCode=showcase&scenario=1&scenarioID=1" target="_blank">Showcase</a>
-[![][e3t]][e3] | Übungsblatt bearbeiten <br><a href="http://ueps.scienceontheweb.net?edit_group=xhtml&userID=demo_admin&encryptedCode=showcase&group=1&scenarioID=1" target="_blank">Showcase</a>
-[![][e4t]][e4] | Übungsaufgabe bearbeiten <br><a href="http://ueps.scienceontheweb.net?edit_ex=xhtml&userID=demo_admin&encryptedCode=showcase&exercise=62&scenarioID=1" target="_blank">Showcase</a>
+<a name="edit-group">[![][e3t]][e3] | Übungsblatt bearbeiten <br><a href="http://ueps.scienceontheweb.net?edit_group=xhtml&userID=demo_admin&encryptedCode=showcase&group=1&scenarioID=1" target="_blank">Showcase</a>
+<a name="edit-exercise">[![][e4t]][e4] | Übungsaufgabe bearbeiten <br><a href="http://ueps.scienceontheweb.net?edit_ex=xhtml&userID=demo_admin&encryptedCode=showcase&exercise=62&scenarioID=1" target="_blank">Showcase</a>
 
 -
 

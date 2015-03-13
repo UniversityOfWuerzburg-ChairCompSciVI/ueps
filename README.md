@@ -136,7 +136,7 @@ Für die ``slave``-Datenbanken werden jeweils folgende Datenbanknutzer mit besch
 
 Bevor man die Anwendung startet sollte man zunächst einen Blick in die Konfigurationsdatei
 [``config.properties``](src/main/resources/config.properties#L40-L44)
-unter ``src/main/resources/``
+unter [``src/main/resources/``](src/main/resources/)
 werfen und Angaben zum Datenbank-Server überschreiben.
 
 #### Datenbankangaben

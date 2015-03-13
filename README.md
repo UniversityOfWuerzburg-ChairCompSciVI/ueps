@@ -314,8 +314,11 @@ hochladen. Hierfür muss ein eigenes externes Tool verwendet werden (z.B.
 
 #### Aufgabengruppe erstellen ([Screenshot](#edit-group))
 Es gibt zwei Arten von Aufgabengruppen, **bewertete** und **unbewertete**. Unbewertete 
-Aufgabengruppen dienen dem freien Üben. Bewertete Aufgabengruppen sind 
-zeitbeschränkt und diesen zur Feststellung der Fähigkeiten der Studenten.
+Aufgabengruppen dienen dem freien Üben und bieten uneingeschränkten Zugang zu den
+Musterlösungen. Bewertete Aufgabengruppen sind zeitbeschränkt und diesen zur 
+Feststellung der Fähigkeiten der Studenten.
+
+Ergebnisse können nach Ablauf der Abgabezeit
 
 
 #### Aufgabe erstellen ([Screenshot](#edit-exercise))
@@ -396,7 +399,7 @@ ex_id ; user_id    ; points ; max_points
 &nbsp;         | &nbsp;
 -------------- | --------------
 [![][t1t]][t1] | Übungsbereich für die Studenten <br><a href="http://ueps.scienceontheweb.net?task=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=1&exercise=1" target="_blank">Showcase</a>
-[![][t2t]][t2] | Anzeige des ER-Diagramms <br>(diese lassen sich auch in einem neuen Tab öffnen)
+[![][t2t]][t2] | Anzeige des ER-Diagramms <br>(diese lassen sich auch in einem <br>neuen Tab öffnen)
 [![][t3t]][t3] | Anzeige von Tabellen (die Fenster lassen sich <br>ziehen und vergrößern/verkleinern)
 [![][t4t]][t4] | Feedback-Generierung
 [![][t5t]][t5] | Servermeldung bei einer Studentenabgabe für eine **bewertete** Aufgabe <br><a href="http://ueps.scienceontheweb.net?task=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=1&exercise=4" target="_blank">Showcase</a>

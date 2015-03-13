@@ -303,11 +303,12 @@ TODO :: TODO :: TODO :: TODO
 
 ## Screenshots
 
-[index-01]: http://kolbasa.github.io/ueps/screenshots/index-01.png
+[scr-01]: http://kolbasa.github.io/ueps/screenshots/index-01.png
+[scr-01-th]: http://kolbasa.github.io/ueps/screenshots/index-01-small.png
 
 **Startseite** | &nbsp;
 -------------- | --------------
-Beschreibung und Auflistung der <br>Übungsaufgaben zu einem Szenario | [![](http://kolbasa.github.io/ueps/screenshots/index-01-small.png)][index-01]
+Beschreibung und Auflistung der <br>Übungsaufgaben zu einem Szenario | [![][scr-01-th]][scr-01]
 Auflistung der Szenarien falls keine <br>``scenarioID`` per GET-Paramater übergeben wurde | [![](http://kolbasa.github.io/ueps/screenshots/index-02-small.png)](http://kolbasa.github.io/ueps/screenshots/index-02.png)
 
 ---

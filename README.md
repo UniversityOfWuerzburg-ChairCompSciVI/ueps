@@ -1,8 +1,6 @@
 # ÜPS
 **ÜPS** (**Ü**bungs-**P**rogramm für **S**QL) ist ein webbasiertes Trainingssystem zum Erlernen der Datenbanksprache SQL ([**Screenshots**](#screenshots)).
 
--
-
 ## Showcase
 Link          | Rolle          | Szenario
 ------------- | -------------  | -------------
@@ -283,7 +281,7 @@ TODO :: TODO :: TODO :: TODO
 -
 
 ## Rollen und Rechte
-Um den Zugriff auf die Funktionen von ÜPS zu kontrollen, wurden drei verschiedene Rollen eingeführt: Student, Dozent und Admin.
+Um den Zugriff auf die Funktionen von ÜPS zu kontrollieren, wurden drei verschiedene Rollen eingeführt: Student, Dozent und Admin.
 
 ### Rolle 'Admin'
 Der 'Admin' verfügt über umfassende Rechte im ganzen System:
@@ -291,9 +289,9 @@ Der 'Admin' verfügt über umfassende Rechte im ganzen System:
 - globale Verwaltung der Szenarien, sowie Rolle 'Dozent' in allen Szenarien
 
 ### Rolle 'Dozent'
-Die Rolle 'Dozent' priviligiert einen Benutzer dazu folgende Funktionalitäten innerhalb eines Szenarios zu nutzen:
+Die Rolle 'Dozent' priviligiert einen Benutzer dazu folgende Funktionalitäten **innerhalb eines Szenarios** (festgelegt von einem Admin) zu nutzen:
 - Zuweisung von Rechten für Benutzer innerhalb des Szenarios
-- Änderung des Szenarion
+- Änderung des Szenarios (wobei die Optionen zum Datenbank-Server und Datenbank-Nutzer nur von einem Admin geändert werden können)
 - Erstellung und Änderung von Übungsblättern und Übungsaufgaben des Szenarios
 - Einsicht und Bewertung von abgebenen Lösungen innerhalb des Szenarios
 

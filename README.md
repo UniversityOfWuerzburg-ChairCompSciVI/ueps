@@ -116,8 +116,8 @@ Mobile Geräte werden zwar unterstützt, es wird jedoch keine angepasste Darstel
 -
 
 
-[er-amazon][src/main/resources/sql/1/er-diagram.png]
-[er-wm2010][src/main/resources/sql/2/wm_2014_05_14-12_00_37.png]
+[er-amazon]: src/main/resources/sql/1/er-diagram.png
+[er-wm2010]: src/main/resources/sql/2/wm_2014_05_14-12_00_37.png
 
 Mit der gezeigten Konfiguration werden beim Start der Anwendungen folgenden Datenbanken erstellt:
 * ``ueps_master`` ([Administrative Datenbank](http://kolbasa.github.io/ueps/screenshots/admin-db-er-diagram.png) - festgelegt durch ``MASTER_DBNAME``)

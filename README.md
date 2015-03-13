@@ -299,7 +299,7 @@ TODO :: TODO :: TODO :: TODO
 ## Screenshots
 [base]:      http://kolbasa.github.io/ueps/screenshots/
 
-[i1]:  http://kolbasa.github.io/ueps/screenshots/index-01.png
+[i1]:  [base]index-01.png
 [i1t]: [base]index-01-small.png
 [i2]:  [base]index-02.png
 [i2t]: [base]index-02-small.png
@@ -311,21 +311,21 @@ Auflistung der Szenarien falls keine <br>``scenarioID`` per GET-Paramater überg
 
 -
 
-[t1]:  [base]task-01.png
-[t1t]: [base]task-01-small.png
-[t2]:  [base]task-02.png
-[t2t]: [base]task-02-small.png
-[t3]:  [base]task-03.png
-[t3t]: [base]task-03-small.png
-[t4]:  [base]task-04.png
-[t4t]: [base]task-04-small.png
+[tsk-01]:    [base]task-01.png
+[tsk-01-th]: [base]task-01-small.png
+[tsk-02]:    [base]task-02.png
+[tsk-02-th]: [base]task-02-small.png
+[tsk-03]:    [base]task-03.png
+[tsk-03-th]: [base]task-03-small.png
+[tsk-04]:    [base]task-04.png
+[tsk-04-th]: [base]task-04-small.png
 
 **Startseite** | &nbsp;
--------------- | ------------------
-Übungsbereich für die Studenten   | [![][t1t]][t1]
-Anzeige des ER-Diagramms          | [![][t2t]][t2]
-Anzeige von Tabellen              | [![][t3t]][t3]
-Feedback-Generierung              | [![][t4t]][t4]
+-------------- | :------------------:
+Übungsbereich für die Studenten   | [![][tsk-01-th]][tsk-01]
+Anzeige des ER-Diagramms          | [![][tsk-02-th]][tsk-02]
+Anzeige von Tabellen              | [![][tsk-03-th]][tsk-03]
+Feedback-Generierung              | [![][tsk-04-th]][tsk-04]
 
 -
 

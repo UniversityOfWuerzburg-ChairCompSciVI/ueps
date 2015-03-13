@@ -315,7 +315,7 @@ Für das Erstellen eines neuen Szenarios muss der Autor ein MySQL-Datenbank-Skri
 hochladen. Hierfür muss ein eigenes externes Tool verwendet werden (z.B. 
 [HeidiSQL][heidi], [SQuirrel][squ], [phpMyAdmin][php]  ...).
 
-[test][edit-scenario]
+[test](#edit-scenario)
 
 #### Aufgabengruppe erstellen
 Es gibt zwei Arten von Aufgabengruppen, 'bewertete' und 'unbewertete'.

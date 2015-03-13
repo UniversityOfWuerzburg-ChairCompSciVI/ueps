@@ -321,7 +321,7 @@ Feedback-Generierung | [![](http://kolbasa.github.io/ueps/screenshots/task-04-sm
 
 **Rechteverwaltung** | &nbsp;
 :------------------: | :------------------:
-Auflistung der vergebenen <br/>Rechte | [![](http://kolbasa.github.io/ueps/screenshots/rights-01-small.png)](http://kolbasa.github.io/ueps/screenshots/rights-01.png)
+Auflistung der vergebenen Rechte | [![](http://kolbasa.github.io/ueps/screenshots/rights-01-small.png)](http://kolbasa.github.io/ueps/screenshots/rights-01.png)
 Hinzufügen von Rechten | [![](http://kolbasa.github.io/ueps/screenshots/rights-02-small.png)](http://kolbasa.github.io/ueps/screenshots/rights-02.png)
 
 ---
@@ -329,17 +329,13 @@ Hinzufügen von Rechten | [![](http://kolbasa.github.io/ueps/screenshots/rights-
 **Szenarien erstellen/bearbeiten** | &nbsp;
 :------------------: | :------------------:
 Kontextmenü-Eintrag | [![](http://kolbasa.github.io/ueps/screenshots/edit-scenario-01-small.png)](http://kolbasa.github.io/ueps/screenshots/edit-scenario-01.png)
+Szenario bearbeiten | [![](http://kolbasa.github.io/ueps/screenshots/edit-scenario-02-small.png)](http://kolbasa.github.io/ueps/screenshots/edit-scenario-02.png)
 
--
+---
 
-#### Szenarien erstellen/bearbeiten
-[![](http://kolbasa.github.io/ueps/screenshots/edit-scenario-01-small.png)](http://kolbasa.github.io/ueps/screenshots/edit-scenario-01.png) [![](http://kolbasa.github.io/ueps/screenshots/edit-scenario-02-small.png)](http://kolbasa.github.io/ueps/screenshots/edit-scenario-02.png)
-
--
-
-#### Abgaben bewerten
-[![](http://kolbasa.github.io/ueps/screenshots/submission-01-small.png)](http://kolbasa.github.io/ueps/screenshots/submission-01.png) [![](http://kolbasa.github.io/ueps/screenshots/submission-02-small.png)](http://kolbasa.github.io/ueps/screenshots/submission-02.png)
-
-[![](http://kolbasa.github.io/ueps/screenshots/submission-03-small.png)](http://kolbasa.github.io/ueps/screenshots/submission-03.png) [![](http://kolbasa.github.io/ueps/screenshots/submission-04-small.png)](http://kolbasa.github.io/ueps/screenshots/submission-04.png)
-
-
+**Abgaben bewerten** | &nbsp;
+:------------------: | :------------------:
+Abgaben lassen sich nach dem <br/> Szenario, dem Übungsblatt, der Übungsaufgabe <br/>oder nach der User-ID sortieren <br/>(oder nach einer Kombination dieser Parameter) | (http://kolbasa.github.io/ueps/screenshots/submission-01-small.png)](http://kolbasa.github.io/ueps/screenshots/submission-01.png)
+Auflistung der Nutzereinträge <br/>in einer Baumstruktur | (http://kolbasa.github.io/ueps/screenshots/submission-02-small.png)](http://kolbasa.github.io/ueps/screenshots/submission-02.png)
+| (http://kolbasa.github.io/ueps/screenshots/submission-03-small.png)](http://kolbasa.github.io/ueps/screenshots/submission-03.png)
+| (http://kolbasa.github.io/ueps/screenshots/submission-04-small.png)](http://kolbasa.github.io/ueps/screenshots/submission-04.png)

@@ -23,7 +23,7 @@ Link          | Rolle          | Szenario
 5. [Quellcodedokumentation](#quellcodedokumentation)
 6. [Screenshots](#screenshots)
 
-------
+---
 
 ## Systemanforderungen
 **Serverseitig**
@@ -38,7 +38,7 @@ Link          | Rolle          | Szenario
 
 Mobile Geräte werden zwar unterstützt, es wird jedoch keine angepasste Darstelltung angeboten
 
-------
+---
 
 ## Kurzanleitung zur Installation
 
@@ -119,7 +119,7 @@ Für die ``slave``-Datenbanken werden jeweils folgende Datenbanknutzer mit besch
 * ``ueps_001``
 * ``ueps_002``
 
-------
+---
 
 ## Konfiguration mit 'config.properties'
 Bevor man die Anwendung startet sollte man zunächst einen Blick in die Konfigurationsdatei
@@ -219,7 +219,7 @@ Alle Texte sind in der Properties-Datei [``text_de.properties``](src/main/resour
 
 Alle Bilder, das Favicon und die Hintergrundfarbe können in der [``config.properties``](src/main/resources/config.properties) geändert werden. Für größere Änderungen gibt es das Stylesheet [``style.css``](src/main/webapp/resources/css/styles.css). Das Aussehen der Tooltips lässt sich mit [``tipsy.css``](src/main/webapp/resources/css/tipsy.css) verändern.
 
-------
+---
 
 
 <a name="DeployMaven"></a>
@@ -260,13 +260,13 @@ Hier dann den entsprechenden Nutzer eintragen und die [Tomcat-URL anpassen](http
 Anschließend kann die Anwendung mit folgendem Skript deployed werden:<br/>
 [``./build-deploy.sh``](build-deploy.sh) unter Linux bzw. [``build-deploy.bat``](build-deploy.bat) unter Windows.
 
-------
+---
 
 ## Quellcodedokumentation
 <!--- TODO: -->
 [Doxygen Dokumentation](http://kolbasa.github.io/ueps/doxygen/)
 
-------
+---
 
 ## Szenarien erstellen/bearbeiten
 TODO :: TODO :: TODO :: TODO
@@ -277,7 +277,7 @@ TODO :: TODO :: TODO :: TODO
 ### Aufgabe erstellen
 TODO :: TODO :: TODO :: TODO
 
-------
+---
 
 ## Rollen und Rechte
 Um den Zugriff auf die Funktionen von ÜPS zu kontrollen, wurden drei verschiedene Rollen eingeführt: Student, Dozent und Admin.
@@ -298,12 +298,12 @@ Die Rolle 'Dozent' priviligiert einen Benutzer dazu folgende Funktionalitäten i
 - Durchführung von Übungsaufgaben
 - Einsicht in die Korrektur der eigenen Abgaben
 
-------
+---
 
 ## Abgaben bewerten
 TODO :: TODO :: TODO :: TODO
 
-------
+---
 
 ## Screenshots
 
@@ -319,7 +319,7 @@ TODO :: TODO :: TODO :: TODO
 [![][i1t]][i1] | Beschreibung und Auflistung der <br>Übungsaufgaben zu einem Szenario <br><a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=1" target="_blank">Showcase</a>
 [![][i2t]][i2] | Auflistung der Szenarien falls keine <br>``scenarioID`` per GET-Paramater übergeben <br>wurde
 
----
+-
 
 #### Übungsseite
 
@@ -339,7 +339,7 @@ TODO :: TODO :: TODO :: TODO
 [![][t3t]][t3] | Anzeige von Tabellen (die Fenster lassen sich <br>ziehen und vergrößern/verkleinern)
 [![][t4t]][t4] | Feedback-Generierung
 
----
+-
 
 #### Rechteverwaltung
 
@@ -354,7 +354,7 @@ TODO :: TODO :: TODO :: TODO
 [![][r1t]][r1] | Auflistung der vergebenen Rechte <br><a href="http://ueps.scienceontheweb.net?user_rights=xhtml&userID=demo_admin&encryptedCode=showcase" target="_blank">Showcase</a>
 [![][r2t]][r2] | Hinzufügen von Rechten
 
----
+-
 
 #### Szenarien erstellen/bearbeiten
 
@@ -377,7 +377,7 @@ TODO :: TODO :: TODO :: TODO
 [![][e3t]][e3] | Übungsblatt bearbeiten <br><a href="http://ueps.scienceontheweb.net?edit_group=xhtml&userID=demo_admin&encryptedCode=showcase&group=1&scenarioID=1" target="_blank">Showcase</a>
 [![][e4t]][e4] | Übungsaufgabe bearbeiten <br><a href="http://ueps.scienceontheweb.net?edit_ex=xhtml&userID=demo_admin&encryptedCode=showcase&exercise=62&scenarioID=1" target="_blank">Showcase</a>
 
----
+-
 
 #### Abgaben bewerten
 

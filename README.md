@@ -1,15 +1,3 @@
-[csv1]: http://kolbasa.github.io/ueps/screenshots/csv-export-01.png
-[csv2]: http://kolbasa.github.io/ueps/screenshots/csv-export-02.png
-
-[s1]:   http://kolbasa.github.io/ueps/screenshots/submission-01.png
-[s1t]:  http://kolbasa.github.io/ueps/screenshots/submission-01-small.png
-[s2]:   http://kolbasa.github.io/ueps/screenshots/submission-02.png
-[s2t]:  http://kolbasa.github.io/ueps/screenshots/submission-02-small.png
-[s3]:   http://kolbasa.github.io/ueps/screenshots/submission-03.png
-[s3t]:  http://kolbasa.github.io/ueps/screenshots/submission-03-small.png
-[s4]:   http://kolbasa.github.io/ueps/screenshots/submission-04.png
-[s4t]:  http://kolbasa.github.io/ueps/screenshots/submission-04-small.png
-
 # ÜPS
 **ÜPS** (**Ü**bungs-**P**rogramm für **S**QL) ist ein webbasiertes Trainingssystem zum Erlernen der Datenbanksprache SQL ([**Screenshots**](#screenshots)).
 
@@ -343,7 +331,7 @@ Die Rolle 'Dozent' priviligiert einen Benutzer dazu folgende Funktionalitäten *
 ### Abgaben bewerten
 
 Nutzer mit Bewertungsrechten können Studentenabgaben aufrufen und gegebenenfalls korrigieren. Wenn manuelle Korrekturen vorgenommen wurden, so wird die ``userID`` des Korrektors gespeichert.
-Einzelne Studentenabgaben können ebenfalls kommentiert werden ([Screenshot](#abgaben-bewerten-1))und nach Freigabe der Ergebnisse von den Nutzern eingesehen werden.
+Einzelne Studentenabgaben können ebenfalls kommentiert werden ([Screenshots](#abgaben-bewerten-1)) und nach Freigabe der Ergebnisse von den Nutzern eingesehen werden.
 
 Um endgültige Bewertungen an Moodle zu übertragen, können sich Nutzer mit Bewertungsrechten zu den einzelnen Aufgabengruppen CSV-Dateien generieren.
 
@@ -375,11 +363,6 @@ ex_id ; user_id    ; points ; max_points
 
 #### Startseite
 
-[i1]:   http://kolbasa.github.io/ueps/screenshots/index-01.png
-[i1t]:  http://kolbasa.github.io/ueps/screenshots/index-01-small.png
-[i2]:   http://kolbasa.github.io/ueps/screenshots/index-02.png
-[i2t]:  http://kolbasa.github.io/ueps/screenshots/index-02-small.png
-
 &nbsp;         | &nbsp;
 -------------- | --------------
 [![][i1t]][i1] | Beschreibung und Auflistung der <br>Übungsaufgaben zu einem Szenario <br><a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=1" target="_blank">Showcase</a>
@@ -388,15 +371,6 @@ ex_id ; user_id    ; points ; max_points
 -
 
 #### Übungsseite
-
-[t1]:   http://kolbasa.github.io/ueps/screenshots/task-01.png
-[t1t]:  http://kolbasa.github.io/ueps/screenshots/task-01-small.png
-[t2]:   http://kolbasa.github.io/ueps/screenshots/task-02.png
-[t2t]:  http://kolbasa.github.io/ueps/screenshots/task-02-small.png
-[t3]:   http://kolbasa.github.io/ueps/screenshots/task-03.png
-[t3t]:  http://kolbasa.github.io/ueps/screenshots/task-03-small.png
-[t4]:   http://kolbasa.github.io/ueps/screenshots/task-04.png
-[t4t]:  http://kolbasa.github.io/ueps/screenshots/task-04-small.png
 
 &nbsp;         | &nbsp;
 -------------- | --------------
@@ -409,12 +383,6 @@ ex_id ; user_id    ; points ; max_points
 
 #### Rechteverwaltung
 
-[r1]:   http://kolbasa.github.io/ueps/screenshots/rights-01.png
-[r1t]:  http://kolbasa.github.io/ueps/screenshots/rights-01-small.png
-[r2]:   http://kolbasa.github.io/ueps/screenshots/rights-02.png
-[r2t]:  http://kolbasa.github.io/ueps/screenshots/rights-02-small.png
-
-
 &nbsp;         | &nbsp;
 -------------- | --------------
 [![][r1t]][r1] | Auflistung der vergebenen Rechte <br><a href="http://ueps.scienceontheweb.net?user_rights=xhtml&userID=demo_admin&encryptedCode=showcase" target="_blank">Showcase</a>
@@ -423,17 +391,6 @@ ex_id ; user_id    ; points ; max_points
 -
 
 #### Szenarien erstellen/bearbeiten
-
-[e0]:  http://kolbasa.github.io/ueps/screenshots/admin-01.png
-[e0t]: http://kolbasa.github.io/ueps/screenshots/admin-01-small.png
-[e1]:  http://kolbasa.github.io/ueps/screenshots/edit-scenario-01.png
-[e1t]: http://kolbasa.github.io/ueps/screenshots/edit-scenario-01-small.png
-[e2]:  http://kolbasa.github.io/ueps/screenshots/edit-scenario-02.png
-[e2t]: http://kolbasa.github.io/ueps/screenshots/edit-scenario-02-small.png
-[e3]:  http://kolbasa.github.io/ueps/screenshots/edit-group-02.png
-[e3t]: http://kolbasa.github.io/ueps/screenshots/edit-group-02-small.png
-[e4]:  http://kolbasa.github.io/ueps/screenshots/edit-ex-02.png
-[e4t]: http://kolbasa.github.io/ueps/screenshots/edit-ex-02-small.png
 
 &nbsp;         | &nbsp;
 -------------- | --------------
@@ -461,4 +418,55 @@ ex_id ; user_id    ; points ; max_points
 [Doxygen Dokumentation](http://kolbasa.github.io/ueps/doxygen/)
 
 -
+
+
+[csv1]: http://kolbasa.github.io/ueps/screenshots/csv-export-01.png
+[csv2]: http://kolbasa.github.io/ueps/screenshots/csv-export-02.png
+
+[s1]:   http://kolbasa.github.io/ueps/screenshots/submission-01.png
+[s1t]:  http://kolbasa.github.io/ueps/screenshots/submission-01-small.png
+[s2]:   http://kolbasa.github.io/ueps/screenshots/submission-02.png
+[s2t]:  http://kolbasa.github.io/ueps/screenshots/submission-02-small.png
+[s3]:   http://kolbasa.github.io/ueps/screenshots/submission-03.png
+[s3t]:  http://kolbasa.github.io/ueps/screenshots/submission-03-small.png
+[s4]:   http://kolbasa.github.io/ueps/screenshots/submission-04.png
+[s4t]:  http://kolbasa.github.io/ueps/screenshots/submission-04-small.png
+
+[e0]:  http://kolbasa.github.io/ueps/screenshots/admin-01.png
+[e0t]: http://kolbasa.github.io/ueps/screenshots/admin-01-small.png
+[e1]:  http://kolbasa.github.io/ueps/screenshots/edit-scenario-01.png
+[e1t]: http://kolbasa.github.io/ueps/screenshots/edit-scenario-01-small.png
+[e2]:  http://kolbasa.github.io/ueps/screenshots/edit-scenario-02.png
+[e2t]: http://kolbasa.github.io/ueps/screenshots/edit-scenario-02-small.png
+[e3]:  http://kolbasa.github.io/ueps/screenshots/edit-group-02.png
+[e3t]: http://kolbasa.github.io/ueps/screenshots/edit-group-02-small.png
+[e4]:  http://kolbasa.github.io/ueps/screenshots/edit-ex-02.png
+[e4t]: http://kolbasa.github.io/ueps/screenshots/edit-ex-02-small.png
+
+[t1]:   http://kolbasa.github.io/ueps/screenshots/task-01.png
+[t1t]:  http://kolbasa.github.io/ueps/screenshots/task-01-small.png
+[t2]:   http://kolbasa.github.io/ueps/screenshots/task-02.png
+[t2t]:  http://kolbasa.github.io/ueps/screenshots/task-02-small.png
+[t3]:   http://kolbasa.github.io/ueps/screenshots/task-03.png
+[t3t]:  http://kolbasa.github.io/ueps/screenshots/task-03-small.png
+[t4]:   http://kolbasa.github.io/ueps/screenshots/task-04.png
+[t4t]:  http://kolbasa.github.io/ueps/screenshots/task-04-small.png
+
+[i1]:   http://kolbasa.github.io/ueps/screenshots/index-01.png
+[i1t]:  http://kolbasa.github.io/ueps/screenshots/index-01-small.png
+[i2]:   http://kolbasa.github.io/ueps/screenshots/index-02.png
+[i2t]:  http://kolbasa.github.io/ueps/screenshots/index-02-small.png
+[i3]:   http://kolbasa.github.io/ueps/screenshots/index-03.png
+[i3t]:  http://kolbasa.github.io/ueps/screenshots/index-03-small.png
+[i4]:   http://kolbasa.github.io/ueps/screenshots/index-04.png
+[i4t]:  http://kolbasa.github.io/ueps/screenshots/index-04-small.png
+[i5]:   http://kolbasa.github.io/ueps/screenshots/index-05.png
+[i5t]:  http://kolbasa.github.io/ueps/screenshots/index-05-small.png
+[i6]:   http://kolbasa.github.io/ueps/screenshots/index-06.png
+[i6t]:  http://kolbasa.github.io/ueps/screenshots/index-06-small.png
+
+[r1]:   http://kolbasa.github.io/ueps/screenshots/rights-01.png
+[r1t]:  http://kolbasa.github.io/ueps/screenshots/rights-01-small.png
+[r2]:   http://kolbasa.github.io/ueps/screenshots/rights-02.png
+[r2t]:  http://kolbasa.github.io/ueps/screenshots/rights-02-small.png
 

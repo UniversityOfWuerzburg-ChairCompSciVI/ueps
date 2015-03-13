@@ -315,13 +315,17 @@ hochladen. Hierfür muss ein eigenes externes Tool verwendet werden (z.B.
 #### Aufgabengruppe erstellen ([Screenshot](#edit-group))
 Es gibt zwei Arten von Aufgabengruppen, **bewertete** und **unbewertete**. Unbewertete 
 Aufgabengruppen dienen dem freien Üben und bieten uneingeschränkten Zugang zu den
-Musterlösungen. Bewertete Aufgabengruppen sind zeitbeschränkt und diesen zur 
+Musterlösungen. Bewertete Aufgabengruppen sind zeitbeschränkt und dienen zur 
 Feststellung der Fähigkeiten der Studenten.
 
-Ergebnisse können nach Ablauf der Abgabezeit
+Ergebnisse können nach Ablauf der Abgabezeit können automatisch oder manuell 
+freigegeben werden.
 
+TODO :: TODO :: TODO :: TODO
 
 #### Aufgabe erstellen ([Screenshot](#edit-exercise))
+
+TODO :: TODO :: TODO :: TODO
 
 -
 

@@ -332,23 +332,21 @@ Die Rolle 'Dozent' priviligiert einen Benutzer dazu folgende Funktionalitäten *
 TODO :: TODO :: TODO :: TODO
 
 Um endgültige Bewertungen an Moodle zu übertragen, können sich Nutzer mit Bewertungsrechten zu den einzelnen Aufgabengruppen CSV-Dateien generieren.
-```mds-csv
-ex_id;user_id;points;max_points
-64;student_4585;1;1
-64;student_6933;1;1
-64;student_7571;0;1
-68;dozent_2;1;1
-68;student_4827;1;1
-68;student_8539;1;1
-74;student_6933;2;2
-74;user_1;2;2
-76;student_1210;0;1
-76;student_5586;0;1
-76;student_5940;1;1
-81;student_3890;1;1
-90;student_3890;0;3
-90;student_5536;3;3
-90;student_5770;0;3
+```
+ex_id ; user_id    ; points ; max_points
+64    ; student_45 ; 1      ; 1
+64    ; student_69 ; 1      ; 1
+64    ; student_75 ; 0      ; 1
+68    ; student_48 ; 1      ; 1
+68    ; student_85 ; 1      ; 1
+74    ; student_69 ; 2      ; 2
+76    ; student_12 ; 0      ; 1
+76    ; student_55 ; 0      ; 1
+76    ; student_59 ; 1      ; 1
+81    ; student_38 ; 1      ; 1
+90    ; student_38 ; 0      ; 3
+90    ; student_55 ; 3      ; 3
+90    ; student_57 ; 0      ; 3
 ```
 
 -

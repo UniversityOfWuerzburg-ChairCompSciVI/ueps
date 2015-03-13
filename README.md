@@ -221,7 +221,7 @@ Es lassen sich zwei Pfade konfigurieren (optional).
 
 Alle Texte sind in der Properties-Datei [``text_de.properties``](src/main/resources/text_de.properties) zusammengefasst und lassen sich so komfortabel abändern.
 
-Alle Bilder, das Favicon und die Hintergrundfarbe können in der [``config.properties``](src/main/resources/config.properties#L180-L262) geändert werden. Für größere Änderungen gibt es das Stylesheet [``main.css``](src/main/webapp/resources/css/styles.css). Das Aussehen der Tooltips lässt sich mit [``tipsy.css``](src/main/webapp/resources/css/tipsy.css) verändern.
+Alle Bilder, das Favicon und die Hintergrundfarbe können in der [``config.properties``](src/main/resources/config.properties#L180-L262) geändert werden. Für größere Änderungen gibt es das Stylesheet [``main.css``](src/main/webapp/resources/css/main.css). Das Aussehen der Tooltips lässt sich mit [``tipsy.css``](src/main/webapp/resources/css/tipsy.css) verändern.
 
 -
 

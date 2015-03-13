@@ -311,8 +311,7 @@ TODO :: TODO :: TODO :: TODO
 
 &nbsp;         | &nbsp;
 -------------- | --------------
-[![][i1t]][i1] | Beschreibung und Auflistung der <br>Übungsaufgaben zu einem Szenario <br>
-                 <a href="http://ueps.scienceontheweb.net?admin=xhtml&userID=demo_admin&encryptedCode=showcase" target="_blank">Demo 1</a>
+[![][i1t]][i1] | Beschreibung und Auflistung der <br>Übungsaufgaben zu einem Szenario <br><a href="http://ueps.scienceontheweb.net?admin=xhtml&userID=demo_admin&encryptedCode=showcase" target="_blank">Showcase</a>
 [![][i2t]][i2] | Auflistung der Szenarien falls keine <br>``scenarioID`` per GET-Paramater übergeben <br>wurde
 
 #### Übungsseite
@@ -355,7 +354,6 @@ TODO :: TODO :: TODO :: TODO
 [e1t]: http://kolbasa.github.io/ueps/screenshots/edit-scenario-01-small.png
 [e2]:  http://kolbasa.github.io/ueps/screenshots/edit-scenario-02.png
 [e2t]: http://kolbasa.github.io/ueps/screenshots/edit-scenario-02-small.png
-[e2s]: http://ueps.scienceontheweb.net?edit_scenario=xhtml&userID=demo_admin&encryptedCode=showcase&scenario=2
 [e3]:  http://kolbasa.github.io/ueps/screenshots/edit-group-02.png
 [e3t]: http://kolbasa.github.io/ueps/screenshots/edit-group-02-small.png
 [e4]:  http://kolbasa.github.io/ueps/screenshots/edit-ex-02.png
@@ -365,7 +363,7 @@ TODO :: TODO :: TODO :: TODO
 -------------- | --------------
 [![][e0t]][e0] | Aufgabenliste als Baumstruktur
 [![][e1t]][e1] | Kontextmenü-Einträge (wird durch einen <br>Rechtsklick auf einen Knoten geöffnet)
-[![][e2t]][e2] | Szenario bearbeiten <br>[Showcase][e2s]
+[![][e2t]][e2] | Szenario bearbeiten  <br><a href="http://ueps.scienceontheweb.net?edit_scenario=xhtml&userID=demo_admin&encryptedCode=showcase&scenario=2" target="_blank">Showcase</a>
 [![][e3t]][e3] | Übungsblatt bearbeiten
 [![][e4t]][e4] | Übungsaufgabe bearbeiten
 

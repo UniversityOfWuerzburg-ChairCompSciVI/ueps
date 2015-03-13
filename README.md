@@ -24,7 +24,7 @@ Link          | Rolle          | Szenario
   5. [Aussehen/Text anpassen](#aussehentext-anpassen)
 4. [Deploy mit Maven](#deploy-mit-maven)
 5. [Bedienung](#bedienung)
-  1. [Übungsmaterial erstellen/bearbeiten](#%C3%9Cbungsmaterial-erstellenbearbeiten)
+  1. [Übungsmaterial erstellen/bearbeiten](#%C3%9Cbungsmaterial-erstellenbearbeiten-screenshots)
   2. [Rollen und Rechte](#rollen-und-rechte)
   3. [Abgaben bewerten](#abgaben-bewerten)
 8. [Screenshots](#screenshots)

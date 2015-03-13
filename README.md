@@ -194,7 +194,7 @@ Admins können auch zur Laufzeit hinzugefügt werden, hierfür muss man jedoch d
 
 ÜPS besitzt keine eigene Nutzerverwaltung. Die Nutzer-Authentifizierung erfolgt über die Open-Source Lernplattform [Moodle](https://moodle.org/) mithilfe der "[Externe URL](https://docs.moodle.org/27/de/Link/URL_konfigurieren)"-Funktion. Diese Form der Anmeldung setzt voraus, dass die Option [``USE_MOODLE_LOGIN``](src/main/resources/config.properties#L111) auf ``true`` steht
 
-Für die Anmeldung werden zwei GET-Paramater übergeben: die **Nutzer-ID** (``userID``) und ein **verschlüsseltes Kennwort** (``encryptedCode``).
+Für die Anmeldung werden zwei HTTP GET Paramater übergeben: die **Nutzer-ID** (``userID``) von Moodle und ein **verschlüsseltes Kennwort** (``encryptedCode``).
 In der config.properties wird zusätzlich ein [``SECRET_PHRASE``](src/main/resources/config.properties#L112) festgelegt. Dieses ``SECRET_PHRASE`` wirds benutzt, um den ``encryptedCode`` zu generieren, der als Parameter an den ÜPS-Server übermittelt wird.
 
 Der verschlüsselte Code wird über einen md5-Wert der aktuellen Client-IP-Adresse in Verbindung mit dem ``SECRET_PHRASE`` und der Nutzer-ID erzeugt, d.h. 
@@ -205,7 +205,8 @@ encryptedCode = md5(userIP + secretPhrase + userID)
 Die Implementierung in ÜPS findet man [hier](src/main/java/de/uniwue/info6/webapp/session/SessionObject.java#L141-L166).<br>
 **WICHTIG:** ``SECRET_PHRASE`` sollte aufgrund seiner Rolle **nicht** den [voreingestellten](src/main/resources/config.properties#L112) Wert beibehalten.
 
-Die URL zusammen mit den Anmeldeparametern sieht folgendermaßen aus:
+Zusätzlich zu den Anmeldeparametern sollte man noch die Kennung der zu bearbeitenden Szenarios ``scenarioID`` angeben.
+Die fertige URL sieht folgendermaßen aus:
 
 ```
 http://%HOST_URL%/index.xhtml?

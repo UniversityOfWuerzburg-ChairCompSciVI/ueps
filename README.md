@@ -38,7 +38,7 @@ Link          | Rolle          | Szenario
 * Firefox, WebKit (Chrome, Safari...) oder Internet Explorer (ab Version 9)
 * Aktiviertes JavaScript wird vorausgesetzt
 
-(Mobile Geräte werden zwar unterstützt, es jedoch wird keine angepasste Darstelltung angeboten)
+(Mobile Geräte werden zwar unterstützt, es wird jedoch keine angepasste Darstelltung angeboten)
 
 ------
 

@@ -311,14 +311,14 @@ Auflistung der Szenarien falls keine <br>``scenarioID`` per GET-Paramater überg
 
 -
 
-[tsk-01]:    [base]task-01.png
-[tsk-01-th]: [base]task-01-small.png
-[tsk-02]:    [base]task-02.png
-[tsk-02-th]: [base]task-02-small.png
-[tsk-03]:    [base]task-03.png
-[tsk-03-th]: [base]task-03-small.png
-[tsk-04]:    [base]task-04.png
-[tsk-04-th]: [base]task-04-small.png
+[tsk-01]:    http://kolbasa.github.io/ueps/screenshots/task-01.png
+[tsk-01-th]: http://kolbasa.github.io/ueps/screenshots/task-01-small.png
+[tsk-02]:    http://kolbasa.github.io/ueps/screenshots/task-02.png
+[tsk-02-th]: http://kolbasa.github.io/ueps/screenshots/task-02-small.png
+[tsk-03]:    http://kolbasa.github.io/ueps/screenshots/task-03.png
+[tsk-03-th]: http://kolbasa.github.io/ueps/screenshots/task-03-small.png
+[tsk-04]:    http://kolbasa.github.io/ueps/screenshots/task-04.png
+[tsk-04-th]: http://kolbasa.github.io/ueps/screenshots/task-04-small.png
 
 **Startseite** | &nbsp;
 -------------- | :------------------:

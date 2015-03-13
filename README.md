@@ -297,35 +297,35 @@ TODO :: TODO :: TODO :: TODO
 ------
 
 ## Screenshots
-[base]:      http://kolbasa.github.io/ueps/screenshots/
+[scr]:      http://kolbasa.github.io/ueps/screenshots/
 
-[ind-01]:    [base]index-01.png
-[ind-01-th]: http://kolbasa.github.io/ueps/screenshots/index-01-small.png
-[ind-02]:    http://kolbasa.github.io/ueps/screenshots/index-02.png
-[ind-02-th]: http://kolbasa.github.io/ueps/screenshots/index-02-small.png
+[i1]:  [scr]index-01.png
+[i1t]: [scr]index-01-small.png
+[i2]:  [scr]index-02.png
+[i2t]: [scr]index-02-small.png
 
 **Startseite** | &nbsp;
 -------------- | --------------
-Beschreibung und Auflistung der <br>Übungsaufgaben zu einem Szenario                        | [![][ind-01-th]][ind-01]
-Auflistung der Szenarien falls keine <br>``scenarioID`` per GET-Paramater übergeben wurde   | [![][ind-02-th]][ind-02]
+Beschreibung und Auflistung der <br>Übungsaufgaben zu einem Szenario                        | [![][i1t]][i1]
+Auflistung der Szenarien falls keine <br>``scenarioID`` per GET-Paramater übergeben wurde   | [![][i2t]][i2]
 
 -
 
-[tsk-01]:    http://kolbasa.github.io/ueps/screenshots/task-01.png
-[tsk-01-th]: http://kolbasa.github.io/ueps/screenshots/task-01-small.png
-[tsk-02]:    http://kolbasa.github.io/ueps/screenshots/task-02.png
-[tsk-02-th]: http://kolbasa.github.io/ueps/screenshots/task-02-small.png
-[tsk-03]:    http://kolbasa.github.io/ueps/screenshots/task-03.png
-[tsk-03-th]: http://kolbasa.github.io/ueps/screenshots/task-03-small.png
-[tsk-04]:    http://kolbasa.github.io/ueps/screenshots/task-04.png
-[tsk-04-th]: http://kolbasa.github.io/ueps/screenshots/task-04-small.png
+[t1]:  [scr]task-01.png
+[t1t]: [scr]task-01-small.png
+[t2]:  [scr]task-02.png
+[t2t]: [scr]task-02-small.png
+[t3]:  [scr]task-03.png
+[t3t]: [scr]task-03-small.png
+[t4]:  [scr]task-04.png
+[t4t]: [scr]task-04-small.png
 
 **Startseite** | &nbsp;
--------------- | :------------------:
-Übungsbereich für die Studenten   | [![][tsk-01-th]][tsk-01]
-Anzeige des ER-Diagramms          | [![][tsk-02-th]][tsk-02]
-Anzeige von Tabellen              | [![][tsk-03-th]][tsk-03]
-Feedback-Generierung              | [![][tsk-04-th]][tsk-04]
+-------------- | ------------------
+Übungsbereich für die Studenten   | [![][t1t]][t1]
+Anzeige des ER-Diagramms          | [![][t2t]][t2]
+Anzeige von Tabellen              | [![][t3t]][t3]
+Feedback-Generierung              | [![][t4t]][t4]
 
 -
 

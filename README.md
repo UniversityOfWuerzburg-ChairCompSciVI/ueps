@@ -325,8 +325,8 @@ Möchte man dies vermeiden, so müssen die Datenbanken und Nutzer manuell erstel
 und eingetragen werden. Die unter "Datenbank-Host/IP" eingetragene Datenbank
 muss hierfür leer sein und der Nutzer unter "Datenbank-User" muss 
 ``SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, ALTER, LOCK TABLES``-Rechte
-für die neue Datenbank besitzen.
-
+**ausschließlich** für die neue Datenbank besitzen. Als Hilfe wird ein 
+Rechteskript am Anfang der Seite generiert ([Screenshot](#edit-scenario)).
 
 #### Aufgabengruppe erstellen ([Screenshot](#edit-group))
 Es gibt zwei Arten von Aufgabengruppen, **bewertete** und **unbewertete**. Unbewertete 

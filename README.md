@@ -306,6 +306,7 @@ TODO :: TODO :: TODO :: TODO
 
 [i1]:   http://kolbasa.github.io/ueps/screenshots/index-01.png
 [i1t]:  http://kolbasa.github.io/ueps/screenshots/index-01-small.png
+[i1s]:  http://ueps.scienceontheweb.net?admin=xhtml&userID=demo_admin&encryptedCode=showcase
 [i2]:   http://kolbasa.github.io/ueps/screenshots/index-02.png
 [i2t]:  http://kolbasa.github.io/ueps/screenshots/index-02-small.png
 
@@ -347,8 +348,6 @@ TODO :: TODO :: TODO :: TODO
 
 
 #### Szenarien erstellen/bearbeiten
-
-
 
 [e0]:  http://kolbasa.github.io/ueps/screenshots/admin-01.png
 [e0t]: http://kolbasa.github.io/ueps/screenshots/admin-01-small.png

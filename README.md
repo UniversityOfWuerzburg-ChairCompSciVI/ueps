@@ -366,7 +366,7 @@ TODO :: TODO :: TODO :: TODO
 -------------- | --------------
 [![][e0t]][e0] | Aufgabenliste als Baumstruktur
 [![][e1t]][e1] | Kontextmenü-Einträge (wird durch einen <br>Rechtsklick auf einen Knoten geöffnet)
-[![][e2t]][e2] | Szenario bearbeiten **<a href="[e2s]" target="_blank">Demo 1</a>**
+[![][e2t]][e2] | Szenario bearbeiten **<a href='[e2s]' target="_blank">Demo 1</a>**
 [![][e3t]][e3] | Übungsblatt bearbeiten
 [![][e4t]][e4] | Übungsaufgabe bearbeiten
 

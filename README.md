@@ -28,15 +28,15 @@ Link          | Rolle          | Szenario
 ------
 
 ## Systemanforderungen
-**Serverseitig:**
+**Serverseitig**
 * Tomcat 7 oder höher
   (Für diese Anleitung wird Tomcat 7 verwendet)
 * Maven 3 (zum Kompilieren)
 * MySQL 5-Server
 
-**Clientseitig:**
+**Clientseitig**
 * Firefox, WebKit (Chrome, Safari...) oder Internet Explorer (ab Version 9)
-* Aktiviertes JavaScript wird vorausgesetzt
+* Aktiviertes JavaScript wird vorausgesetzt<br>
 (Mobile Geräte werden zwar unterstützt, es jedoch wird keine angepasste Darstelltung angeboten)
 
 ------

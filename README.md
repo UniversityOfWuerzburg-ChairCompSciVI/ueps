@@ -21,8 +21,11 @@ Link          | Rolle          | Szenario
   4. [Pfadangaben](#pfadangaben)
   5. [Aussehen/Text anpassen](#aussehentext-anpassen)
 4. [Deploy mit Maven](#deploy-mit-maven)
-5. [Quellcodedokumentation](#quellcodedokumentation)
-6. [Screenshots](#screenshots)
+5. [Übungsmaterial erstellen/bearbeiten](#%C3%9Cbungsmaterial-erstellenbearbeiten)
+6. [Rollen und Rechte](#rollen-und-rechte)
+7. [Abgaben bewerten](#abgaben-bewerten)
+8. [Screenshots](#screenshots)
+9. [Quellcodedokumentation](#quellcodedokumentation)
 
 -
 
@@ -264,12 +267,6 @@ Anschließend kann die Anwendung mit folgendem Skript deployed werden:<br/>
 
 -
 
-## Quellcodedokumentation
-<!--- TODO: -->
-[Doxygen Dokumentation](http://kolbasa.github.io/ueps/doxygen/)
-
--
-
 ## Übungsmaterial erstellen/bearbeiten
 TODO :: TODO :: TODO :: TODO
 
@@ -290,7 +287,7 @@ Um den Zugriff auf die Funktionen von ÜPS zu kontrollieren, wurden drei verschi
 #### Rolle 'Admin'
 Der 'Admin' verfügt über umfassende Rechte im ganzen System:
 - globale Benutzerverwaltung z.B. Bestimmung von Dozenten und deren Zuweisung zu Szenarien
-- globale Verwaltung der Szenarien, sowie Rolle 'Dozent' in allen Szenarien
+- globale Verwaltung der Szenarien, sowie Rolle 'Dozent' in allen Szenarien<br>
   (Admins sind die einzigen Nutzer, die neue Szenarien erstellen können)
 
 #### Rolle 'Dozent'
@@ -312,6 +309,7 @@ TODO :: TODO :: TODO :: TODO
 -
 
 ## Screenshots
+&nbsp;
 
 #### Startseite
 
@@ -403,4 +401,11 @@ TODO :: TODO :: TODO :: TODO
 [![][s3t]][s3] | Nutzerabgabe bearbeiten <br><a href="http://ueps.scienceontheweb.net?edit_submission=xhtml&userID=demo_admin&encryptedCode=showcase&submission=1" target="_blank">Showcase</a>
 [![][s4t]][s4] | Kommentar abgeben
 
----
+-
+
+## Quellcodedokumentation
+<!--- TODO: -->
+[Doxygen Dokumentation](http://kolbasa.github.io/ueps/doxygen/)
+
+-
+

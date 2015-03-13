@@ -11,7 +11,7 @@ Link          | Rolle          | Szenario
 
 -
 
-# Inhaltsverzeichnis
+## Inhaltsverzeichnis
 1. [Systemanforderungen](#systemanforderungen)
 2. [Kurzanleitung zur Installation](#kurzanleitung-zur-installation)
 3. [Konfiguration mit 'config.properties'](#konfiguration-mit-configproperties)
@@ -123,12 +123,14 @@ Für die ``slave``-Datenbanken werden jeweils folgende Datenbanknutzer mit besch
 -
 
 ## Konfiguration mit 'config.properties'
+
 Bevor man die Anwendung startet sollte man zunächst einen Blick in die Konfigurationsdatei
 [``config.properties``](src/main/resources/config.properties#L40-L44)
 unter ``src/main/resources/``
 werfen und Angaben zum Datenbank-Server überschreiben.
 
 #### Datenbankangaben
+
 In der [administrativen Datenbank](src/main/resources/config.properties#L40-L44) werden alle Studentenabgaben und zugehörige
 Aufgaben gespeichert (siehe [ER-Diagramm](http://kolbasa.github.io/ueps/screenshots/admin-db-er-diagram.png)).
 

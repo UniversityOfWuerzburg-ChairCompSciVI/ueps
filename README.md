@@ -5,6 +5,8 @@
 
 ## Showcase
 
+<br>
+
 Link          | Rolle          | Szenario
 ------------- | -------------  | -------------
 **<a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=1" target="_blank">Demo 1</a>** | [Student](#rollen-und-rechte) | Amazon Buchdatenbank
@@ -14,7 +16,7 @@ Link          | Rolle          | Szenario
 
 <br>
 
----
+-
 
 # Inhaltsverzeichnis
 1. [Systemanforderungen](#systemanforderungen)
@@ -29,7 +31,7 @@ Link          | Rolle          | Szenario
 5. [Quellcodedokumentation](#quellcodedokumentation)
 6. [Screenshots](#screenshots)
 
----
+-
 
 ## Systemanforderungen
 **Serverseitig**
@@ -44,7 +46,7 @@ Link          | Rolle          | Szenario
 
 Mobile Geräte werden zwar unterstützt, es wird jedoch keine angepasste Darstelltung angeboten
 
----
+-
 
 ## Kurzanleitung zur Installation
 
@@ -114,7 +116,7 @@ Mobile Geräte werden zwar unterstützt, es wird jedoch keine angepasste Darstel
   ```
   <!--- ` -->
 
----
+-
 
 Mit der gezeigten Konfiguration werden beim Start der Anwendungen folgenden Datenbanken erstellt:
 * ``ueps_master`` ([Administrative Datenbank](http://kolbasa.github.io/ueps/screenshots/admin-db-er-diagram.png) - festgelegt durch ``MASTER_DBNAME``)
@@ -125,7 +127,7 @@ Für die ``slave``-Datenbanken werden jeweils folgende Datenbanknutzer mit besch
 * ``ueps_001``
 * ``ueps_002``
 
----
+-
 
 ## Konfiguration mit 'config.properties'
 Bevor man die Anwendung startet sollte man zunächst einen Blick in die Konfigurationsdatei
@@ -225,7 +227,7 @@ Alle Texte sind in der Properties-Datei [``text_de.properties``](src/main/resour
 
 Alle Bilder, das Favicon und die Hintergrundfarbe können in der [``config.properties``](src/main/resources/config.properties) geändert werden. Für größere Änderungen gibt es das Stylesheet [``style.css``](src/main/webapp/resources/css/styles.css). Das Aussehen der Tooltips lässt sich mit [``tipsy.css``](src/main/webapp/resources/css/tipsy.css) verändern.
 
----
+-
 
 
 <a name="DeployMaven"></a>
@@ -266,13 +268,13 @@ Hier dann den entsprechenden Nutzer eintragen und die [Tomcat-URL anpassen](http
 Anschließend kann die Anwendung mit folgendem Skript deployed werden:<br/>
 [``./build-deploy.sh``](build-deploy.sh) unter Linux bzw. [``build-deploy.bat``](build-deploy.bat) unter Windows.
 
----
+-
 
 ## Quellcodedokumentation
 <!--- TODO: -->
 [Doxygen Dokumentation](http://kolbasa.github.io/ueps/doxygen/)
 
----
+-
 
 ## Szenarien erstellen/bearbeiten
 TODO :: TODO :: TODO :: TODO
@@ -283,7 +285,7 @@ TODO :: TODO :: TODO :: TODO
 ### Aufgabe erstellen
 TODO :: TODO :: TODO :: TODO
 
----
+-
 
 ## Rollen und Rechte
 Um den Zugriff auf die Funktionen von ÜPS zu kontrollen, wurden drei verschiedene Rollen eingeführt: Student, Dozent und Admin.
@@ -304,12 +306,12 @@ Die Rolle 'Dozent' priviligiert einen Benutzer dazu folgende Funktionalitäten i
 - Durchführung von Übungsaufgaben
 - Einsicht in die Korrektur der eigenen Abgaben
 
----
+-
 
 ## Abgaben bewerten
 TODO :: TODO :: TODO :: TODO
 
----
+-
 
 ## Screenshots
 

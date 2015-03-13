@@ -181,7 +181,7 @@ public class DaoTools<T> implements Serializable {
    *
    * @param obj
    */
-  protected synchronized void pull(Object obj, Session session) {
+  protected synchronized void refresh(Object obj, Session session) {
     if (obj != null) {
       try {
         session.refresh(obj);
@@ -196,13 +196,13 @@ public class DaoTools<T> implements Serializable {
    *
    *
    */
-  public synchronized void pullObject(Object obj) {
+  public synchronized void refreshObject(Object obj) {
     Session session = null;
     if (obj != null) {
       boolean success = true;
       try {
         session = startTransaction();
-        pull(obj, session);
+        refresh(obj, session);
       } catch (Exception e) {
         success = false;
         log.error("custom hibernate operation failed", e);

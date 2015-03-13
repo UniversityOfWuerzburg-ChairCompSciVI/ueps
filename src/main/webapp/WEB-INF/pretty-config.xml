@@ -73,7 +73,7 @@ xsi:schemaLocation="http://ocpsoft.org/schema/rewrite-config-prettyfaces http://
   </url-mapping>
 
   <url-mapping>
-    <pattern value="/edit-submission-#{exercise}-#{submission}-#{result}" />
+    <pattern value="/edit-submission-#{submission}" />
     <view-id value="/edit_submission.xhtml" />
   </url-mapping>
 

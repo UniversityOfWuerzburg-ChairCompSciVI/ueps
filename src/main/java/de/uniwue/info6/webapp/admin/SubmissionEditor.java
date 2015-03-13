@@ -143,23 +143,13 @@ public class SubmissionEditor implements Serializable {
 
       connectionPool = ConnectionManager.instance();
 
-      if (!requestParams.isEmpty()
-          && requestParams.containsKey(EXERCISE_PARAM)
-          && requestParams.containsKey(SUBMISSION_PARAM)
-          && requestParams.containsKey(RESULT_PARAM)) {
+      if (!requestParams.isEmpty() && requestParams.containsKey(SUBMISSION_PARAM)) {
 
-        String param = requestParams.get(EXERCISE_PARAM);
-        String param2 = requestParams.get(SUBMISSION_PARAM);
-        String param3 = requestParams.get(RESULT_PARAM);
-
-        final int id = Integer.parseInt(param);
-        exercise = exerciseDao.getById(id);
-
-        final int id2 = Integer.parseInt(param2);
-        userEntry = userEntryDao.getById(id2);
-
-        final int id3 = Integer.parseInt(param3);
-        userResult = userResultDao.getById(id3);
+        String submissionParameter = requestParams.get(SUBMISSION_PARAM);
+        final int submissionID = Integer.parseInt(submissionParameter);
+        userEntry = userEntryDao.getById(submissionID);
+        exercise = exerciseDao.pull(userEntry.getExercise());
+        userResult = userResultDao.getLastUserResultFromEntry(userEntry);
 
         if (exercise != null && userEntry != null && userResult != null) {
           SolutionQuery example = new SolutionQuery();

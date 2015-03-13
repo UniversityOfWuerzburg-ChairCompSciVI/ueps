@@ -291,6 +291,7 @@ Um den Zugriff auf die Funktionen von ÜPS zu kontrollieren, wurden drei verschi
 Der 'Admin' verfügt über umfassende Rechte im ganzen System:
 - globale Benutzerverwaltung z.B. Bestimmung von Dozenten und deren Zuweisung zu Szenarien
 - globale Verwaltung der Szenarien, sowie Rolle 'Dozent' in allen Szenarien
+  (Admins sind die einzigen Nutzer, die neue Szenarien erstellen können)
 
 #### Rolle 'Dozent'
 Die Rolle 'Dozent' priviligiert einen Benutzer dazu folgende Funktionalitäten **innerhalb eines Szenarios** (festgelegt von einem Admin) zu nutzen:

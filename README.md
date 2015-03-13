@@ -307,6 +307,7 @@ TODO :: TODO :: TODO :: TODO
 :------------: | :------------:
 Beschreibung und Auflistung <br/>der Übungsaufgaben zu <br/> einem Szenario | [![](http://kolbasa.github.io/ueps/screenshots/index-01-small.png)](http://kolbasa.github.io/ueps/screenshots/index-01.png)
 Auflistung der Szenarien <br/>falls keine ``scenarioID`` per <br/>GET-Paramater übergeben wurde | [![](http://kolbasa.github.io/ueps/screenshots/index-02-small.png)](http://kolbasa.github.io/ueps/screenshots/index-02.png)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;
 
 **Startseite** | &nbsp;
 :------------: | :------------------:

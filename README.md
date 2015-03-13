@@ -380,7 +380,7 @@ ex_id ; user_id    ; points ; max_points
 &nbsp;         | &nbsp;
 -------------- | --------------
 [![][t1t]][t1] | Übungsbereich für die Studenten <br><a href="http://ueps.scienceontheweb.net?task=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=1&exercise=1" target="_blank">Showcase</a>
-[![][t2t]][t2] | Anzeige des ER-Diagramms
+[![][t2t]][t2] | Anzeige des ER-Diagramms <br>(diese lassen sich auch in einem neuen Tab öffnen)
 [![][t3t]][t3] | Anzeige von Tabellen (die Fenster lassen sich <br>ziehen und vergrößern/verkleinern)
 [![][t4t]][t4] | Feedback-Generierung
 [![][t5t]][t5] | Servermeldung bei einer Studentenabgabe für eine **bewertete** Aufgabe <br><a href="http://ueps.scienceontheweb.net?task=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=1&exercise=4" target="_blank">Showcase</a>

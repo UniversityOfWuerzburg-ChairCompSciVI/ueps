@@ -1,8 +1,6 @@
 # ÜPS
 **ÜPS** (**Ü**bungs-**P**rogramm für **S**QL) ist ein webbasiertes Trainingssystem zum Erlernen der Datenbanksprache SQL ([**Screenshots**](#screenshots)).
 
-<!--- http://ueps.ddnss.de:82/ueps/task.xhtml?userID=demo_admin&encryptedCode=showcase&scenarioID=1&exercise=1 -->
-
 ## Showcase
 
 Link          | Rolle          | Szenario
@@ -35,7 +33,7 @@ Link          | Rolle          | Szenario
 * MySQL 5-Server
 
 **Clientseitig**
-* Firefox, WebKit (Chrome, Safari...) oder Internet Explorer (ab Version 9)
+* Firefox, WebKit (Chrome, Safari (ab Ver.7) ...) oder Internet Explorer (ab Ver.9)
 * Aktiviertes JavaScript wird vorausgesetzt
 
 Mobile Geräte werden zwar unterstützt, es wird jedoch keine angepasste Darstelltung angeboten

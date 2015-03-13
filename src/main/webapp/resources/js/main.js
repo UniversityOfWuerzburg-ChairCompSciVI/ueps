@@ -251,12 +251,16 @@ jQuery(document).ready(function() {
   }
 
   jQuery('.tree_description').pulsate({
-   color: '#DCE0FF',
+     glow:   false,
+     reach:  10,
+     color:  '#DCE0FF',
      repeat: 3
   });
 
   jQuery('.admin_help_text').pulsate({
-   color: '#FFE5E5',
+     glow:   false,
+     reach:  10,
+     color:  '#FFE5E5',
      repeat: 2
   });
 
@@ -290,22 +294,30 @@ jQuery(document).ready(function() {
 
 function pulsateButton() {
   jQuery('#usertask\\:user_result_button').pulsate({
-   color: '#D3D8FF',
+     glow:   false,
+     reach:  10,
+     color: '#D3D8FF',
      repeat: 2
   });
 
   jQuery('#usertask\\:result_button').pulsate({
-   color: '#D3D8FF',
+     glow:   false,
+     reach:  10,
+     color: '#D3D8FF',
      repeat: 2
   });
 
   jQuery('#usertask\\:feedback_accordion').pulsate({
-   color: '#D3D8FF',
+     glow:   false,
+     reach:  10,
+     color: '#D3D8FF',
      repeat: 2
   });
 
   jQuery('#saved_query_box').pulsate({
-   color: '#D3D8FF',
+     glow:   false,
+     reach:  10,
+     color: '#D3D8FF',
      repeat: 2
   });
 }

@@ -182,7 +182,7 @@ Wenn eine automatische Installation nicht erwünscht ist, so benötigt die Anwen
 
 #### Nutzer-Authentifizierung
 In der Konfigurationsdatei sollte mindestens ein [Adminstrator-Nutzer](src/main/resources/config.properties#L96) festgelegt werden. Mehrere Nutzer sollten mit einem Semikolon getrennt werden (z.B. ``admin_id1;admin_id2;``).
-Admins können auch zur Laufzeit hinzugefügt werden, hierfür muss man jedoch den Datenbankeintrag für den Nutzer abändern ([Tabelle: ``user``, Spalte: ``is_admin``](http://kolbasa.github.io/ueps/screenshots/admin-db-er-diagram.png)).
+Admins können auch zur Laufzeit hinzugefügt werden, hierfür muss man jedoch den Datenbankeintrag für den Nutzer manuell abändern ([Tabelle: ``user``, Spalte: ``is_admin``](http://kolbasa.github.io/ueps/screenshots/admin-db-er-diagram.png)).
 
 ÜPS besitzt keine eigene Nutzerverwaltung. Die Nutzer-Authentifizierung erfolgt über die Open-Source Lernplattform [Moodle](https://moodle.org/) mithilfe der "[Externe URL](https://docs.moodle.org/27/de/Link/URL_konfigurieren)"-Funktion. Diese Form der Anmeldung setzt voraus, dass die Option [``USE_MOODLE_LOGIN``](src/main/resources/config.properties#L111) auf ``true`` steht
 
@@ -194,7 +194,7 @@ Der verschlüsselte Code wird über einen md5-Wert der aktuellen Client-IP-Adres
 encryptedCode = md5(userIP + secretPhrase + userID)
 ```
 
-Die Implementierung in ÜPS findet man [hier](src/main/java/de/uniwue/info6/webapp/session/SessionObject.java#L141-L166). ``SECRET_PHRASE`` sollte aufgrund seiner Rolle den [voreingestellten](src/main/resources/config.properties#L112) Wert **nicht** beibehalten.
+Die Implementierung in ÜPS findet man [hier](src/main/java/de/uniwue/info6/webapp/session/SessionObject.java#L141-L166). **WICHTIG:** ``SECRET_PHRASE`` sollte aufgrund seiner Rolle den [voreingestellten](src/main/resources/config.properties#L112) Wert **nicht** beibehalten.
 
 Die URL zusammen mit den Anmeldeparametern sieht folgendermaßen aus:
 

@@ -52,7 +52,7 @@ Link          | Rolle          | Szenario
    MASTER_DBNAME = ueps_master
    MASTER_DBUSER = test_user
    MASTER_DBPASS = 3ti4k4tm270kg
-   ```<!--- ` -->
+   ``` <!--- ` -->
 
    Der unter [``MASTER_DBUSER``](src/main/resources/config.properties#L43) festgelegte Nutzer sollte folgende Rechte besitzen:
 

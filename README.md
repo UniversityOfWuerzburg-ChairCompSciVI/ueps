@@ -294,7 +294,7 @@ Anschließend kann die Anwendung mit folgendem Skript deployed werden:<br/>
 │   └── ...
 └── ...
 ```
-Siehe auch [Screenshots](#szenarien-erstellenbearbeiten).
+Siehe auch [Screenshots](#szenarien-erstellenbearbeiten) der eigentlichen Baumdarstellung.
 
 #### Szenarien erstellen
 TODO :: TODO :: TODO :: TODO

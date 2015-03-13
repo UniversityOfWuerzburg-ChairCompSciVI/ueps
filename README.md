@@ -316,9 +316,15 @@ Man sollte darauf achten, dass dieses Skript nicht zu groß wird (am besten unte
 ``DROP``-und ``CREATE``-Statements benötigen viel Laufzeit, um ein Vielfaches mehr 
 als die üblichen und optimierten ``SELECT, UPDATE, DELETE, INSERT``-Statements.
 
-Für jeden eingeloggten Studenten wird das komplette Skript einmal ausgeführt.
+Für jeden Studenten wird das komplette Skript beim Login einmal ausgeführt.
 Es wird also von jeder Tabelle eine Kopie für jeden individuellen Nutzer erstellt
-(hierfür wird einfach bei jeder Tabelle die Moodle-``userID`` als Präfix benutzt).
+(hierfür wird einfach bei jeder Tabelle die Moodle-``userID`` als Präfix angehängt).
+So wird verhindert, dass sich die Nutzer gegenseitig stören, wenn sie die Tabellen
+modifizieren.<br>
+Von den originalen Tabellen wird jeweils ein Hashwert gespeichert. Modifiziert
+ein Student eins seiner Tabellen, so wird **allein** diese mithilfe des SQL-Skripts 
+wieder auf den Ursprungszustand zurückgesetzt. Es wird also nur die Inserts für 
+diese Tabelle aus dem Skript extrahiert.
 
 Optional kann auch ein Entity-Relationship-Diagramm (im JPEG/PNG-Format) 
 bereitgestellt werden.

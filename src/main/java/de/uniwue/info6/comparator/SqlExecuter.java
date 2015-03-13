@@ -102,6 +102,7 @@ public class SqlExecuter {
       return;
     }
 
+    // TODO: fehleranfaellig, sollte man nachbessern
     if (query.getPlainContent().toLowerCase().contains("drop")
         || query.getPlainContent().toLowerCase().contains("truncate")
         || query.getPlainContent().toLowerCase().contains("create")

@@ -281,7 +281,7 @@ Anschließend kann die Anwendung mit folgendem Skript deployed werden:<br/>
 
 ## Bedienung
 
-#### Übungsmaterial erstellen/bearbeiten
+#### Übungsmaterial erstellen/bearbeiten ([Screenshots](#szenarien-erstellenbearbeiten))
 ÜPS fasst einzelne SQL-Übungsaufgaben zusammen zu Aufgabengruppen und 
 Aufgabengruppen zu "Szenarios":
 
@@ -297,9 +297,6 @@ Aufgabengruppen zu "Szenarios":
 │   └── ...
 └── ...
 ```
-
-Siehe auch [Screenshots](#szenarien-erstellenbearbeiten) der eigentlichen 
-Baumdarstellung.
 
 Besitzt der angemeldete Nutzer **Editierrechte**, so kann er Aufgaben komfortabel 
 über die *Editieren*-Seite bearbeiten. Hierfür muss der Nutzer einen 

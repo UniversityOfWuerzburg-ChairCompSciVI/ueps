@@ -297,7 +297,7 @@ TODO :: TODO :: TODO :: TODO
 ------
 
 ## Screenshots
-[base]:      http://kolbasa.github.io/ueps/screenshots/
+[base]: http://kolbasa.github.io/ueps/screenshots/
 
 [i1]:  [base]index-01.png
 [i1t]: [base]index-01-small.png

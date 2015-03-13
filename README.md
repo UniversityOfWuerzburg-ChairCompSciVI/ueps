@@ -52,20 +52,21 @@ Link          | Rolle          | Szenario
    MASTER_DBNAME = ueps_master
    MASTER_DBUSER = test_user
    MASTER_DBPASS = 3ti4k4tm270kg
-   ```
-  <!--- ` -->
+   ```<!--- ` -->
+
    Der unter [``MASTER_DBUSER``](src/main/resources/config.properties#L43) festgelegte Nutzer sollte folgende Rechte besitzen:
+
   ```
   SELECT, INSERT, UPDATE, DELETE, ALTER, CREATE, DROP, GRANT OPTION, LOCK TABLES
-  ```
-  <!--- ` -->
+  ```<!--- ` -->
+
   Die aufgelisteten Rechte müssen für die unter [``MASTER_DBNAME``](src/main/resources/config.properties#L42) angegebene Datenbank sowie für neu erstellte Datenbanken gelten. Eine Rechteskript könnte beispielsweise folgendermaßen aussehen:
+
   ```
   GRANT SELECT, INSERT, UPDATE, DELETE, ALTER, CREATE, DROP,
   GRANT OPTION, LOCK TABLES, ON *.* TO '%MASTER_DBUSER%'@'%MASTER_DBHOST%'
   IDENTIFIED BY '%MASTER_DBPASS%';
-  ```
-  <!--- ` -->
+  ```<!--- ` -->
 
 6. Anschließend kann die Anwendung kompiliert werden:
    * *Unter Linux*<br/>
@@ -96,11 +97,9 @@ Link          | Rolle          | Szenario
     INFO (ueps): Importing database
     INFO (ueps): Creating database 'ueps_master'
     INFO (ueps): Admin user with id: 'user_1' added
-  ```
+  ```<!--- ` -->
 
-  <!--- ` -->
-
---
+---
 
 Mit der gezeigten Konfiguration werden beim Start der Anwendungen folgenden Datenbanken erstellt:
 * ``ueps_master`` ([Administrative Datenbank](http://kolbasa.github.io/ueps/screenshots/admin-db-er-diagram.png) - festgelegt durch ``MASTER_DBNAME``)
@@ -230,8 +229,6 @@ Hier muss einem Nutzer (hier: 'admin') die Rolle 'manager-script' zugewiesen wer
 <user username="admin" password="testing" roles="manager-script"/>
 ```
 
-<!--- ` -->
-
 **pom.xml** im [Root-Verzeichnis](pom.xml#L141-L163)<br/>
 Hier dann den entsprechenden Nutzer eintragen und die [Tomcat-URL anpassen](http://tomcat.apache.org/maven-plugin-trunk/tomcat7-maven-plugin/usage.html):
 ```
@@ -250,8 +247,6 @@ Hier dann den entsprechenden Nutzer eintragen und die [Tomcat-URL anpassen](http
 </configuration>
 </plugin>
 ```
-
-<!--- ` -->
 
 Anschließend kann die Anwendung mit folgendem Skript deployed werden:<br/>
 [``./build-deploy.sh``](build-deploy.sh) unter Linux bzw. [``build-deploy.bat``](build-deploy.bat) unter Windows.
@@ -303,13 +298,15 @@ TODO :: TODO :: TODO :: TODO
 
 ## Screenshots
 
-[scr-01]: http://kolbasa.github.io/ueps/screenshots/index-01.png
+[scr-01]:    http://kolbasa.github.io/ueps/screenshots/index-01.png
 [scr-01-th]: http://kolbasa.github.io/ueps/screenshots/index-01-small.png
+[scr-02]:    http://kolbasa.github.io/ueps/screenshots/index-02.png
+[scr-02-th]: http://kolbasa.github.io/ueps/screenshots/index-02-small.png
 
 **Startseite** | &nbsp;
 -------------- | --------------
 Beschreibung und Auflistung der <br>Übungsaufgaben zu einem Szenario | [![][scr-01-th]][scr-01]
-Auflistung der Szenarien falls keine <br>``scenarioID`` per GET-Paramater übergeben wurde | [![](http://kolbasa.github.io/ueps/screenshots/index-02-small.png)](http://kolbasa.github.io/ueps/screenshots/index-02.png)
+Auflistung der Szenarien falls keine <br>``scenarioID`` per GET-Paramater übergeben wurde | [![][scr-02-th]][scr-02]
 
 ---
 

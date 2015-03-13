@@ -308,10 +308,13 @@ gewünschten Knoten im Baum auswählen, das Kontextmenü mit einem Rechtsklick
 ([Screenshot](#szenarien-erstellenbearbeiten)).
 
 #### Szenarios erstellen
-Szenarios
+Ein einzelnes Szenario stellt eine SQL Datenbank dar. Auf dieser Datenbank werden
+alle SQL-Queries der Studenten ausgeführt.
+Für das Erstellen eines neuen Szenarios muss der Autor ein MySQL-Datenbank-Skript
+hochladen. Hierfür muss ein eigenes externes Tool verwendet werden (z.B. [HeidiSQL](http://www.heidisql.com/), [SQuirrel](http://squirrel-sql.sourceforge.net/) ...).
 
 #### Aufgabengruppe erstellen
-TODO :: TODO :: TODO :: TODO
+Es gibt zwei Arten von Aufgabengruppen, 'bewertete' und 'unbewertete'.
 
 #### Aufgabe erstellen
 TODO :: TODO :: TODO :: TODO

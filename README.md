@@ -368,6 +368,7 @@ ex_id ; user_id    ; points ; max_points
 [![][i6t]][i6] | Eine **unbewertete** Übungsgruppe aufgeklappt
 [![][i5t]][i5] | Eine **bewertete** und noch **aktive** Übungsgruppe aufgeklappt
 [![][i3t]][i3] | Eine **bewertete** und bereits **abgelaufene** Übungsgruppe aufgeklappt
+[![][i4t]][i4] | Eine einzelne Bewertung mit Kommentar vom Korrektor aufgeklappt
 [![][i2t]][i2] | Auflistung der Szenarien falls keine <br>``scenarioID`` per GET-Paramater übergeben <br>wurde
 
 -

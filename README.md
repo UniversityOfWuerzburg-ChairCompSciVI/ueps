@@ -315,6 +315,8 @@ Für das Erstellen eines neuen Szenarios muss der Autor ein MySQL-Datenbank-Skri
 hochladen. Hierfür muss ein eigenes externes Tool verwendet werden (z.B. 
 [HeidiSQL][heidi], [SQuirrel][squ], [phpMyAdmin][php]  ...).
 
+[test][edit-scenario]
+
 #### Aufgabengruppe erstellen
 Es gibt zwei Arten von Aufgabengruppen, 'bewertete' und 'unbewertete'.
 
@@ -419,7 +421,7 @@ ex_id ; user_id    ; points ; max_points
 -------------- | --------------
 [![][e0t]][e0] | Aufgabenliste als Baumstruktur <br><a href="http://ueps.scienceontheweb.net?admin=xhtml&userID=demo_admin&encryptedCode=showcase&scenarioID=1" target="_blank">Showcase</a>
 [![][e1t]][e1] | Kontextmenü-Einträge (wird durch einen <br>Rechtsklick auf einen Knoten geöffnet)
-[![][e2t]][e2] | Szenario bearbeiten <br><a href="http://ueps.scienceontheweb.net?edit_scenario=xhtml&userID=demo_admin&encryptedCode=showcase&scenario=1&scenarioID=1" target="_blank">Showcase</a>
+[![][e2t]][e2] | <a href="#edit-scenario"></a>Szenario bearbeiten <br><a href="http://ueps.scienceontheweb.net?edit_scenario=xhtml&userID=demo_admin&encryptedCode=showcase&scenario=1&scenarioID=1" target="_blank">Showcase</a>
 [![][e3t]][e3] | Übungsblatt bearbeiten <br><a href="http://ueps.scienceontheweb.net?edit_group=xhtml&userID=demo_admin&encryptedCode=showcase&group=1&scenarioID=1" target="_blank">Showcase</a>
 [![][e4t]][e4] | Übungsaufgabe bearbeiten <br><a href="http://ueps.scienceontheweb.net?edit_ex=xhtml&userID=demo_admin&encryptedCode=showcase&exercise=62&scenarioID=1" target="_blank">Showcase</a>
 

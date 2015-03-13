@@ -334,7 +334,7 @@ TODO :: TODO :: TODO :: TODO
 Um endgültige Bewertungen an Moodle zu übertragen, können sich Nutzer mit Bewertungsrechten zu den einzelnen Aufgabengruppen CSV-Dateien generieren.
 
 Anleitung:
-*Bewerten*->*Nach gesuchtem Übungsblatt filtern*->*Export-Symbol klicken*
+*Bewerten*&#8594;*Nach gesuchtem Übungsblatt filtern*->*Export-Symbol klicken*
 
 ```
 ex_id ; user_id    ; points ; max_points

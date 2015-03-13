@@ -117,7 +117,6 @@ Mobile Geräte werden zwar unterstützt, es wird jedoch keine angepasste Darstel
 
 -
 
-
 [er-amazon]: src/main/resources/sql/1/er-diagram.png
 [er-wm2010]: src/main/resources/sql/2/wm_2014_05_14-12_00_37.png
 
@@ -281,6 +280,7 @@ Anschließend kann die Anwendung mit folgendem Skript deployed werden:<br/>
 ## Bedienung
 
 #### Übungsmaterial erstellen/bearbeiten
+ÜPS fasst Aufgaben zusammen zu Aufgabengruppen und Aufgabengruppen zu Szenarien:
 
 ```
 ├── Szenario 01

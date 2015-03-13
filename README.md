@@ -329,7 +329,8 @@ Die Rolle 'Dozent' priviligiert einen Benutzer dazu folgende Funktionalitäten *
 -
 
 ### Abgaben bewerten
-TODO :: TODO :: TODO :: TODO
+Nutzer mit Bewertungsrechten können Studentenabgaben aufrufen und gegebenenfalls korrigieren. Wenn manuelle Korrekturen vorgenommen wurden, so wird die ``userID`` des Korrektors gespeichert.
+Einzelne Studentenabgaben können ebenfalls kommentiert werden und nach Freigabe der Ergebnisse von den Nutzern eingesehen werden.
 
 Um endgültige Bewertungen an Moodle zu übertragen, können sich Nutzer mit Bewertungsrechten zu den einzelnen Aufgabengruppen CSV-Dateien generieren.
 

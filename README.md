@@ -311,6 +311,9 @@ Für das Erstellen eines neuen Szenarios muss der Autor ein MySQL-Datenbank-Skri
 hochladen. Hierfür muss ein eigenes externes Tool verwendet werden (z.B. 
 [HeidiSQL][heidi], [SQuirrel][squ], [phpMyAdmin][php]  ...).
 
+Optional kann auch ein Entity-Relationship-Diagramm (im JPEG/PNG-Format) 
+bereitgestellt werden.
+
 
 #### Aufgabengruppe erstellen ([Screenshot](#edit-group))
 Es gibt zwei Arten von Aufgabengruppen, **bewertete** und **unbewertete**. Unbewertete 
@@ -318,14 +321,14 @@ Aufgabengruppen dienen dem freien Üben und bieten uneingeschränkten Zugang zu 
 Musterlösungen. Bewertete Aufgabengruppen sind zeitbeschränkt und dienen zur 
 Feststellung der Fähigkeiten der Studenten.
 
-Ergebnisse können nach Ablauf der Abgabezeit können automatisch oder manuell 
-freigegeben werden.
+Ergebnisse können nach Ablauf der Abgabezeit automatisch oder manuell 
+freigegeben werden. Möchte man nach einer manuellen Bearbeitungszeit die 
+Ergebnisse freigeben, so muss man nur die Option 'nicht automatisch freigeben'
+wieder auf 'automatisch freigeben' setzen.
 
-TODO :: TODO :: TODO :: TODO
 
 #### Aufgabe erstellen ([Screenshot](#edit-exercise))
 
-TODO :: TODO :: TODO :: TODO
 
 -
 

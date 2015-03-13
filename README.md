@@ -306,7 +306,7 @@ TODO :: TODO :: TODO :: TODO
 Startseite     | &nbsp;
 -------------- | --------------
 Beschreibung und Auflistung der <br>Übungsaufgaben zu einem Szenario | [![][i1t]][i1]
-Auflistung der Szenarien falls keine <br>``scenarioID`` per GET-Paramater übergeben wurde | [![][i2t]][i2]
+Auflistung der Szenarien falls keine <br>``scenarioID`` per GET-Paramater übergeben <br>wurde | [![][i2t]][i2]
 
 -
 
@@ -340,15 +340,21 @@ Hinzufügen von Rechten            | [![][r2t]][r2]
 
 -
 
-[ec1]:  http://kolbasa.github.io/ueps/screenshots/edit-scenario-01.png
-[ec1t]: http://kolbasa.github.io/ueps/screenshots/edit-scenario-01-small.png
-[ec2]:  http://kolbasa.github.io/ueps/screenshots/edit-scenario-02.png
-[ec2t]: http://kolbasa.github.io/ueps/screenshots/edit-scenario-02-small.png
+[e1]:  http://kolbasa.github.io/ueps/screenshots/edit-scenario-01.png
+[e1t]: http://kolbasa.github.io/ueps/screenshots/edit-scenario-01-small.png
+[e2]:  http://kolbasa.github.io/ueps/screenshots/edit-scenario-02.png
+[e2t]: http://kolbasa.github.io/ueps/screenshots/edit-scenario-02-small.png
+[e3]:  http://kolbasa.github.io/ueps/screenshots/edit-ex-01.png
+[e3t]: http://kolbasa.github.io/ueps/screenshots/edit-ex-01-small.png
+[e4]:  http://kolbasa.github.io/ueps/screenshots/edit-group-01.png
+[e4t]: http://kolbasa.github.io/ueps/screenshots/edit-group-01-small.png
 
 Szenarien erstellen/bearbeiten     | &nbsp;
 ---------------------------------- | ----------------------------------
-Kontextmenü-Eintrag  | [![][ec1t]][ec1]
-Szenario bearbeiten  | [![][ec2t]][ec2]
+Kontextmenü-Eintrag       | [![][e1t]][e1]
+Szenario bearbeiten       | [![][e2t]][e2]
+Übungsaufgabe bearbeiten  | [![][e3t]][e3]
+Übungsblatt bearbeiten    | [![][e4t]][e4]
 
 -
 

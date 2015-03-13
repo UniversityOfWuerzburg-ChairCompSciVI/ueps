@@ -36,7 +36,8 @@ Link          | Rolle          | Szenario
 
 **Clientseitig**
 * Firefox, WebKit (Chrome, Safari...) oder Internet Explorer (ab Version 9)
-* Aktiviertes JavaScript wird vorausgesetzt<br>
+* Aktiviertes JavaScript wird vorausgesetzt
+
 (Mobile Geräte werden zwar unterstützt, es jedoch wird keine angepasste Darstelltung angeboten)
 
 ------

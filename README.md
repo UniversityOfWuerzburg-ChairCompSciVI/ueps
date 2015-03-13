@@ -312,7 +312,7 @@ TODO :: TODO :: TODO :: TODO
 
 &nbsp;         | &nbsp;
 -------------- | --------------
-[![][i1t]][i1] | Beschreibung und Auflistung der <br>Übungsaufgaben zu einem Szenario
+[![][i1t]][i1] | Beschreibung und Auflistung der <br>Übungsaufgaben zu einem Szenario <br>[Showcase][i1s]
 [![][i2t]][i2] | Auflistung der Szenarien falls keine <br>``scenarioID`` per GET-Paramater übergeben <br>wurde
 
 #### Übungsseite

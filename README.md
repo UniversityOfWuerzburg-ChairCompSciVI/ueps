@@ -303,11 +303,36 @@ TODO :: TODO :: TODO :: TODO
 
 ## Screenshots
 
+<style>
+ table { table-layout: fixed; }
+ table th, table td { overflow: hidden; }
+</style>
+
+<table class="span12">
+  <thead>
+    <tr>
+      <th style="width: 30%">Col 1</th>
+      <th style="width: 20%">Col 2</th>
+      <th style="width: 10%">Col 3</th>
+      <th style="width: 30%">Col 4</th>
+      <th style="width: 10%">Col 5</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Val 1</th>
+      <td>Val 2</th>
+      <td>Val 3</th>
+      <td>Val 4</th>
+      <td>Val 5</th>
+    </tr>
+  </tbody>
+</table>
+
 **Startseite** | &nbsp;
 :------------: | :------------:
 Beschreibung und Auflistung <br/>der Übungsaufgaben zu <br/> einem Szenario | [![](http://kolbasa.github.io/ueps/screenshots/index-01-small.png)](http://kolbasa.github.io/ueps/screenshots/index-01.png)
 Auflistung der Szenarien <br/>falls keine ``scenarioID`` per <br/>GET-Paramater übergeben wurde | [![](http://kolbasa.github.io/ueps/screenshots/index-02-small.png)](http://kolbasa.github.io/ueps/screenshots/index-02.png)
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;
 
 **Startseite** | &nbsp;
 :------------: | :------------------:

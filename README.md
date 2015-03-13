@@ -280,7 +280,7 @@ Anschließend kann die Anwendung mit folgendem Skript deployed werden:<br/>
 ## Bedienung
 
 #### Übungsmaterial erstellen/bearbeiten
-ÜPS fasst Aufgaben zusammen zu Aufgabengruppen und Aufgabengruppen zu Szenarien:
+ÜPS fasst Aufgaben zusammen zu Aufgabengruppen und Aufgabengruppen zu Szenarien [Screenshot](#szenarien-erstellenbearbeiten):
 
 ```
 ├── Szenario 01

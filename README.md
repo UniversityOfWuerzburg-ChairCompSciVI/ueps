@@ -305,8 +305,8 @@ TODO :: TODO :: TODO :: TODO
 
 Startseite     | &nbsp;
 -------------- | --------------
-Beschreibung und Auflistung der <br>Übungsaufgaben zu einem Szenario                        | [![][i1t]][i1]
-Auflistung der Szenarien falls keine <br>``scenarioID`` per GET-Paramater übergeben wurde   | [![][i2t]][i2]
+Beschreibung und Auflistung der <br>Übungsaufgaben zu einem Szenario | [![][i1t]][i1]
+Auflistung der Szenarien falls keine <br>``scenarioID`` per GET-Paramater übergeben wurde | [![][i2t]][i2]
 
 -
 
@@ -321,10 +321,10 @@ Auflistung der Szenarien falls keine <br>``scenarioID`` per GET-Paramater überg
 
 Übungsseite    | &nbsp;
 -------------- | --------------
-Übungsbereich für die Studenten   | [![][t1t]][t1]
-Anzeige des ER-Diagramms          | [![][t2t]][t2]
-Anzeige von Tabellen              | [![][t3t]][t3]
-Feedback-Generierung              | [![][t4t]][t4]
+Übungsbereich für die Studenten | [![][t1t]][t1]
+Anzeige des ER-Diagramms | [![][t2t]][t2]
+Anzeige von Tabellen (die Fenster <br>lassen sich ziehen und vergrößern/verkleinern) | [![][t3t]][t3]
+Feedback-Generierung | [![][t4t]][t4]
 
 -
 
@@ -363,7 +363,7 @@ Szenario bearbeiten  | [![][ec2t]][ec2]
 
 Abgaben bewerten  | &nbsp;
 ----------------- | -----------------
-Abgaben lassen sich nach dem Szenario, <br>dem Übungsblatt, der Übungsaufgabe <br>oder nach der User-ID sortieren <br>(oder nach einer Kombination <br>dieser Parameter) | [![][s1t]][s1]
+Abgaben lassen sich nach dem Szenario, <br>dem Übungsblatt, der Übungsaufgabe <br>oder nach der User-ID sortieren <br>(oder nach einer Kombination dieser <br>Parameter) | [![][s1t]][s1]
 Auflistung der Nutzereinträge in einer <br>Baumstruktur | [![][s2t]][s2]
 Nutzerabgabe bearbeiten | [![][s3t]][s3]
 Kommentar abgeben | [![][s4t]][s4]

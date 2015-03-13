@@ -302,17 +302,19 @@ TODO :: TODO :: TODO :: TODO
 
 ## Screenshots
 
+#### Startseite
+
 [i1]:   http://kolbasa.github.io/ueps/screenshots/index-01.png
 [i1t]:  http://kolbasa.github.io/ueps/screenshots/index-01-small.png
 [i2]:   http://kolbasa.github.io/ueps/screenshots/index-02.png
 [i2t]:  http://kolbasa.github.io/ueps/screenshots/index-02-small.png
 
-Startseite     | &nbsp;
+&nbsp;         | &nbsp;
 -------------- | --------------
 Beschreibung und Auflistung der <br>Übungsaufgaben zu einem Szenario | [![][i1t]][i1]
 Auflistung der Szenarien falls keine <br>``scenarioID`` per GET-Paramater übergeben <br>wurde | [![][i2t]][i2]
 
--
+#### Übungsseite
 
 [t1]:   http://kolbasa.github.io/ueps/screenshots/task-01.png
 [t1t]:  http://kolbasa.github.io/ueps/screenshots/task-01-small.png
@@ -323,26 +325,28 @@ Auflistung der Szenarien falls keine <br>``scenarioID`` per GET-Paramater überg
 [t4]:   http://kolbasa.github.io/ueps/screenshots/task-04.png
 [t4t]:  http://kolbasa.github.io/ueps/screenshots/task-04-small.png
 
-Übungsseite    | &nbsp;
+&nbsp;         | &nbsp;
 -------------- | --------------
 Übungsbereich für die Studenten | [![][t1t]][t1]
 Anzeige des ER-Diagramms | [![][t2t]][t2]
 Anzeige von Tabellen (die Fenster lassen sich <br>ziehen und vergrößern/verkleinern) | [![][t3t]][t3]
 Feedback-Generierung | [![][t4t]][t4]
 
--
+#### Rechteverwaltung
 
 [r1]:   http://kolbasa.github.io/ueps/screenshots/rights-01.png
 [r1t]:  http://kolbasa.github.io/ueps/screenshots/rights-01-small.png
 [r2]:   http://kolbasa.github.io/ueps/screenshots/rights-02.png
 [r2t]:  http://kolbasa.github.io/ueps/screenshots/rights-02-small.png
 
-Rechteverwaltung     | &nbsp;
--------------------- | --------------------
+
+&nbsp;         | &nbsp;
+-------------- | --------------
 Auflistung der vergebenen Rechte  | [![][r1t]][r1]
 Hinzufügen von Rechten            | [![][r2t]][r2]
 
--
+
+#### Szenarien erstellen/bearbeiten
 
 [e0]:  http://kolbasa.github.io/ueps/screenshots/admin-01.png
 [e0t]: http://kolbasa.github.io/ueps/screenshots/admin-01-small.png
@@ -355,15 +359,15 @@ Hinzufügen von Rechten            | [![][r2t]][r2]
 [e4]:  http://kolbasa.github.io/ueps/screenshots/edit-ex-02.png
 [e4t]: http://kolbasa.github.io/ueps/screenshots/edit-ex-02-small.png
 
-Szenarien erstellen/bearbeiten     | &nbsp;
----------------------------------- | ----------------------------------
+&nbsp;         | &nbsp;
+-------------- | --------------
 Aufgabenliste als Baumstruktur | [![][e0t]][e0]
 Kontextmenü-Einträge (wird durch einen <br>Rechtsklick auf einen Knoten geöffnet) | [![][e1t]][e1]
 Szenario bearbeiten | [![][e2t]][e2]
 Übungsblatt bearbeiten | [![][e3t]][e3]
 Übungsaufgabe bearbeiten | [![][e4t]][e4]
 
--
+#### Abgaben bewerten
 
 [s1]:   http://kolbasa.github.io/ueps/screenshots/submission-01.png
 [s1t]:  http://kolbasa.github.io/ueps/screenshots/submission-01-small.png
@@ -374,8 +378,8 @@ Szenario bearbeiten | [![][e2t]][e2]
 [s4]:   http://kolbasa.github.io/ueps/screenshots/submission-04.png
 [s4t]:  http://kolbasa.github.io/ueps/screenshots/submission-04-small.png
 
-Abgaben bewerten  | &nbsp;
------------------ | -----------------
+&nbsp;         | &nbsp;
+-------------- | --------------
 Abgaben lassen sich nach dem Szenario, <br>dem Übungsblatt, der Übungsaufgabe <br>oder nach der User-ID sortieren <br>(oder nach einer Kombination dieser <br>Parameter) | [![][s1t]][s1]
 Auflistung der Nutzereinträge in einer <br>Baumstruktur | [![][s2t]][s2]
 Nutzerabgabe bearbeiten | [![][s3t]][s3]

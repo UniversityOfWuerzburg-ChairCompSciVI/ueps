@@ -115,10 +115,14 @@ Mobile Geräte werden zwar unterstützt, es wird jedoch keine angepasste Darstel
 
 -
 
+
+[er-amazon][src/main/resources/sql/1/er-diagram.png]
+[er-wm2010][src/main/resources/sql/2/wm_2014_05_14-12_00_37.png]
+
 Mit der gezeigten Konfiguration werden beim Start der Anwendungen folgenden Datenbanken erstellt:
 * ``ueps_master`` ([Administrative Datenbank](http://kolbasa.github.io/ueps/screenshots/admin-db-er-diagram.png) - festgelegt durch ``MASTER_DBNAME``)
-* ``ueps_slave_001`` (Datenbank für das erste Beispielszenario - [Amazon Buchdatenbank](http://kolbasa.github.io/ueps/screenshots/er-diagram-amazon.png))
-* ``ueps_slave_002`` (Datenbank für das zweite Beispielszenario - [Fussball WM 2010](http://kolbasa.github.io/ueps/screenshots/er-diagram-wm.png))
+* ``ueps_slave_001`` (Datenbank für das erste Beispielszenario - [Amazon Buchdatenbank][er-amazon])
+* ``ueps_slave_002`` (Datenbank für das zweite Beispielszenario - [Fussball WM 2010][er-wm2010])
 
 Für die ``slave``-Datenbanken werden jeweils folgende Datenbanknutzer mit beschränkten Rechten erstellt:
 * ``ueps_001``
@@ -272,6 +276,7 @@ Anschließend kann die Anwendung mit folgendem Skript deployed werden:<br/>
 
 ### Übungsmaterial erstellen/bearbeiten
 
+Das 
 ```
 ├── Szenario 01
 │   ├── Aufgabengruppe 01

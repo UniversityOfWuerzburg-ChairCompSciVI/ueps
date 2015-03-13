@@ -337,8 +337,9 @@ Um endgültige Bewertungen an Moodle zu übertragen, können sich Nutzer mit Bew
 [csv2]: http://kolbasa.github.io/ueps/screenshots/csv-export-02.png
 Anleitung:<br>
 *Bewerten* &#8594; *Nach gesuchtem Übungsblatt filtern* &#8594; *Export-Symbol klicken*<br>
-[Screenshot 1][csv1] [Screenshot 2][csv2]
+[Screenshot 1][csv1] | [Screenshot 2][csv2]
 
+Die Werte sind mit Semikolon getrennt:
 ```
 ex_id ; user_id    ; points ; max_points
 64    ; student_45 ; 1      ; 1

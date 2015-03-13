@@ -424,9 +424,7 @@ ex_id ; user_id    ; points ; max_points
 #### Verwendete Technologien
 
 **Clientseitig**
-* HTML5
-* [jQuery](http://jquery.com/)
-* CSS3
+* HTML5, [jQuery](http://jquery.com/), CSS3
 
 **Serverseitig**
 * Tomcat7/8

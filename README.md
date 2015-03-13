@@ -310,9 +310,10 @@ gewünschten Knoten im Baum auswählen, das Kontextmenü mit einem Rechtsklick
 #### Szenarios erstellen
 
 Ein einzelnes Szenario stellt eine SQL Datenbank dar. Auf dieser Datenbank werden
-alle SQL-Queries der Studenten ausgeführt.
+alle zugehörigen SQL-Queries der Studenten ausgeführt.<br>
 Für das Erstellen eines neuen Szenarios muss der Autor ein MySQL-Datenbank-Skript
-hochladen. Hierfür muss ein eigenes externes Tool verwendet werden (z.B. [HeidiSQL](http://www.heidisql.com/), [SQuirrel](http://squirrel-sql.sourceforge.net/) ...).
+hochladen. Hierfür muss ein eigenes externes Tool verwendet werden (z.B. 
+[HeidiSQL][heidi], [SQuirrel][squ], [phpMyAdmin][php]  ...).
 
 #### Aufgabengruppe erstellen
 Es gibt zwei Arten von Aufgabengruppen, 'bewertete' und 'unbewertete'.
@@ -511,4 +512,5 @@ ex_id ; user_id    ; points ; max_points
 
 [heidi]:      http://www.heidisql.com/
 [squ]:        http://squirrel-sql.sourceforge.net/
+[php]:        http://www.phpmyadmin.net/
 <!--- }}} -->

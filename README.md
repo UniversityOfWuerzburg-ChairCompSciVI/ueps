@@ -194,7 +194,8 @@ Der verschlüsselte Code wird über einen md5-Wert der aktuellen Client-IP-Adres
 encryptedCode = md5(userIP + secretPhrase + userID)
 ```
 
-Die Implementierung in ÜPS findet man [hier](src/main/java/de/uniwue/info6/webapp/session/SessionObject.java#L141-L166). **WICHTIG:** ``SECRET_PHRASE`` sollte aufgrund seiner Rolle den [voreingestellten](src/main/resources/config.properties#L112) Wert **nicht** beibehalten.
+Die Implementierung in ÜPS findet man [hier](src/main/java/de/uniwue/info6/webapp/session/SessionObject.java#L141-L166). 
+**WICHTIG:** ``SECRET_PHRASE`` sollte aufgrund seiner Rolle den [voreingestellten](src/main/resources/config.properties#L112) Wert **nicht** beibehalten.
 
 Die URL zusammen mit den Anmeldeparametern sieht folgendermaßen aus:
 

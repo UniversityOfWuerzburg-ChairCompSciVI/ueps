@@ -338,7 +338,7 @@ Der **Admin** verfügt über umfassende Rechte im ganzen System:
 - globale Verwaltung der Szenarios, sowie Rolle 'Dozent' in allen Szenarios<br>
   (Admins sind die einzigen Nutzer, die neue Szenarios erstellen können)
 
-Die Rolle **Dozent** priviligiert den Benutzer dazu folgende Funktionalitäten ****innerhalb eines Szenarios**** (festgelegt von einem Admin) zu nutzen:
+Die Rolle **Dozent** priviligiert den Benutzer dazu folgende Funktionalitäten *innerhalb eines Szenarios* (festgelegt von einem Admin) zu nutzen:
 - Zuweisung von Rechten für Benutzer innerhalb des Szenarios
 - Änderung des Szenarios (wobei die Optionen zum Datenbank-Server und Datenbank-Nutzer nur von einem Admin geändert werden können)
 - Erstellung und Änderung von Übungsblättern und Übungsaufgaben des Szenarios

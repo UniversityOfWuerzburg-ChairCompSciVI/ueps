@@ -1,5 +1,7 @@
 # ÜPS
-**ÜPS** (**Ü**bungs-**P**rogramm für **S**QL) ist ein webbasiertes Trainingssystem zum Erlernen der Datenbanksprache SQL ([**Screenshots**](#screenshots)).
+**ÜPS** (**Ü**bungs-**P**rogramm für **S**QL) ist ein webbasiertes 
+Trainingssystem zum Erlernen der Datenbanksprache SQL 
+([**Screenshots**](#screenshots)).
 
 ## Showcase
 Link          | Rolle          | Szenario
@@ -280,7 +282,8 @@ Anschließend kann die Anwendung mit folgendem Skript deployed werden:<br/>
 ## Bedienung
 
 #### Übungsmaterial erstellen/bearbeiten
-ÜPS fasst einzelne SQL-Übungsaufgaben zusammen zu Aufgabengruppen und Aufgabengruppen zu Szenarien:
+ÜPS fasst einzelne SQL-Übungsaufgaben zusammen zu Aufgabengruppen und 
+Aufgabengruppen zu Szenarien:
 
 ```
 ├── Szenario 01
@@ -295,10 +298,13 @@ Anschließend kann die Anwendung mit folgendem Skript deployed werden:<br/>
 └── ...
 ```
 
-Siehe auch [Screenshots](#szenarien-erstellenbearbeiten) der eigentlichen Baumdarstellung.
+Siehe auch [Screenshots](#szenarien-erstellenbearbeiten) der eigentlichen 
+Baumdarstellung.
 
-Besitzt der angemeldete Nutzer Editierrechte, so kann er Aufgaben komfortabel über die *Editieren*-Seite bearbeiten.
-Hierfür muss der Nutzer einen gewünschten Knoten im Baum auswählen, das Kontextmenü mit dem Rechtsklick öffnen und auf *Bearbeiten* klicken.
+Besitzt der angemeldete Nutzer Editierrechte, so kann er Aufgaben komfortabel 
+über die *Editieren*-Seite bearbeiten.<br>
+Hierfür muss der Nutzer einen gewünschten Knoten im Baum auswählen, das 
+Kontextmenü mit einem Rechtsklick öffnen und auf *Bearbeiten* klicken.
 
 #### Szenarien erstellen
 TODO :: TODO :: TODO :: TODO

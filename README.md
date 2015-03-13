@@ -303,35 +303,31 @@ TODO :: TODO :: TODO :: TODO
 
 ## Screenshots
 
-Startseite    | &nbsp;
-:-----------: | :-----------:
+**Startseite** | &nbsp;
+:------------: | :------------:
 Beschreibung und Auflistung <br/>der Übungsaufgaben zu <br/> einem Szenario | [![](http://kolbasa.github.io/ueps/screenshots/index-01-small.png)](http://kolbasa.github.io/ueps/screenshots/index-01.png)
 Auflistung der Szenarien <br/>falls keine ``scenarioID`` per <br/>GET-Paramater übergeben wurde | [![](http://kolbasa.github.io/ueps/screenshots/index-02-small.png)](http://kolbasa.github.io/ueps/screenshots/index-02.png)
-
 **Übungsbereich** | &nbsp;
 Übungsbereich für die Studenten | [![](http://kolbasa.github.io/ueps/screenshots/task-01-small.png)](http://kolbasa.github.io/ueps/screenshots/task-01.png)
-Anzeige des ER-Diagramms | [![Index](http://kolbasa.github.io/ueps/screenshots/task-02-small.png)](http://kolbasa.github.io/ueps/screenshots/task-02.png)
-Anzeige von Tabellen | [![Index](http://kolbasa.github.io/ueps/screenshots/task-03-small.png)](http://kolbasa.github.io/ueps/screenshots/task-03.png)
-
-#### Übungsbereich
-
-[![Index](http://kolbasa.github.io/ueps/screenshots/task-03-small.png)](http://kolbasa.github.io/ueps/screenshots/task-03.png) [![Index](http://kolbasa.github.io/ueps/screenshots/task-04-small.png)](http://kolbasa.github.io/ueps/screenshots/task-04.png)
-
+Anzeige des ER-Diagramms | [![](http://kolbasa.github.io/ueps/screenshots/task-02-small.png)](http://kolbasa.github.io/ueps/screenshots/task-02.png)
+Anzeige von Tabellen | [![](http://kolbasa.github.io/ueps/screenshots/task-03-small.png)](http://kolbasa.github.io/ueps/screenshots/task-03.png)
+Feedback-Generierung | [![](http://kolbasa.github.io/ueps/screenshots/task-04-small.png)](http://kolbasa.github.io/ueps/screenshots/task-04.png)
+**Rechteverwaltung** | &nbsp;
+Auflistung der <br/>vergebenen Rechte | [![](http://kolbasa.github.io/ueps/screenshots/rights-01-small.png)](http://kolbasa.github.io/ueps/screenshots/rights-01.png)
 -
 
-#### Rechteverwaltung
-[![Index](http://kolbasa.github.io/ueps/screenshots/rights-01-small.png)](http://kolbasa.github.io/ueps/screenshots/rights-01.png) [![Index](http://kolbasa.github.io/ueps/screenshots/rights-02-small.png)](http://kolbasa.github.io/ueps/screenshots/rights-02.png)
+[![](http://kolbasa.github.io/ueps/screenshots/rights-01-small.png)](http://kolbasa.github.io/ueps/screenshots/rights-01.png) [![](http://kolbasa.github.io/ueps/screenshots/rights-02-small.png)](http://kolbasa.github.io/ueps/screenshots/rights-02.png)
 
 -
 
 #### Szenarien erstellen/bearbeiten
-[![Index](http://kolbasa.github.io/ueps/screenshots/edit-scenario-01-small.png)](http://kolbasa.github.io/ueps/screenshots/edit-scenario-01.png) [![Index](http://kolbasa.github.io/ueps/screenshots/edit-scenario-02-small.png)](http://kolbasa.github.io/ueps/screenshots/edit-scenario-02.png)
+[![](http://kolbasa.github.io/ueps/screenshots/edit-scenario-01-small.png)](http://kolbasa.github.io/ueps/screenshots/edit-scenario-01.png) [![](http://kolbasa.github.io/ueps/screenshots/edit-scenario-02-small.png)](http://kolbasa.github.io/ueps/screenshots/edit-scenario-02.png)
 
 -
 
 #### Abgaben bewerten
-[![Index](http://kolbasa.github.io/ueps/screenshots/submission-01-small.png)](http://kolbasa.github.io/ueps/screenshots/submission-01.png) [![Index](http://kolbasa.github.io/ueps/screenshots/submission-02-small.png)](http://kolbasa.github.io/ueps/screenshots/submission-02.png)
+[![](http://kolbasa.github.io/ueps/screenshots/submission-01-small.png)](http://kolbasa.github.io/ueps/screenshots/submission-01.png) [![](http://kolbasa.github.io/ueps/screenshots/submission-02-small.png)](http://kolbasa.github.io/ueps/screenshots/submission-02.png)
 
-[![Index](http://kolbasa.github.io/ueps/screenshots/submission-03-small.png)](http://kolbasa.github.io/ueps/screenshots/submission-03.png) [![Index](http://kolbasa.github.io/ueps/screenshots/submission-04-small.png)](http://kolbasa.github.io/ueps/screenshots/submission-04.png)
+[![](http://kolbasa.github.io/ueps/screenshots/submission-03-small.png)](http://kolbasa.github.io/ueps/screenshots/submission-03.png) [![](http://kolbasa.github.io/ueps/screenshots/submission-04-small.png)](http://kolbasa.github.io/ueps/screenshots/submission-04.png)
 
 

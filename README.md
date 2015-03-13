@@ -45,7 +45,7 @@ Link          | Rolle          | Szenario
 * Firefox, Chrome, Safari (ab Ver.7) oder Internet Explorer (ab Ver.9)
 * Aktiviertes JavaScript wird vorausgesetzt
 
-Mobile Geräte werden zwar unterstützt, es wird jedoch keine angepasste Darstelltung angeboten
+Mobile Geräte werden zwar unterstützt, es wird jedoch keine angepasste Darstellung angeboten
 
 -
 
@@ -76,7 +76,7 @@ Mobile Geräte werden zwar unterstützt, es wird jedoch keine angepasste Darstel
   ```
   <!--- ` -->
 
-  Die aufgelisteten Rechte müssen für die unter [``MASTER_DBNAME``](src/main/resources/config.properties#L42) angegebene Datenbank sowie für neu erstellte Datenbanken gelten. Eine Rechteskript könnte beispielsweise folgendermaßen aussehen:
+  Die aufgelisteten Rechte müssen für die unter [``MASTER_DBNAME``](src/main/resources/config.properties#L42) angegebene Datenbank sowie für neu erstellte Datenbanken gelten. Ein Rechte-Skript könnte beispielsweise folgendermaßen aussehen:
 
   ```
   GRANT SELECT, INSERT, UPDATE, DELETE, ALTER, CREATE, DROP,
@@ -89,11 +89,11 @@ Mobile Geräte werden zwar unterstützt, es wird jedoch keine angepasste Darstel
    * *Unter Linux*<br/>
      Zuerst müssen einige Build-Skripte im Wurzelverzeichnis ausführbar gemacht werden:<br/>
      ``chmod +x check-dependencies.sh build-deploy.sh build-package.sh``<br/>
-     Dann einfach foldendes Skript ausführen<br/>
+     Dann einfach folgendes Skript ausführen<br/>
      [``./build-package.sh``](build-deploy.sh)<br/>
 
    * *Unter Windows*<br/>
-     Einfach folgendes Skript auführen (Doppelklick genügt):<br/>
+     Einfach folgendes Skript ausführen (Doppelklick genügt):<br/>
      [``build-package.bat``](build-package.bat)
 
 7. Die kompilierte ``ueps.war``-Datei sollte jetzt deploy-fertig im Wurzelverzeichnis zu finden sein.
@@ -192,7 +192,7 @@ IDENTIFIED BY '%MASTER_DBPASS%';
 Wenn eine automatische Installation nicht erwünscht ist, so benötigt die Anwendung im laufenden Betrieb nur ``SELECT, INSERT, UPDATE, DELETE`` Rechte.
 
 #### Nutzer-Authentifizierung
-In der Konfigurationsdatei sollte mindestens ein [Adminstrator-Nutzer](src/main/resources/config.properties#L96) festgelegt werden. Mehrere Nutzer sollten mit einem Semikolon getrennt werden (z.B. ``admin_id1;admin_id2;``).
+In der Konfigurationsdatei sollte mindestens ein [Administrator-Nutzer](src/main/resources/config.properties#L96) festgelegt werden. Mehrere Nutzer sollten mit einem Semikolon getrennt werden (z.B. ``admin_id1;admin_id2;``).
 Admins können auch zur Laufzeit hinzugefügt werden, hierfür muss man jedoch den Datenbankeintrag für den Nutzer manuell abändern ([Tabelle: ``user``, Spalte: ``is_admin``](http://kolbasa.github.io/ueps/screenshots/admin-db-er-diagram.png)).
 
 ÜPS besitzt keine eigene Nutzerverwaltung. Die Nutzer-Authentifizierung erfolgt über die Open-Source Lernplattform [Moodle](https://moodle.org/) mithilfe der "[Externe URL](https://docs.moodle.org/27/de/Link/URL_konfigurieren)"-Funktion. Diese Form der Anmeldung setzt voraus, dass die Option [``USE_MOODLE_LOGIN``](src/main/resources/config.properties#L111) auf ``true`` steht.
@@ -330,27 +330,24 @@ TODO :: TODO :: TODO :: TODO
 -
 
 #### Rollen und Rechte
-Um den Zugriff auf die Funktionen von ÜPS zu kontrollieren, wurden drei 
-verschiedene Rollen eingeführt: **Student**, **Dozent** und **Admin**.
+Um den Zugriff auf die Funktionen von ÜPS zu kontrollieren, wurden drei verschiedene Rollen eingeführt: **Student**, **Dozent** und **Admin**.
 
-##### Rolle 'Admin'
-Der 'Admin' verfügt über umfassende Rechte im ganzen System:
+
+Der **Admin** verfügt über umfassende Rechte im ganzen System:
 - globale Benutzerverwaltung z.B. Bestimmung von Dozenten und deren Zuweisung zu Szenarios
 - globale Verwaltung der Szenarios, sowie Rolle 'Dozent' in allen Szenarios<br>
   (Admins sind die einzigen Nutzer, die neue Szenarios erstellen können)
 
-##### Rolle 'Dozent'
-Die Rolle 'Dozent' priviligiert einen Benutzer dazu folgende Funktionalitäten **innerhalb eines Szenarios** (festgelegt von einem Admin) zu nutzen:
-- Zuweisung von Rechten für Benutzer innerhalb des Szenarios
+Die Rolle **Dozent** privilegiert den Nutzer dazu folgende Funktionalitäten *innerhalb eines Szenarios* (festgelegt von einem Admin) zu nutzen:
+- Zuweisung von Rechten für Nutzer innerhalb des Szenarios
 - Änderung des Szenarios (wobei die Optionen zum Datenbank-Server und Datenbank-Nutzer nur von einem Admin geändert werden können)
 - Erstellung und Änderung von Übungsblättern und Übungsaufgaben des Szenarios
-- Einsicht und Bewertung von abgebenen Lösungen innerhalb des Szenarios
+- Einsicht und Bewertung von abgegebenen Lösungen innerhalb des Szenarios
 
-##### Rolle 'Student'
+Ein **Student** kann folgende Funktionen des Systems nutzen:
 - Durchführung von Übungsaufgaben
 - Einsicht in die Korrektur der eigenen Abgaben
-
--
+- ggf. Korrektur- und/oder Bearbeitungsrechte für bestimmte Szenarien (für Tutoren)
 
 #### Abgaben bewerten
 

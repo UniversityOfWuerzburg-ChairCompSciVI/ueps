@@ -38,7 +38,7 @@ Link          | Rolle          | Szenario
 * Firefox, WebKit (Chrome, Safari...) oder Internet Explorer (ab Version 9)
 * Aktiviertes JavaScript wird vorausgesetzt
 
-(Mobile Geräte werden zwar unterstützt, es wird jedoch keine angepasste Darstelltung angeboten)
+Mobile Geräte werden zwar unterstützt, es wird jedoch keine angepasste Darstelltung angeboten
 
 ------
 
@@ -87,7 +87,7 @@ Link          | Rolle          | Szenario
 
    * *Unter Windows*<br/>
      Einfach folgendes Skript auführen (Doppelklick genügt):<br/>
-     [``build-deploy.bat``](build-deploy.bat)
+     [``build-package.bat``](build-package.bat)
 
 7. Die kompilierte ``ueps.war``-Datei sollte jetzt deploy-fertig im Wurzelverzeichnis zu finden sein.
    (ÜPS lässt sich alternativ auch [direkt mit Maven deployen](#DeployMaven)).

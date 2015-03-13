@@ -143,15 +143,7 @@ public class PageController implements Serializable {
   public String editSubmission(SubmissionRow currentNode) {
     String url = null;
     if (currentNode.getIsEntry()) {
-      //  url = "edit_submission?exercise="
-      //      + currentNode.getExercise().getId() + "&submission="
-      //      + currentNode.getUserEntry().getId() + "&result="
-      //      + currentNode.getUserResult().getId()  + FACES_REDIRECT;
-
-      url = "edit-submission-"
-            + currentNode.getExercise().getId() + "-"
-            + currentNode.getUserEntry().getId() + "-"
-            + currentNode.getUserResult().getId();
+      url = "edit-submission-" + currentNode.getUserEntry().getId();
     }
     return url;
   }

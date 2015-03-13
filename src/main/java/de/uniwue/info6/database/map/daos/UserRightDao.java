@@ -177,4 +177,9 @@ public class UserRightDao extends DaoTools<UserRight> {
       throw re;
     }
   }
+
+  // TODO:
+  public UserRight pull(UserRight right) {
+    return getById(right.getId());
+  }
 }

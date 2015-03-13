@@ -64,16 +64,6 @@
 	</developers>
 
 	<!-- ... -->
-	<profiles>
-		<profile>
-			<id>test</id>
-			<build>
-				<directory>trg</directory>
-			</build>
-		</profile>
-	</profiles>
-
-	<!-- ... -->
 	<repositories>
 		<repository>
 			<id>prime-repo</id>
@@ -202,7 +192,6 @@
 						<includes>
 							<includes>**/*.java</includes>
 							<includes>**/*.xml</includes>
-							<includes>**/*.xsd</includes>
 							<includes>**/*.xhtml</includes>
 							<includes>**/*.properties</includes>
 							<includes>**/*.sql</includes>

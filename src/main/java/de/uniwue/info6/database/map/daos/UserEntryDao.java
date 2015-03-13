@@ -268,7 +268,7 @@ public class UserEntryDao extends DaoTools<UserEntry> {
 		Session session = null;
 		try {
 			session = startTransaction();
-			pull(UserEntry, session);
+			refresh(UserEntry, session);
 			@SuppressWarnings("unchecked")
 			Set<SolutionQuery> solutions = (Set<SolutionQuery>) UserEntry.getSolutionQueries();
 			List<SolutionQuery> queries = new ArrayList<SolutionQuery>();

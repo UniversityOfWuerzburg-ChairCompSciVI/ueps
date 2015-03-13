@@ -31,6 +31,8 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 
 import de.uniwue.info6.database.map.ExerciseGroup;
@@ -89,8 +91,8 @@ public class AutoCompleteGroup {
    * @param scenarioID
    * @return
    */
-  public AutoCompleteGroup scenarioInit(String scenarioID) {
-    if (user != null) {
+  public void scenarioInit(String scenarioID) {
+    if (user != null && groups == null) {
       if (scenarioID != null && !scenarioID.isEmpty()
           && (this.scenarioID == null || !this.scenarioID.equals(scenarioID))) {
         this.scenarioID = StringTools.extractIDFromAutoComplete(scenarioID);
@@ -119,8 +121,6 @@ public class AutoCompleteGroup {
         }
       }
     }
-
-    return this;
   }
 
   /**
@@ -130,6 +130,10 @@ public class AutoCompleteGroup {
    * @return
    */
   public List<String> complete(String query) {
+    FacesContext context = FacesContext.getCurrentInstance();
+    String scenarioID = (String) UIComponent.getCurrentComponent(context).getAttributes().get("scenarioID");
+    this.scenarioInit(scenarioID);
+
     if (query.startsWith("0")) {
       query = query.replaceFirst("[0]+", "");
     }

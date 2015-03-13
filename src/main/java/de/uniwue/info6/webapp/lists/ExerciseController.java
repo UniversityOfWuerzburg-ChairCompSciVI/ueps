@@ -325,15 +325,17 @@ public class ExerciseController implements Serializable {
         final int id = Integer.parseInt(requestParams.get(exerciseParam));
         exercise = exerciseDao.getById(id);
 
-        if (exercise != null) {
-          exerciseGroup = exGroupDao.getById(exercise.getExerciseGroup().getId());
-        }
-        if (exerciseGroup != null) {
-          final boolean scenarioMissing = (scenario == null);
-          scenario = scenarioDao.getById(exerciseGroup.getScenario().getId());
-          if (scenarioMissing) {
-            this.ac.setScenario(scenario);
-          }
+      }
+
+      if (exercise != null) {
+        exerciseGroup = exGroupDao.getById(exercise.getExerciseGroup().getId());
+      }
+
+      if (exerciseGroup != null) {
+        final boolean scenarioMissing = (scenario == null);
+        scenario = scenarioDao.getById(exerciseGroup.getScenario().getId());
+        if (scenarioMissing) {
+          this.ac.setScenario(scenario);
         }
       }
 
@@ -578,11 +580,13 @@ public class ExerciseController implements Serializable {
 
       connection = connectionPool.getConnection(scenario);
       executer = new SqlExecuter(connection, user, scenario);
+
       SqlQueryComparator comparator = new SqlQueryComparator(userQuery, solutionQueries, executer);
 
       // get user feedback
       LinkedList<Error> errors = comparator.compare();
       usedSolutionQuery = comparator.getSolutionQuery();
+
       if (solutionQueries != null && !solutionQueries.isEmpty()) {
         usedSolutionIndex = solutionQueries.indexOf(usedSolutionQuery);
       }

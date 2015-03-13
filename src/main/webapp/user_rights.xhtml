@@ -189,7 +189,7 @@ xmlns:p="http://primefaces.org/ui">
        <!-- -->
        <h:outputLabel for="userId" style="display:block;min-width:120px" value="#{txt['RIGHTS.USER']}:" />
        <p:autoComplete id="userId" value="#{rights_bean.userId}" dropdown="true" maxResults="15"
-       forceSelection="true" completeMethod="#{user_names.rightsInit().complete}" style="width:229px">
+       forceSelection="true" completeMethod="#{user_names.complete}" style="width:229px">
         <p:ajax event="itemSelect" listener="#{rights_bean.validateUser}"
         update="canAssert userStatus canAssert canEditGroups canEditScenario scenarioId insertBut"
         oncomplete="context_tooltip()" />
@@ -234,7 +234,7 @@ xmlns:p="http://primefaces.org/ui">
        <h:outputLabel for="lecturerId" style="display:block;min-width:120px"
        value="#{txt['RIGHTS.USER']}:" />
        <p:autoComplete id="lecturerId" value="#{rights_bean.userId}" dropdown="true" maxResults="15"
-       completeMethod="#{user_names.rightsInit().complete}" style="width:229px" />
+       completeMethod="#{user_names.complete}" style="width:229px" />
       </h:panelGrid>
       <p:commandButton id="insertBut2" value="#{txt['RIGHTS.INSERT']}" update="lecturerList rights"
       actionListener="#{rights_bean.insertLecturer}"

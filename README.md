@@ -4,8 +4,8 @@
 ## Showcase
 Link          | Rolle          | Szenario
 ------------- | -------------  | -------------
-**<a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=1" target="_blank">Demo 1</a>** | [Student](#rollen-und-rechte) | Amazon Buchdatenbank
-**<a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_admin&encryptedCode=showcase&scenarioID=1" target="_blank">Demo 2</a>** | [Admin](#rollen-und-rechte) | Amazon Buchdatenbank
+**<a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=1" target="_blank">Demo 1</a>** | Student | Amazon Buchdatenbank
+**<a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_admin&encryptedCode=showcase&scenarioID=1" target="_blank">Demo 2</a>** | Admin | Amazon Buchdatenbank
 **<a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=2" target="_blank">Demo 3</a>** | Student | Fussball WM 2010 
 **<a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_admin&encryptedCode=showcase&scenarioID=2" target="_blank">Demo 4</a>** | Admin | Fussball WM 2010
 
@@ -21,9 +21,10 @@ Link          | Rolle          | Szenario
   4. [Pfadangaben](#pfadangaben)
   5. [Aussehen/Text anpassen](#aussehentext-anpassen)
 4. [Deploy mit Maven](#deploy-mit-maven)
-5. [Übungsmaterial erstellen/bearbeiten](#%C3%9Cbungsmaterial-erstellenbearbeiten)
-6. [Rollen und Rechte](#rollen-und-rechte)
-7. [Abgaben bewerten](#abgaben-bewerten)
+5. [Bedienung]
+  1. [Übungsmaterial erstellen/bearbeiten](#%C3%9Cbungsmaterial-erstellenbearbeiten)
+  2. [Rollen und Rechte](#rollen-und-rechte)
+  3. [Abgaben bewerten](#abgaben-bewerten)
 8. [Screenshots](#screenshots)
 9. [Quellcodedokumentation](#quellcodedokumentation)
 

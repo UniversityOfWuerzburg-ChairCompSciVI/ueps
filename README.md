@@ -337,5 +337,5 @@ Szenario bearbeiten | [![](http://kolbasa.github.io/ueps/screenshots/edit-scenar
 -------------------- | :------------------:
 Abgaben lassen sich nach dem <br/> Szenario, dem Übungsblatt, der Übungsaufgabe <br/>oder nach der User-ID sortieren <br/>(oder nach einer Kombination dieser Parameter) | [![](http://kolbasa.github.io/ueps/screenshots/submission-01-small.png)](http://kolbasa.github.io/ueps/screenshots/submission-01.png)
 Auflistung der Nutzereinträge <br/>in einer Baumstruktur | [![](http://kolbasa.github.io/ueps/screenshots/submission-02-small.png)](http://kolbasa.github.io/ueps/screenshots/submission-02.png)
-&nbsp; | [![](http://kolbasa.github.io/ueps/screenshots/submission-03-small.png)](http://kolbasa.github.io/ueps/screenshots/submission-03.png)
-&nbsp; | [![](http://kolbasa.github.io/ueps/screenshots/submission-04-small.png)](http://kolbasa.github.io/ueps/screenshots/submission-04.png)
+Nutzerabgabe bearbeiten | [![](http://kolbasa.github.io/ueps/screenshots/submission-03-small.png)](http://kolbasa.github.io/ueps/screenshots/submission-03.png)
+Kommentar abgeben | [![](http://kolbasa.github.io/ueps/screenshots/submission-04-small.png)](http://kolbasa.github.io/ueps/screenshots/submission-04.png)

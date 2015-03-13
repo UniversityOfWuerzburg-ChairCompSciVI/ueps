@@ -310,7 +310,6 @@ Auflistung der Szenarien <br/>falls keine ``scenarioID`` per <br/>GET-Paramater 
 
 ---
 
-
 **Startseite** | &nbsp;
 :------------: | :------------------:
 Übungsbereich für die Studenten | [![](http://kolbasa.github.io/ueps/screenshots/task-01-small.png)](http://kolbasa.github.io/ueps/screenshots/task-01.png)
@@ -320,16 +319,16 @@ Feedback-Generierung | [![](http://kolbasa.github.io/ueps/screenshots/task-04-sm
 
 ---
 
-
 **Rechteverwaltung** | &nbsp;
 :------------------: | :------------------:
-Auflistung der <br/>vergebenen Rechte | [![](http://kolbasa.github.io/ueps/screenshots/rights-01-small.png)](http://kolbasa.github.io/ueps/screenshots/rights-01.png)
+Auflistung der vergebenen <br/>Rechte | [![](http://kolbasa.github.io/ueps/screenshots/rights-01-small.png)](http://kolbasa.github.io/ueps/screenshots/rights-01.png)
 Hinzufügen von Rechten | [![](http://kolbasa.github.io/ueps/screenshots/rights-02-small.png)](http://kolbasa.github.io/ueps/screenshots/rights-02.png)
 
 ---
 
-
-[![](http://kolbasa.github.io/ueps/screenshots/rights-01-small.png)](http://kolbasa.github.io/ueps/screenshots/rights-01.png) [![](http://kolbasa.github.io/ueps/screenshots/rights-02-small.png)](http://kolbasa.github.io/ueps/screenshots/rights-02.png)
+**Szenarien erstellen/bearbeiten** | &nbsp;
+:------------------: | :------------------:
+Kontextmenü-Eintrag | [![](http://kolbasa.github.io/ueps/screenshots/edit-scenario-01-small.png)](http://kolbasa.github.io/ueps/screenshots/edit-scenario-01.png)
 
 -
 

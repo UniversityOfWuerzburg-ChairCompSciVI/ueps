@@ -306,13 +306,13 @@ TODO :: TODO :: TODO :: TODO
 
 [i1]:   http://kolbasa.github.io/ueps/screenshots/index-01.png
 [i1t]:  http://kolbasa.github.io/ueps/screenshots/index-01-small.png
-[i1s]:  http://ueps.scienceontheweb.net?admin=xhtml&userID=demo_admin&encryptedCode=showcase
 [i2]:   http://kolbasa.github.io/ueps/screenshots/index-02.png
 [i2t]:  http://kolbasa.github.io/ueps/screenshots/index-02-small.png
 
 &nbsp;         | &nbsp;
 -------------- | --------------
-[![][i1t]][i1] | Beschreibung und Auflistung der <br>Übungsaufgaben zu einem Szenario <br>[Showcase][i1s]
+[![][i1t]][i1] | Beschreibung und Auflistung der <br>Übungsaufgaben zu einem Szenario <br>
+                 <a href="http://ueps.scienceontheweb.net?admin=xhtml&userID=demo_admin&encryptedCode=showcase" target="_blank">Demo 1</a>
 [![][i2t]][i2] | Auflistung der Szenarien falls keine <br>``scenarioID`` per GET-Paramater übergeben <br>wurde
 
 #### Übungsseite

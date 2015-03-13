@@ -365,7 +365,7 @@ TODO :: TODO :: TODO :: TODO
 [![][e1t]][e1] | Kontextmenü-Einträge (wird durch einen <br>Rechtsklick auf einen Knoten geöffnet)
 [![][e2t]][e2] | Szenario bearbeiten <br><a href="http://ueps.scienceontheweb.net?edit_scenario=xhtml&userID=demo_admin&encryptedCode=showcase&scenario=2" target="_blank">Showcase</a>
 [![][e3t]][e3] | Übungsblatt bearbeiten <br><a href="http://ueps.scienceontheweb.net?edit_group=xhtml&userID=demo_admin&encryptedCode=showcase&group=1" target="_blank">Showcase</a>
-[![][e4t]][e4] | Übungsaufgabe bearbeiten <br><a href="http://ueps.scienceontheweb.net?edit_exp=xhtml&userID=demo_admin&encryptedCode=showcase&exercise=62" target="_blank">Showcase</a>
+[![][e4t]][e4] | Übungsaufgabe bearbeiten <br><a href="http://ueps.scienceontheweb.net?edit_ex=xhtml&userID=demo_admin&encryptedCode=showcase&exercise=62" target="_blank">Showcase</a>
 
 #### Abgaben bewerten
 

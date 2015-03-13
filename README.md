@@ -311,7 +311,7 @@ TODO :: TODO :: TODO :: TODO
 
 &nbsp;         | &nbsp;
 -------------- | --------------
-[![][i1t]][i1] | Beschreibung und Auflistung der <br>Übungsaufgaben zu einem Szenario <br><a href="http://ueps.scienceontheweb.net?admin=xhtml&userID=demo_admin&encryptedCode=showcase" target="_blank">Showcase</a>
+[![][i1t]][i1] | Beschreibung und Auflistung der <br>Übungsaufgaben zu einem Szenario <br><a href="http://ueps.scienceontheweb.net?admin=xhtml&userID=demo_student&encryptedCode=showcase" target="_blank">Showcase</a>
 [![][i2t]][i2] | Auflistung der Szenarien falls keine <br>``scenarioID`` per GET-Paramater übergeben <br>wurde
 
 #### Übungsseite
@@ -327,7 +327,7 @@ TODO :: TODO :: TODO :: TODO
 
 &nbsp;         | &nbsp;
 -------------- | --------------
-[![][t1t]][t1] | Übungsbereich für die Studenten
+[![][t1t]][t1] | Übungsbereich für die Studenten <br><a href="http://ueps.scienceontheweb.net?task=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=1&exercise=1" target="_blank">Showcase</a>
 [![][t2t]][t2] | Anzeige des ER-Diagramms
 [![][t3t]][t3] | Anzeige von Tabellen (die Fenster lassen sich <br>ziehen und vergrößern/verkleinern)
 [![][t4t]][t4] | Feedback-Generierung
@@ -342,7 +342,7 @@ TODO :: TODO :: TODO :: TODO
 
 &nbsp;         | &nbsp;
 -------------- | --------------
-[![][r1t]][r1] | Auflistung der vergebenen Rechte
+[![][r1t]][r1] | Auflistung der vergebenen Rechte <br><a href="http://ueps.scienceontheweb.net?edit_rights=xhtml&userID=demo_admin&encryptedCode=showcase" target="_blank">Showcase</a>
 [![][r2t]][r2] | Hinzufügen von Rechten
 
 
@@ -361,7 +361,7 @@ TODO :: TODO :: TODO :: TODO
 
 &nbsp;         | &nbsp;
 -------------- | --------------
-[![][e0t]][e0] | Aufgabenliste als Baumstruktur
+[![][e0t]][e0] | Aufgabenliste als Baumstruktur <br><a href="http://ueps.scienceontheweb.net?admin=xhtml&userID=demo_admin&encryptedCode=showcase" target="_blank">Showcase</a>
 [![][e1t]][e1] | Kontextmenü-Einträge (wird durch einen <br>Rechtsklick auf einen Knoten geöffnet)
 [![][e2t]][e2] | Szenario bearbeiten  <br><a href="http://ueps.scienceontheweb.net?edit_scenario=xhtml&userID=demo_admin&encryptedCode=showcase&scenario=2" target="_blank">Showcase</a>
 [![][e3t]][e3] | Übungsblatt bearbeiten

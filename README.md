@@ -422,7 +422,17 @@ ex_id ; user_id    ; points ; max_points
 ## Implementierung
 
 #### Verwendete Technologien
-TODO :: TODO :: TODO :: TODO
+**Clientseitig**
+* HTML5
+* [jQuery](http://jquery.com/)
+* CSS3
+
+**Serverseitig**
+* Tomcat7/8
+* [PrimeFaces 4.0](http://primefaces.org/) (JSF-Framework)
+* MySQL5 mit Hibernate (für die administrative Datenbank)
+* MySQL5 mit MariaDB-Connector für die Übungsdatenbanken
+* [Akiban SQL-parser](http://blog.akiban.com/akibans-open-source-sql-parser/) für die Feedback-Generierung
 
 #### Quellcodedokumentation
 TODO :: TODO :: TODO :: TODO

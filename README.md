@@ -278,9 +278,8 @@ Anschließend kann die Anwendung mit folgendem Skript deployed werden:<br/>
 
 ## Bedienung
 
-### Übungsmaterial erstellen/bearbeiten
+#### Übungsmaterial erstellen/bearbeiten
 
-Das 
 ```
 ├── Szenario 01
 │   ├── Aufgabengruppe 01
@@ -306,29 +305,29 @@ TODO :: TODO :: TODO :: TODO
 
 -
 
-### Rollen und Rechte
+#### Rollen und Rechte
 Um den Zugriff auf die Funktionen von ÜPS zu kontrollieren, wurden drei verschiedene Rollen eingeführt: Student, Dozent und Admin.
 
-#### Rolle 'Admin'
+##### Rolle 'Admin'
 Der 'Admin' verfügt über umfassende Rechte im ganzen System:
 - globale Benutzerverwaltung z.B. Bestimmung von Dozenten und deren Zuweisung zu Szenarien
 - globale Verwaltung der Szenarien, sowie Rolle 'Dozent' in allen Szenarien<br>
   (Admins sind die einzigen Nutzer, die neue Szenarien erstellen können)
 
-#### Rolle 'Dozent'
+##### Rolle 'Dozent'
 Die Rolle 'Dozent' priviligiert einen Benutzer dazu folgende Funktionalitäten **innerhalb eines Szenarios** (festgelegt von einem Admin) zu nutzen:
 - Zuweisung von Rechten für Benutzer innerhalb des Szenarios
 - Änderung des Szenarios (wobei die Optionen zum Datenbank-Server und Datenbank-Nutzer nur von einem Admin geändert werden können)
 - Erstellung und Änderung von Übungsblättern und Übungsaufgaben des Szenarios
 - Einsicht und Bewertung von abgebenen Lösungen innerhalb des Szenarios
 
-#### Rolle 'Student'
+##### Rolle 'Student'
 - Durchführung von Übungsaufgaben
 - Einsicht in die Korrektur der eigenen Abgaben
 
 -
 
-### Abgaben bewerten
+#### Abgaben bewerten
 
 Nutzer mit Bewertungsrechten können Studentenabgaben aufrufen und gegebenenfalls korrigieren. Wenn manuelle Korrekturen vorgenommen wurden, so wird die ``userID`` des Korrektors gespeichert.
 Einzelne Studentenabgaben können ebenfalls kommentiert werden ([Screenshots](#abgaben-bewerten-1)) und nach Freigabe der Ergebnisse von den Nutzern eingesehen werden.
@@ -362,6 +361,7 @@ ex_id ; user_id    ; points ; max_points
 ## Screenshots
 
 #### Startseite
+
 &nbsp;         | &nbsp;
 -------------- | --------------
 [![][i1t]][i1] | Beschreibung und Auflistung der <br>Übungsaufgaben zu einem Szenario <br><a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=1" target="_blank">Showcase</a>
@@ -374,17 +374,19 @@ ex_id ; user_id    ; points ; max_points
 -
 
 #### Übungsseite
+
 &nbsp;         | &nbsp;
 -------------- | --------------
 [![][t1t]][t1] | Übungsbereich für die Studenten <br><a href="http://ueps.scienceontheweb.net?task=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=1&exercise=1" target="_blank">Showcase</a>
 [![][t2t]][t2] | Anzeige des ER-Diagramms
 [![][t3t]][t3] | Anzeige von Tabellen (die Fenster lassen sich <br>ziehen und vergrößern/verkleinern)
 [![][t4t]][t4] | Feedback-Generierung
-[![][t5t]][t5] | Servermeldung bei einer Studentenabgabe für eine **bewertete** Aufgabe
+[![][t5t]][t5] | Servermeldung bei einer Studentenabgabe für eine **bewertete** Aufgabe <br><a href="http://ueps.scienceontheweb.net?task=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=1&exercise=4" target="_blank">Showcase</a>
 
 -
 
 #### Rechteverwaltung
+
 &nbsp;         | &nbsp;
 -------------- | --------------
 [![][r1t]][r1] | Auflistung der vergebenen Rechte <br><a href="http://ueps.scienceontheweb.net?user_rights=xhtml&userID=demo_admin&encryptedCode=showcase" target="_blank">Showcase</a>
@@ -416,6 +418,7 @@ ex_id ; user_id    ; points ; max_points
 -
 
 ## Quellcodedokumentation
+
 <!--- TODO: -->
 [Doxygen Dokumentation](http://kolbasa.github.io/ueps/doxygen/)
 

@@ -367,6 +367,7 @@ ex_id ; user_id    ; points ; max_points
 [![][i1t]][i1] | Beschreibung und Auflistung der <br>Übungsaufgaben zu einem Szenario <br><a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=1" target="_blank">Showcase</a>
 [![][i6t]][i6] | Eine **unbewertete** Übungsgruppe aufgeklappt
 [![][i5t]][i5] | Eine **bewertete** und noch **aktive** Übungsgruppe aufgeklappt
+[![][i3t]][i3] | Eine **bewertete** und bereits **abgelaufene** Übungsgruppe aufgeklappt
 [![][i2t]][i2] | Auflistung der Szenarien falls keine <br>``scenarioID`` per GET-Paramater übergeben <br>wurde
 
 -

@@ -300,9 +300,9 @@ TODO :: TODO :: TODO :: TODO
 [base]:      http://kolbasa.github.io/ueps/screenshots/
 
 [i1]:  [base]index-01.png
-[i1t]: http://kolbasa.github.io/ueps/screenshots/index-01-small.png
-[i2]:    http://kolbasa.github.io/ueps/screenshots/index-02.png
-[i2t]: http://kolbasa.github.io/ueps/screenshots/index-02-small.png
+[i1t]: [base]index-01-small.png
+[i2]:  [base]index-02.png
+[i2t]: [base]index-02-small.png
 
 **Startseite** | &nbsp;
 -------------- | --------------

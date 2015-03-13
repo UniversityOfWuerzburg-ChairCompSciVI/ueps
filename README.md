@@ -352,7 +352,7 @@ Hinzufügen von Rechten            | [![][r2t]][r2]
 
 Szenarien erstellen/bearbeiten     | &nbsp;
 ---------------------------------- | ----------------------------------
-Aufgabenliste als Baumstruktur     | [![][e1t]][e0]
+Aufgabenliste als Baumstruktur     | [![][e0t]][e0]
 Kontextmenü-Einträge               | [![][e1t]][e1]
 Szenario bearbeiten                | [![][e2t]][e2]
 Übungsblatt bearbeiten             | [![][e3t]][e3]

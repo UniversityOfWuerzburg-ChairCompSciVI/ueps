@@ -311,7 +311,7 @@ TODO :: TODO :: TODO :: TODO
 
 &nbsp;         | &nbsp;
 -------------- | --------------
-[![][i1t]][i1] | Beschreibung und Auflistung der <br>Übungsaufgaben zu einem Szenario <br><a href="http://ueps.scienceontheweb.net?admin=xhtml&userID=demo_student&encryptedCode=showcase" target="_blank">Showcase</a>
+[![][i1t]][i1] | Beschreibung und Auflistung der <br>Übungsaufgaben zu einem Szenario <br><a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=1" target="_blank">Showcase</a>
 [![][i2t]][i2] | Auflistung der Szenarien falls keine <br>``scenarioID`` per GET-Paramater übergeben <br>wurde
 
 #### Übungsseite

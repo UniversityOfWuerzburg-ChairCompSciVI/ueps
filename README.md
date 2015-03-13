@@ -363,8 +363,7 @@ Szenario bearbeiten  | [![][ec2t]][ec2]
 
 Abgaben bewerten  | &nbsp;
 ----------------- | -----------------
-Abgaben lassen sich nach dem Szenario, dem Übungsblatt, der Übungsaufgabe
-oder nach der User-ID sortieren (oder nach einer Kombination dieser Parameter) | [![][s1t]][s1]
+Abgaben lassen sich nach dem Szenario, dem Übungsblatt, der Übungsaufgabe oder nach der User-ID sortieren (oder nach einer Kombination dieser Parameter) | [![][s1t]][s1]
 Auflistung der Nutzereinträge in einer Baumstruktur | [![][s2t]][s2]
 Nutzerabgabe bearbeiten | [![][s3t]][s3]
 Kommentar abgeben | [![][s4t]][s4]

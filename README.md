@@ -303,10 +303,13 @@ TODO :: TODO :: TODO :: TODO
 
 ## Screenshots
 
+[test]: http://kolbasa.github.io/ueps/screenshots/index-01.png
+[link text][test]
+
 **Startseite** | &nbsp;
 -------------- | :------------:
-Beschreibung und Auflistung <br/>der Übungsaufgaben zu <br/> einem Szenario | [![](http://kolbasa.github.io/ueps/screenshots/index-01-small.png)](http://kolbasa.github.io/ueps/screenshots/index-01.png)
-Auflistung der Szenarien <br/>falls keine ``scenarioID`` per <br/>GET-Paramater übergeben wurde | [![](http://kolbasa.github.io/ueps/screenshots/index-02-small.png)](http://kolbasa.github.io/ueps/screenshots/index-02.png)
+Beschreibung und Auflistung der Übungsaufgaben zu  einem Szenario | [![](http://kolbasa.github.io/ueps/screenshots/index-01-small.png)](http://kolbasa.github.io/ueps/screenshots/index-01.png)
+Auflistung der Szenarien falls keine ``scenarioID`` per GET-Paramater übergeben wurde | [![](http://kolbasa.github.io/ueps/screenshots/index-02-small.png)](http://kolbasa.github.io/ueps/screenshots/index-02.png)
 
 ---
 
@@ -335,7 +338,7 @@ Szenario bearbeiten | [![](http://kolbasa.github.io/ueps/screenshots/edit-scenar
 
 **Abgaben bewerten** | &nbsp;
 -------------------- | :------------------:
-Abgaben lassen sich nach dem <br/> Szenario, dem Übungsblatt, der Übungsaufgabe <br/>oder nach der User-ID sortieren <br/>(oder nach einer Kombination dieser Parameter) | [![](http://kolbasa.github.io/ueps/screenshots/submission-01-small.png)](http://kolbasa.github.io/ueps/screenshots/submission-01.png)
-Auflistung der Nutzereinträge <br/>in einer Baumstruktur | [![](http://kolbasa.github.io/ueps/screenshots/submission-02-small.png)](http://kolbasa.github.io/ueps/screenshots/submission-02.png)
+Abgaben lassen sich nach dem Szenario, dem Übungsblatt, der Übungsaufgabe oder nach der User-ID sortieren (oder nach einer Kombination dieser Parameter) | [![](http://kolbasa.github.io/ueps/screenshots/submission-01-small.png)](http://kolbasa.github.io/ueps/screenshots/submission-01.png)
+Auflistung der Nutzereinträge in einer Baumstruktur | [![](http://kolbasa.github.io/ueps/screenshots/submission-02-small.png)](http://kolbasa.github.io/ueps/screenshots/submission-02.png)
 Nutzerabgabe bearbeiten | [![](http://kolbasa.github.io/ueps/screenshots/submission-03-small.png)](http://kolbasa.github.io/ueps/screenshots/submission-03.png)
 Kommentar abgeben | [![](http://kolbasa.github.io/ueps/screenshots/submission-04-small.png)](http://kolbasa.github.io/ueps/screenshots/submission-04.png)

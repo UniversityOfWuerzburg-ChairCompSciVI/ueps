@@ -33,7 +33,7 @@ Link          | Rolle          | Szenario
 * MySQL 5-Server
 
 **Clientseitig**
-* Firefox, WebKit (Chrome, Safari (ab Ver.7) ...) oder Internet Explorer (ab Ver.9)
+* Firefox, Chrome, Safari (ab Ver.7) oder Internet Explorer (ab Ver.9)
 * Aktiviertes JavaScript wird vorausgesetzt
 
 Mobile Geräte werden zwar unterstützt, es wird jedoch keine angepasste Darstelltung angeboten

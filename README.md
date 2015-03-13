@@ -311,6 +311,11 @@ Für das Erstellen eines neuen Szenarios muss der Autor ein MySQL-Datenbank-Skri
 hochladen. Hierfür muss ein eigenes externes Tool verwendet werden (z.B. 
 [HeidiSQL][heidi], [SQuirrel][squ], [phpMyAdmin][php]  ...).
 
+Man sollte darauf achten, dass dieses Skript nicht zu groß wird (am besten unter 
+200KB). Eine Tabelle braucht für Lehrzwecke keine 10.000 Einträge.
+``DROP``-und ``CREATE``-Statements benötigen viel Laufzeit, deutlich mehr als 
+die üblichen und optimierten ``SELECT, UPDATE, DELETE, INSERT``-Statements.
+
 Optional kann auch ein Entity-Relationship-Diagramm (im JPEG/PNG-Format) 
 bereitgestellt werden.
 

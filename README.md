@@ -323,7 +323,7 @@ Auflistung der Szenarien falls keine <br>``scenarioID`` per GET-Paramater überg
 -------------- | --------------
 Übungsbereich für die Studenten | [![][t1t]][t1]
 Anzeige des ER-Diagramms | [![][t2t]][t2]
-Anzeige von Tabellen (die Fenster <br>lassen sich ziehen und vergrößern/verkleinern) | [![][t3t]][t3]
+Anzeige von Tabellen (die Fenster lassen sich <br>ziehen und vergrößern/verkleinern) | [![][t3t]][t3]
 Feedback-Generierung | [![][t4t]][t4]
 
 -

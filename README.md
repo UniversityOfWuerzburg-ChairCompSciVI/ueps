@@ -308,14 +308,13 @@ gewünschten Knoten im Baum auswählen, das Kontextmenü mit einem Rechtsklick
 ([Screenshot](#szenarien-erstellenbearbeiten)).
 
 #### Szenarios erstellen
-
+[Screenshot](#edit-scenario) der Bearbeitungsseite mit allen Optionen.<br><br>
 Ein einzelnes Szenario stellt eine SQL Datenbank dar. Auf dieser Datenbank werden
 alle zugehörigen SQL-Queries der Studenten ausgeführt.<br>
 Für das Erstellen eines neuen Szenarios muss der Autor ein MySQL-Datenbank-Skript
 hochladen. Hierfür muss ein eigenes externes Tool verwendet werden (z.B. 
 [HeidiSQL][heidi], [SQuirrel][squ], [phpMyAdmin][php]  ...).
 
-[test](#edit-scenario)
 
 #### Aufgabengruppe erstellen
 Es gibt zwei Arten von Aufgabengruppen, 'bewertete' und 'unbewertete'.

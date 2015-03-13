@@ -280,7 +280,7 @@ Anschließend kann die Anwendung mit folgendem Skript deployed werden:<br/>
 ## Bedienung
 
 #### Übungsmaterial erstellen/bearbeiten
-ÜPS fasst einzelne SQL-Übungsaufgaben zusammen zu Aufgabengruppen und Aufgabengruppen zu Szenarien ([Screenshot](#szenarien-erstellenbearbeiten)):
+ÜPS fasst einzelne SQL-Übungsaufgaben zusammen zu Aufgabengruppen und Aufgabengruppen zu Szenarien:
 
 ```
 ├── Szenario 01
@@ -294,7 +294,7 @@ Anschließend kann die Anwendung mit folgendem Skript deployed werden:<br/>
 │   └── ...
 └── ...
 ```
-
+Siehe auch [Screenshots](#szenarien-erstellenbearbeiten).
 
 #### Szenarien erstellen
 TODO :: TODO :: TODO :: TODO

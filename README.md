@@ -429,7 +429,7 @@ ex_id ; user_id    ; points ; max_points
 **Serverseitig**
 * Tomcat7/8
 * [PrimeFaces 4.0](http://primefaces.org/) (JSF-Framework)
-    * Leicht abgeändert, Quellcode mit der Dokumentation der Änderungen findet sich [hier](res/primefaces/)
+    * Leicht abgeändert, Quellcode (mit der Dokumentation der Änderungen) findet sich [hier](res/primefaces/)
 * MySQL5 mit Hibernate (für die administrative Datenbank)
 * MySQL5 mit [MariaDB-Connector](https://mariadb.com/kb/en/mariadb/about-the-mariadb-java-client/) für die Übungsdatenbanken
 * [Akiban SQL-parser](http://blog.akiban.com/akibans-open-source-sql-parser/) für die Feedback-Generierung

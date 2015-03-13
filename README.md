@@ -272,10 +272,18 @@ Anschließend kann die Anwendung mit folgendem Skript deployed werden:<br/>
 
 ### Übungsmaterial erstellen/bearbeiten
 
-+-- _Szenario 1
-|   +-- begin-with-the-crazy-ideas.textile
-|   +-- on-simplicity-in-technology.markdown
-+-- _Szenario 2
+``
+├── configure
+├── configure.in
+├── Demo
+│   ├── cgi
+│   │   ├── cgi0.sh
+│   │   ├── cgi1.py
+│   │   ├── cgi2.py
+│   │   ├── cgi3.py
+│   │   ├── README
+│   │   └── wiki.py
+``
 
 
 #### Szenarien erstellen

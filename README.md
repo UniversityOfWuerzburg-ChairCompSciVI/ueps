@@ -35,7 +35,7 @@ Link          | Rolle          | Szenario
 * MySQL 5-Server
 
 **Clientseitig:**
-* Browser
+* Firefox, WebKit (Chrome, Safari...) oder Internet Explorer (ab Version 9)
 
 ------
 

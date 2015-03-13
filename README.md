@@ -336,7 +336,7 @@ Um endgültige Bewertungen an Moodle zu übertragen, können sich Nutzer mit Bew
 [csv1]: http://kolbasa.github.io/ueps/screenshots/csv-export-01.png
 [csv2]: http://kolbasa.github.io/ueps/screenshots/csv-export-02.png
 Anleitung:<br>
-*Bewerten* &#8594; *Nach gesuchtem Übungsblatt filtern* &#8594; *Export-Symbol klicken*
+*Bewerten* &#8594; *Nach gesuchtem Übungsblatt filtern* &#8594; *Export-Symbol klicken*<br>
 [Screenshot 1][csv1] [Screenshot 2][csv2]
 
 ```

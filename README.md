@@ -327,8 +327,8 @@ SQL-Skripts wieder auf den Ursprungszustand zurückgesetzt. Es werden also nur
 die Inserts für diese Tabelle aus dem Skript verwendet.
 
 Wenn das Szenario gespeichert wurde, so sollte man unbedingt überprüfen, ob 
-alle Tabellen [rightig erkannt][e5] wurden. Wenn ein Skript syntaktisch korrekt 
-ist aber nicht right geparst werden konnte, dann verfassen Sie bitte ein 
+alle Tabellen [richtig erkannt][e5] wurden. Wenn ein Skript syntaktisch korrekt 
+ist aber nicht richtig geparst werden konnte, dann verfassen Sie bitte ein 
 Bug-report [hier][bug].
 
 Aus Sicherheitsgründen werden alle MySQL-Anfragen der Studenten mit einem

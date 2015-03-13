@@ -294,7 +294,10 @@ Anschließend kann die Anwendung mit folgendem Skript deployed werden:<br/>
 │   └── ...
 └── ...
 ```
+
 Siehe auch [Screenshots](#szenarien-erstellenbearbeiten) der eigentlichen Baumdarstellung.
+
+Besitzt der angemeldete Nutzer Editierrechte, so kann er Aufgaben komfortabel über die *Editieren*-Seite bearbeiten.
 
 #### Szenarien erstellen
 TODO :: TODO :: TODO :: TODO

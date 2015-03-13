@@ -313,7 +313,10 @@ hochladen. Hierfür muss ein eigenes externes Tool verwendet werden (z.B.
 
 
 #### Aufgabengruppe erstellen ([Screenshot](#edit-group))
-Es gibt zwei Arten von Aufgabengruppen, 'bewertete' und 'unbewertete'.
+Es gibt zwei Arten von Aufgabengruppen, **bewertete** und **unbewertete**. Unbewertete 
+Aufgabengruppen dienen dem freien Üben. Bewertete Aufgabengruppen sind 
+zeitbeschränkt und diesen zur Feststellung der Fähigkeiten der Studenten.
+
 
 #### Aufgabe erstellen ([Screenshot](#edit-exercise))
 

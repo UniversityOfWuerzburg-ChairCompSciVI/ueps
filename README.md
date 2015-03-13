@@ -298,6 +298,7 @@ Anschließend kann die Anwendung mit folgendem Skript deployed werden:<br/>
 Siehe auch [Screenshots](#szenarien-erstellenbearbeiten) der eigentlichen Baumdarstellung.
 
 Besitzt der angemeldete Nutzer Editierrechte, so kann er Aufgaben komfortabel über die *Editieren*-Seite bearbeiten.
+Hierfür muss der Nutzer einen gewünschten Knoten im Baum auswählen, das Kontextmenü mit dem Rechtsklick öffnen und auf *Bearbeiten* klicken.
 
 #### Szenarien erstellen
 TODO :: TODO :: TODO :: TODO

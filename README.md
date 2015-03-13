@@ -319,6 +319,8 @@ TODO :: TODO :: TODO :: TODO
 [![][i1t]][i1] | Beschreibung und Auflistung der <br>Übungsaufgaben zu einem Szenario <br><a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=1" target="_blank">Showcase</a>
 [![][i2t]][i2] | Auflistung der Szenarien falls keine <br>``scenarioID`` per GET-Paramater übergeben <br>wurde
 
+---
+
 #### Übungsseite
 
 [t1]:   http://kolbasa.github.io/ueps/screenshots/task-01.png
@@ -337,6 +339,8 @@ TODO :: TODO :: TODO :: TODO
 [![][t3t]][t3] | Anzeige von Tabellen (die Fenster lassen sich <br>ziehen und vergrößern/verkleinern)
 [![][t4t]][t4] | Feedback-Generierung
 
+---
+
 #### Rechteverwaltung
 
 [r1]:   http://kolbasa.github.io/ueps/screenshots/rights-01.png
@@ -350,6 +354,7 @@ TODO :: TODO :: TODO :: TODO
 [![][r1t]][r1] | Auflistung der vergebenen Rechte <br><a href="http://ueps.scienceontheweb.net?user_rights=xhtml&userID=demo_admin&encryptedCode=showcase" target="_blank">Showcase</a>
 [![][r2t]][r2] | Hinzufügen von Rechten
 
+---
 
 #### Szenarien erstellen/bearbeiten
 
@@ -372,6 +377,8 @@ TODO :: TODO :: TODO :: TODO
 [![][e3t]][e3] | Übungsblatt bearbeiten <br><a href="http://ueps.scienceontheweb.net?edit_group=xhtml&userID=demo_admin&encryptedCode=showcase&group=1&scenarioID=1" target="_blank">Showcase</a>
 [![][e4t]][e4] | Übungsaufgabe bearbeiten <br><a href="http://ueps.scienceontheweb.net?edit_ex=xhtml&userID=demo_admin&encryptedCode=showcase&exercise=62&scenarioID=1" target="_blank">Showcase</a>
 
+---
+
 #### Abgaben bewerten
 
 [s1]:   http://kolbasa.github.io/ueps/screenshots/submission-01.png
@@ -389,3 +396,5 @@ TODO :: TODO :: TODO :: TODO
 [![][s2t]][s2] | Auflistung der Nutzereinträge in einer <br>Baumstruktur
 [![][s3t]][s3] | Nutzerabgabe bearbeiten <br><a href="http://ueps.scienceontheweb.net?edit_submission=xhtml&userID=demo_admin&encryptedCode=showcase&submission=1" target="_blank">Showcase</a>
 [![][s4t]][s4] | Kommentar abgeben
+
+---

@@ -321,7 +321,7 @@ hochladen. Hierfür muss ein eigenes externes Tool verwendet werden (z.B.
 
 Es gibt zwei Arten von Aufgabengruppen, 'bewertete' und 'unbewertete'.
 
-#### Aufgabe erstellen
+#### Aufgabe erstellen ([Screenshot](#edit-exercise))
 [Screenshot](#edit-exercise) der Bearbeitungsseite mit allen Optionen.<br><br>
 
 -

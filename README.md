@@ -355,11 +355,13 @@ Aufgabengruppen dienen dem freien Üben und bieten uneingeschränkten Zugang zu 
 Musterlösungen. Bewertete Aufgabengruppen sind zeitbeschränkt und dienen zur 
 Feststellung der Fähigkeiten der Studenten.
 
-Ergebnisse können nach Ablauf der Abgabezeit automatisch oder manuell 
-freigegeben werden. Möchte man nach einer manuellen Bearbeitungszeit die 
-Ergebnisse freigeben, so muss man nur die Option 'nicht automatisch freigeben'
-wieder auf 'automatisch freigeben' setzen.
+Zusätzlich sieht der Student bei bewerteten Aufgaben eine Server-Meldung für
+jede Abgabe.
 
+Ergebnisse können nach Ablauf der Abgabezeit **automatisch** oder **manuell** 
+freigegeben werden. Möchte man nach einer manuellen Bearbeitungszeit die 
+Ergebnisse freigeben, so muss man nur die Option '*nicht automatisch freigeben*'
+wieder auf '*automatisch freigeben*' setzen.
 
 #### Aufgabe erstellen ([Screenshot](#edit-exercise))
 

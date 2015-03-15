@@ -355,8 +355,8 @@ Aufgabengruppen dienen dem freien Üben und bieten uneingeschränkten Zugang zu 
 Musterlösungen. Bewertete Aufgabengruppen sind zeitbeschränkt und dienen zur 
 Feststellung der Fähigkeiten der Studenten.
 
-Zusätzlich sieht der Student bei bewerteten Aufgaben eine Server-Meldung für
-jede Abgabe.
+Zusätzlich bekommt der Student bei bewerteten Aufgaben eine Server-Meldung für
+jede Abgabe als Bestätigung.
 
 Ergebnisse können nach Ablauf der Abgabezeit **automatisch** oder **manuell** 
 freigegeben werden. Möchte man nach einer manuellen Bearbeitungszeit die 
@@ -364,6 +364,16 @@ Ergebnisse freigeben, so muss man nur die Option '*nicht automatisch freigeben*'
 wieder auf '*automatisch freigeben*' setzen.
 
 #### Aufgabe erstellen ([Screenshot](#edit-exercise))
+
+Eine Aufgabe besteht aus einem Aufgabentext und einer oder mehrerer Musterlösungen.
+Die Aufgaben sind auf ``SELECT``, ``UPDATE``, ``INSERT`` und ``DELETE`` beschränkt.
+``CREATE``, ``DROP``-anfragen werden nicht unterstüzt.
+
+Zusätzlich sollte ein Schwierigkeitsgrad (1-5 Punkte) festgelegt werden. Man sollte
+dabei beachten, dass die Anwendung Abgaben nur als *richtig* oder *falsch*
+einstufen kann, d.h. bei einer maximalen Punktzahl von fünf kann nur bei einer 
+[manuellen Nachkorrektur](#abgaben-bewerten) eine Punktzahl zwischen 1-4 erreicht 
+werden.
 
 
 -
@@ -393,10 +403,15 @@ Die Rolle 'Dozent' priviligiert einen Benutzer dazu folgende Funktionalitäten *
 
 #### Abgaben bewerten
 
-Nutzer mit Bewertungsrechten können Studentenabgaben aufrufen und gegebenenfalls korrigieren. Wenn manuelle Korrekturen vorgenommen wurden, so wird die ``userID`` des Korrektors gespeichert.
-Einzelne Studentenabgaben können ebenfalls kommentiert werden ([Screenshots](#abgaben-bewerten-1)) und nach Freigabe der Ergebnisse von den Nutzern eingesehen werden.
+Nutzer mit Bewertungsrechten können Studentenabgaben aufrufen und gegebenenfalls 
+korrigieren. Wenn manuelle Korrekturen vorgenommen wurden, so wird die 
+``userID`` des Korrektors gespeichert.
+Einzelne Studentenabgaben können ebenfalls kommentiert werden 
+([Screenshots](#abgaben-bewerten-1)) und nach Freigabe der Ergebnisse von den 
+Nutzern eingesehen werden.
 
-Um endgültige Bewertungen an Moodle zu übertragen, können sich Nutzer mit Bewertungsrechten zu den einzelnen Aufgabengruppen CSV-Dateien generieren.
+Um endgültige Bewertungen an Moodle zu übertragen, können sich Nutzer mit 
+Bewertungsrechten zu den einzelnen Aufgabengruppen CSV-Dateien generieren.
 
 **Anleitung:**<br>
 *Bewerten* &#8594; *Nach gesuchtem Übungsblatt filtern* &#8594; *Export-Symbol klicken*<br>

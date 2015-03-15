@@ -42,11 +42,13 @@ import de.uniwue.info6.database.map.ExerciseGroup;
 import de.uniwue.info6.database.map.Scenario;
 import de.uniwue.info6.database.map.SolutionQuery;
 import de.uniwue.info6.database.map.User;
+import de.uniwue.info6.database.map.UserEntry;
 import de.uniwue.info6.database.map.UserRight;
 import de.uniwue.info6.database.map.daos.ExerciseDao;
 import de.uniwue.info6.database.map.daos.ExerciseGroupDao;
 import de.uniwue.info6.database.map.daos.ScenarioDao;
 import de.uniwue.info6.database.map.daos.UserDao;
+import de.uniwue.info6.database.map.daos.UserEntryDao;
 import de.uniwue.info6.database.map.daos.UserRightDao;
 import de.uniwue.info6.misc.StringTools;
 import de.uniwue.info6.misc.properties.Cfg;
@@ -149,7 +151,7 @@ public class ConnectionTools extends Thread {
     boolean debugMode = Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG, PropBool.DEBUG_MODE);
     boolean showcaseMode = Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG, PropBool.SHOWCASE_MODE);
 
-    if (debugMode || showcaseMode) {
+    if ((debugMode || showcaseMode) && (new UserEntryDao().findAll().size() < 20)) {
       this.addSomeTestData();
     }
 
@@ -360,6 +362,7 @@ public class ConnectionTools extends Thread {
     String[] testUsers = new String[] {"dozent_1", "dozent_2", "student_1", "student_2"};
     User exampleLecturer = null;
     User lastAdminUser = userDao.getById("user_1");
+
     for (String testUserId : testUsers) {
       User testUser = userDao.getById(testUserId.trim());
       if (testUser == null) {
@@ -402,7 +405,6 @@ public class ConnectionTools extends Thread {
       }
     }
 
-    // UserEntryDao userEntryDao = new UserEntryDao();
     // UserResultDao userResultDao = new UserResultDao();
     // ExerciseDao exerciseDao = new ExerciseDao();
     // SolutionQueryDao solutionQueryDao = new SolutionQueryDao();

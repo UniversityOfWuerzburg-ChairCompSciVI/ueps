@@ -315,6 +315,7 @@ Man sollte darauf achten, dass dieses Skript nicht zu groß wird (am besten unte
 200KB). Eine Tabelle braucht für Lehrzwecke keine 10.000 Einträge.
 ``DROP``-und ``CREATE``-Statements benötigen viel Laufzeit, um ein Vielfaches mehr 
 als die üblichen und optimierten ``SELECT, UPDATE, DELETE, INSERT``-Statements.
+Je kompakter das Skript, desto performanter die Anwendung.
 
 Für jeden Studenten wird das komplette Skript beim Login einmal ausgeführt.
 Es wird also von jeder Tabelle eine Kopie für jeden individuellen Nutzer erstellt
@@ -329,7 +330,7 @@ die Inserts für diese Tabelle aus dem Skript verwendet.
 Wenn das Szenario gespeichert wurde, so sollte man unbedingt überprüfen, ob 
 alle Tabellen [richtig erkannt][e5] wurden. Wenn ein Skript syntaktisch korrekt 
 ist aber nicht richtig geparst werden konnte, dann verfassen Sie bitte ein 
-Bug-report [hier][bug].
+Bug Report [hier][bug].
 
 Aus Sicherheitsgründen werden alle MySQL-Anfragen der Studenten mit einem
 MySQL-Nutzer mit beschränkten Zugriffsrechten ausgeführt.

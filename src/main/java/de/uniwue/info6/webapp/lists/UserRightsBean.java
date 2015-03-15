@@ -37,7 +37,6 @@ import javax.faces.application.FacesMessage.Severity;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ValueChangeEvent;
 
 import de.uniwue.info6.database.map.Scenario;
 import de.uniwue.info6.database.map.User;
@@ -46,6 +45,8 @@ import de.uniwue.info6.database.map.daos.ScenarioDao;
 import de.uniwue.info6.database.map.daos.UserDao;
 import de.uniwue.info6.database.map.daos.UserRightDao;
 import de.uniwue.info6.misc.properties.Cfg;
+import de.uniwue.info6.misc.properties.PropBool;
+import de.uniwue.info6.misc.properties.PropertiesFile;
 import de.uniwue.info6.webapp.admin.UserRights;
 import de.uniwue.info6.webapp.session.SessionObject;
 
@@ -340,33 +341,41 @@ public class UserRightsBean implements Serializable {
     FacesMessage msg = null;
     boolean error = false;
 
-    // ------------------------------------------------ //
-    // delete all rights given by the lecturer
-    UserRight example = new UserRight();
-    example.setCreatedByUser(this.selectedLecturer);
-    List<UserRight> givenRights = this.userRightDao.findByExample(example);
-    for (UserRight right : givenRights) {
-      this.rights.remove(right);
-      this.userRightDao.deleteInstance(right);
-    }
-    // ------------------------------------------------ //
+    final boolean showCaseMode = Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG, PropBool.SHOWCASE_MODE);
 
-    if (this.selectedLecturer != null) {
-      this.selectedLecturer.setIsLecturer(false);
-
-      if (userDao.updateInstance(this.selectedLecturer)) {
-        sev = FacesMessage.SEVERITY_INFO;
-        message = Cfg.inst().getProp(DEF_LANGUAGE, "RIGHTS.LECTURER_REMOVED");
-      } else {
-        error = true;
+    if (!showCaseMode) {
+      // ------------------------------------------------ //
+      // delete all rights given by the lecturer
+      UserRight example = new UserRight();
+      example.setCreatedByUser(this.selectedLecturer);
+      List<UserRight> givenRights = this.userRightDao.findByExample(example);
+      for (UserRight right : givenRights) {
+        this.rights.remove(right);
+        this.userRightDao.deleteInstance(right);
       }
-      this.lecturerList = userRights.getLecturers();
-    }
+      // ------------------------------------------------ //
+
+      if (this.selectedLecturer != null) {
+        this.selectedLecturer.setIsLecturer(false);
+
+        if (userDao.updateInstance(this.selectedLecturer)) {
+          sev = FacesMessage.SEVERITY_INFO;
+          message = Cfg.inst().getProp(DEF_LANGUAGE, "RIGHTS.LECTURER_REMOVED");
+        } else {
+          error = true;
+        }
+        this.lecturerList = userRights.getLecturers();
+      }
 
 
-    if (error) {
-      message = Cfg.inst().getProp(DEF_LANGUAGE, "ERROR");
+      if (error) {
+        message = Cfg.inst().getProp(DEF_LANGUAGE, "ERROR");
+        sev = FacesMessage.SEVERITY_ERROR;
+      }
+
+    } else {
       sev = FacesMessage.SEVERITY_ERROR;
+      message = Cfg.inst().getProp(DEF_LANGUAGE, "SHOWCASE_ERROR");
     }
 
     msg = new FacesMessage(sev, message, null);
@@ -383,23 +392,29 @@ public class UserRightsBean implements Serializable {
     FacesMessage msg = null;
     boolean error = false;
 
-    if (selectedRight != null) {
-      if (userRightDao.deleteInstance(selectedRight)) {
-        rights.remove(selectedRight);
-        selectedRight = null;
+    final boolean showCaseMode = Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG, PropBool.SHOWCASE_MODE);
+    if (!showCaseMode) {
+      if (selectedRight != null) {
+        if (userRightDao.deleteInstance(selectedRight)) {
+          rights.remove(selectedRight);
+          selectedRight = null;
 
-        sev = FacesMessage.SEVERITY_INFO;
-        message = Cfg.inst().getProp(DEF_LANGUAGE, "RIGHTS.RIGHTS_REMOVED");
+          sev = FacesMessage.SEVERITY_INFO;
+          message = Cfg.inst().getProp(DEF_LANGUAGE, "RIGHTS.RIGHTS_REMOVED");
+        } else {
+          error = true;
+        }
       } else {
         error = true;
       }
-    } else {
-      error = true;
-    }
 
-    if (error) {
-      message = Cfg.inst().getProp(DEF_LANGUAGE, "ERROR");
+      if (error) {
+        message = Cfg.inst().getProp(DEF_LANGUAGE, "ERROR");
+        sev = FacesMessage.SEVERITY_ERROR;
+      }
+    } else {
       sev = FacesMessage.SEVERITY_ERROR;
+      message = Cfg.inst().getProp(DEF_LANGUAGE, "SHOWCASE_ERROR");
     }
     msg = new FacesMessage(sev, message, null);
     FacesContext.getCurrentInstance().addMessage(null, msg);

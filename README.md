@@ -375,7 +375,6 @@ einstufen kann, d.h. bei einer maximalen Punktzahl von fünf kann nur bei einer
 [manuellen Nachkorrektur](#abgaben-bewerten) eine Punktzahl zwischen 1-4 erreicht 
 werden.
 
-
 -
 
 #### Rollen und Rechte

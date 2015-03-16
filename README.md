@@ -375,8 +375,6 @@ einstufen kann, d.h. bei einer maximalen Punktzahl von fünf kann nur bei einer
 [manuellen Nachkorrektur](#abgaben-bewerten) eine Punktzahl zwischen 1-4 erreicht 
 werden.
 
--
-
 #### Szenarios exportieren
 
 Szenarios lassen sich als XSD + XML exportieren (*Editieren-Menü* &#8594; 

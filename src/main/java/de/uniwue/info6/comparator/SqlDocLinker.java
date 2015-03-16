@@ -28,39 +28,39 @@ import de.uniwue.info6.misc.properties.PropertiesFile;
  * #L%
  */
 
-
 /**
  * Klasse wandelt MySQL-Keywords in Urls um.
  * 
  * @author Christian
- *
+ * 
  */
 public class SqlDocLinker {
-	
-	public static RefLink getUrlByKeyword(String keyword){
 
-		String url = Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG, PropString.MYSQL_DOC_URL);
-		
-		if(keyword.equals("SELECT")){
+	public static RefLink getUrlByKeyword(String keyword) {
+
+		String url = Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG,
+				PropString.MYSQL_DOC_URL);
+
+		if (keyword.equals("SELECT")) {
 			url += "select.html";
-		} else if(keyword.equals("UPDATE")){
+		} else if (keyword.equals("UPDATE")) {
 			url += "select.html";
-		} else if(keyword.equals("INSERT")){
+		} else if (keyword.equals("INSERT")) {
 			url += "insert.html";
-		} else if(keyword.equals("DELETE")){
+		} else if (keyword.equals("DELETE")) {
 			url += "delete.html";
-		} else if(keyword.equals("JOIN")){
+		} else if (keyword.equals("JOIN")) {
 			url += "join.html";
-		} else if(keyword.equals("WHERE")){
+		} else if (keyword.equals("WHERE")) {
 			url += "functions.html";
-		} else if(keyword.equals("GROUPBY")){
+		} else if (keyword.equals("GROUPBY")) {
 			url += "group-by-functions-and-modifiers.html";
 		} else {
 			return null;
 		}
-		
+
 		return new RefLink(keyword, url);
-	
+
 	}
-	
+
 }

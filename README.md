@@ -367,7 +367,7 @@ wieder auf '*automatisch freigeben*' setzen.
 
 Eine Aufgabe besteht aus einem Aufgabentext und einer oder mehrerer Musterlösungen.
 Die Aufgaben sind auf ``SELECT``, ``UPDATE``, ``INSERT`` und ``DELETE`` beschränkt.
-``CREATE``, ``DROP``-anfragen werden nicht unterstüzt.
+``CREATE``, ``DROP``-Anfragen werden nicht unterstüzt.
 
 Zusätzlich sollte ein Schwierigkeitsgrad (1-5 Punkte) festgelegt werden. Man sollte
 dabei beachten, dass die Anwendung Abgaben nur als *richtig* oder *falsch*
@@ -376,6 +376,15 @@ einstufen kann, d.h. bei einer maximalen Punktzahl von fünf kann nur bei einer
 werden.
 
 -
+
+#### Szenarios exportieren
+
+Szenarios lassen sich als XSD + XML exportieren (*Editieren-Menü* &#8594; 
+*Rechtklick auf beliebiges Szenario*  &#8594; *Szenario exportieren*).
+
+[export1]: http://kolbasa.github.io/ueps/exports/scenario_1_export.zip
+
+Ein Beispiel zum herunterladen: [Amazon-Szenario][export1]
 
 #### Rollen und Rechte
 Um den Zugriff auf die Funktionen von ÜPS zu kontrollieren, wurden drei 

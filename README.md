@@ -386,6 +386,8 @@ Szenarios lassen sich als XSD + XML exportieren (*Editieren-Menü* &#8594;
 
 Ein Beispiel zum herunterladen: [Amazon-Szenario][export1]
 
+-
+
 #### Rollen und Rechte
 Um den Zugriff auf die Funktionen von ÜPS zu kontrollieren, wurden drei 
 verschiedene Rollen eingeführt: **Student**, **Dozent** und **Admin**.

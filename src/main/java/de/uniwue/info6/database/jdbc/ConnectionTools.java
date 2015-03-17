@@ -42,11 +42,13 @@ import de.uniwue.info6.database.map.ExerciseGroup;
 import de.uniwue.info6.database.map.Scenario;
 import de.uniwue.info6.database.map.SolutionQuery;
 import de.uniwue.info6.database.map.User;
+import de.uniwue.info6.database.map.UserEntry;
 import de.uniwue.info6.database.map.UserRight;
 import de.uniwue.info6.database.map.daos.ExerciseDao;
 import de.uniwue.info6.database.map.daos.ExerciseGroupDao;
 import de.uniwue.info6.database.map.daos.ScenarioDao;
 import de.uniwue.info6.database.map.daos.UserDao;
+import de.uniwue.info6.database.map.daos.UserEntryDao;
 import de.uniwue.info6.database.map.daos.UserRightDao;
 import de.uniwue.info6.misc.StringTools;
 import de.uniwue.info6.misc.properties.Cfg;
@@ -149,7 +151,7 @@ public class ConnectionTools extends Thread {
     boolean debugMode = Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG, PropBool.DEBUG_MODE);
     boolean showcaseMode = Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG, PropBool.SHOWCASE_MODE);
 
-    if (debugMode || showcaseMode) {
+    if ((debugMode || showcaseMode) && (new UserEntryDao().findAll().size() < 20)) {
       this.addSomeTestData();
     }
 
@@ -322,7 +324,7 @@ public class ConnectionTools extends Thread {
 
           // ------------------------------------------------ //
           for (Exercise exercise : exercises) {
-            for (int i = 0; i < random.nextInt(10); i++) {
+            for (int i = 0; i < random.nextInt(20); i++) {
               User user = userDao.getRandom();
               if (!user.getId().equals(dummyUser)) {
                 try {
@@ -356,83 +358,83 @@ public class ConnectionTools extends Thread {
    *
    */
   public void addSomeTestData() {
-    UserRightDao userRightDao = new UserRightDao();
-    String[] testUsers = new String[] {"dozent_1", "dozent_2", "student_1", "student_2"};
-    User exampleLecturer = null;
-    User lastAdminUser = userDao.getById("user_1");
-    for (String testUserId : testUsers) {
-      User testUser = userDao.getById(testUserId.trim());
-      if (testUser == null) {
-        testUser = new User();
-        testUser.setId(testUserId);
+    final UserRightDao userRightDao = new UserRightDao();
 
-        // ------------------------------------------------ //
-        if (testUserId.startsWith("dozent_")) {
-          testUser.setIsLecturer(true);
-        }
-        userDao.insertNewInstance(testUser);
-        // ------------------------------------------------ //
-        if (testUserId.equals("dozent_1")) {
-          exampleLecturer = testUser;
-          Scenario scenario = new ScenarioDao().getById(1);
-          if (scenario != null && testUser != null && lastAdminUser != null) {
-            UserRight right = new UserRight(testUser, lastAdminUser, scenario, true, true, false);
-            userRightDao.insertNewInstance(right);
-          }
-        }
-        // ------------------------------------------------ //
-        if (testUserId.equals("student_1")) {
-          Scenario scenario = new ScenarioDao().getById(1);
-          if (scenario != null && testUser != null && exampleLecturer != null) {
-            UserRight right = new UserRight(testUser, exampleLecturer, scenario, true, true, true);
-            userRightDao.insertNewInstance(right);
-          }
-        }
-        // ------------------------------------------------ //
-        if (testUserId.equals("student_2")) {
-          Scenario scenario = new ScenarioDao().getById(2);
-          if (scenario != null && testUser != null && exampleLecturer != null) {
-            UserRight right = new UserRight(testUser, lastAdminUser, scenario, true, true, true);
-            userRightDao.insertNewInstance(right);
-          }
-        }
+    // ------------------------------------------------ //
 
-        // ------------------------------------------------ //
-        System.err.println("INFO (ueps): Test user with id: \"" + testUserId + "\" added");
+    String adminId1 = Cfg.DEMO_ADMIN + "1", adminId2 = Cfg.DEMO_ADMIN + "2";
+    User admin1 = userDao.getById(adminId1);
+    User admin2 = userDao.getById(adminId2);
+
+    if (admin1 == null) {
+      admin1 = new User();
+      admin1.setId(adminId1);
+      admin1.setIsAdmin(true);
+      this.userDao.insertNewInstance(admin1);
+    }
+    if (admin2 == null) {
+      admin2 = new User();
+      admin2.setId(adminId2);
+      admin2.setIsAdmin(true);
+      this.userDao.insertNewInstance(admin2);
+    }
+
+    // ------------------------------------------------ //
+
+    String lecturerId1 = Cfg.DEMO_LECTURER + "1", lecturerId2 = Cfg.DEMO_LECTURER + "2";
+    User lecturer1 = userDao.getById(lecturerId1);
+    User lecturer2 = userDao.getById(lecturerId2);
+
+    if (lecturer1 == null) {
+      lecturer1 = new User();
+      lecturer1.setId(lecturerId1);
+      lecturer1.setIsLecturer(true);
+      this.userDao.insertNewInstance(lecturer1);
+
+      Scenario scenario = new ScenarioDao().getById(1);
+      if (scenario != null && admin1 != null) {
+        UserRight right = new UserRight(lecturer1, admin1, scenario, true, true, false);
+        userRightDao.insertNewInstance(right);
       }
     }
 
-    // UserEntryDao userEntryDao = new UserEntryDao();
-    // UserResultDao userResultDao = new UserResultDao();
-    // ExerciseDao exerciseDao = new ExerciseDao();
-    // SolutionQueryDao solutionQueryDao = new SolutionQueryDao();
+    if (lecturer2 == null) {
+      lecturer2 = new User();
+      lecturer2.setId(lecturerId2);
+      lecturer2.setIsLecturer(true);
+      this.userDao.insertNewInstance(lecturer2);
+    }
 
-    // for (int i = 1; i < 100; i++) {
-    //   try {
-    //     Exercise testExercise = exerciseDao.getById(i);
-    //     if (testExercise != null) {
-    //       UserEntry testEntry = new UserEntry();
-    //       // testEntry.setExercise(exerciseDao.getById(4));
-    //       testEntry.setExercise(testExercise);
-    //       testEntry.setUser(userDao.getById("student_2"));
-    //       testEntry.setUserQuery("SELECT title, author, price FROM books JOIN publishers ON publisher_id=publishers.id WHERE publishers.name=\"Carlsen\"");
-    //       testEntry.setEntryTime(new Date());
-    //       testEntry.setResultMessage("");
-    //       userEntryDao.insertNewInstance(testEntry);
+    // ------------------------------------------------ //
 
-    //       UserResult testResult = new UserResult();
-    //       testResult.setUserEntry(testEntry);
-    //       testResult.setSolutionQuery(solutionQueryDao.getById(4));
-    //       testResult.setCredits((byte) 0);
-    //       testResult.setComment("");
-    //       testResult.setLastModified(new Date());
-    //       userResultDao.insertNewInstance(testResult);
-    //     }
-    //   } catch (Exception e) {
-    //     // TODO: logging
-    //     e.printStackTrace();
-    //   }
-    // }
+    String studentId1 = Cfg.DEMO_STUDENT + "1", studentId2 = Cfg.DEMO_STUDENT + "2";
+    User student1 = userDao.getById(studentId1);
+    User student2 = userDao.getById(studentId2);
+
+    if (student1 == null) {
+      student1 = new User();
+      student1.setId(studentId1);
+      this.userDao.insertNewInstance(student1);
+
+      Scenario scenario = new ScenarioDao().getById(1);
+      if (scenario != null && student1 != null && lecturer1 != null) {
+        UserRight right = new UserRight(student1, lecturer1, scenario, true, true, true);
+        userRightDao.insertNewInstance(right);
+      }
+    }
+    if (student2 == null) {
+      student2 = new User();
+      student2.setId(studentId2);
+      this.userDao.insertNewInstance(student2);
+
+      Scenario scenario = new ScenarioDao().getById(2);
+      if (scenario != null && student2 != null && admin1 != null) {
+        UserRight right = new UserRight(student2, admin1, scenario, true, true, true);
+        userRightDao.insertNewInstance(right);
+      }
+    }
+
+    // ------------------------------------------------ //
 
     this.addSomeTestStudents();
   }

@@ -35,6 +35,7 @@ import static de.uniwue.info6.misc.properties.PropString.SCENARIO_RESOURCES_PATH
 import static de.uniwue.info6.misc.properties.PropertiesFile.MAIN_CONFIG;
 import static de.uniwue.info6.webapp.session.SessionObject.DEMO_ADMIN;
 import static de.uniwue.info6.webapp.session.SessionObject.DEMO_STUDENT;
+import static de.uniwue.info6.webapp.session.SessionObject.DEMO_LECTURER;
 import static de.uniwue.info6.webapp.session.SessionObject.SESSION_POSITION;
 
 import java.io.File;
@@ -739,7 +740,9 @@ public class AuthorizationFilter implements Filter, Serializable {
       final boolean showCaseUserPar =
         validID &&
         (
-          idGET.equals(DEMO_ADMIN) || idGET.equals(DEMO_STUDENT)
+          idGET.equals(DEMO_ADMIN)
+          || idGET.equals(DEMO_STUDENT)
+          || idGET.equals(DEMO_LECTURER)
         );
 
       // ------------------------------------------------ //
@@ -749,6 +752,7 @@ public class AuthorizationFilter implements Filter, Serializable {
         (
           sessionUser.getId().startsWith(DEMO_ADMIN)
           || sessionUser.getId().startsWith(DEMO_STUDENT)
+          || sessionUser.getId().startsWith(DEMO_LECTURER)
         );
 
       // ------------------------------------------------ //
@@ -786,6 +790,10 @@ public class AuthorizationFilter implements Filter, Serializable {
                 userIDPrefix = DEMO_ADMIN;
               }
 
+              if (validID && idGET.equals(DEMO_LECTURER)) {
+                userIDPrefix = DEMO_LECTURER;
+              }
+
               String userName = userIDPrefix + "_" + random.nextInt(maxRandom);
               while (SessionListener.userExists(userName)) {
                 userName = userIDPrefix + "_" + random.nextInt(maxRandom);
@@ -806,8 +814,10 @@ public class AuthorizationFilter implements Filter, Serializable {
 
         // ------------------------------------------------ //
 
-        if (validID && validEC && !idGET.equals(DEMO_ADMIN)
-            && !idGET.equals(DEMO_STUDENT)) {
+        if (validID && validEC
+            && !idGET.equals(DEMO_ADMIN)
+            && !idGET.equals(DEMO_STUDENT)
+            && !idGET.equals(DEMO_LECTURER)) {
           if (validSC) {
             scenario = scenarioDao.getById(Integer.valueOf(scGET));
             return new String[] { idGET, ecGET, scGET};

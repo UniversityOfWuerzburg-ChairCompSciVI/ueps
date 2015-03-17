@@ -8,8 +8,10 @@ Link          | Rolle          | Szenario
 ------------- | -------------  | -------------
 **<a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=1" target="_blank">Demo 1</a>** | Student | Amazon Buchdatenbank
 **<a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_admin&encryptedCode=showcase&scenarioID=1" target="_blank">Demo 2</a>** | Admin | Amazon Buchdatenbank
-**<a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=2" target="_blank">Demo 3</a>** | Student | Fussball WM 2010 
-**<a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_admin&encryptedCode=showcase&scenarioID=2" target="_blank">Demo 4</a>** | Admin | Fussball WM 2010
+**<a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_lecturer&encryptedCode=showcase&scenarioID=1" target="_blank">Demo 3</a>** | Dozent (für das Amazon-Szenario) | Amazon Buchdatenbank
+**<a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=2" target="_blank">Demo 4</a>** | Student | Fussball WM 2010 
+**<a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_admin&encryptedCode=showcase&scenarioID=2" target="_blank">Demo 5</a>** | Admin | Fussball WM 2010
+**<a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_lecturer&encryptedCode=showcase&scenarioID=2" target="_blank">Demo 6</a>** | Dozent (für das Amazon-Szenario) | Fussball WM 2010
 
 -
 
@@ -311,6 +313,43 @@ Für das Erstellen eines neuen Szenarios muss der Autor ein MySQL-Datenbank-Skri
 hochladen. Hierfür muss ein eigenes externes Tool verwendet werden (z.B. 
 [HeidiSQL][heidi], [SQuirrel][squ], [phpMyAdmin][php]  ...).
 
+Man sollte darauf achten, dass dieses Skript nicht zu groß wird (am besten unter 
+200KB). Eine Tabelle braucht für Lehrzwecke keine 10.000 Einträge.
+``DROP``-und ``CREATE``-Statements benötigen viel Laufzeit, um ein Vielfaches mehr 
+als die üblichen und optimierten ``SELECT, UPDATE, DELETE, INSERT``-Statements.
+Je kompakter das Skript, desto performanter die Anwendung.
+
+Für jeden Studenten wird das komplette Skript beim Login einmal ausgeführt.
+Es wird also von jeder Tabelle eine Kopie für jeden individuellen Nutzer erstellt
+(hierfür wird einfach bei jeder Tabelle die Moodle-``userID`` als Präfix angehängt).
+So wird verhindert, dass sich die Nutzer gegenseitig stören, wenn sie die Tabellen
+modifizieren.<br>
+Von den originalen Tabellen wird jeweils ein Hashwert gespeichert. Modifiziert
+ein Student eins seiner Tabellen, so wird **ausschließlich** diese mithilfe des 
+SQL-Skripts wieder auf den Ursprungszustand zurückgesetzt. Es werden also nur 
+die Inserts für diese Tabelle aus dem Skript verwendet.
+
+Wenn das Szenario gespeichert wurde, so sollte man unbedingt überprüfen, ob 
+alle Tabellen [richtig erkannt][e5] wurden. Wenn ein Skript syntaktisch korrekt 
+ist aber nicht richtig geparst werden konnte, dann verfassen Sie bitte ein 
+Bug Report [hier][bug].
+
+Aus Sicherheitsgründen werden alle MySQL-Anfragen der Studenten mit einem
+MySQL-Nutzer mit beschränkten Zugriffsrechten ausgeführt.
+
+Wenn der unter [``MASTER_DBUSER``](MASTER_DB_USER) ``ALTER, CREATE, DROP, 
+GRANT OPTION, LOCK TABLES``-Rechte besitzt, so übernimmt ÜPS automatisch das
+Anlegen von neuen Datenbanken und beschränkten Datenbanknutzern.
+
+Möchte man dies vermeiden, so müssen die Datenbanken und Nutzer manuell erstellt 
+und eingetragen werden. Die unter "Datenbank-Host/IP" eingetragene Datenbank
+muss hierfür leer sein und der Nutzer unter "Datenbank-User" muss 
+``SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, ALTER, LOCK TABLES``-Rechte
+**ausschließlich** für die neue Datenbank besitzen. Als Hilfe wird ein 
+Rechteskript am Anfang der Seite generiert ([Screenshot](#edit-scenario)).
+
+Optional kann auch ein Entity-Relationship-Diagramm (im JPEG/PNG-Format) 
+bereitgestellt werden.
 
 #### Aufgabengruppe erstellen ([Screenshot](#edit-group))
 Es gibt zwei Arten von Aufgabengruppen, **bewertete** und **unbewertete**. Unbewertete 
@@ -318,14 +357,34 @@ Aufgabengruppen dienen dem freien Üben und bieten uneingeschränkten Zugang zu 
 Musterlösungen. Bewertete Aufgabengruppen sind zeitbeschränkt und dienen zur 
 Feststellung der Fähigkeiten der Studenten.
 
-Ergebnisse können nach Ablauf der Abgabezeit können automatisch oder manuell 
-freigegeben werden.
+Zusätzlich bekommt der Student bei bewerteten Aufgaben eine Server-Meldung für
+jede Abgabe als Bestätigung.
 
-TODO :: TODO :: TODO :: TODO
+Ergebnisse können nach Ablauf der Abgabezeit **automatisch** oder **manuell** 
+freigegeben werden. Möchte man nach einer manuellen Bearbeitungszeit die 
+Ergebnisse freigeben, so muss man nur die Option '*nicht automatisch freigeben*'
+wieder auf '*automatisch freigeben*' setzen.
 
 #### Aufgabe erstellen ([Screenshot](#edit-exercise))
 
-TODO :: TODO :: TODO :: TODO
+Eine Aufgabe besteht aus einem Aufgabentext und einer oder mehrerer Musterlösungen.
+Die Aufgaben sind auf ``SELECT``, ``UPDATE``, ``INSERT`` und ``DELETE`` beschränkt.
+``CREATE``, ``DROP``-Anfragen werden nicht unterstüzt.
+
+Zusätzlich sollte ein Schwierigkeitsgrad (1-5 Punkte) festgelegt werden. Man sollte
+dabei beachten, dass die Anwendung Abgaben nur als *richtig* oder *falsch*
+einstufen kann, d.h. bei einer maximalen Punktzahl von fünf kann nur bei einer 
+[manuellen Nachkorrektur](#abgaben-bewerten) eine Punktzahl zwischen 1-4 erreicht 
+werden.
+
+#### Szenarios exportieren
+
+Szenarios lassen sich als XSD + XML exportieren (*Editieren-Menü* &#8594; 
+*Rechtklick auf beliebiges Szenario*  &#8594; *Szenario exportieren*).
+
+[export1]: http://kolbasa.github.io/ueps/exports/scenario_1_export.zip
+
+Ein Beispiel zum herunterladen: [Amazon-Szenario][export1]
 
 -
 
@@ -351,10 +410,15 @@ Ein **Student** kann folgende Funktionen des Systems nutzen:
 
 #### Abgaben bewerten
 
-Nutzer mit Bewertungsrechten können Studentenabgaben aufrufen und gegebenenfalls korrigieren. Wenn manuelle Korrekturen vorgenommen wurden, so wird die ``userID`` des Korrektors gespeichert.
-Einzelne Studentenabgaben können ebenfalls kommentiert werden ([Screenshots](#abgaben-bewerten-1)) und nach Freigabe der Ergebnisse von den Nutzern eingesehen werden.
+Nutzer mit Bewertungsrechten können Studentenabgaben aufrufen und gegebenenfalls 
+korrigieren. Wenn manuelle Korrekturen vorgenommen wurden, so wird die 
+``userID`` des Korrektors gespeichert.
+Einzelne Studentenabgaben können ebenfalls kommentiert werden 
+([Screenshots](#abgaben-bewerten-1)) und nach Freigabe der Ergebnisse von den 
+Nutzern eingesehen werden.
 
-Um endgültige Bewertungen an Moodle zu übertragen, können sich Nutzer mit Bewertungsrechten zu den einzelnen Aufgabengruppen CSV-Dateien generieren.
+Um endgültige Bewertungen an Moodle zu übertragen, können sich Nutzer mit 
+Bewertungsrechten zu den einzelnen Aufgabengruppen CSV-Dateien generieren.
 
 **Anleitung:**<br>
 *Bewerten* &#8594; *Nach gesuchtem Übungsblatt filtern* &#8594; *Export-Symbol klicken*<br>
@@ -461,59 +525,63 @@ ex_id ; user_id    ; points ; max_points
 -
 
 <!--- {{{ -->
-[csv1]:       http://kolbasa.github.io/ueps/screenshots/csv-export-01.png
-[csv2]:       http://kolbasa.github.io/ueps/screenshots/csv-export-02.png
+[csv1]:           http://kolbasa.github.io/ueps/screenshots/csv-export-01.png
+[csv2]:           http://kolbasa.github.io/ueps/screenshots/csv-export-02.png
 
-[s1]:         http://kolbasa.github.io/ueps/screenshots/submission-01.png
-[s1t]:        http://kolbasa.github.io/ueps/screenshots/submission-01-small.png
-[s2]:         http://kolbasa.github.io/ueps/screenshots/submission-02.png
-[s2t]:        http://kolbasa.github.io/ueps/screenshots/submission-02-small.png
-[s3]:         http://kolbasa.github.io/ueps/screenshots/submission-03.png
-[s3t]:        http://kolbasa.github.io/ueps/screenshots/submission-03-small.png
-[s4]:         http://kolbasa.github.io/ueps/screenshots/submission-04.png
-[s4t]:        http://kolbasa.github.io/ueps/screenshots/submission-04-small.png
+[s1]:             http://kolbasa.github.io/ueps/screenshots/submission-01.png
+[s1t]:            http://kolbasa.github.io/ueps/screenshots/submission-01-small.png
+[s2]:             http://kolbasa.github.io/ueps/screenshots/submission-02.png
+[s2t]:            http://kolbasa.github.io/ueps/screenshots/submission-02-small.png
+[s3]:             http://kolbasa.github.io/ueps/screenshots/submission-03.png
+[s3t]:            http://kolbasa.github.io/ueps/screenshots/submission-03-small.png
+[s4]:             http://kolbasa.github.io/ueps/screenshots/submission-04.png
+[s4t]:            http://kolbasa.github.io/ueps/screenshots/submission-04-small.png
 
-[e0]:         http://kolbasa.github.io/ueps/screenshots/admin-01.png
-[e0t]:        http://kolbasa.github.io/ueps/screenshots/admin-01-small.png
-[e1]:         http://kolbasa.github.io/ueps/screenshots/edit-scenario-01.png
-[e1t]:        http://kolbasa.github.io/ueps/screenshots/edit-scenario-01-small.png
-[e2]:         http://kolbasa.github.io/ueps/screenshots/edit-scenario-02.png
-[e2t]:        http://kolbasa.github.io/ueps/screenshots/edit-scenario-02-small.png
-[e3]:         http://kolbasa.github.io/ueps/screenshots/edit-group-02.png
-[e3t]:        http://kolbasa.github.io/ueps/screenshots/edit-group-02-small.png
-[e4]:         http://kolbasa.github.io/ueps/screenshots/edit-ex-02.png
-[e4t]:        http://kolbasa.github.io/ueps/screenshots/edit-ex-02-small.png
+[e0]:             http://kolbasa.github.io/ueps/screenshots/admin-01.png
+[e0t]:            http://kolbasa.github.io/ueps/screenshots/admin-01-small.png
+[e1]:             http://kolbasa.github.io/ueps/screenshots/edit-scenario-01.png
+[e1t]:            http://kolbasa.github.io/ueps/screenshots/edit-scenario-01-small.png
+[e2]:             http://kolbasa.github.io/ueps/screenshots/edit-scenario-02.png
+[e2t]:            http://kolbasa.github.io/ueps/screenshots/edit-scenario-02-small.png
+[e3]:             http://kolbasa.github.io/ueps/screenshots/edit-group-02.png
+[e3t]:            http://kolbasa.github.io/ueps/screenshots/edit-group-02-small.png
+[e4]:             http://kolbasa.github.io/ueps/screenshots/edit-ex-02.png
+[e4t]:            http://kolbasa.github.io/ueps/screenshots/edit-ex-02-small.png
+[e5]:             http://kolbasa.github.io/ueps/screenshots/edit-scenario-03.png
 
-[t1]:         http://kolbasa.github.io/ueps/screenshots/task-01.png
-[t1t]:        http://kolbasa.github.io/ueps/screenshots/task-01-small.png
-[t2]:         http://kolbasa.github.io/ueps/screenshots/task-02.png
-[t2t]:        http://kolbasa.github.io/ueps/screenshots/task-02-small.png
-[t3]:         http://kolbasa.github.io/ueps/screenshots/task-03.png
-[t3t]:        http://kolbasa.github.io/ueps/screenshots/task-03-small.png
-[t4]:         http://kolbasa.github.io/ueps/screenshots/task-04.png
-[t4t]:        http://kolbasa.github.io/ueps/screenshots/task-04-small.png
-[t5]:         http://kolbasa.github.io/ueps/screenshots/task-05.png
-[t5t]:        http://kolbasa.github.io/ueps/screenshots/task-05-small.png
+[t1]:             http://kolbasa.github.io/ueps/screenshots/task-01.png
+[t1t]:            http://kolbasa.github.io/ueps/screenshots/task-01-small.png
+[t2]:             http://kolbasa.github.io/ueps/screenshots/task-02.png
+[t2t]:            http://kolbasa.github.io/ueps/screenshots/task-02-small.png
+[t3]:             http://kolbasa.github.io/ueps/screenshots/task-03.png
+[t3t]:            http://kolbasa.github.io/ueps/screenshots/task-03-small.png
+[t4]:             http://kolbasa.github.io/ueps/screenshots/task-04.png
+[t4t]:            http://kolbasa.github.io/ueps/screenshots/task-04-small.png
+[t5]:             http://kolbasa.github.io/ueps/screenshots/task-05.png
+[t5t]:            http://kolbasa.github.io/ueps/screenshots/task-05-small.png
 
-[i1]:         http://kolbasa.github.io/ueps/screenshots/index-01.png
-[i1t]:        http://kolbasa.github.io/ueps/screenshots/index-01-small.png
-[i2]:         http://kolbasa.github.io/ueps/screenshots/index-02.png
-[i2t]:        http://kolbasa.github.io/ueps/screenshots/index-02-small.png
-[i3]:         http://kolbasa.github.io/ueps/screenshots/index-03.png
-[i3t]:        http://kolbasa.github.io/ueps/screenshots/index-03-small.png
-[i4]:         http://kolbasa.github.io/ueps/screenshots/index-04.png
-[i4t]:        http://kolbasa.github.io/ueps/screenshots/index-04-small.png
-[i5]:         http://kolbasa.github.io/ueps/screenshots/index-05.png
-[i5t]:        http://kolbasa.github.io/ueps/screenshots/index-05-small.png
-[i6]:         http://kolbasa.github.io/ueps/screenshots/index-06.png
-[i6t]:        http://kolbasa.github.io/ueps/screenshots/index-06-small.png
+[i1]:             http://kolbasa.github.io/ueps/screenshots/index-01.png
+[i1t]:            http://kolbasa.github.io/ueps/screenshots/index-01-small.png
+[i2]:             http://kolbasa.github.io/ueps/screenshots/index-02.png
+[i2t]:            http://kolbasa.github.io/ueps/screenshots/index-02-small.png
+[i3]:             http://kolbasa.github.io/ueps/screenshots/index-03.png
+[i3t]:            http://kolbasa.github.io/ueps/screenshots/index-03-small.png
+[i4]:             http://kolbasa.github.io/ueps/screenshots/index-04.png
+[i4t]:            http://kolbasa.github.io/ueps/screenshots/index-04-small.png
+[i5]:             http://kolbasa.github.io/ueps/screenshots/index-05.png
+[i5t]:            http://kolbasa.github.io/ueps/screenshots/index-05-small.png
+[i6]:             http://kolbasa.github.io/ueps/screenshots/index-06.png
+[i6t]:            http://kolbasa.github.io/ueps/screenshots/index-06-small.png
 
-[r1]:         http://kolbasa.github.io/ueps/screenshots/rights-01.png
-[r1t]:        http://kolbasa.github.io/ueps/screenshots/rights-01-small.png
-[r2]:         http://kolbasa.github.io/ueps/screenshots/rights-02.png
-[r2t]:        http://kolbasa.github.io/ueps/screenshots/rights-02-small.png
+[r1]:             http://kolbasa.github.io/ueps/screenshots/rights-01.png
+[r1t]:            http://kolbasa.github.io/ueps/screenshots/rights-01-small.png
+[r2]:             http://kolbasa.github.io/ueps/screenshots/rights-02.png
+[r2t]:            http://kolbasa.github.io/ueps/screenshots/rights-02-small.png
 
-[heidi]:      http://www.heidisql.com/
-[squ]:        http://squirrel-sql.sourceforge.net/
-[php]:        http://www.phpmyadmin.net/
+[heidi]:          http://www.heidisql.com/
+[squ]:            http://squirrel-sql.sourceforge.net/
+[php]:            http://www.phpmyadmin.net/
+
+[bug]:            https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/issues
+[MASTER_DB_USER]: src/main/resources/config.properties#L43
 <!--- }}} -->

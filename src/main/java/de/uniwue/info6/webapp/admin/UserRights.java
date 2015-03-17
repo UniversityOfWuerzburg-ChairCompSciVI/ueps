@@ -302,27 +302,10 @@ public class UserRights implements Serializable {
    * @param sc
    * @return
    */
-  public boolean checkIfScenarioCanBeEdited(Scenario sc) {
+  public boolean canBeDeleted(Scenario sc) {
     List<ExerciseGroup> groups = exerciseGroupDao.findByScenario(sc);
     for (ExerciseGroup gr : groups) {
-      if (!checkIfExerciseGroupCanBeEdited(gr)) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  /**
-   *
-   *
-   * @param sc
-   * @return
-   */
-  public boolean checkIfExerciseCanBeEdited(Exercise ex) {
-    List<UserEntry> entries = userEntryDao.getLastEntriesForExercise(ex);
-    for (UserEntry entry : entries) {
-      User user = userDao.getById(entry.getUser().getId());
-      if (!hasEditingRight(user, ex) && !hasRatingRight(user, ex)) {
+      if (!canBeDeleted(gr)) {
         return false;
       }
     }
@@ -335,17 +318,35 @@ public class UserRights implements Serializable {
    * @param gr
    * @return
    */
-  public boolean checkIfExerciseGroupCanBeEdited(ExerciseGroup gr) {
+  public boolean canBeDeleted(ExerciseGroup gr) {
     if (gr.getIsRated()) {
       List<Exercise> exercises = exerciseDao.findByExGroup(gr);
       for (Exercise ex : exercises) {
-        if (!checkIfExerciseCanBeEdited(ex)) {
+        if (!canBeDeleted(ex)) {
           return false;
         }
       }
     }
     return true;
   }
+
+  /**
+   *
+   *
+   * @param sc
+   * @return
+   */
+  public boolean canBeDeleted(Exercise ex) {
+    List<UserEntry> entries = userEntryDao.getLastEntriesForExercise(ex);
+    for (UserEntry entry : entries) {
+      User user = userDao.getById(entry.getUser().getId());
+      if (!hasEditingRight(user, ex) && !hasRatingRight(user, ex)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
 
   // ------------------------------------------------ //
   // --
@@ -447,8 +448,11 @@ public class UserRights implements Serializable {
    * @return
    */
   public boolean hasEditingRight(final User user, final ExerciseGroup group) {
-    if (group != null) {
-      return hasEditingRight(user, group.pull().getScenario(), true);
+    if (group != null && user != null) {
+      final Scenario scenario = group.getScenario();
+      if (scenario != null) {
+        return hasEditingRight(user, scenario, true);
+      }
     }
     return false;
   }

@@ -233,6 +233,7 @@ public class ScenarioExporter {
   private Scenario populateScenario(Scenario scenario) {
     scenario.setScenarios(null);
     scenario.setUserRights(null);
+    scenario.setDbPass("you can not export the password");
 
     Set<ExerciseGroup> groupSet = exerciseGroupDao.findByScenarioAsSet(scenario);
     for (ExerciseGroup group : groupSet) {

@@ -78,7 +78,7 @@ xmlns:p="http://primefaces.org/ui">
      widgetVar="del" severity="alert">
       <p:commandButton value="#{txt['ADMINTREE.DELETE_2']}" onclick="del.hide()"
       styleClass="ui-confirmdialog-yes confirmbutton" icon="ui-icon-check" actionListener="#{t.deleteNode}"
-      update="exerciseTree" />
+      update="exerciseTree messages" />
       <p:commandButton value="#{txt['ADMINTREE.CANCEL']}" styleClass="ui-confirmdialog-no confirmbutton"
       icon="ui-icon-close" onclick="del.hide()" />
      </p:confirmDialog>
@@ -89,7 +89,7 @@ xmlns:p="http://primefaces.org/ui">
      widgetVar="duplicate" severity="info">
       <p:commandButton value="#{txt['ADMINTREE.CONFIRM']}" onclick="duplicate.hide()"
       styleClass="ui-confirmdialog-yes confirmbutton" icon="ui-icon-check"
-      actionListener="#{t.duplicateNode}" update="exerciseTree" />
+      actionListener="#{t.duplicateNode}" update="exerciseTree messages" />
       <p:commandButton value="#{txt['ADMINTREE.CANCEL']}" styleClass="ui-confirmdialog-no confirmbutton"
       icon="ui-icon-close" onclick="duplicate.hide()" />
      </p:confirmDialog>
@@ -99,7 +99,7 @@ xmlns:p="http://primefaces.org/ui">
      <p:confirmDialog message="#{txt['ADMINTREE.PASTE_DIALOG']}" widgetVar="paste" severity="info">
       <p:commandButton value="#{txt['ADMINTREE.PASTE']}" onclick="paste.hide()"
       styleClass="ui-confirmdialog-yes confirmbutton" icon="ui-icon-check" actionListener="#{t.copyNode}"
-      update="exerciseTree" />
+      update="exerciseTree messages" />
       <p:commandButton value="#{txt['ADMINTREE.CANCEL']}" styleClass="ui-confirmdialog-no confirmbutton"
       icon="ui-icon-close" onclick="paste.hide()" />
      </p:confirmDialog>

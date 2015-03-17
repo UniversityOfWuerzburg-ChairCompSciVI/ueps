@@ -8,10 +8,10 @@ Link          | Rolle          | Szenario
 ------------- | -------------  | -------------
 **<a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=1" target="_blank">Demo 1</a>** | Student | Amazon Buchdatenbank
 **<a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_admin&encryptedCode=showcase&scenarioID=1" target="_blank">Demo 2</a>** | Admin | Amazon Buchdatenbank
-**<a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_lecturer&encryptedCode=showcase&scenarioID=1" target="_blank">Demo 3</a>** | Dozent (für das Szenario 1) | Amazon Buchdatenbank
+**<a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_lecturer&encryptedCode=showcase&scenarioID=1" target="_blank">Demo 3</a>** | Dozent (für das Amazon-Szenario) | Amazon Buchdatenbank
 **<a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=2" target="_blank">Demo 4</a>** | Student | Fussball WM 2010 
 **<a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_admin&encryptedCode=showcase&scenarioID=2" target="_blank">Demo 5</a>** | Admin | Fussball WM 2010
-**<a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_lecturer&encryptedCode=showcase&scenarioID=2" target="_blank">Demo 6</a>** | Dozent (für das Szenario 1) | Fussball WM 2010
+**<a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_lecturer&encryptedCode=showcase&scenarioID=2" target="_blank">Demo 6</a>** | Dozent (für das Amazon-Szenario) | Fussball WM 2010
 
 -
 

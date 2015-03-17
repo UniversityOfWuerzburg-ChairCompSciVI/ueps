@@ -324,7 +324,7 @@ public class ConnectionTools extends Thread {
 
           // ------------------------------------------------ //
           for (Exercise exercise : exercises) {
-            for (int i = 0; i < random.nextInt(10); i++) {
+            for (int i = 0; i < random.nextInt(20); i++) {
               User user = userDao.getRandom();
               if (!user.getId().equals(dummyUser)) {
                 try {

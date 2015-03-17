@@ -8,9 +8,9 @@ Trainingssystem zum Erlernen der Datenbanksprache SQL.
 
 Link          | Rolle
 ------------- | -------------
-**<a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=1" target="_blank">Amazon Buchdatenbank</a>** - **<a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=2" target="_blank">Fussball WM 2010</a>** | Student
-**<a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_admin&encryptedCode=showcase&scenarioID=1" target="_blank">Amazon Buchdatenbank</a>** - **<a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_admin&encryptedCode=showcase&scenarioID=2" target="_blank">Fussball WM 2010</a>** | Admin
-**<a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_lecturer&encryptedCode=showcase&scenarioID=1" target="_blank">Amazon Buchdatenbank</a>** - **<a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_lecturer&encryptedCode=showcase&scenarioID=2" target="_blank">Fussball WM 2010</a>** | Dozent
+**<a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=1" target="_blank">Amazon Buchdatenbank</a>** / **<a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=2" target="_blank">Fussball WM 2010</a>** | Student
+**<a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_admin&encryptedCode=showcase&scenarioID=1" target="_blank">Amazon Buchdatenbank</a>** / **<a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_admin&encryptedCode=showcase&scenarioID=2" target="_blank">Fussball WM 2010</a>** | Admin
+**<a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_lecturer&encryptedCode=showcase&scenarioID=1" target="_blank">Amazon Buchdatenbank</a>** / **<a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_lecturer&encryptedCode=showcase&scenarioID=2" target="_blank">Fussball WM 2010</a>** | Dozent (beschränkt auf das Amazon-Szenario)
 
 -
 

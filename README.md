@@ -393,20 +393,26 @@ verschiedene Rollen eingeführt: **Student**, **Dozent** und **Admin**.
 
 ##### Rolle 'Admin'
 Der 'Admin' verfügt über umfassende Rechte im ganzen System:
-- globale Benutzerverwaltung z.B. Bestimmung von Dozenten und deren Zuweisung zu Szenarios
+- globale Benutzerverwaltung z.B. Bestimmung von Dozenten und deren Zuweisung 
+    zu Szenarios
 - globale Verwaltung der Szenarios, sowie Rolle 'Dozent' in allen Szenarios<br>
-  (Admins sind die einzigen Nutzer, die neue Szenarios erstellen können)
+    - Admins sind die einzigen Nutzer, die neue Szenarios erstellen können 
 
 ##### Rolle 'Dozent'
-Die Rolle 'Dozent' priviligiert einen Benutzer dazu folgende Funktionalitäten **innerhalb eines Szenarios** (festgelegt von einem Admin) zu nutzen:
+Die Rolle 'Dozent' priviligiert einen Benutzer dazu folgende Funktionalitäten 
+**innerhalb eines Szenarios** (festgelegt von einem Admin) zu nutzen:
 - Zuweisung von Rechten für Benutzer innerhalb des Szenarios
-- Änderung des Szenarios (wobei die Optionen zum Datenbank-Server und Datenbank-Nutzer nur von einem Admin geändert werden können)
+    - sie können jedoch keine Dozenten hinzufügen
+- Änderung des Szenarios (wobei die Optionen zum Datenbank-Server und 
+    Datenbank-Nutzer nur von einem Admin geändert werden können)
 - Erstellung und Änderung von Übungsblättern und Übungsaufgaben des Szenarios
 - Einsicht und Bewertung von abgebenen Lösungen innerhalb des Szenarios
 
 ##### Rolle 'Student'
 - Durchführung von Übungsaufgaben
 - Einsicht in die Korrektur der eigenen Abgaben
+- einem Studenten können Bewertungs -und Editierrechte zugewiesen werden,
+    jedoch keine Rechte zur Benutzerverwaltung
 
 -
 

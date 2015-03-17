@@ -42,7 +42,6 @@ import de.uniwue.info6.database.map.ExerciseGroup;
 import de.uniwue.info6.database.map.Scenario;
 import de.uniwue.info6.database.map.SolutionQuery;
 import de.uniwue.info6.database.map.User;
-import de.uniwue.info6.database.map.UserEntry;
 import de.uniwue.info6.database.map.UserRight;
 import de.uniwue.info6.database.map.daos.ExerciseDao;
 import de.uniwue.info6.database.map.daos.ExerciseGroupDao;
@@ -201,7 +200,6 @@ public class ConnectionTools extends Thread {
    *
    */
   private void initStatsLog() {
-
     String date = dateFileExecuter.format(new Date());
 
     this.executerStatsFile = SCRIPT_PATH + File.separator + Cfg.RESOURCE_PATH
@@ -266,7 +264,6 @@ public class ConnectionTools extends Thread {
    * @return
    */
   private String hashMapToOutput(Map<Date, String> map) {
-
     StringBuffer buffer = new StringBuffer();
     if (map != null) {
       for (Date date : map.keySet()) {

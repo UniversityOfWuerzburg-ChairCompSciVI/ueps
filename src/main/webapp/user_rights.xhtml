@@ -245,8 +245,10 @@ xmlns:p="http://primefaces.org/ui">
      <!-- ######################################################################### -->
      <p:dialog widgetVar="deleteInstr" resizable="false">
       <br />
-      <h:outputLabel style="display:block;min-width:120px;font-weight:bold;"
+      <h:outputLabel style="display:block;min-width:120px;font-weight:bold; padding:10px 10px 0px 10px"
       value="#{txt['RIGHTS.DELETE_LECTURER']}" />
+      <h:outputLabel style="display:block;min-width:120px;font-weight:bold; padding:10px 10px 0px 10px"
+      value="#{txt['RIGHTS.DELETE_LECTURER_DESC']}" />
       <br />
       <p:commandButton id="deleteButton" value="#{txt['DELETE']}" update="lecturerList rights"
       style="margin:5px" onclick="deleteInstr.hide(); context_tooltip()"

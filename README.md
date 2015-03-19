@@ -1,6 +1,6 @@
 # ÜPS
-**ÜPS** (**Ü**bungs-**P**rogramm für **S**QL) ist ein webbasiertes 
-Trainingssystem zum Erlernen der Datenbanksprache SQL.
+**ÜPS** (**Ü**bungs-**P**rogramm für **S**QL) ist ein webbasiertes Trainingssystem 
+zum Erlernen der Datenbanksprache SQL.
 
 ([**Screenshots**](#screenshots)).
 
@@ -47,7 +47,8 @@ Link          | Rolle
 * Firefox, Chrome, Safari (ab Ver.7) oder Internet Explorer (ab Ver.9)
 * Aktiviertes JavaScript wird vorausgesetzt
 
-Mobile Geräte werden zwar unterstützt, es wird jedoch keine angepasste Darstellung angeboten
+Mobile Geräte werden zwar unterstützt, es wird jedoch keine angepasste 
+Darstellung angeboten
 
 -
 
@@ -55,11 +56,12 @@ Mobile Geräte werden zwar unterstützt, es wird jedoch keine angepasste Darstel
 
 1. Quellcode herunterladen:<br/>
    ``git clone --depth=1 https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps``<br/>
-   (Alternativ auch als [direkter Download](https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/archive/master.zip))
+   (Alternativ auch als [direkter Download][master-archive])
 
 2. In das ``ueps``-Verzeichnis wechseln.
 
-3. Konfigurationsdatei in einem Editor öffnen: [``src/main/resources/config.properties``](src/main/resources/config.properties)
+3. Konfigurationsdatei in einem Editor 
+   öffnen: [``src/main/resources/config.properties``][cfg]
 
 4. Den Datenbank-Server und einen Nutzer festlegen:
    ```properties
@@ -71,14 +73,15 @@ Mobile Geräte werden zwar unterstützt, es wird jedoch keine angepasste Darstel
    ```
    <!--- ` -->
 
-   Der unter [``MASTER_DBUSER``](src/main/resources/config.properties#L43) festgelegte Nutzer sollte folgende Rechte besitzen:
+   Der unter [``MASTER_DBUSER``][MASTER_DBUSER] festgelegte Nutzer sollte 
+   folgende Rechte besitzen:
 
   ```
   SELECT, INSERT, UPDATE, DELETE, ALTER, CREATE, DROP, GRANT OPTION, LOCK TABLES
   ```
   <!--- ` -->
 
-  Die aufgelisteten Rechte müssen für die unter [``MASTER_DBNAME``](src/main/resources/config.properties#L42) angegebene Datenbank sowie für neu erstellte Datenbanken gelten. Ein Rechte-Skript könnte beispielsweise folgendermaßen aussehen:
+  Die aufgelisteten Rechte müssen für die unter [``MASTER_DBNAME``][MASTER_DBNAME] angegebene Datenbank sowie für neu erstellte Datenbanken gelten. Ein Rechte-Skript könnte beispielsweise folgendermaßen aussehen:
 
   ```
   GRANT SELECT, INSERT, UPDATE, DELETE, ALTER, CREATE, DROP,
@@ -301,9 +304,10 @@ Aufgabengruppen zu "Szenarios":
 ```
 
 Besitzt der angemeldete Nutzer **Editierrechte**, so kann er Aufgaben komfortabel 
-über die *Editieren*-Seite bearbeiten. Hierfür muss der Nutzer einen 
-gewünschten Knoten im Baum auswählen, das Kontextmenü mit einem Rechtsklick 
-öffnen und auf *Bearbeiten* klicken 
+über die *Editieren*-Seite bearbeiten. Hierfür muss der Nutzer einen gewünschten 
+Knoten im Baum auswählen, das Kontextmenü mit einem Rechtsklick öffnen und 
+auf *Bearbeiten* klicken 
+
 ([Screenshot](#szenarios-erstellenbearbeiten)).
 
 #### Szenarios erstellen ([Screenshot](#edit-scenario))
@@ -357,13 +361,19 @@ Aufgabengruppen dienen dem freien Üben und bieten uneingeschränkten Zugang zu 
 Musterlösungen. Bewertete Aufgabengruppen sind zeitbeschränkt und dienen zur 
 Feststellung der Fähigkeiten der Studenten.
 
-Zusätzlich bekommt der Student bei bewerteten Aufgaben eine [Server-Meldung](#server-info) für
-jede Abgabe als Bestätigung.
+Zusätzlich bekommt der Student bei bewerteten Aufgaben eine 
+[Server-Meldung](#server-info) für jede Abgabe als Bestätigung.
 
 Ergebnisse können nach Ablauf der Abgabezeit **automatisch** oder **manuell** 
 freigegeben werden. Möchte man nach einer manuellen Bearbeitungszeit die 
 Ergebnisse freigeben, so muss man nur die Option '*nicht automatisch freigeben*'
 wieder auf '*automatisch freigeben*' setzen.
+
+Bewertete Aufgaben (und dessen Elternknoten) können nicht mehr gelöscht werden, 
+wenn Nutzer (ohne weitere Rechte) diese bereits bearbeitet haben. Dies soll 
+versehentliches Löschen von prüfungsrelevanten Nutzerabgaben verhindern. Möchte
+man diese tatsächlich löschen, so muss zuerst die zugehörige Übungsgruppe auf 
+"unbewertet" gestellt werden.
 
 #### Aufgabe erstellen ([Screenshot](#edit-exercise))
 
@@ -592,7 +602,10 @@ Möchte man die Anwendung warten, so kann man im laufenden Betrieb eine
 [php]:            http://www.phpmyadmin.net/
 
 [bug]:            https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/issues
-[MASTER_DB_USER]: src/main/resources/config.properties#L43
+[MASTER_DBUSER]: src/main/resources/config.properties#L43
+[MASTER_DBNAME]:  src/main/resources/config.properties#L42
 [info-section]:   src/main/webapp/templates/common/commonLayout.xhtml#L71-L74
+[master-archive]: https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/archive/master.zip
+[cfg]:            src/main/resources/config.properties
 <!--- }}} -->
 

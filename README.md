@@ -55,7 +55,8 @@ Darstellung angeboten
 ## Kurzanleitung zur Installation
 
 1. Quellcode herunterladen:<br/>
-   ``git clone --depth=1 https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps``<br/>
+   ``git clone --depth=1 
+   https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps``<br/>
    (Alternativ auch als [direkter Download][master-archive])
 
 2. In das ``ueps``-Verzeichnis wechseln.
@@ -81,7 +82,9 @@ Darstellung angeboten
   ```
   <!--- ` -->
 
-  Die aufgelisteten Rechte müssen für die unter [``MASTER_DBNAME``][MASTER_DBNAME] angegebene Datenbank sowie für neu erstellte Datenbanken gelten. Ein Rechte-Skript könnte beispielsweise folgendermaßen aussehen:
+  Die aufgelisteten Rechte müssen für die unter [``MASTER_DBNAME``][MASTER_DBNAME] 
+  angegebene Datenbank sowie für neu erstellte Datenbanken gelten. Ein Rechte-Skript 
+  könnte beispielsweise folgendermaßen aussehen:
 
   ```
   GRANT SELECT, INSERT, UPDATE, DELETE, ALTER, CREATE, DROP,
@@ -92,7 +95,8 @@ Darstellung angeboten
 
 6. Anschließend kann die Anwendung kompiliert werden:
    * *Unter Linux*<br/>
-     Zuerst müssen einige Build-Skripte im Wurzelverzeichnis ausführbar gemacht werden:<br/>
+     Zuerst müssen einige Build-Skripte im Wurzelverzeichnis ausführbar gemacht 
+     werden:<br/>
      ``chmod +x check-dependencies.sh build-deploy.sh build-package.sh``<br/>
      Dann einfach folgendes Skript ausführen<br/>
      [``./build-package.sh``](build-deploy.sh)<br/>
@@ -101,10 +105,13 @@ Darstellung angeboten
      Einfach folgendes Skript ausführen (Doppelklick genügt):<br/>
      [``build-package.bat``](build-package.bat)
 
-7. Die kompilierte ``ueps.war``-Datei sollte jetzt deploy-fertig im Wurzelverzeichnis zu finden sein.
-   (ÜPS lässt sich alternativ auch [direkt mit Maven deployen](#DeployMaven)).
+7. Die kompilierte ``ueps.war``-Datei sollte jetzt deploy-fertig im 
+   Wurzelverzeichnis zu finden sein. (ÜPS lässt sich alternativ auch 
+   [direkt mit Maven deployen](#DeployMaven)).
 
-8. [Die Startseite](http://kolbasa.github.io/ueps/screenshots/startpage.png) lässt sich jetzt über die eingestellte Tomcat-URL aufrufen (siehe auch [Nutzer-Authentifizierung](#nutzer-authentifizierung)). ``catalina.out`` sollte folgende Zeilen zeigen:
+8. [Die Startseite](#startseite) lässt sich jetzt über die eingestellte Tomcat-URL 
+   aufrufen (siehe auch [Nutzer-Authentifizierung](#nutzer-authentifizierung)). 
+   ``catalina.out`` sollte folgende Zeilen zeigen:
 
   ```
     INFO (ueps): Load 'config.properties' from
@@ -124,15 +131,17 @@ Darstellung angeboten
 
 -
 
-[er-amazon]: src/main/resources/sql/1/er-diagram.png
-[er-wm2010]: src/main/resources/sql/2/wm_2014_05_14-12_00_37.png
+Mit der gezeigten Konfiguration werden beim Start der Anwendungen folgenden 
+Datenbanken erstellt:
+* ``ueps_master`` ([Administrative Datenbank][er-admin] 
+  - festgelegt durch ``MASTER_DBNAME``)
+* ``ueps_slave_001`` (Datenbank für das erste Beispielszenario 
+  - [Amazon Buchdatenbank][er-amazon])
+* ``ueps_slave_002`` (Datenbank für das zweite Beispielszenario 
+  - [Fussball WM 2010][er-wm2010])
 
-Mit der gezeigten Konfiguration werden beim Start der Anwendungen folgenden Datenbanken erstellt:
-* ``ueps_master`` ([Administrative Datenbank](http://kolbasa.github.io/ueps/screenshots/admin-db-er-diagram.png) - festgelegt durch ``MASTER_DBNAME``)
-* ``ueps_slave_001`` (Datenbank für das erste Beispielszenario - [Amazon Buchdatenbank][er-amazon])
-* ``ueps_slave_002`` (Datenbank für das zweite Beispielszenario - [Fussball WM 2010][er-wm2010])
-
-Für die ``slave``-Datenbanken werden jeweils folgende Datenbanknutzer mit beschränkten Rechten erstellt:
+Für die ``slave``-Datenbanken werden jeweils folgende Datenbanknutzer mit 
+beschränkten Rechten erstellt:
 * ``ueps_001``
 * ``ueps_002``
 
@@ -140,15 +149,15 @@ Für die ``slave``-Datenbanken werden jeweils folgende Datenbanknutzer mit besch
 
 ## Konfiguration mit 'config.properties'
 
-Bevor man die Anwendung startet sollte man zunächst einen Blick in die Konfigurationsdatei
-[``config.properties``](src/main/resources/config.properties#L40-L44)
-unter [``src/main/resources/``](src/main/resources/)
-werfen und Angaben zum Datenbank-Server überschreiben.
+Bevor man die Anwendung startet sollte man zunächst einen Blick in die 
+Konfigurationsdatei [``config.properties``][db-fields] unter 
+[``src/main/resources/``][res] werfen und Angaben zum Datenbank-Server 
+überschreiben.
 
 #### Datenbankangaben
 
-In der [administrativen Datenbank](src/main/resources/config.properties#L40-L44) werden alle Studentenabgaben und zugehörige
-Aufgaben gespeichert (siehe [ER-Diagramm](http://kolbasa.github.io/ueps/screenshots/admin-db-er-diagram.png)).
+In der [administrativen Datenbank][db-fields] werden alle Studentenabgaben und 
+zugehörige Aufgaben gespeichert (siehe [ER-Diagramm][er-admin]).
 
 ```properties
 MASTER_DBHOST = 127.0.0.1
@@ -158,10 +167,9 @@ MASTER_DBUSER = test_user
 MASTER_DBPASS = 3ti4k4tm270kg
 ```
 
-Der Nutzer unter [``MASTER_DBUSER``](src/main/resources/config.properties#L43)
-benötigt mindestens folgende
-Rechte: ``SELECT, INSERT, UPDATE, DELETE`` für die Datenbank
-angegeben durch [``MASTER_DBNAME``](src/main/resources/config.properties#L42).
+Der Nutzer unter [``MASTER_DBUSER``][MASTER_DBUSER] benötigt mindestens folgende
+Rechte: ``SELECT, INSERT, UPDATE, DELETE`` für die Datenbank angegeben durch 
+[``MASTER_DBNAME``][MASTER_DBNAME].
 
 Beispiel MySQL-Rechte-Skript:
 ```
@@ -602,10 +610,18 @@ Möchte man die Anwendung warten, so kann man im laufenden Betrieb eine
 [php]:            http://www.phpmyadmin.net/
 
 [bug]:            https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/issues
-[MASTER_DBUSER]: src/main/resources/config.properties#L43
+[MASTER_DBUSER]:  src/main/resources/config.properties#L43
 [MASTER_DBNAME]:  src/main/resources/config.properties#L42
 [info-section]:   src/main/webapp/templates/common/commonLayout.xhtml#L71-L74
 [master-archive]: https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/archive/master.zip
+
+[res]:            src/main/resources/
 [cfg]:            src/main/resources/config.properties
+[db-fields]:      src/main/resources/config.properties#L40-L44
+
+
+[er-admin]:       http://kolbasa.github.io/ueps/screenshots/admin-db-er-diagram.png
+[er-amazon]:      src/main/resources/sql/1/er-diagram.png
+[er-wm2010]:      src/main/resources/sql/2/wm_2014_05_14-12_00_37.png
 <!--- }}} -->
 

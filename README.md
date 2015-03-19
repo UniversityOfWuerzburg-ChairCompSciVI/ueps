@@ -6,11 +6,11 @@ zum Erlernen der Datenbanksprache SQL.
 
 ## Showcase
 
-Link          | Rolle
-------------- | -------------
-**<a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=1" target="_blank">Amazon Buchdatenbank</a>** / **<a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=2" target="_blank">Fussball WM 2010</a>** | Student
-**<a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_admin&encryptedCode=showcase&scenarioID=1" target="_blank">Amazon Buchdatenbank</a>** / **<a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_admin&encryptedCode=showcase&scenarioID=2" target="_blank">Fussball WM 2010</a>** | Admin
-**<a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_lecturer&encryptedCode=showcase&scenarioID=1" target="_blank">Amazon Buchdatenbank</a>** / **<a href="http://ueps.scienceontheweb.net?index=xhtml&userID=demo_lecturer&encryptedCode=showcase&scenarioID=2" target="_blank">Fussball WM 2010</a>** | Dozent (beschränkt auf das Amazon-Szenario)
+Link                                                        | Rolle
+----------------------------------------------------------- | -------------
+[**Amazon Buchdatenbank**][d1] / [**Fussball WM 2010**][d2] | Student
+[**Amazon Buchdatenbank**][d3] / [**Fussball WM 2010**][d4] | Admin 
+[**Amazon Buchdatenbank**][d4] / [**Fussball WM 2010**][d5] | Dozent 
 
 -
 
@@ -205,7 +205,7 @@ IDENTIFIED BY '%MASTER_DBPASS%';
 Wenn eine automatische Installation nicht erwünscht ist, so benötigt die Anwendung im laufenden Betrieb nur ``SELECT, INSERT, UPDATE, DELETE`` Rechte.
 
 #### Nutzer-Authentifizierung
-In der Konfigurationsdatei sollte mindestens ein [Administrator-Nutzer](src/main/resources/config.properties#L96) festgelegt werden. Mehrere Nutzer sollten mit einem Semikolon getrennt werden (z.B. ``admin_id1;admin_id2;``).
+In der Konfigurationsdatei sollte mindestens ein [Administrator-Nutzer][ADMINS] festgelegt werden. Mehrere Nutzer sollten mit einem Semikolon getrennt werden (z.B. ``admin_id1;admin_id2;``).
 Admins können auch zur Laufzeit hinzugefügt werden, hierfür muss man jedoch den Datenbankeintrag für den Nutzer manuell abändern ([Tabelle: ``user``, Spalte: ``is_admin``](http://kolbasa.github.io/ueps/screenshots/admin-db-er-diagram.png)).
 
 ÜPS besitzt keine eigene Nutzerverwaltung. Die Nutzer-Authentifizierung erfolgt über die Open-Source Lernplattform [Moodle](https://moodle.org/) mithilfe der "[Externe URL](https://docs.moodle.org/27/de/Link/URL_konfigurieren)"-Funktion. Diese Form der Anmeldung setzt voraus, dass die Option [``USE_MOODLE_LOGIN``](src/main/resources/config.properties#L111) auf ``true`` steht.
@@ -550,78 +550,90 @@ Möchte man die Anwendung warten, so kann man im laufenden Betrieb eine
 -
 
 <!--- {{{ -->
-[csv1]:           http://kolbasa.github.io/ueps/screenshots/csv-export-01.png
-[csv2]:           http://kolbasa.github.io/ueps/screenshots/csv-export-02.png
+[csv1]:                       http://kolbasa.github.io/ueps/screenshots/csv-export-01.png
+[csv2]:                       http://kolbasa.github.io/ueps/screenshots/csv-export-02.png
 
-[s1]:             http://kolbasa.github.io/ueps/screenshots/submission-01.png
-[s1t]:            http://kolbasa.github.io/ueps/screenshots/submission-01-small.png
-[s2]:             http://kolbasa.github.io/ueps/screenshots/submission-02.png
-[s2t]:            http://kolbasa.github.io/ueps/screenshots/submission-02-small.png
-[s3]:             http://kolbasa.github.io/ueps/screenshots/submission-03.png
-[s3t]:            http://kolbasa.github.io/ueps/screenshots/submission-03-small.png
-[s4]:             http://kolbasa.github.io/ueps/screenshots/submission-04.png
-[s4t]:            http://kolbasa.github.io/ueps/screenshots/submission-04-small.png
+[s1]:                         http://kolbasa.github.io/ueps/screenshots/submission-01.png
+[s1t]:                        http://kolbasa.github.io/ueps/screenshots/submission-01-small.png
+[s2]:                         http://kolbasa.github.io/ueps/screenshots/submission-02.png
+[s2t]:                        http://kolbasa.github.io/ueps/screenshots/submission-02-small.png
+[s3]:                         http://kolbasa.github.io/ueps/screenshots/submission-03.png
+[s3t]:                        http://kolbasa.github.io/ueps/screenshots/submission-03-small.png
+[s4]:                         http://kolbasa.github.io/ueps/screenshots/submission-04.png
+[s4t]:                        http://kolbasa.github.io/ueps/screenshots/submission-04-small.png
 
-[e0]:             http://kolbasa.github.io/ueps/screenshots/admin-01.png
-[e0t]:            http://kolbasa.github.io/ueps/screenshots/admin-01-small.png
-[e1]:             http://kolbasa.github.io/ueps/screenshots/edit-scenario-01.png
-[e1t]:            http://kolbasa.github.io/ueps/screenshots/edit-scenario-01-small.png
-[e2]:             http://kolbasa.github.io/ueps/screenshots/edit-scenario-02.png
-[e2t]:            http://kolbasa.github.io/ueps/screenshots/edit-scenario-02-small.png
-[e3]:             http://kolbasa.github.io/ueps/screenshots/edit-group-02.png
-[e3t]:            http://kolbasa.github.io/ueps/screenshots/edit-group-02-small.png
-[e4]:             http://kolbasa.github.io/ueps/screenshots/edit-ex-02.png
-[e4t]:            http://kolbasa.github.io/ueps/screenshots/edit-ex-02-small.png
-[e5]:             http://kolbasa.github.io/ueps/screenshots/edit-scenario-03.png
+[e0]:                         http://kolbasa.github.io/ueps/screenshots/admin-01.png
+[e0t]:                        http://kolbasa.github.io/ueps/screenshots/admin-01-small.png
+[e1]:                         http://kolbasa.github.io/ueps/screenshots/edit-scenario-01.png
+[e1t]:                        http://kolbasa.github.io/ueps/screenshots/edit-scenario-01-small.png
+[e2]:                         http://kolbasa.github.io/ueps/screenshots/edit-scenario-02.png
+[e2t]:                        http://kolbasa.github.io/ueps/screenshots/edit-scenario-02-small.png
+[e3]:                         http://kolbasa.github.io/ueps/screenshots/edit-group-02.png
+[e3t]:                        http://kolbasa.github.io/ueps/screenshots/edit-group-02-small.png
+[e4]:                         http://kolbasa.github.io/ueps/screenshots/edit-ex-02.png
+[e4t]:                        http://kolbasa.github.io/ueps/screenshots/edit-ex-02-small.png
+[e5]:                         http://kolbasa.github.io/ueps/screenshots/edit-scenario-03.png
 
-[t1]:             http://kolbasa.github.io/ueps/screenshots/task-01.png
-[t1t]:            http://kolbasa.github.io/ueps/screenshots/task-01-small.png
-[t2]:             http://kolbasa.github.io/ueps/screenshots/task-02.png
-[t2t]:            http://kolbasa.github.io/ueps/screenshots/task-02-small.png
-[t3]:             http://kolbasa.github.io/ueps/screenshots/task-03.png
-[t3t]:            http://kolbasa.github.io/ueps/screenshots/task-03-small.png
-[t4]:             http://kolbasa.github.io/ueps/screenshots/task-04.png
-[t4t]:            http://kolbasa.github.io/ueps/screenshots/task-04-small.png
-[t5]:             http://kolbasa.github.io/ueps/screenshots/task-05.png
-[t5t]:            http://kolbasa.github.io/ueps/screenshots/task-05-small.png
+[t1]:                         http://kolbasa.github.io/ueps/screenshots/task-01.png
+[t1t]:                        http://kolbasa.github.io/ueps/screenshots/task-01-small.png
+[t2]:                         http://kolbasa.github.io/ueps/screenshots/task-02.png
+[t2t]:                        http://kolbasa.github.io/ueps/screenshots/task-02-small.png
+[t3]:                         http://kolbasa.github.io/ueps/screenshots/task-03.png
+[t3t]:                        http://kolbasa.github.io/ueps/screenshots/task-03-small.png
+[t4]:                         http://kolbasa.github.io/ueps/screenshots/task-04.png
+[t4t]:                        http://kolbasa.github.io/ueps/screenshots/task-04-small.png
+[t5]:                         http://kolbasa.github.io/ueps/screenshots/task-05.png
+[t5t]:                        http://kolbasa.github.io/ueps/screenshots/task-05-small.png
 
-[i1]:             http://kolbasa.github.io/ueps/screenshots/index-01.png
-[i1t]:            http://kolbasa.github.io/ueps/screenshots/index-01-small.png
-[i2]:             http://kolbasa.github.io/ueps/screenshots/index-02.png
-[i2t]:            http://kolbasa.github.io/ueps/screenshots/index-02-small.png
-[i3]:             http://kolbasa.github.io/ueps/screenshots/index-03.png
-[i3t]:            http://kolbasa.github.io/ueps/screenshots/index-03-small.png
-[i4]:             http://kolbasa.github.io/ueps/screenshots/index-04.png
-[i4t]:            http://kolbasa.github.io/ueps/screenshots/index-04-small.png
-[i5]:             http://kolbasa.github.io/ueps/screenshots/index-05.png
-[i5t]:            http://kolbasa.github.io/ueps/screenshots/index-05-small.png
-[i6]:             http://kolbasa.github.io/ueps/screenshots/index-06.png
-[i6t]:            http://kolbasa.github.io/ueps/screenshots/index-06-small.png
+[i1]:                         http://kolbasa.github.io/ueps/screenshots/index-01.png
+[i1t]:                        http://kolbasa.github.io/ueps/screenshots/index-01-small.png
+[i2]:                         http://kolbasa.github.io/ueps/screenshots/index-02.png
+[i2t]:                        http://kolbasa.github.io/ueps/screenshots/index-02-small.png
+[i3]:                         http://kolbasa.github.io/ueps/screenshots/index-03.png
+[i3t]:                        http://kolbasa.github.io/ueps/screenshots/index-03-small.png
+[i4]:                         http://kolbasa.github.io/ueps/screenshots/index-04.png
+[i4t]:                        http://kolbasa.github.io/ueps/screenshots/index-04-small.png
+[i5]:                         http://kolbasa.github.io/ueps/screenshots/index-05.png
+[i5t]:                        http://kolbasa.github.io/ueps/screenshots/index-05-small.png
+[i6]:                         http://kolbasa.github.io/ueps/screenshots/index-06.png
+[i6t]:                        http://kolbasa.github.io/ueps/screenshots/index-06-small.png
 
-[r1]:             http://kolbasa.github.io/ueps/screenshots/rights-01.png
-[r1t]:            http://kolbasa.github.io/ueps/screenshots/rights-01-small.png
-[r2]:             http://kolbasa.github.io/ueps/screenshots/rights-02.png
-[r2t]:            http://kolbasa.github.io/ueps/screenshots/rights-02-small.png
+[r1]:                         http://kolbasa.github.io/ueps/screenshots/rights-01.png
+[r1t]:                        http://kolbasa.github.io/ueps/screenshots/rights-01-small.png
+[r2]:                         http://kolbasa.github.io/ueps/screenshots/rights-02.png
+[r2t]:                        http://kolbasa.github.io/ueps/screenshots/rights-02-small.png
 
-[info]:           http://kolbasa.github.io/ueps/screenshots/info-screen.png
+[info]:                       http://kolbasa.github.io/ueps/screenshots/info-screen.png
 
-[heidi]:          http://www.heidisql.com/
-[squ]:            http://squirrel-sql.sourceforge.net/
-[php]:            http://www.phpmyadmin.net/
+[heidi]:                      http://www.heidisql.com/
+[squ]:                        http://squirrel-sql.sourceforge.net/
+[php]:                        http://www.phpmyadmin.net/
 
-[bug]:            https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/issues
-[MASTER_DBUSER]:  src/main/resources/config.properties#L43
-[MASTER_DBNAME]:  src/main/resources/config.properties#L42
-[info-section]:   src/main/webapp/templates/common/commonLayout.xhtml#L71-L74
-[master-archive]: https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/archive/master.zip
+[bug]:                        https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/issues
+[info-section]:               src/main/webapp/templates/common/commonLayout.xhtml#L71-L74
+[master-archive]:             https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/archive/master.zip
 
-[res]:            src/main/resources/
-[cfg]:            src/main/resources/config.properties
-[db-fields]:      src/main/resources/config.properties#L40-L44
+[res]:                        src/main/resources/
+[cfg]:                        src/main/resources/config.properties
+[db-fields]:                  src/main/resources/config.properties#L40-L44
+[MASTER_DBHOST]:              src/main/resources/config.properties#L40
+[MASTER_DBNAME]:              src/main/resources/config.properties#L42
+[MASTER_DBUSER]:              src/main/resources/config.properties#L43
+[IMPORT_DB_IF_EMPTY]:         src/main/resources/config.properties#L57
+[IMPORT_EXAMPLE_SCENARIO]:    src/main/resources/config.properties#L75
+[FORCE_RESET_DATABASE]:       src/main/resources/config.properties#L84
+[ADMINS]:                     src/main/resources/config.properties#L96
 
+[er-admin]:                   http://kolbasa.github.io/ueps/screenshots/admin-db-er-diagram.png
+[er-amazon]:                  src/main/resources/sql/1/er-diagram.png
+[er-wm2010]:                  src/main/resources/sql/2/wm_2014_05_14-12_00_37.png
+[admin-sql]:                  src/main/resources/admin_db_structure.sql
 
-[er-admin]:       http://kolbasa.github.io/ueps/screenshots/admin-db-er-diagram.png
-[er-amazon]:      src/main/resources/sql/1/er-diagram.png
-[er-wm2010]:      src/main/resources/sql/2/wm_2014_05_14-12_00_37.png
+[d1]:                         http://ueps.scienceontheweb.net?index=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=1
+[d2]:                         http://ueps.scienceontheweb.net?index=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=2
+[d3]:                         http://ueps.scienceontheweb.net?index=xhtml&userID=demo_admin&encryptedCode=showcase&scenarioID=1
+[d4]:                         http://ueps.scienceontheweb.net?index=xhtml&userID=demo_admin&encryptedCode=showcase&scenarioID=2
+[d5]:                         http://ueps.scienceontheweb.net?index=xhtml&userID=demo_lecturer&encryptedCode=showcase&scenarioID=1
+[d6]:                         http://ueps.scienceontheweb.net?index=xhtml&userID=demo_lecturer&encryptedCode=showcase&scenarioID=2
 <!--- }}} -->
 

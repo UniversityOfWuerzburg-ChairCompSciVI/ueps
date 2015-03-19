@@ -44,6 +44,7 @@ html, body {position: relative !important}
 
 /* header elements {{{ */
 
+
 #header {
   width: 100%;
   font-weight: bold;
@@ -84,6 +85,38 @@ html, body {position: relative !important}
   margin-bottom: 0px;
 }
 
+#shitty_internet_explorer {
+  display:none;
+  min-height: 24px;
+  width: 830px;
+  text-align: center;
+  background-color: rgb(255, 165, 165);
+  margin-bottom: 20px;
+  padding: 15px 10px 20px 10px;
+  font-weight: bold;
+}
+
+#info_screen {
+  min-height: 24px;
+  width: 830px;
+  text-align: center;
+  margin-bottom: 20px;
+  padding: 15px 10px 20px 10px;
+  font-weight: bold;
+  background-color: rgb(223, 255, 223);
+}
+
+.hide_panel_button {
+  float: right;
+  position: relative;
+  top: 20px;
+  z-index:99;
+}
+
+.header_elements .main_links_height {
+  height:35px;
+}
+
 #header .userid {
   /* float: right; */
   margin-right: 15px;
@@ -92,8 +125,14 @@ html, body {position: relative !important}
   margin-top: 8px;
 }
 
+/* admin label color */
 #header .admin-text {
   color: darkred;
+}
+
+/* admin lecturer color */
+#header .lecturer-text {
+  color: #004188;
 }
 
 #header .links a{

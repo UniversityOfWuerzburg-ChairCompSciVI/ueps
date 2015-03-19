@@ -169,7 +169,7 @@ public class SessionListener implements HttpSessionListener, Serializable {
     try {
       SessionObject ac = SessionObject.pullFromSession();
       if (ac != null) {
-        return ac.getShowInternetExplorerWarning();
+        return ac.showInternetExplorerWarning();
       }
     } catch (Exception e) {
       //
@@ -191,6 +191,42 @@ public class SessionListener implements HttpSessionListener, Serializable {
       //
     }
   }
+
+  /**
+   *
+   *
+   * @param initialShow
+   * @return
+   */
+  public boolean showInfoScreen(boolean initialShow) {
+    if (initialShow) {
+      try {
+        SessionObject ac = SessionObject.pullFromSession();
+        if (ac != null) {
+          return ac.showInfoMessage();
+        }
+      } catch (Exception e) {
+        //
+      }
+    }
+    return false;
+  }
+
+  /**
+   *
+   *
+   */
+  public void disableInfoScreen() {
+    try {
+      SessionObject ac = SessionObject.pullFromSession();
+      if (ac != null) {
+        ac.setShowInfoMessage(false);
+      }
+    } catch (Exception e) {
+      //
+    }
+  }
+
 
   /**
    *

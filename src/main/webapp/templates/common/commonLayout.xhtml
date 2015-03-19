@@ -68,7 +68,7 @@ xmlns:o="http://omnifaces.org/ui" xmlns:p="http://primefaces.org/ui" class="main
      <!-- Info panel that can be used for maintenance messages  -->
      <!-- to activate the panel, just toggle 'false' to 'true'  -->
      <!-- at '#{sessionListener.showInfoScreen(false)}'         -->
-     <p:panel id="info_screen" rendered="#{sessionListener.showInfoScreen(true)}">
+     <p:panel id="info_screen" rendered="#{sessionListener.showInfoScreen(false)}">
        Info: Wartung am Dienstag den 01.04.2013 zwischen 14:00 und 15:00 Uhr
        <p:commandButton value="#{txt['HIDE']}" oncomplete="hideInfoMessage()"
        actionListener="#{sessionListener.disableInfoScreen()}" styleClass="hide_panel_button" />

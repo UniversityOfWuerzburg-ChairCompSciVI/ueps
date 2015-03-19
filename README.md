@@ -31,7 +31,8 @@ Link          | Rolle
 8. [Screenshots](#screenshots)
 9. [Implementierung](#implementierung)
   1. [Verwendete Technologien](#verwendete-technologien)
-  2. [Quellcodedokumentation](#quellcodedokumentation)
+  2. [Wartung](#wartung)
+  3. [Quellcodedokumentation](#quellcodedokumentation)
 
 -
 
@@ -517,14 +518,16 @@ ex_id ; user_id    ; points ; max_points
 * MySQL5 mit [MariaDB-Connector](https://mariadb.com/kb/en/mariadb/about-the-mariadb-java-client/) für die Übungsdatenbanken
 * [Akiban SQL-parser](http://blog.akiban.com/akibans-open-source-sql-parser/) für die Feedback-Generierung
 
-#### Quellcodedokumentation
-
-[Doxygen Dokumentation](http://kolbasa.github.io/ueps/doxygen/)
 
 #### Wartung
+
 Möchte man die Anwendung warten, so kann man im laufenden Betrieb eine 
 [Wartungsmeldung][info] einblenden. Hierzu muss man nur 
 [folgende Stelle][info-section] anpassen.
+
+#### Quellcodedokumentation
+
+[Doxygen Dokumentation](http://kolbasa.github.io/ueps/doxygen/)
 
 -
 

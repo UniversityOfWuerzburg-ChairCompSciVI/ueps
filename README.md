@@ -411,7 +411,7 @@ Die Rolle 'Dozent' priviligiert einen Benutzer dazu folgende Funktionalitäten
 ##### Rolle 'Student'
 - Durchführung von Übungsaufgaben
 - Einsicht in die Korrektur der eigenen Abgaben
-- einem Studenten können Bewertungs -und Editierrechte zugewiesen werden,
+- einem Studenten können Bewertungs- und Editierrechte zugewiesen werden,
     jedoch keine Rechte zur Benutzerverwaltung
 
 -

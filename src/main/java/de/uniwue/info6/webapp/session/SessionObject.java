@@ -70,7 +70,7 @@ public class SessionObject  implements Serializable {
   private HttpSession session;
   private Scenario scenario;
   private ExerciseGroup exerciseGroup;
-  private boolean validCredentials, showInternetExplorerWarning;
+  private boolean validCredentials, showInternetExplorerWarning, showInfoMessage;
   private UserDao userDao;
   private UserRightDao userRightDao;
   private ScenarioDao scenarioDao;
@@ -110,6 +110,7 @@ public class SessionObject  implements Serializable {
     this.user = null;
     this.scenario = null;
     this.showInternetExplorerWarning = true;
+    this.showInfoMessage = true;
     this.userDao = new UserDao();
     this.userRightDao = new UserRightDao();
     this.scenarioDao = new ScenarioDao();
@@ -376,6 +377,20 @@ public class SessionObject  implements Serializable {
   }
 
   /**
+   * @return the validCredentials
+   */
+  public boolean isValidCredentials() {
+    return validCredentials;
+  }
+
+  /**
+   * @param validCredentials the validCredentials to set
+   */
+  public void setValidCredentials(boolean validCredentials) {
+    this.validCredentials = validCredentials;
+  }
+
+  /**
    * @param validCredentials
    *          the validCredentials to set
    */
@@ -384,10 +399,32 @@ public class SessionObject  implements Serializable {
   }
 
   /**
-   * @return the showIEError
+   * @return the showInternetExplorerWarning
    */
-  public Boolean getShowInternetExplorerWarning() {
+  public boolean showInternetExplorerWarning() {
     return showInternetExplorerWarning;
+  }
+
+  /**
+   * @param showInternetExplorerWarning the showInternetExplorerWarning to set
+   */
+  public void setShowInternetExplorerWarning(
+    boolean showInternetExplorerWarning) {
+    this.showInternetExplorerWarning = showInternetExplorerWarning;
+  }
+
+  /**
+   * @return the showInfoMessage
+   */
+  public boolean showInfoMessage() {
+    return showInfoMessage;
+  }
+
+  /**
+   * @param showInfoMessage the showInfoMessage to set
+   */
+  public void setShowInfoMessage(boolean showInfoMessage) {
+    this.showInfoMessage = showInfoMessage;
   }
 
   /**

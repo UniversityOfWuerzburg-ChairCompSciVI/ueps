@@ -447,6 +447,12 @@ function hideIEMessage() {
   });
 }
 
+function hideInfoMessage() {
+  jQuery("#info_screen").css({
+    display : "none"
+  });
+}
+
 // var siteFunctions = {
 //     //patch to fix a problem that the context menu disappears after update
 //     //delay the show to occure after the update

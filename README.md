@@ -206,13 +206,13 @@ Das verschlüsselte Kennwort wird über einen md5-Wert der aktuellen Client-IP-A
 encryptedCode = md5(userIP + secretPhrase + userID)
 ```
 
-[encCode]: src/main/java/de/uniwue/info6/webapp/session/SessionObject.java#L141-L166
+[encCode]: src/main/java/de/uniwue/info6/webapp/session/SessionObject.java#L151-L166
 
 Bei einer Benutzeranmeldung [berechnet ÜPS][encCode] ebenfalls einen solchen ``encryptedCode`` und vergleicht ihn mit dem übermittelten. Sind beide Kennwörter identisch, so ist der Benutzer authentifiziert, andernfalls bekommt er eine Fehlermeldung zu sehen.
 
 **WICHTIG:** ``SECRET_PHRASE`` sollte aufgrund seiner Rolle **nicht** den [voreingestellten](src/main/resources/config.properties#L112) Wert beibehalten.
 
-Zusätzlich zu den Anmeldeparametern sollte man noch die Kennung des zu bearbeitenden Szenarios ``scenarioID`` angeben ([weitere Infos zu Szenarios](#%C3%9Cbungsmaterial-erstellenbearbeiten)).
+Zusätzlich zu den Anmeldeparametern sollte man noch die Kennung des zu bearbeitenden Szenarios ``scenarioID`` angeben ([weitere Infos zu Szenarios](#%C3%9Cbungsmaterial-erstellenbearbeiten-screenshot)).
 Die fertige URL sieht dann folgendermaßen aus:
 
 ```
@@ -356,7 +356,7 @@ Aufgabengruppen dienen dem freien Üben und bieten uneingeschränkten Zugang zu 
 Musterlösungen. Bewertete Aufgabengruppen sind zeitbeschränkt und dienen zur 
 Feststellung der Fähigkeiten der Studenten.
 
-Zusätzlich bekommt der Student bei bewerteten Aufgaben eine Server-Meldung für
+Zusätzlich bekommt der Student bei bewerteten Aufgaben eine [Server-Meldung](#server-info) für
 jede Abgabe als Bestätigung.
 
 Ergebnisse können nach Ablauf der Abgabezeit **automatisch** oder **manuell** 
@@ -466,7 +466,7 @@ ex_id ; user_id    ; points ; max_points
 [![][t2t]][t2] | Anzeige des ER-Diagramms <br>(diese lassen sich auch in einem <br>neuen Tab öffnen)
 [![][t3t]][t3] | Anzeige von Tabellen (die Fenster lassen sich <br>ziehen und vergrößern/verkleinern)
 [![][t4t]][t4] | Feedback-Generierung
-[![][t5t]][t5] | Servermeldung bei einer Studentenabgabe <br>für eine **bewertete** Aufgabe <a href="http://ueps.scienceontheweb.net?task=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=1&exercise=4" target="_blank">Showcase</a>
+<a name="server-info">[![][t5t]][t5] | Servermeldung bei einer Studentenabgabe <br>für eine **bewertete** Aufgabe <a href="http://ueps.scienceontheweb.net?task=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=1&exercise=4" target="_blank">Showcase</a>
 
 -
 

@@ -521,6 +521,11 @@ ex_id ; user_id    ; points ; max_points
 
 [Doxygen Dokumentation](http://kolbasa.github.io/ueps/doxygen/)
 
+#### Wartung
+Möchte man die Anwendung warten, so kann man im laufenden Betrieb eine 
+[Wartungsmeldung][info] einblenden. Hierzu muss man nur 
+[folgende Stelle][info-section] anpassen.
+
 -
 
 <!--- {{{ -->
@@ -577,10 +582,14 @@ ex_id ; user_id    ; points ; max_points
 [r2]:             http://kolbasa.github.io/ueps/screenshots/rights-02.png
 [r2t]:            http://kolbasa.github.io/ueps/screenshots/rights-02-small.png
 
+[info]:           http://kolbasa.github.io/ueps/screenshots/info-screen.png
+
 [heidi]:          http://www.heidisql.com/
 [squ]:            http://squirrel-sql.sourceforge.net/
 [php]:            http://www.phpmyadmin.net/
 
 [bug]:            https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/issues
 [MASTER_DB_USER]: src/main/resources/config.properties#L43
+[info-section]:   src/main/webapp/templates/common/commonLayout.xhtml#L71-L74
 <!--- }}} -->
+

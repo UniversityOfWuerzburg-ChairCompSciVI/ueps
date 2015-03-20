@@ -132,12 +132,12 @@ Darstellung angeboten
 
 Mit der gezeigten Konfiguration werden beim Start der Anwendungen folgenden 
 Datenbanken erstellt:
-* ``ueps_master`` ([Administrative Datenbank][er-admin] 
-  - festgelegt durch ``MASTER_DBNAME``)
-* ``ueps_slave_001`` (Datenbank für das erste Beispielszenario 
-  - [Amazon Buchdatenbank][er-amazon])
-* ``ueps_slave_002`` (Datenbank für das zweite Beispielszenario 
-  - [Fussball WM 2010][er-wm2010])
+* ``ueps_master`` ([Administrative Datenbank][er-admin] -
+  festgelegt durch ``MASTER_DBNAME``)
+* ``ueps_slave_001`` (Datenbank für das erste Beispielszenario -
+  [Amazon Buchdatenbank][er-amazon])
+* ``ueps_slave_002`` (Datenbank für das zweite Beispielszenario -
+  [Fussball WM 2010][er-wm2010])
 
 Für die ``slave``-Datenbanken werden jeweils folgende Datenbanknutzer mit 
 beschränkten Rechten erstellt:

@@ -594,7 +594,7 @@ Möchte man die Anwendung warten, so kann man im laufenden Betrieb eine
 
 #### Quellcodedokumentation
 
-[Doxygen Dokumentation][doxygen]
+[Javadoc][javadoc]
 
 -
 
@@ -701,6 +701,7 @@ Möchte man die Anwendung warten, so kann man im laufenden Betrieb eine
 [admin-sql]:                  src/main/resources/admin_db_structure.sql
 [export1]:                    http://kolbasa.github.io/ueps/exports/scenario_1_export.zip
 [doxygen]:                    http://kolbasa.github.io/ueps/doxygen/
+[javadoc]:                    http://kolbasa.github.io/ueps/javadoc/
 
 
 [d1]:  http://ueps.scienceontheweb.net?index=xhtml&userID=demo_student&encryptedCode=showcase&scenarioID=1

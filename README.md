@@ -10,7 +10,7 @@ Link                                                        | Rolle
 ----------------------------------------------------------- | -------------
 [**Amazon Buchdatenbank**][d1] / [**Fussball WM 2010**][d2] | Student
 [**Amazon Buchdatenbank**][d3] / [**Fussball WM 2010**][d4] | Admin 
-[**Amazon Buchdatenbank**][d4] / [**Fussball WM 2010**][d5] | Dozent 
+[**Amazon Buchdatenbank**][d4] / [**Fussball WM 2010**][d5] | Dozent (für das Amazon-Szenario)
 
 -
 

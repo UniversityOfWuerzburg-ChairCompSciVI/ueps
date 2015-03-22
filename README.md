@@ -393,7 +393,7 @@ Bug Report [hier][bug].
 Aus Sicherheitsgründen werden alle MySQL-Anfragen der Studenten mit einem
 MySQL-Nutzer mit beschränkten Zugriffsrechten ausgeführt.
 
-Wenn der unter [``MASTER_DBUSER``](MASTER_DB_USER) ``ALTER, CREATE, DROP, 
+Wenn der unter [``MASTER_DBUSER``][MASTER_DB_USER] ``ALTER, CREATE, DROP, 
 GRANT OPTION, LOCK TABLES``-Rechte besitzt, so übernimmt ÜPS automatisch das
 Anlegen von neuen Datenbanken und beschränkten Datenbanknutzern.
 
@@ -669,7 +669,7 @@ Möchte man die Anwendung warten, so kann man im laufenden Betrieb eine
 [jquery]:                     http://jquery.com/
 [prime]:                      http://primefaces.org/
 [mariadb]:                    https://mariadb.com/kb/en/mariadb/about-the-mariadb-java-client/
-[akiban]:                     http://blog.akiban.com/akibans-open-source-sql-parser/
+[akiban]:                     https://github.com/FoundationDB/sql-parser
 
 
 [enc-code]:                   src/main/java/de/uniwue/info6/webapp/session/SessionObject.java#L151-L166
@@ -677,7 +677,6 @@ Möchte man die Anwendung warten, so kann man im laufenden Betrieb eine
 [txt]:                        src/main/resources/text_de.properties
 [main-css]:                   src/main/webapp/resources/css/main.css
 [tipsy-css]:                  src/main/webapp/resources/css/tipsy.css
-
 
 
 [res]:                        src/main/resources/

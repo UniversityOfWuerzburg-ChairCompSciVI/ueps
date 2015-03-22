@@ -104,7 +104,7 @@ public class InitVariables implements ServletContextListener, Serializable {
     Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropBool.USE_FALLBACK_USER,            false);
     Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropBool.SHOWCASE_MODE,                true);
 
-    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropString.FALLBACK_USER_ID,           "user_1");
+    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropString.FALLBACK_USER_ID,           "admin_01");
     Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropString.FALLBACK_ENCRYPTED_CODE,    "d1ac3b14896c2faf640d1e00966fc065");
     Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropInteger.SESSION_TIMEOUT,           600);
   }

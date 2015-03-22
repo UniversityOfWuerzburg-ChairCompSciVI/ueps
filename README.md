@@ -393,7 +393,7 @@ Bug Report [hier][bug].
 Aus Sicherheitsgründen werden alle MySQL-Anfragen der Studenten mit einem
 MySQL-Nutzer mit beschränkten Zugriffsrechten ausgeführt.
 
-Wenn der unter [``MASTER_DBUSER``][MASTER_DB_USER] ``ALTER, CREATE, DROP, 
+Wenn der unter [``MASTER_DBUSER``][MASTER_DBUSER] ``ALTER, CREATE, DROP, 
 GRANT OPTION, LOCK TABLES``-Rechte besitzt, so übernimmt ÜPS automatisch das
 Anlegen von neuen Datenbanken und beschränkten Datenbanknutzern.
 

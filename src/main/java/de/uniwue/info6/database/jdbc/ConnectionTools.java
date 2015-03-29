@@ -335,6 +335,7 @@ public class ConnectionTools extends Thread {
                   ExerciseController exc = new ExerciseController().init_debug(scenario, exercise,
                       user);
                   exc.setUserString(solution);
+                  System.err.println("INFO (ueps): Adding test user entry: " + solution);
                 } catch (Exception e) {
                 } finally {
                 }
@@ -345,7 +346,7 @@ public class ConnectionTools extends Thread {
         }
       }
     }
-
+    System.err.println("INFO (ueps): Test data added!");
   }
 
 

@@ -13,9 +13,9 @@ package de.uniwue.info6.comparator;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -91,46 +91,46 @@ public class SqlQuery {
 
 
 
-    //SqlQuery query1 = new SqlQuery("SELECT Orders.OrderID as orders, Customers.CustomerName, Orders.OrderDate FROM Orders INNER JOIN Customers1 ON Orders.CustomerID=Customers1.CustomerID INNER JOIN Customers2 ON Orders2.CustomerID=Customers2.CustomerID WHERE orders>400 and title='hh'");
-    //SqlQuery query1 = new SqlQuery("Select title, sum(title+1) from books, autor where (title=1) and title1>title2 order by table1.titel1 desc, titel2 asc, title3");
-    //SqlQuery query1 = new SqlQuery("Select * from books group by autor having count(title)>5 and title=1");
-    //SqlQuery query1 = new SqlQuery("Select max(sum(title+1)) as bla, title as title2 from books");
-    //SqlQuery query1 = new SqlQuery("Update books set autor=autor+1, title=asd");
-    //SqlQuery query1 = new SqlQuery("Select sum(sum(title+1)) as titlte from books where books='te s'");
+  //SqlQuery query1 = new SqlQuery("SELECT Orders.OrderID as orders, Customers.CustomerName, Orders.OrderDate FROM Orders INNER JOIN Customers1 ON Orders.CustomerID=Customers1.CustomerID INNER JOIN Customers2 ON Orders2.CustomerID=Customers2.CustomerID WHERE orders>400 and title='hh'");
+  //SqlQuery query1 = new SqlQuery("Select title, sum(title+1) from books, autor where (title=1) and title1>title2 order by table1.titel1 desc, titel2 asc, title3");
+  //SqlQuery query1 = new SqlQuery("Select * from books group by autor having count(title)>5 and title=1");
+  //SqlQuery query1 = new SqlQuery("Select max(sum(title+1)) as bla, title as title2 from books");
+  //SqlQuery query1 = new SqlQuery("Update books set autor=autor+1, title=asd");
+  //SqlQuery query1 = new SqlQuery("Select sum(sum(title+1)) as titlte from books where books='te s'");
 
-    //SqlQuery query1 = new SqlQuery("SELECT title, price FROM books WHERE price < 10 ORDER BY price ASC");
-    //SqlQuery query1 = new SqlQuery("SELECT signature FROM books WHERE title='Shades of Grey - Geheimes Verlangen'");
-    //SqlQuery query1 = new SqlQuery("SELECT title, publishers.name, stock FROM books JOIN publishers ON publisher_id=publishers.id WHERE stock < 40000");
-    //SqlQuery query1 = new SqlQuery("SELECT title, author FROM books ORDER BY price DESC LIMIT 3");
-    //SqlQuery query1 = new SqlQuery("SELECT title, author FROM books ORDER BY price DESC LIMIT 2,3");
-    //SqlQuery query1 = new SqlQuery("SELECT title, price FROM books WHERE author='J. R. R. Tolkien' AND price<10 ORDER BY year DESC");
-    //SqlQuery query1 = new SqlQuery("SELECT stock*price AS revenue FROM books WHERE title='Animal Farm'");
-    //SqlQuery query1 = new SqlQuery("SELECT first_name, family_name, birthday FROM customers WHERE birthday LIKE '%-02-%'");
-    //SqlQuery query1 = new SqlQuery("SELECT * FROM customers WHERE birthday < '2000-01-01'");
-    //SqlQuery query1 = new SqlQuery("SELECT birthday, FLOOR(DATEDIFF(NOW(), birthday)/365) AS age FROM customers");
-    //SqlQuery query1 = new SqlQuery("SELECT email, COUNT(email) AS occurrences FROM customers GROUP BY email HAVING ( COUNT(email) > 1 )");
-    //SqlQuery query1 = new SqlQuery("SELECT first_name, family_name FROM customers WHERE LENGTH(family_name) = 4 ORDER BY family_name ASC");
-    //SqlQuery query1 = new SqlQuery("SELECT date, orders.id AS order_id, family_name, customers.id AS customer_id FROM customers JOIN orders ON customers.id = customer_id ORDER BY date DESC");
-    //SqlQuery query1 = new SqlQuery("SELECT orders.id AS order_id, family_name, email FROM customers JOIN orders ON customers.id = customer_id WHERE paid=0");
-    //SqlQuery query1 = new SqlQuery("SELECT customers.id, family_name, COUNT(customer_id) AS quantity FROM customers JOIN orders ON customers.id = customer_id GROUP BY customer_id HAVING ( COUNT(customer_id) > 1 )");
-    //SqlQuery query1 = new SqlQuery("SELECT email FROM customers WHERE email LIKE '%gmx.de' OR  email LIKE '%gmail.com'");
-    //SqlQuery query1 = new SqlQuery("SELECT id, SUM(price*amount) AS sum FROM order_positions GROUP BY order_id");
-    //SqlQuery query1 = new SqlQuery("SELECT order_positions.id, title, books.price AS current_price, order_positions.price AS order_price FROM order_positions JOIN books ON books.id = book_id WHERE (books.price - order_positions.price) > 0");
-    //SqlQuery query1 = new SqlQuery("SELECT first_name, family_name, COUNT(orders.id) AS order_count FROM customers JOIN orders ON customers.id = customer_id GROUP BY customers.id ORDER BY order_count DESC");
-    //SqlQuery query1 = new SqlQuery("DELETE FROM books where title='bla'");
-    //SqlQuery query1 = new SqlQuery("select author from books");
-    //SqlQuery query2 = new SqlQuery("select author from books where title='bla'");
-    //der tSqlQuery query1 = new SqlQuery("UPDATE customers SET email='paulina.r@yahoo.com' WHERE first_name='Paulina' AND family_name='Rohr'");
-    //SqlQuery query1 = new SqlQuery("INSERT INTO custund ders (first_name, family_name, birthday, email) VALUES ('Ferdinandus', 'Merkle', '1990-11-24', 'ferdinandus_1856@yahoo.com')");
-    //SqlQuery query1 = new SqlQuery("SELECT avg(rating) AS avg_rating, count(*) AS rating_count FROM ratings JOIN books ON books.id=book_id WHERE books.title='Harry Potter und der Orden des Ph�nix' GROUP BY book_id");
-    //SqlQuery query1 = new SqlQuery("select * from book");
-    //SqlQuery query2 = new SqlQuery("select * from book");
-    //SqlQueryComparator comparator = new SqlQueryComparator(query1, query2, null);
-    //System.out.println(comparator.compare());
+  //SqlQuery query1 = new SqlQuery("SELECT title, price FROM books WHERE price < 10 ORDER BY price ASC");
+  //SqlQuery query1 = new SqlQuery("SELECT signature FROM books WHERE title='Shades of Grey - Geheimes Verlangen'");
+  //SqlQuery query1 = new SqlQuery("SELECT title, publishers.name, stock FROM books JOIN publishers ON publisher_id=publishers.id WHERE stock < 40000");
+  //SqlQuery query1 = new SqlQuery("SELECT title, author FROM books ORDER BY price DESC LIMIT 3");
+  //SqlQuery query1 = new SqlQuery("SELECT title, author FROM books ORDER BY price DESC LIMIT 2,3");
+  //SqlQuery query1 = new SqlQuery("SELECT title, price FROM books WHERE author='J. R. R. Tolkien' AND price<10 ORDER BY year DESC");
+  //SqlQuery query1 = new SqlQuery("SELECT stock*price AS revenue FROM books WHERE title='Animal Farm'");
+  //SqlQuery query1 = new SqlQuery("SELECT first_name, family_name, birthday FROM customers WHERE birthday LIKE '%-02-%'");
+  //SqlQuery query1 = new SqlQuery("SELECT * FROM customers WHERE birthday < '2000-01-01'");
+  //SqlQuery query1 = new SqlQuery("SELECT birthday, FLOOR(DATEDIFF(NOW(), birthday)/365) AS age FROM customers");
+  //SqlQuery query1 = new SqlQuery("SELECT email, COUNT(email) AS occurrences FROM customers GROUP BY email HAVING ( COUNT(email) > 1 )");
+  //SqlQuery query1 = new SqlQuery("SELECT first_name, family_name FROM customers WHERE LENGTH(family_name) = 4 ORDER BY family_name ASC");
+  //SqlQuery query1 = new SqlQuery("SELECT date, orders.id AS order_id, family_name, customers.id AS customer_id FROM customers JOIN orders ON customers.id = customer_id ORDER BY date DESC");
+  //SqlQuery query1 = new SqlQuery("SELECT orders.id AS order_id, family_name, email FROM customers JOIN orders ON customers.id = customer_id WHERE paid=0");
+  //SqlQuery query1 = new SqlQuery("SELECT customers.id, family_name, COUNT(customer_id) AS quantity FROM customers JOIN orders ON customers.id = customer_id GROUP BY customer_id HAVING ( COUNT(customer_id) > 1 )");
+  //SqlQuery query1 = new SqlQuery("SELECT email FROM customers WHERE email LIKE '%gmx.de' OR  email LIKE '%gmail.com'");
+  //SqlQuery query1 = new SqlQuery("SELECT id, SUM(price*amount) AS sum FROM order_positions GROUP BY order_id");
+  //SqlQuery query1 = new SqlQuery("SELECT order_positions.id, title, books.price AS current_price, order_positions.price AS order_price FROM order_positions JOIN books ON books.id = book_id WHERE (books.price - order_positions.price) > 0");
+  //SqlQuery query1 = new SqlQuery("SELECT first_name, family_name, COUNT(orders.id) AS order_count FROM customers JOIN orders ON customers.id = customer_id GROUP BY customers.id ORDER BY order_count DESC");
+  //SqlQuery query1 = new SqlQuery("DELETE FROM books where title='bla'");
+  //SqlQuery query1 = new SqlQuery("select author from books");
+  //SqlQuery query2 = new SqlQuery("select author from books where title='bla'");
+  //der tSqlQuery query1 = new SqlQuery("UPDATE customers SET email='paulina.r@yahoo.com' WHERE first_name='Paulina' AND family_name='Rohr'");
+  //SqlQuery query1 = new SqlQuery("INSERT INTO custund ders (first_name, family_name, birthday, email) VALUES ('Ferdinandus', 'Merkle', '1990-11-24', 'ferdinandus_1856@yahoo.com')");
+  //SqlQuery query1 = new SqlQuery("SELECT avg(rating) AS avg_rating, count(*) AS rating_count FROM ratings JOIN books ON books.id=book_id WHERE books.title='Harry Potter und der Orden des Ph�nix' GROUP BY book_id");
+  //SqlQuery query1 = new SqlQuery("select * from book");
+  //SqlQuery query2 = new SqlQuery("select * from book");
+  //SqlQueryComparator comparator = new SqlQueryComparator(query1, query2, null);
+  //System.out.println(comparator.compare());
 
   // }
 
-  public SqlQuery(String sqlString){
+  public SqlQuery(String sqlString) {
     plainContent = adjustPlainString(sqlString);
   }
 
@@ -141,7 +141,7 @@ public class SqlQuery {
    * - ; am Ende des Query
    *
    */
-  public static String adjustPlainString(String plainContent){
+  public static String adjustPlainString(String plainContent) {
 
     plainContent = plainContent.replaceAll("year", "yearx");
     plainContent = plainContent.replaceAll("group", "groupx");
@@ -151,7 +151,7 @@ public class SqlQuery {
 
   }
 
-  public static String dejustPlainString(String plainContent){
+  public static String dejustPlainString(String plainContent) {
 
     plainContent = plainContent.replaceAll("yearx", "year");
     plainContent = plainContent.replaceAll("groupx", "group");
@@ -160,27 +160,27 @@ public class SqlQuery {
 
   }
 
-  public String toString(){
+  public String toString() {
     return plainContent;
   }
 
-  public SqlError getError(){
+  public SqlError getError() {
     return error;
   }
 
-  public RootVisitor getParsedContent() throws ParserException, StandardException{
+  public RootVisitor getParsedContent() throws ParserException, StandardException {
 
-    if(parsedContent == null){
+    if (parsedContent == null) {
 
-        SQLParser parser = new SQLParser();
-        StatementNode data;
+      SQLParser parser = new SQLParser();
+      StatementNode data;
 
-        data = parser.parseStatement(plainContent);
-        parsedContent = new RootVisitor();
+      data = parser.parseStatement(plainContent);
+      parsedContent = new RootVisitor();
 
-        data.accept(parsedContent);
+      data.accept(parsedContent);
 
-        tables = parsedContent.getTables();
+      tables = parsedContent.getTables();
 
     }
 
@@ -188,7 +188,7 @@ public class SqlQuery {
 
   }
 
-  public RefLink getRefLink(){
+  public RefLink getRefLink() {
 
     try {
       return SqlDocLinker.getUrlByKeyword(getParsedContent().getMainKeyWord());
@@ -200,15 +200,15 @@ public class SqlQuery {
 
   }
 
-  public String getPlainContent(){
+  public String getPlainContent() {
     return plainContent;
   }
 
-  public void setPlainContent(String editedQuery){
+  public void setPlainContent(String editedQuery) {
     plainContent = editedQuery;
   }
 
-  public void rebuild() throws ParserException, StandardException{
+  public void rebuild() throws ParserException, StandardException {
 
     parsedContent = null;
     //plainContent = plainContent;
@@ -217,16 +217,16 @@ public class SqlQuery {
 
   }
 
-  public LinkedList<TableStructure> getRelevantTables(){
+  public LinkedList<TableStructure> getRelevantTables() {
 
     LinkedList<TableStructure> tmp = new LinkedList<TableStructure>();
 
-    if(tables == null){
+    if (tables == null) {
       return null;
     }
 
-    for(TableStructure item : tables){
-      if(item instanceof JoinTableStructure){
+    for (TableStructure item : tables) {
+      if (item instanceof JoinTableStructure) {
         tmp.addAll(getTablesFromJoin((JoinTableStructure) item));
       } else {
         tmp.add(item);
@@ -237,17 +237,17 @@ public class SqlQuery {
 
   }
 
-  public static LinkedList<TableStructure> getTablesFromJoin(JoinTableStructure join){
+  public static LinkedList<TableStructure> getTablesFromJoin(JoinTableStructure join) {
 
     LinkedList<TableStructure> tmp = new LinkedList<TableStructure>();
 
-    if(join.getLeftTable() instanceof JoinTableStructure) {
+    if (join.getLeftTable() instanceof JoinTableStructure) {
       tmp.addAll(getTablesFromJoin((JoinTableStructure) join.getLeftTable()));
     } else {
       tmp.add(join.getLeftTable());
     }
 
-    if(join.getRightTable() instanceof JoinTableStructure) {
+    if (join.getRightTable() instanceof JoinTableStructure) {
       tmp.addAll(getTablesFromJoin((JoinTableStructure) join.getRightTable()));
     } else {
       tmp.add(join.getRightTable());
@@ -257,10 +257,10 @@ public class SqlQuery {
 
   }
 
-  public LinkedList<String> getContainingTags(){
+  public LinkedList<String> getContainingTags() {
 
     //if(parsedContent == null)
-      //return null;
+    //return null;
 
     LinkedList<String> tmpList = new LinkedList<String>();
 
@@ -268,8 +268,8 @@ public class SqlQuery {
 
     String[] relevantTags = {"SELECT", "UPDATE", "INSERT", "DELETE", "VALUES", "ORDER BY", "LIMIT", "HAVING", "WHERE", "JOIN", "GROUP BY", "SET"};
 
-    for(String item : relevantTags){
-      if(plainContent.toUpperCase().contains(item))
+    for (String item : relevantTags) {
+      if (plainContent.toUpperCase().contains(item))
         tmpList.add(item);
     }
 
@@ -277,11 +277,11 @@ public class SqlQuery {
 
   }
 
-  public void setResult(SqlResult result){
+  public void setResult(SqlResult result) {
     this.result = result;
   }
 
-  public SqlResult getResult(){
+  public SqlResult getResult() {
     return result;
   }
 
@@ -290,3 +290,4 @@ public class SqlQuery {
   }
 
 }
+

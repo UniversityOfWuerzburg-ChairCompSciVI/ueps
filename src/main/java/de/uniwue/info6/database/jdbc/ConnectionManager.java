@@ -101,6 +101,8 @@ public class ConnectionManager implements Serializable {
   private Cfg config;
   private static ConnectionManager instance;
 
+  private static boolean OUTPUT_RESPONCE_TIME = false;
+
   // ------------------------------------------------ //
   // -- initialize
   // ------------------------------------------------ //
@@ -509,7 +511,6 @@ public class ConnectionManager implements Serializable {
           } else {
             sqlScript = new File(resourcePath + File.separator + scID, dbScript);
             tempScenarioFile = new File(resourcePath + File.separator + "0", dbScript);
-            // System.out.println(sqlScript);
 
             if (!sqlScript.exists() && tempScenarioFile.exists()) {
               if (!sqlScript.getParentFile().exists()) {
@@ -547,8 +548,9 @@ public class ConnectionManager implements Serializable {
             }
           }
 
-          // System.out.println(scenario.getDbName());
-          LOGGER.error(error, e);
+          if (!error.toLowerCase().contains("duplicate entry")) {
+            LOGGER.error(error, e);
+          }
 
           if (!errors.containsKey(scenario)) {
             errors.put(scenario, error);
@@ -765,7 +767,6 @@ public class ConnectionManager implements Serializable {
         resultSet = statement.getResultSet();
 
         if (resultSet.next()) {
-          // System.out.println(table + " - " + resultSet.getString(2));
           return resultSet.getString(2);
         }
 
@@ -792,11 +793,11 @@ public class ConnectionManager implements Serializable {
 
 
   /**
-  *
-  *
-  * @return
-  * @throws SQLException
-  */
+   *
+   *
+   * @return
+   * @throws SQLException
+   */
   private boolean tableExists(Scenario scenario, String table) throws SQLException {
     Connection connection = null;
     Statement statement = null;
@@ -809,7 +810,6 @@ public class ConnectionManager implements Serializable {
       result.beforeFirst();
       if (result.next()) {
         return true;
-        // System.out.println(result.getString(1));
       }
     } catch (Exception e) {
       LOGGER.error("CHECKING IF TABLE EXISTS FAILED", e);
@@ -834,15 +834,15 @@ public class ConnectionManager implements Serializable {
 
 
   /**
-  *
-  *
-  * @param scenario
-  * @param user
-  * @param force
-  * @throws IOException
-  * @throws SQLException
-  * @throws FileNotFoundException
-  */
+   *
+   *
+   * @param scenario
+   * @param user
+   * @param force
+   * @throws IOException
+   * @throws SQLException
+   * @throws FileNotFoundException
+   */
   public synchronized void resetTables(Scenario scenario, User user)
   throws FileNotFoundException, SQLException, IOException {
     this.resetTables(scenario, user, false);
@@ -864,6 +864,7 @@ public class ConnectionManager implements Serializable {
       originalTableDeleted.add(scenario);
     }
 
+
     if (scenario != null && user != null) {
       Connection connection = null;
       Statement statement = null;
@@ -874,7 +875,6 @@ public class ConnectionManager implements Serializable {
         List<String> unchangedTables = new ArrayList<String>();
 
         if (changedTables != null) {
-
           if (!scenarioTablesWithHash.isEmpty()) {
             dropDatabaseTablesForUser(scenario, user, changedTables);
           }
@@ -895,8 +895,8 @@ public class ConnectionManager implements Serializable {
 
 
             statement = connection.createStatement();
-            // LOGGER.error("main-url: " + connection.getMetaData());
             ArrayList<String> commands = scenarioScripts.get(scenario);
+
             if (commands != null) {
               for (String command : commands) {
                 command = command.trim();
@@ -930,6 +930,7 @@ public class ConnectionManager implements Serializable {
                       if (containsChangedTable || !containsUnchangedTable) {
                         // ------------------------------------------------ //
                         for (String changedTable : changedTables) {
+
                           String tableName = user.getId() + "_" + changedTable;
                           boolean createStatement = isCreateStatement(commandWithUserPrefix, tableName);
                           if (createStatement) {
@@ -945,6 +946,7 @@ public class ConnectionManager implements Serializable {
                               }
                             } else {
                               statement.execute("DROP TABLE IF EXISTS `" + tableName + "`;");
+                              skipExecute = false;
                             }
                           }
                         }
@@ -956,6 +958,7 @@ public class ConnectionManager implements Serializable {
                         }
                       }
                     } catch (Exception e) {
+                      // e.printStackTrace();
                       // TODO: logging
                     }
                   }
@@ -991,8 +994,10 @@ public class ConnectionManager implements Serializable {
       }
     }
 
-    long elapsedTime = System.currentTimeMillis() - starttime;
-    // System.out.println("Import-Script: " + elapsedTime + " ms");
+    if (OUTPUT_RESPONCE_TIME) {
+      long elapsedTime = System.currentTimeMillis() - starttime;
+      System.out.println("Import-Script: " + elapsedTime + " ms");
+    }
   }
 
 
@@ -1007,29 +1012,33 @@ public class ConnectionManager implements Serializable {
    * @throws SQLException
    */
   private List<String> checkSumChanged(Scenario scenario, User user) throws SQLException {
-    List<String> list = new ArrayList<String>();
-    HashMap<String, String> tables = scenarioTablesWithHash.get(scenario);
+    if (scenario == null) {
+      LOGGER.error("GIVEN SCENARIO IS NULL!");
+    } else {
+      List<String> list = new ArrayList<String>();
+      HashMap<String, String> tables = scenarioTablesWithHash.get(scenario);
 
-    if (!scenarioTablesWithHash.containsKey(scenario)) {
-      return list;
-    }
+      if (!scenarioTablesWithHash.containsKey(scenario)) {
+        return list;
+      }
 
-    if (tables != null && tables.isEmpty()) {
-      return list;
-    }
+      if (tables != null && tables.isEmpty()) {
+        return list;
+      }
 
-    for (String name : tables.keySet()) {
-      String sum = tables.get(name);
-      String currentSum = getTableChecksum(scenario, user, name);
-      if (!sum.equals(currentSum)) {
-        list.add(name);
+
+      for (String name : tables.keySet()) {
+        String sum = tables.get(name);
+        String currentSum = getTableChecksum(scenario, user, name);
+        if (currentSum == null || sum == null || !sum.equals(currentSum)) {
+          list.add(name);
+        }
+      }
+
+      if (!list.isEmpty()) {
+        return list;
       }
     }
-
-    if (!list.isEmpty()) {
-      return list;
-    }
-
     return null;
   }
 
@@ -1087,7 +1096,7 @@ public class ConnectionManager implements Serializable {
    * @throws SQLException
    */
   private boolean isCreateStatement(String query, String table) throws SQLException {
-    String regex_table = "[\\`\\'\"\\s]+(" + table + ")[\\`\\'\"\\s]*[,]?";
+    String regex_table = "[\\`\\'\"\\s]+(" + table + ")[\\`\\'\"\\s;]+[,]?";
     String REGEX_FIELD = "(?:create)[\\s]+table[s]?(?:[\\s]*if[\\s]*not?[\\s]*exists)?"
                          + regex_table;
     Matcher matcher = Pattern.compile(REGEX_FIELD, Pattern.CASE_INSENSITIVE).matcher(query);
@@ -1208,8 +1217,8 @@ public class ConnectionManager implements Serializable {
     List<Integer> stringEnd = new ArrayList<Integer>();
 
     while (matcher.find()) {
-      String table = matcher.group(1).trim().toLowerCase();
-      if (!exclusions.contains(table)) {
+      String table = matcher.group(1).trim();
+      if (!exclusions.contains(table.toLowerCase())) {
         tablesToReplace.add(table);
         tablesToUse.add(table);
         stringStart.add(matcher.start(1));
@@ -1220,8 +1229,8 @@ public class ConnectionManager implements Serializable {
     REGEX_FIELD = "(?:insert[\\s]+into|references|constraint)" + regex_table;
     matcher = Pattern.compile(REGEX_FIELD, Pattern.CASE_INSENSITIVE).matcher(query);
     while (matcher.find()) {
-      String table = matcher.group(1).trim().toLowerCase();
-      if (!exclusions.contains(table)) {
+      String table = matcher.group(1).trim();
+      if (!exclusions.contains(table.toLowerCase())) {
         tablesToReplace.add(table);
         stringStart.add(matcher.start(1));
         stringEnd.add(matcher.end(1));
@@ -1231,24 +1240,15 @@ public class ConnectionManager implements Serializable {
     REGEX_FIELD = "(?:insert[\\s]+into|references)" + regex_table;
     matcher = Pattern.compile(REGEX_FIELD, Pattern.CASE_INSENSITIVE).matcher(query);
     if (matcher.find()) {
-      String table = matcher.group(1).trim().toLowerCase();
-      if (!exclusions.contains(table)) {
+      String table = matcher.group(1).trim();
+      if (!exclusions.contains(table.toLowerCase())) {
         tablesToUse.add(table);
         stringStart.add(matcher.start(1));
         stringEnd.add(matcher.end(1));
       }
     }
 
-    // String tempQuery = query.replaceAll("\\s+", "").toLowerCase();
-    // if (tempQuery.contains("foreignkey") &&
-    // tempQuery.contains("createtable")) {
-    // if (!hasForeignKeys.contains(scenario)) {
-    // hasForeignKeys.add(scenario);
-    // }
-    // }
-
     if (!tablesToReplace.isEmpty()) {
-      // System.out.println(tablesToReplace);
       HashMap<String, String> tablesWithHash = null;
       HashMap<String, String> tableIncrements = null;
 

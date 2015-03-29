@@ -112,7 +112,7 @@ public class ExerciseController implements Serializable {
 
   private User user;
 
-  private String userString, feedback, solutionTable, userTable, diagramImage;
+  private String userString, lastUserString, feedback, solutionTable, userTable, diagramImage;
   private SqlQuery userQuery, usedSolutionQuery;
   private SqlExecuter executer;
   private ConnectionManager connectionPool;
@@ -121,6 +121,7 @@ public class ExerciseController implements Serializable {
 
   private boolean resultVisible, userResultVisible, feedbackVisible;
   private boolean syntaxError;
+  private boolean tempBlock;
 
   private ArrayList<String> availableTables;
 
@@ -563,220 +564,107 @@ public class ExerciseController implements Serializable {
     return false;
   }
 
+
   /**
    *
    *
    */
   public void compareResults() {
-    if (scenario == null || user == null) {
+    boolean sameString =
+      (
+        this.lastUserString != null
+        && this.userString != null
+        && this.lastUserString.equals(this.userString)
+      );
+
+    if (sameString || scenario == null || user == null) {
       return;
     }
 
-    Connection connection = null;
+    this.lastUserString = this.userString;
     try {
-      this.feedbackVisible = false;
-      this.resultVisible = false;
-      this.syntaxError = false;
+      this.tempBlock = true;
+      long starttime = System.currentTimeMillis();
+      FacesMessage message1 = null;
 
-      connection = connectionPool.getConnection(scenario);
-      executer = new SqlExecuter(connection, user, scenario);
+      Connection connection = null;
+      try {
+        this.feedbackVisible = false;
+        this.resultVisible = false;
+        this.syntaxError = false;
 
-      SqlQueryComparator comparator = new SqlQueryComparator(userQuery, solutionQueries, executer);
+        connection = connectionPool.getConnection(scenario);
+        executer = new SqlExecuter(connection, user, scenario);
 
-      // get user feedback
-      LinkedList<Error> errors = comparator.compare();
-      usedSolutionQuery = comparator.getSolutionQuery();
+        SqlQueryComparator comparator = new SqlQueryComparator(userQuery, solutionQueries, executer);
 
-      if (solutionQueries != null && !solutionQueries.isEmpty()) {
-        usedSolutionIndex = solutionQueries.indexOf(usedSolutionQuery);
-      }
+        // get user feedback
+        LinkedList<Error> errors = comparator.compare();
+        usedSolutionQuery = comparator.getSolutionQuery();
 
-      if (errors != null) {
-        feedbackList = new ArrayList<UserFeedback>();
-        for (Error er : errors) {
-          feedbackList.add(new UserFeedback(er, user));
+        if (solutionQueries != null && !solutionQueries.isEmpty()) {
+          usedSolutionIndex = solutionQueries.indexOf(usedSolutionQuery);
         }
-      }
 
-      for (UserFeedback fd : feedbackList) {
-        if (fd.isJavaError()) {
-          feedbackList.remove(fd);
-          break;
-        }
-      }
-
-      boolean userEntrySuccess = false;
-
-      String feedbackSummaryDB = "";
-
-      for (UserFeedback fb : feedbackList) {
-        if (fb.isSyntaxError()) {
-          syntaxError = true;
-        }
-        if (fb.isMainError()) {
-          userEntrySuccess = fb.isCorrect();
-        } else {
-          String fd = fb.getFeedback();
-          if (!userEntrySuccess) {
-            feedbackSummaryDB += fb.getTitle() + ": " + fd + "<br/>";
+        if (errors != null) {
+          feedbackList = new ArrayList<UserFeedback>();
+          for (Error er : errors) {
+            feedbackList.add(new UserFeedback(er, user));
           }
         }
-      }
 
-      if (usedSolutionQuery == null || usedSolutionQuery.getResult() == null) {
-        ArrayList<UserFeedback> newFeedbackList = new ArrayList<UserFeedback>();
-        newFeedbackList.add(new UserFeedback(Cfg.inst().getProp(DEF_LANGUAGE, "QUE.UNEXPECTED_ERROR"),
-                                             Cfg.inst().getProp(DEF_LANGUAGE, "QUE.UNEXPECTED_ERROR2"), user));
-        newFeedbackList.addAll(feedbackList);
-        feedbackList = newFeedbackList;
-        this.feedbackVisible = true;
-        LOGGER.error("EMPTY SOLUTION RESULT, FAULTY SOLUTION-QUERY?\n" + feedbackSummaryDB);
-      }
-
-      if (usedSolutionQuery != null && usedSolutionQuery.getResult() != null) {
-        /*
-         * **************************************************************
-         * get column-names and values from db solution-query
-         * **************************************************************
-         */
-
-        if (solutionQueryValues == null || solutionQueryColumns == null
-            || solutionQueryValues.isEmpty() || solutionQueryColumns.isEmpty()) {
-          // setting correct solution
-          SqlResult sol_result = usedSolutionQuery.getResult();
-          String[][] data = sol_result.getData();
-          solutionQueryColumns = new ArrayList<String>();
-          solutionQueryValues = new ArrayList<TableEntry>();
-
-          ResultSetMetaData metaData = sol_result.getResultMetaData();
-          if (metaData != null) {
-            for (int i = 1; i <= metaData.getColumnCount(); i++) {
-              String name = metaData.getColumnLabel(i);
-
-              if (user != null && name != null && name.contains(user.getId() + "_")) {
-                name = name.replaceAll(user.getId() + "_", "");
-              }
-
-              if (name != null && !name.trim().isEmpty()) {
-                solutionQueryColumns.add(name);
-              }
-            }
+        for (UserFeedback fd : feedbackList) {
+          if (fd.isJavaError()) {
+            feedbackList.remove(fd);
+            break;
           }
-          if (data != null) {
-            for (int i = 0; i < data.length; i++) {
-              TableEntry en = new TableEntry(solutionQueryColumns);
-              for (int z = 0; z < data[i].length; z++) {
-                en.addValue(data[i][z], z);
-              }
-              solutionQueryValues.add(en);
-            }
-          }
-          filteredSolutionQueryValues = solutionQueryValues;
-          createSolutionQueryColumns();
         }
 
-        if (showResults()) {
-          this.resultVisible = true;
-          this.feedbackVisible = true;
-        }
+        boolean userEntrySuccess = false;
 
-        UserEntry entry = null;
-        UserResult result = null;
-        boolean userEntryAvailable = false;
-        byte reachedCredits = userEntrySuccess ? exercise.getCredits() : 0;
-        SolutionQuery usedQuery = null;
+        String feedbackSummaryDB = "";
 
-        int index = solutionQueries.indexOf(usedSolutionQuery);
-        if (index < solutions.size()) {
-          usedQuery = solutions.get(index);
-        }
-
-        String msg = null;
-
-        if (
-          !userString.trim().isEmpty() &&
-          (
-            !isRated() || userRights.entriesCanBeEdited(exerciseGroup)
-          )
-        ) {
-
-          entry = userEntryDao.getLastEntry(exercise, user);
-          msg = Cfg.inst().getText("EX.SAVED_SUCCESSFUL");
-          if (entry != null) {
-            msg = Cfg.inst().getText("EX.OVERWRITING_SUCCESSFUL");
+        for (UserFeedback fb : feedbackList) {
+          if (fb.isSyntaxError()) {
+            syntaxError = true;
           }
-
-          if (Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG, PropBool.ONLY_SAVE_LAST_USER_QUERY)) {
-            // String msg = Cfg.inst().getProp(DEF_LANGUAGE, "ASSERTION.FILTER5");
-            // TODO:
-            if (entry != null) {
-              entry.setUserQuery(userString);
-              entry.setEntryTime(new Date());
-              entry.setResultMessage(feedbackSummaryDB);
-              userEntryAvailable = userEntryDao.updateInstance(entry);
-              result = userResultDao.getLastUserResultFromEntry(entry);
-
-              if (result != null) {
-                result.setCredits(reachedCredits);
-                result.setLastModified(new Date());
-                result.setSolutionQuery(usedQuery);
-                result.setComment(feedbackSummaryDB);
-                userResultDao.updateInstance(result);
-              }
-            } else {
-              entry = new UserEntry(user, exercise, userString, new Date());
-              entry.setResultMessage(feedbackSummaryDB);
-              userEntryAvailable = userEntryDao.insertNewInstance(entry);
-            }
+          if (fb.isMainError()) {
+            userEntrySuccess = fb.isCorrect();
           } else {
-            entry = new UserEntry(user, exercise, userString, new Date());
-            entry.setResultMessage(feedbackSummaryDB);
-            userEntryAvailable = userEntryDao.insertNewInstance(entry);
-          }
-
-          if (!showFeedback) {
-            querySaved = true;
-          }
-
-          if (result == null && userEntryAvailable) {
-            result = new UserResult(entry, reachedCredits, new Date());
-            result.setSolutionQuery(usedQuery);
-            result.setComment(feedbackSummaryDB);
-            userResultDao.insertNewInstance(result);
+            String fd = fb.getFeedback();
+            if (!userEntrySuccess) {
+              feedbackSummaryDB += fb.getTitle() + ": " + fd + "<br/>";
+            }
           }
         }
 
-
-        if (isRated() && !debug) {
-          if (!userRights.entriesCanBeEdited(exerciseGroup)) {
-            msg = Cfg.inst().getText("EX.RATED_CLOSED");
-          }
-
-          if (msg != null) {
-            // show feedback message to user
-            Severity sev = FacesMessage.SEVERITY_INFO;
-            FacesMessage message1 = new FacesMessage(sev, Cfg.inst().getText("EX.SERVER_MESSAGE"), msg);
-            FacesContext.getCurrentInstance().addMessage(null, message1);
-            // FacesMessage message2 = new FacesMessage("Gespeicherte Query:",
-            // StringTools.trimToLengthIndicator(userString, 100));
-            // FacesContext.getCurrentInstance().addMessage(null, message2);
-          }
+        if (usedSolutionQuery == null || usedSolutionQuery.getResult() == null) {
+          ArrayList<UserFeedback> newFeedbackList = new ArrayList<UserFeedback>();
+          newFeedbackList.add(new UserFeedback(Cfg.inst().getProp(DEF_LANGUAGE, "QUE.UNEXPECTED_ERROR"),
+                                               Cfg.inst().getProp(DEF_LANGUAGE, "QUE.UNEXPECTED_ERROR2"), user));
+          newFeedbackList.addAll(feedbackList);
+          feedbackList = newFeedbackList;
+          this.feedbackVisible = true;
+          LOGGER.error("EMPTY SOLUTION RESULT, FAULTY SOLUTION-QUERY?\n" + feedbackSummaryDB);
         }
 
+        if (usedSolutionQuery != null && usedSolutionQuery.getResult() != null) {
+          /*
+           * **************************************************************
+           * get column-names and values from db solution-query
+           * **************************************************************
+           */
 
-        if (feedbackVisible) {
-          refLinks = comparator.getRefLinks();
-        }
+          if (solutionQueryValues == null || solutionQueryColumns == null
+              || solutionQueryValues.isEmpty() || solutionQueryColumns.isEmpty()) {
+            // setting correct solution
+            SqlResult sol_result = usedSolutionQuery.getResult();
+            String[][] data = sol_result.getData();
+            solutionQueryColumns = new ArrayList<String>();
+            solutionQueryValues = new ArrayList<TableEntry>();
 
-        if (!syntaxError) {
-          SqlResult sol_result = userQuery.getResult();
-          String[][] data = sol_result.getData();
-          userQueryColumns = new ArrayList<String>();
-          userQueryValues = new ArrayList<TableEntry>();
-
-          ResultSetMetaData metaData = sol_result.getResultMetaData();
-          if (metaData != null) {
-            if (!debug) {
+            ResultSetMetaData metaData = sol_result.getResultMetaData();
+            if (metaData != null) {
               for (int i = 1; i <= metaData.getColumnCount(); i++) {
                 String name = metaData.getColumnLabel(i);
 
@@ -785,64 +673,205 @@ public class ExerciseController implements Serializable {
                 }
 
                 if (name != null && !name.trim().isEmpty()) {
-                  userQueryColumns.add(name);
+                  solutionQueryColumns.add(name);
                 }
               }
             }
-          }
-          if (data != null) {
-            for (int i = 0; i < data.length; i++) {
-              TableEntry en = new TableEntry(userQueryColumns);
-              for (int z = 0; z < data[i].length; z++) {
-                if (data[i][z] != null) {
+            if (data != null) {
+              for (int i = 0; i < data.length; i++) {
+                TableEntry en = new TableEntry(solutionQueryColumns);
+                for (int z = 0; z < data[i].length; z++) {
                   en.addValue(data[i][z], z);
-                } else {
-                  en.addValue("NULL", z);
                 }
+                solutionQueryValues.add(en);
               }
-              userQueryValues.add(en);
+            }
+            filteredSolutionQueryValues = solutionQueryValues;
+            createSolutionQueryColumns();
+          }
+
+          if (showResults()) {
+            this.resultVisible = true;
+            this.feedbackVisible = true;
+          }
+
+          UserEntry entry = null;
+          UserResult result = null;
+          boolean userEntryAvailable = false;
+          byte reachedCredits = userEntrySuccess ? exercise.getCredits() : 0;
+          SolutionQuery usedQuery = null;
+
+          int index = solutionQueries.indexOf(usedSolutionQuery);
+          if (index < solutions.size()) {
+            usedQuery = solutions.get(index);
+          }
+
+          String msg = null;
+
+          if (
+            !userString.trim().isEmpty() &&
+            (
+              !isRated() || userRights.entriesCanBeEdited(exerciseGroup)
+            )
+          ) {
+
+            entry = userEntryDao.getLastEntry(exercise, user);
+            msg = Cfg.inst().getText("EX.SAVED_SUCCESSFUL");
+            if (entry != null) {
+              msg = Cfg.inst().getText("EX.OVERWRITING_SUCCESSFUL");
+            }
+
+            if (!showFeedback) {
+              querySaved = true;
+            }
+
+            if (Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG, PropBool.ONLY_SAVE_LAST_USER_QUERY)) {
+              // String msg = Cfg.inst().getProp(DEF_LANGUAGE, "ASSERTION.FILTER5");
+              // TODO:
+              if (entry != null) {
+                entry.setUserQuery(userString);
+                entry.setEntryTime(new Date());
+                entry.setResultMessage(feedbackSummaryDB);
+                userEntryAvailable = userEntryDao.updateInstance(entry);
+                result = userResultDao.getLastUserResultFromEntry(entry);
+
+                if (result != null) {
+                  result.setCredits(reachedCredits);
+                  result.setLastModified(new Date());
+                  result.setSolutionQuery(usedQuery);
+                  result.setComment(feedbackSummaryDB);
+                  userResultDao.updateInstance(result);
+                }
+              } else {
+                entry = new UserEntry(user, exercise, userString, new Date());
+                entry.setResultMessage(feedbackSummaryDB);
+                userEntryAvailable = userEntryDao.insertNewInstance(entry);
+              }
+            } else {
+              entry = new UserEntry(user, exercise, userString, new Date());
+              entry.setResultMessage(feedbackSummaryDB);
+              userEntryAvailable = userEntryDao.insertNewInstance(entry);
+            }
+
+
+            if (result == null && userEntryAvailable) {
+              result = new UserResult(entry, reachedCredits, new Date());
+              result.setSolutionQuery(usedQuery);
+              result.setComment(feedbackSummaryDB);
+              userResultDao.insertNewInstance(result);
             }
           }
-          filteredUserQueryValues = userQueryValues;
-          createUserQueryColumns();
 
-          if (showFeedback) {
-            this.userResultVisible = true;
+
+          if (isRated() && !debug) {
+            if (!userRights.entriesCanBeEdited(exerciseGroup)) {
+              msg = Cfg.inst().getText("EX.RATED_CLOSED");
+            }
+
+            if (msg != null) {
+              // show feedback message to user
+              Severity sev = FacesMessage.SEVERITY_INFO;
+              message1 = new FacesMessage(sev, Cfg.inst().getText("EX.SERVER_MESSAGE"), msg);
+            }
           }
-        } else {
-          if (showFeedback) {
-            this.feedbackVisible = true;
-            this.userResultVisible = false;
+
+
+          if (feedbackVisible) {
+            refLinks = comparator.getRefLinks();
           }
+
+          if (!syntaxError) {
+            SqlResult sol_result = userQuery.getResult();
+            String[][] data = sol_result.getData();
+            userQueryColumns = new ArrayList<String>();
+            userQueryValues = new ArrayList<TableEntry>();
+
+            ResultSetMetaData metaData = sol_result.getResultMetaData();
+            if (metaData != null) {
+              if (!debug) {
+                for (int i = 1; i <= metaData.getColumnCount(); i++) {
+                  String name = metaData.getColumnLabel(i);
+
+                  if (user != null && name != null && name.contains(user.getId() + "_")) {
+                    name = name.replaceAll(user.getId() + "_", "");
+                  }
+
+                  if (name != null && !name.trim().isEmpty()) {
+                    userQueryColumns.add(name);
+                  }
+                }
+              }
+            }
+            if (data != null) {
+              for (int i = 0; i < data.length; i++) {
+                TableEntry en = new TableEntry(userQueryColumns);
+                for (int z = 0; z < data[i].length; z++) {
+                  if (data[i][z] != null) {
+                    en.addValue(data[i][z], z);
+                  } else {
+                    en.addValue("NULL", z);
+                  }
+                }
+                userQueryValues.add(en);
+              }
+            }
+            filteredUserQueryValues = userQueryValues;
+            createUserQueryColumns();
+
+            if (showFeedback) {
+              this.userResultVisible = true;
+            }
+          } else {
+            if (showFeedback) {
+              this.feedbackVisible = true;
+              this.userResultVisible = false;
+            }
+          }
+
+          // ------------------------------------------------ //
+          // --
+          // ------------------------------------------------ //
+
+          if (userEntrySuccess) {
+            feedbackList.clear();
+            UserFeedback feedback = new UserFeedback(Cfg.inst().getProp(DEF_LANGUAGE, "COMPARATOR.DYN_RESULT"),
+                Cfg.inst().getProp(DEF_LANGUAGE, "COMPARATOR.DYN_RESULT.SUC"), user);
+            feedback.setSuccess(true);
+            feedback.setMainError(true);
+            feedbackList.add(feedback);
+          }
+
         }
 
-        // ------------------------------------------------ //
-        // --
-        // ------------------------------------------------ //
-
-        if (userEntrySuccess) {
-          feedbackList.clear();
-          UserFeedback feedback = new UserFeedback(Cfg.inst().getProp(DEF_LANGUAGE, "COMPARATOR.DYN_RESULT"),
-              Cfg.inst().getProp(DEF_LANGUAGE, "COMPARATOR.DYN_RESULT.SUC"), user);
-          feedback.setSuccess(true);
-          feedback.setMainError(true);
-          feedbackList.add(feedback);
+      } catch (SQLException e) {
+        LOGGER.error("PARSER-SQL-ERROR", e);
+      } catch (Exception e) {
+        LOGGER.error("PARSER-ERROR", e);
+      } finally {
+        if (connection != null) {
+          try {
+            connection.close();
+          } catch (SQLException e) {
+            e.printStackTrace();
+          }
         }
-
       }
 
-    } catch (SQLException e) {
-      LOGGER.error("PARSER-SQL-ERROR", e);
+      long elapsedTime = System.currentTimeMillis() - starttime;
+
+      String processTime = "Bearbeitungszeit: " + elapsedTime + " ms.";
+      if (message1 == null) {
+        Severity sev = FacesMessage.SEVERITY_INFO;
+        String msg = processTime;
+        message1 = new FacesMessage(sev, Cfg.inst().getText("EX.SERVER_MESSAGE"), msg);
+      } else if (message1 != null) {
+        String details = message1.getDetail();
+        message1.setDetail(details + "   (" + processTime + ")");
+        FacesContext.getCurrentInstance().addMessage(null, message1);
+      }
+
     } catch (Exception e) {
-      LOGGER.error("PARSER-ERROR", e);
-    } finally {
-      if (connection != null) {
-        try {
-          connection.close();
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-      }
+      LOGGER.error("ERROR COMPARING RESULTS", e);
     }
   }
 

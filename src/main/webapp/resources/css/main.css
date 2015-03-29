@@ -22,7 +22,6 @@
  * #L%
  */
 
-
 html, body {position: relative !important}
 
 /* main colors {{{ */
@@ -85,7 +84,7 @@ html, body {position: relative !important}
   margin-bottom: 0px;
 }
 
-#shitty_internet_explorer {
+#internet_explorer_warning_message {
   display:none;
   min-height: 24px;
   width: 830px;
@@ -299,8 +298,22 @@ html, body {position: relative !important}
   background-color:white;
 }
 
+.ui-fileupload {
+  margin-bottom:10px;
+}
+
 .ui-fileupload-content {
-  background:lightcyan;
+  background-color: #fff;
+  background-size: 100% 1.2em;
+  background-image: -webkit-linear-gradient(0deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px),
+                    -webkit-linear-gradient(#eee .05em, transparent .05em);
+  background-image: -moz-linear-gradient(0deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px),
+                    -moz-linear-gradient(#eee .05em, transparent .05em);
+  background-image: linear-gradient(90deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px),
+                    linear-gradient(#eee .05em, transparent .05em);
+  -pie-background: linear-gradient(90deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px) 0 0 / 100% 1.2em,
+                   linear-gradient(#eee .05em, transparent .05em) 0 0 / 100% 1.2em #fff;
+  behavior: url(/pie/PIE.htc);
 }
 
 
@@ -664,26 +677,6 @@ span.intoduction_text {
   border:none !important;
 }
 
-.feedback_box div {
-  border:none !important;
-}
-
-.feedback_box h3 {
-  height: 27px !important;
-}
-
-.result_correct h3{
-  background-color:#a5cea5 !important;
-}
-
-.result_error h3{
-  background-color:#db9d9d !important;
-}
-
-.feedback_box a {
-  padding-top: 5px !important;
-  padding-bottom: 5px !important;
-}
 
 #usertask\:feedback div{
   padding: 0px !important;
@@ -717,7 +710,7 @@ span.intoduction_text {
 }
 
 #usertask\:task_grid button {
-  background-color:#f2f2f2 !important;
+  background-color:#f2f2f2;
 }
 
 #usertask\:task_grid .ui-paginator {
@@ -725,7 +718,7 @@ span.intoduction_text {
 }
 
 #usertask\:task_grid td {
-  border:none !important;
+  border:none;
 }
 
 #usertask\:task_grid {
@@ -745,12 +738,6 @@ span.intoduction_text {
 .table_button {
   background-color: #f2f2f2 !important;
 }
-
-.mysql_help_button {
-  position:relative;
-  left:-3px;
-}
-
 
 .table_button span {
   padding-top: 0 !important;
@@ -1043,6 +1030,7 @@ img.open_task {
   top: 1px;
   font-size: 12px !important;
   color: #969696;
+  display:none;
 }
 
 #online_counter{
@@ -1055,6 +1043,7 @@ img.open_task {
 #session_expired_button {
   text-align: center;
   margin-top: 50px;
+  font-size:14px;
 }
 
 .ui-inputfield{
@@ -1070,9 +1059,6 @@ img.open_task {
   /* top: 50px !important; */
 }
 
-.question-text-scrollpanel {
-
-}
 
 /* ::-webkit-scrollbar {                                                                                   */
 /*     width: 14px;                                                                                        */
@@ -1143,4 +1129,186 @@ img.open_task {
   border: 1px solid #004188 !important;
 }
 
+#javascript_error {
+  height: 50px; 
+  width:830px; 
+  text-align:center;
+  background-color: rgb(255, 165, 165);
+  margin-bottom: 20px; 
+  padding: 10px
+}
 
+#server_time {
+  float:left;
+}
+
+#session_expired_panel {
+  color:red;
+  font-size:22px !important;
+  margin-top:50px;
+  text-align:center
+}
+
+/* task.xhtml {{{ */
+
+.question_title {
+  text-align:center;
+  border-right:none;
+}
+
+.user_input_title {
+  text-align:center;
+  border-left:none;
+}
+
+.question_box {
+  font-size:16px;
+  text-align:center;
+  border:1px dashed gray !important;
+  width:428px
+}
+
+.question-text-scrollpanel {
+  max-height:180px;
+  border:none;
+  padding-right:10px;
+  padding-left:10px;
+}
+
+.question_box_credits {
+  font-weight:bold;
+  color:#004188;
+  font-size:13px;
+}
+
+.question_box_solution_title {
+  font-size:13px;
+  color:grey;
+  font-weight:bold;
+}
+
+.question_box_solution {
+  font-size:13px;
+  color:rgb(195, 195, 195);
+  background-color:rgb(195, 195, 195) !important;
+}
+
+.user_input_box {
+  border:1px dashed gray !important; 
+  padding: 10px !important;
+}
+
+.feedback_column {
+  vertical-align:top;
+}
+
+.feedback_box {
+  text-align:justify;
+}
+
+.feedback_box a {
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
+}
+
+.feedback_box div {
+  border:none !important;
+}
+
+.feedback_box h3 {
+  height: 27px !important;
+}
+
+.result_correct h3{
+  background-color:#a5cea5 !important;
+}
+
+.result_error h3{
+  background-color:#db9d9d !important;
+}
+
+.feedback_box_original {
+  font-size:13px;
+  color:grey;
+}
+
+.feedback_buttons_column {
+  text-align:center;
+  vertical-align:top;
+}
+
+.result_button, .user_result_button {
+  background-color:#EDEFFF !important;
+  margin-top:-10px;
+  position:relative;
+  top:13px;
+}
+
+.result_button_half {
+  width:50% !important;
+}
+
+.result_button_full {
+  width:100% !important;
+}
+
+.user_result_button_half {
+  width:49% !important;
+}
+
+.user_result_button_full {
+  width:100% !important;
+}
+
+.relevant_tables_column {
+  padding-bottom:0px !important;
+}
+
+.table_dialog_close_container_t {
+  margin:5px 0px 3px 0px;
+}
+
+.table_dialog_close_container_b {
+  margin:3px 0px 15px 0px;
+}
+
+.table_dialog_close_text {
+  font-size:11px;
+  text-decoration:underlined;
+  font-weight:bold;
+  cursor:pointer;
+  color:#969696;
+}
+
+.custom_mysql_button {
+  position:relative;
+  top:-12px;
+  float:left;
+  background-color: #DB9D9D !important;
+}
+
+.mysql_help_button {
+  position:relative;
+  left:-3px;
+  background-color:#D7DBFF !important;
+  position:relative;
+  left:-6px;
+  top:-12px;
+  margin-left:6px
+}
+
+.close_dialogs_button {
+  background-color:#D7DBFF !important;
+  position:relative;
+  left:-6px;
+  top:-12px
+}
+
+.dia_button {
+  background-color:#D7DBFF !important;
+  position:relative;
+  left:-6px;
+  top:-12px
+}
+
+/* }}} */

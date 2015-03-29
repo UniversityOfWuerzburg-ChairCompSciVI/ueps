@@ -343,14 +343,14 @@ Anschließend kann die Anwendung mit folgendem Skript deployed werden:<br/>
 Aufgabengruppen zu "Szenarios":
 
 ```
-├── Szenario 01
-│   ├── Aufgabengruppe 01
-│   │   ├── Aufgabe 01
-│   │   └── Aufgabe 02
-│   ├── Aufgabengruppe 02
+├── Szenario 1
+│   ├── Aufgabengruppe 1
+│   │   ├── Aufgabe 1
+│   │   └── Aufgabe 2
+│   ├── Aufgabengruppe 2
 │   │   └── ...
 │   └── ...
-├── Szenario 02
+├── Szenario 2
 │   └── ...
 └── ...
 ```
@@ -390,6 +390,8 @@ alle Tabellen [richtig erkannt][e5] wurden. Wenn ein Skript syntaktisch korrekt
 ist aber nicht richtig geparst werden konnte, dann verfassen Sie bitte ein 
 Bug Report [hier][bug].
 
+Beispieldatenbanken zum Experementieren findet man [hier][import-scripts].
+
 Aus Sicherheitsgründen werden alle MySQL-Anfragen der Studenten mit einem
 MySQL-Nutzer mit beschränkten Zugriffsrechten ausgeführt.
 
@@ -404,8 +406,8 @@ muss hierfür leer sein und der Nutzer unter "Datenbank-User" muss
 **ausschließlich** für die neue Datenbank besitzen. Als Hilfe wird ein 
 Rechteskript am Anfang der Seite generiert ([Screenshot](#edit-scenario)).
 
-Optional kann auch ein Entity-Relationship-Diagramm (im JPEG/PNG-Format) 
-bereitgestellt werden.
+Optional kann ein Entity-Relationship-Diagramm (im JPEG/PNG-Format) hochgeladen 
+werden.
 
 #### Aufgabengruppe erstellen ([Screenshot](#edit-group))
 Es gibt zwei Arten von Aufgabengruppen, **bewertete** und **unbewertete**. 
@@ -594,7 +596,7 @@ Möchte man die Anwendung warten, so kann man im laufenden Betrieb eine
 
 #### Quellcodedokumentation
 
-[Javadoc][javadoc]
+[Javadoc][javadoc] (momentan noch *work in progress*)
 
 -
 
@@ -700,6 +702,7 @@ Möchte man die Anwendung warten, so kann man im laufenden Betrieb eine
 [er-wm2010]:                  src/main/resources/sql/2/wm_2014_05_14-12_00_37.png
 [admin-sql]:                  src/main/resources/admin_db_structure.sql
 [export1]:                    http://kolbasa.github.io/ueps/exports/scenario_1_export.zip
+[import-scripts]:             http://kolbasa.github.io/ueps/imports/scenario-scripts.zip
 [doxygen]:                    http://kolbasa.github.io/ueps/doxygen/
 [javadoc]:                    http://kolbasa.github.io/ueps/javadoc/
 

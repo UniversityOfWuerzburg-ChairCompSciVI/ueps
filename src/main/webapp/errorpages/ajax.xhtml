@@ -24,8 +24,9 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core"
 xmlns:h="http://java.sun.com/jsf/html" xmlns:ui="http://java.sun.com/jsf/facelets"
 xmlns:p="http://primefaces.org/ui">
+ <!-- TODO: half session time -->
  <!-- <p:idleMonitor timeout="#{config['SESSION_TIMEOUT'] * 500}" onidle="idleDialog.show()" -->
- <!-- onactive="idleDialog.hide();syncSessionDisplay()" />                                   -->
+ <!-- onactive="idleDialog.hide();handleAjaxSuccess()" />                                   -->
  <p:dialog header="#{txt['AJAX.SESS_TITLE']}" resizable="false" widgetVar="idleDialog" modal="true"
  width="400" id="dialog_box">
   <h:graphicImage class="renew-session-dialog" value="/resources/img/#{config['IMG.RENEW_SESSION']}" />
@@ -42,7 +43,7 @@ xmlns:p="http://primefaces.org/ui">
    <h:outputText value="#{txt['AJAX.ERRORLINE2']}" />
   </span>
  </p:dialog>
- <p:ajaxStatus id="ajaxStatusPanel">
+ <p:ajaxStatus id="ajaxStatusPanel" onsuccess="handleAjaxSuccess()" onerror="handleAjaxError()">
   <f:facet name="prestart">
    <h:graphicImage class="load_button" value="/resources/img/#{config['IMG.LOAD']}" />
   </f:facet>

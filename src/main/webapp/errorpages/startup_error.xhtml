@@ -3,7 +3,7 @@
   ************************************************************************
   ORGANIZATION  :  Institute of Computer Science, University of Wuerzburg
   PROJECT       :  UEPS - Uebungs-Programm fuer SQL
-  FILENAME      :  database.xhtml
+  FILENAME      :  startup_error.xhtml
   ************************************************************************
   %%
   Copyright (C) 2014 - 2015 Institute of Computer Science, University of Wuerzburg
@@ -21,9 +21,19 @@
   limitations under the License.
   #L%
   -->
-<ui:composition template="/templates/errorpage.xhtml"
-    xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:ui="http://java.sun.com/jsf/facelets"
->
-    <ui:define name="contentTitle">Oops! DB fail!</ui:define>
+<ui:composition template="/templates/errorpage.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+xmlns:p="http://primefaces.org/ui">
+ <!-- ************************************************************************ -->
+ <ui:define name="header_text">
+  <span class="error">#{txt['ERROR']}</span>
+  <script type="text/javascript">synctime=false;setTimeout("endAjaxStatus()", 1500);</script>
+ </ui:define>
+ <!-- ************************************************************************ -->
+ <ui:define name="content">
+  <p id="session_expired_button">
+   <h:outputText value="#{startup_error.error}" escape="false" />
+  </p>
+ </ui:define>
+ <!-- ************************************************************************ -->
 </ui:composition>

@@ -53,21 +53,23 @@ xmlns:o="http://omnifaces.org/ui" xmlns:p="http://primefaces.org/ui" class="main
      </ui:insert>
     </div>
     <div id="content" class="roundcorners2">
+     <!-- ************************************************************************ -->
      <noscript>
-      <div style="height: 50px; width:830px; text-align:center;
-        background-color: red; margin-bottom: 20px; padding: 10px">
+      <div id="javascript_error">
        <h3>#{txt['ERROR.JAVASCRIPT']}</h3>
       </div>
      </noscript>
      <!-- ************************************************************************ -->
      <!-- Internet Explorer Warning Message -->
-     <p:panel id="shitty_internet_explorer" rendered="#{sessionListener.showIEError()}">#{txt['ERROR.IE']} 
-     <p:commandButton value="#{txt['HIDE']}" onclick="hideIEMessage()"
+     <!-- ************************************************************************ -->
+     <p:panel id="internet_explorer_warning_message" rendered="#{sessionListener.showIEError()}">#{txt['ERROR.IE']}
+     <p:commandButton value="#{txt['HIDE']}" onclick="hideInternetExplorerMessage()"
      actionListener="#{sessionListener.disableIEError()}" styleClass="hide_panel_button" /></p:panel>
      <!-- ************************************************************************ -->
      <!-- Info panel that can be used for maintenance messages  -->
      <!-- to activate the panel, just toggle 'false' to 'true'  -->
      <!-- at '#{sessionListener.showInfoScreen(false)}'         -->
+     <!-- ************************************************************************ -->
      <p:panel id="info_screen" rendered="#{sessionListener.showInfoScreen(false)}">
        Info: Wartung am Dienstag den 01.04.2013 zwischen 14:00 und 15:00 Uhr
        <p:commandButton value="#{txt['HIDE']}" oncomplete="hideInfoMessage()"
@@ -78,12 +80,14 @@ xmlns:o="http://omnifaces.org/ui" xmlns:p="http://primefaces.org/ui" class="main
       <ui:include src="/templates/common/commonContent.xhtml" />
      </ui:insert>
     </div>
+    <!-- ************************************************************************ -->
     <div id="footer">
      <ui:insert name="footer">
       <ui:include src="/templates/common/commonFooter.xhtml" />
-      <script type="text/javascript">syncSessionDisplay()</script>
+      <script type="text/javascript">handleAjaxSuccess()</script>
      </ui:insert>
     </div>
+    <!-- ************************************************************************ -->
    </div>
   </h:body>
  </f:view>

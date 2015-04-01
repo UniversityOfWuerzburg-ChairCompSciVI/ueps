@@ -358,6 +358,14 @@ public class UserRightsBean implements Serializable {
           this.rights.remove(right);
           this.userRightDao.deleteInstance(right);
         }
+
+        example.setCreatedByUser(null);
+        example.setUser(this.selectedLecturer);
+        givenRights = this.userRightDao.findByExample(example);
+        for (UserRight right : givenRights) {
+          this.rights.remove(right);
+          this.userRightDao.deleteInstance(right);
+        }
         // ------------------------------------------------ //
 
         this.selectedLecturer.setIsLecturer(false);

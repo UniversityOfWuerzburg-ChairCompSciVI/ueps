@@ -620,6 +620,7 @@ public class AuthorizationFilter implements Filter, Serializable {
     try {
       chain.doFilter(request, response);
     } catch (IndexOutOfBoundsException e) {
+      throw e;
     } catch (FacesFileNotFoundException e) {
       this.throw404Error(res, req);
     } catch (Exception e) {

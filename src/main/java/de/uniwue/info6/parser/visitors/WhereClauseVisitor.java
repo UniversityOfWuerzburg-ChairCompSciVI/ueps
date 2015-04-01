@@ -13,9 +13,9 @@ package de.uniwue.info6.parser.visitors;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -54,302 +54,303 @@ import de.uniwue.info6.parser.structures.TableStructure;
 
 /**
  * Visitor for conditions.
- * 
+ *
  * @author Christian
- * 
+ *
  */
 public class WhereClauseVisitor implements Visitor {
 
-	private Structure conditionTree;
-	private Structure leftOperand;
-	private Structure rightOperand;
-	private LinkedList<TableStructure> tables = new LinkedList<TableStructure>();
+  private Structure conditionTree;
+  private Structure leftOperand;
+  private Structure rightOperand;
+  private LinkedList<TableStructure> tables = new LinkedList<TableStructure>();
 
-	private boolean operator = false;
+  private boolean operator = false;
 
-	@SuppressWarnings("unused")
-	private boolean stopChilds = false;
+  @SuppressWarnings("unused")
+  private boolean stopChilds = false;
 
-	/* (non-Javadoc)
-	 * @see com.akiban.sql.parser.Visitor#visit(com.akiban.sql.parser.Visitable)
-	 */
-	@Override
-	public Visitable visit(Visitable node) throws StandardException {
+  /* (non-Javadoc)
+   * @see com.akiban.sql.parser.Visitor#visit(com.akiban.sql.parser.Visitable)
+   */
+  @Override
+  public Visitable visit(Visitable node) throws StandardException {
 
-		if (node instanceof BinaryOperatorNode) {
+    if (node instanceof BinaryOperatorNode) {
 
-			operator = true;
+      operator = true;
 
-			visit2(((BinaryOperatorNode) node).getLeftOperand());
-			visit2(((BinaryOperatorNode) node).getRightOperand());
+      visit2(((BinaryOperatorNode) node).getLeftOperand());
+      visit2(((BinaryOperatorNode) node).getRightOperand());
 
-			conditionTree = new OperatorStructure(
-					((BinaryOperatorNode) node).getOperator(), leftOperand,
-					rightOperand);
+      conditionTree = new OperatorStructure(
+        ((BinaryOperatorNode) node).getOperator(), leftOperand,
+        rightOperand);
 
-			stopChilds = true;
+      stopChilds = true;
 
-		} else if (node instanceof AggregateNode) {
-			visit((AggregateNode) node);
-		} else if (node instanceof StaticMethodCallNode) {
-			visit((StaticMethodCallNode) node);
-		} else if (node instanceof TernaryOperatorNode) {
+    } else if (node instanceof AggregateNode) {
+      visit((AggregateNode) node);
+    } else if (node instanceof StaticMethodCallNode) {
+      visit((StaticMethodCallNode) node);
+    } else if (node instanceof TernaryOperatorNode) {
 
-			operator = true;
+      operator = true;
 
-			visit2(((TernaryOperatorNode) node).getReceiver());
-			visit2(((TernaryOperatorNode) node).getLeftOperand());
+      visit2(((TernaryOperatorNode) node).getReceiver());
+      visit2(((TernaryOperatorNode) node).getLeftOperand());
 
-			conditionTree = new OperatorStructure(
-					((TernaryOperatorNode) node).getOperator(), leftOperand,
-					rightOperand);
+      conditionTree = new OperatorStructure(
+        ((TernaryOperatorNode) node).getOperator(), leftOperand,
+        rightOperand);
 
-			stopChilds = true;
+      stopChilds = true;
 
-		} else if (node instanceof UnaryOperatorNode) {
+    } else if (node instanceof UnaryOperatorNode) {
 
-			operator = true;
+      operator = true;
 
-			LinkedList<Structure> operands = new LinkedList<Structure>();
+      LinkedList<Structure> operands = new LinkedList<Structure>();
 
-			visit2(((UnaryOperatorNode) node).getOperand());
+      visit2(((UnaryOperatorNode) node).getOperand());
 
-			operands.add(leftOperand);
+      operands.add(leftOperand);
 
-			conditionTree = new PrefixOperatorStructure(
-					((UnaryOperatorNode) node).getOperator(), operands);
+      conditionTree = new PrefixOperatorStructure(
+        ((UnaryOperatorNode) node).getOperator(), operands);
 
-			stopChilds = true;
+      stopChilds = true;
 
-		} else if (node instanceof ConstantNode) {
-			visit((ConstantNode) node);
-		} else if (node instanceof ColumnReference) {
-			visit((ColumnReference) node);
-		} else if (node instanceof SQLToJavaValueNode) {
-			visit((SQLToJavaValueNode) node);
-		} else if (node instanceof JavaToSQLValueNode) {
-			visit((JavaToSQLValueNode) node);
-		} else if (node instanceof InListOperatorNode) {
-				
-				operator = true;
+    } else if (node instanceof ConstantNode) {
+      visit((ConstantNode) node);
+    } else if (node instanceof ColumnReference) {
+      visit((ColumnReference) node);
+    } else if (node instanceof SQLToJavaValueNode) {
+      visit((SQLToJavaValueNode) node);
+    } else if (node instanceof JavaToSQLValueNode) {
+      visit((JavaToSQLValueNode) node);
+    } else if (node instanceof InListOperatorNode) {
 
-				LinkedList<Structure> operands = new LinkedList<Structure>();
+      operator = true;
 
-				for(ValueNode item : ((RowConstructorNode) ((InListOperatorNode) node).getRightOperandList()).getNodeList()){
-					if(item instanceof NumericConstantNode){
-						operands.add(new Structure("" + ((NumericConstantNode) item).getValue()));
-						
-					} else {
-						visit2(item);
-					}
-				}
+      LinkedList<Structure> operands = new LinkedList<Structure>();
 
-				conditionTree = new PrefixOperatorStructure(
-						"IN", operands);
+      for (ValueNode item : ((RowConstructorNode) ((InListOperatorNode) node).getRightOperandList()).getNodeList()) {
+        if (item instanceof NumericConstantNode) {
+          operands.add(new Structure("" + ((NumericConstantNode) item).getValue()));
 
-				stopChilds = true;
-				
-		} else if (node instanceof SubqueryNode) {
-			visit((SubqueryNode) node);
-		} else
-			throw new StandardException("Unbekannter Parameter: \n "
-					+ node.getClass() + "\n" + node.toString());
+        } else {
+          visit2(item);
+        }
+      }
 
-		return node;
+      conditionTree = new PrefixOperatorStructure(
+        "IN", operands);
 
-	}
+      stopChilds = true;
 
-	/**
-	 * @param node
-	 * @throws StandardException
-	 */
-	public void visit(StaticMethodCallNode node) throws StandardException {
-
-		StaticMethodCallNodeVisitor tvisitor = new StaticMethodCallNodeVisitor();
-		node.accept(tvisitor);
-
-		PrefixOperatorStructure tmp = tvisitor.getConditionTree();
-
-		setOperand(tmp);
+    } else if (node instanceof SubqueryNode) {
+      visit((SubqueryNode) node);
+    } else
+      throw new StandardException("Unbekannter Parameter: \n "
+                                  + node.getClass() + "\n" + node.toString());
 
-	}
-	
-	/**
-	 * @param node
-	 * @throws StandardException
-	 */
-	public void visit(SubqueryNode node) throws StandardException {
-
-		RootVisitor rvisitor = new RootVisitor();
-		node.accept(rvisitor);
-
-		tables.addAll(rvisitor.getTables());
-		
-		SubqueryStructure tmp = new SubqueryStructure("subtree", rvisitor);
-
-		setOperand(tmp);
+    return node;
 
-	}
+  }
 
-	/**
-	 * @param node
-	 * @throws StandardException
-	 */
-	public void visit(SQLToJavaValueNode node) throws StandardException {
+  /**
+   * @param node
+   * @throws StandardException
+   */
+  public void visit(StaticMethodCallNode node) throws StandardException {
 
-		WhereClauseVisitor wvisitor = new WhereClauseVisitor();
-		node.getSQLValueNode().accept(wvisitor);
-		
-		tables.addAll(wvisitor.getTables());
+    StaticMethodCallNodeVisitor tvisitor = new StaticMethodCallNodeVisitor();
+    node.accept(tvisitor);
 
-		Structure tmp = wvisitor.getConditionTree();
+    PrefixOperatorStructure tmp = tvisitor.getConditionTree();
 
-		setOperand(tmp);
-	}
+    setOperand(tmp);
 
-	/**
-	 * @param node
-	 * @throws StandardException
-	 */
-	public void visit(JavaToSQLValueNode node) throws StandardException {
+  }
 
-		WhereClauseVisitor wvisitor = new WhereClauseVisitor();
-		node.getJavaValueNode().accept(wvisitor);
-		
-		tables.addAll(wvisitor.getTables());
+  /**
+   * @param node
+   * @throws StandardException
+   */
+  public void visit(SubqueryNode node) throws StandardException {
 
-		Structure tmp = wvisitor.getConditionTree();
+    RootVisitor rvisitor = new RootVisitor();
+    node.accept(rvisitor);
 
-		setOperand(tmp);
-	}
+    tables.addAll(rvisitor.getTables());
 
-	/**
-	 * @param node
-	 * @throws StandardException
-	 */
-	public void visit(AggregateNode node) throws StandardException {
+    SubqueryStructure tmp = new SubqueryStructure("subtree", rvisitor);
 
-		AggregateNodeVisitor avisitor = new AggregateNodeVisitor();
-		node.accept(avisitor);
-
-		PrefixOperatorStructure tmp = avisitor.getConditionTree();
-
-		setOperand(tmp);
-
-	}
-
-	/**
-	 * @param node
-	 */
-	public void visit(ConstantNode node) {
-		Structure tmp = new Structure(node.getValue().toString());
-		setOperand(tmp);
-	}
-
-	/**
-	 * @param node
-	 */
-	public void visit(ColumnReference node) {
-		ColumnStructure tmp = new ColumnStructure(node.getColumnName(),
-				node.getTableName());
-		setOperand(tmp);
-	}
-
-	/**
-	 * @param node
-	 * @throws StandardException
-	 */
-	public void visit(BinaryOperatorNode node) throws StandardException {
-
-		WhereClauseVisitor wvisitor = new WhereClauseVisitor();
-		node.accept(wvisitor);
-		
-		tables.addAll(wvisitor.getTables());
-
-		Structure tmp = wvisitor.getConditionTree();
-
-		setOperand(tmp);
-
-	}
-
-	/**
-	 * Delegates operands to a WhereClauseVisitor
-	 * 
-	 * @param node
-	 * @throws StandardException
-	 */
-	public void visit2(ValueNode node) throws StandardException {
-
-		WhereClauseVisitor wvisitor = new WhereClauseVisitor();
-		node.accept(wvisitor);
-		
-		tables.addAll(wvisitor.getTables());
-
-		Structure tmp = wvisitor.getConditionTree();
-
-		setOperand(tmp);
-
-	}
-
-	/**
-	 * @param tmp
-	 */
-	public void setOperand(Structure tmp) {
-
-		if (operator) {
-
-			if (leftOperand == null) {
-				leftOperand = tmp;
-			} else if (rightOperand == null) {
-				rightOperand = tmp;
-			}
-
-		} else {
-
-			conditionTree = tmp;
-			stopChilds = true;
-
-		}
-
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public LinkedList<TableStructure> getTables() {
-		return tables;
-	}
-
-	/**
-	 * @return
-	 */
-	public Structure getConditionTree() {
-		return conditionTree;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.akiban.sql.parser.Visitor#visitChildrenFirst(com.akiban.sql.parser.Visitable)
-	 */
-	@Override
-	public boolean visitChildrenFirst(Visitable node) {
-		return false;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.akiban.sql.parser.Visitor#stopTraversal()
-	 */
-	@Override
-	public boolean stopTraversal() {
-		return false;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.akiban.sql.parser.Visitor#skipChildren(com.akiban.sql.parser.Visitable)
-	 */
-	@Override
-	public boolean skipChildren(Visitable node) throws StandardException {
-		return true;
-	}
+    setOperand(tmp);
+
+  }
+
+  /**
+   * @param node
+   * @throws StandardException
+   */
+  public void visit(SQLToJavaValueNode node) throws StandardException {
+
+    WhereClauseVisitor wvisitor = new WhereClauseVisitor();
+    node.getSQLValueNode().accept(wvisitor);
+
+    tables.addAll(wvisitor.getTables());
+
+    Structure tmp = wvisitor.getConditionTree();
+
+    setOperand(tmp);
+  }
+
+  /**
+   * @param node
+   * @throws StandardException
+   */
+  public void visit(JavaToSQLValueNode node) throws StandardException {
+
+    WhereClauseVisitor wvisitor = new WhereClauseVisitor();
+    node.getJavaValueNode().accept(wvisitor);
+
+    tables.addAll(wvisitor.getTables());
+
+    Structure tmp = wvisitor.getConditionTree();
+
+    setOperand(tmp);
+  }
+
+  /**
+   * @param node
+   * @throws StandardException
+   */
+  public void visit(AggregateNode node) throws StandardException {
+
+    AggregateNodeVisitor avisitor = new AggregateNodeVisitor();
+    node.accept(avisitor);
+
+    PrefixOperatorStructure tmp = avisitor.getConditionTree();
+
+    setOperand(tmp);
+
+  }
+
+  /**
+   * @param node
+   */
+  public void visit(ConstantNode node) {
+    Structure tmp = new Structure(node.getValue().toString());
+    setOperand(tmp);
+  }
+
+  /**
+   * @param node
+   */
+  public void visit(ColumnReference node) {
+    ColumnStructure tmp = new ColumnStructure(node.getColumnName(),
+        node.getTableName());
+    setOperand(tmp);
+  }
+
+  /**
+   * @param node
+   * @throws StandardException
+   */
+  public void visit(BinaryOperatorNode node) throws StandardException {
+
+    WhereClauseVisitor wvisitor = new WhereClauseVisitor();
+    node.accept(wvisitor);
+
+    tables.addAll(wvisitor.getTables());
+
+    Structure tmp = wvisitor.getConditionTree();
+
+    setOperand(tmp);
+
+  }
+
+  /**
+   * Delegates operands to a WhereClauseVisitor
+   *
+   * @param node
+   * @throws StandardException
+   */
+  public void visit2(ValueNode node) throws StandardException {
+
+    WhereClauseVisitor wvisitor = new WhereClauseVisitor();
+    node.accept(wvisitor);
+
+    tables.addAll(wvisitor.getTables());
+
+    Structure tmp = wvisitor.getConditionTree();
+
+    setOperand(tmp);
+
+  }
+
+  /**
+   * @param tmp
+   */
+  public void setOperand(Structure tmp) {
+
+    if (operator) {
+
+      if (leftOperand == null) {
+        leftOperand = tmp;
+      } else if (rightOperand == null) {
+        rightOperand = tmp;
+      }
+
+    } else {
+
+      conditionTree = tmp;
+      stopChilds = true;
+
+    }
+
+  }
+
+  /**
+   *
+   * @return
+   */
+  public LinkedList<TableStructure> getTables() {
+    return tables;
+  }
+
+  /**
+   * @return
+   */
+  public Structure getConditionTree() {
+    return conditionTree;
+  }
+
+  /* (non-Javadoc)
+   * @see com.akiban.sql.parser.Visitor#visitChildrenFirst(com.akiban.sql.parser.Visitable)
+   */
+  @Override
+  public boolean visitChildrenFirst(Visitable node) {
+    return false;
+  }
+
+  /* (non-Javadoc)
+   * @see com.akiban.sql.parser.Visitor#stopTraversal()
+   */
+  @Override
+  public boolean stopTraversal() {
+    return false;
+  }
+
+  /* (non-Javadoc)
+   * @see com.akiban.sql.parser.Visitor#skipChildren(com.akiban.sql.parser.Visitable)
+   */
+  @Override
+  public boolean skipChildren(Visitable node) throws StandardException {
+    return true;
+  }
 
 }
+

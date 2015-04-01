@@ -25,12 +25,7 @@
 xmlns:ui="http://java.sun.com/jsf/facelets">
  <!-- ************************************************************************ -->
  <ui:define name="header_text">
-  <script type="text/javascript">
-  <!-- * -->
-  jQuery.ajaxSetup({ error: handleXhrError });
-  <!-- * -->
-  function handleXhrError(xhr){}
-  <!-- * --></script>
+  <script type="text/javascript">synctime=false;setTimeout("endAjaxStatus()", 1500);</script>
   <span class="error">404</span>
  </ui:define>
  <!-- ************************************************************************ -->

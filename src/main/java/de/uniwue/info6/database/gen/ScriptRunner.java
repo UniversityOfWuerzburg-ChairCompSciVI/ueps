@@ -180,7 +180,6 @@ public class ScriptRunner implements Serializable {
                 statement.execute(command.toString());
               } catch (SQLException e) {
                 e.fillInStackTrace();
-                System.out.println(e);
                 printlnError("Error executing: " + command);
                 printlnError(e);
               }
@@ -231,13 +230,11 @@ public class ScriptRunner implements Serializable {
         conn.commit();
       }
     } catch (SQLException e) {
-      System.out.println(e);
       e.fillInStackTrace();
       printlnError("Error executing: " + command);
       printlnError(e);
       throw e;
     } catch (IOException e) {
-      System.out.println(e);
       e.fillInStackTrace();
       printlnError("Error executing: " + command);
       printlnError(e);

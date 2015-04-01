@@ -24,6 +24,8 @@ package de.uniwue.info6.webapp.admin;
  * #L%
  */
 
+import static de.uniwue.info6.misc.properties.PropBool.DEBUG_MODE;
+import static de.uniwue.info6.misc.properties.PropBool.CREATE_EXAMPLE_EXERCISE;
 import static de.uniwue.info6.misc.properties.PropBool.SHOWCASE_MODE;
 import static de.uniwue.info6.misc.properties.PropString.MASTER_DBHOST;
 import static de.uniwue.info6.misc.properties.PropString.MASTER_DBPORT;
@@ -39,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -49,16 +52,21 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.StreamedContent;
 
 import de.uniwue.info6.database.jdbc.ConnectionManager;
+import de.uniwue.info6.database.map.Exercise;
 import de.uniwue.info6.database.map.ExerciseGroup;
 import de.uniwue.info6.database.map.Scenario;
+import de.uniwue.info6.database.map.SolutionQuery;
 import de.uniwue.info6.database.map.User;
+import de.uniwue.info6.database.map.daos.ExerciseDao;
 import de.uniwue.info6.database.map.daos.ExerciseGroupDao;
 import de.uniwue.info6.database.map.daos.ScenarioDao;
+import de.uniwue.info6.database.map.daos.SolutionQueryDao;
 import de.uniwue.info6.misc.DateFormatTools;
 import de.uniwue.info6.misc.FileTransfer;
 import de.uniwue.info6.misc.Password;
@@ -88,11 +96,9 @@ public class AdminEditScenario implements Serializable {
 
   private static String scriptSystemPath = Cfg.inst().getProp(MAIN_CONFIG, SCENARIO_RESOURCES_PATH);
 
-  private ScenarioDao scenarioDao;
   private Scenario scenario;
 
   private Integer originalScenarioId;
-  private ExerciseGroupDao exerciseGroupDao;
 
   private User user;
   private SessionObject ac;
@@ -122,6 +128,14 @@ public class AdminEditScenario implements Serializable {
   private UserRights rights;
   private boolean databaseChanged;
   private boolean isAdmin;
+  private boolean debugMode;
+
+  // ------------------------------------------------ //
+  private ScenarioDao scenarioDao;
+  private ExerciseDao exerciseDao;
+  private ExerciseGroupDao exerciseGroupDao;
+  private SolutionQueryDao solutionQueryDao;
+  // ------------------------------------------------ //
 
   /**
    *
@@ -194,13 +208,16 @@ public class AdminEditScenario implements Serializable {
     userHasRights = false;
     ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
     scenarioDao = new ScenarioDao();
+    exerciseDao = new ExerciseDao();
     exerciseGroupDao = new ExerciseGroupDao();
+    solutionQueryDao = new SolutionQueryDao();
     Map<String, String> requestParams = ec.getRequestParameterMap();
     ac = SessionObject.pullFromSession();
     user = ac.getUser();
     connectionPool = ConnectionManager.instance();
     uploader = new FileTransfer();
     rights = new UserRights().initialize();
+    debugMode = Cfg.inst().getProp(MAIN_CONFIG, DEBUG_MODE);
 
     if (user != null) {
       this.isAdmin = rights.isAdmin(user);
@@ -272,15 +289,11 @@ public class AdminEditScenario implements Serializable {
       }
     }
 
-    // scenarioName = "testname";
-    // description = "testbeschreibung";
-    // scriptPath = "scenario_01.sql";
-    //
-    // dbHost = "localhost";
-    // dbUser = "blabla";
-    // dbPass = "testpassword";
-    // dbPort = "3306";
-    // dbName = "dev_ex";
+    if (debugMode) {
+      final Random random = new Random();
+      scenarioName = "debug-name-" + random.nextInt(1000);
+      description = StringUtils.repeat("debug-description ", 50);
+    }
 
     updateRightScripts();
   }
@@ -622,6 +635,7 @@ public class AdminEditScenario implements Serializable {
             if (tempScenario != null) {
               scenarioDao.insertNewInstanceP(tempScenario);
             }
+
             List<Scenario> tempScenarios = scenarioDao.findByExample(tempScenario);
             Scenario temp = null;
             if (tempScenarios != null && !tempScenarios.isEmpty()) {
@@ -640,15 +654,45 @@ public class AdminEditScenario implements Serializable {
                         + Cfg.inst().getProp(DEF_LANGUAGE, "EDIT_SC.SC_NOT_FOUND");
               sev = FacesMessage.SEVERITY_ERROR;
             }
+
+            connectionPool.updateScenarios();
+
+            // ------------------------------------------------ //
+            try {
+              final boolean generateExampleExercise = Cfg.inst().getProp(MAIN_CONFIG, CREATE_EXAMPLE_EXERCISE);
+              if (generateExampleExercise && tempScenario.getId() != null) {
+                final Random random = new Random();
+                final ExerciseGroup testGroup = new ExerciseGroup();
+                testGroup.setName("Test Übungsblatt - " + random.nextInt(100000) + " (lösch mich)");
+                testGroup.setIsRated(false);
+                testGroup.setScenario(tempScenario);
+                exerciseGroupDao.insertNewInstanceP(testGroup);
+                final ArrayList<String> tables = connectionPool.getScenarioTableNames(tempScenario);
+                if (testGroup.getId() != null && tables != null && !tables.isEmpty()) {
+                  final Exercise testExercise = new Exercise();
+                  testExercise.setExerciseGroup(testGroup);
+                  testExercise.setQuestion("Test Übungsaufgabe - " + random.nextInt(100000) +  " (lösch mich)");
+                  testExercise.setCredits((byte) 1);
+                  this.exerciseDao.insertNewInstanceP(testExercise);
+                  final SolutionQuery solutionQuery = new SolutionQuery();
+                  solutionQuery.setExercise(testExercise);
+                  solutionQuery.setQuery("SELECT * FROM " + tables.get(0));
+                  this.solutionQueryDao.insertNewInstanceP(solutionQuery);
+                }
+              }
+            } catch (Exception e) {
+              LOGGER.info("CAN NOT GENERATE EXAMPLE SCENARIO", e);
+            }
+            // ------------------------------------------------ //
           }
         } else {
           if (scenario != null) {
             connectionPool.removeScenario(scenario, databaseChanged);
             scenarioDao.updateInstanceP(tempScenario);
           }
+          connectionPool.updateScenarios();
         }
 
-        connectionPool.updateScenarios();
 
         String error = connectionPool.getError(tempScenario);
 

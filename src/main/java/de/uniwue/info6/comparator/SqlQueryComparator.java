@@ -68,10 +68,9 @@ public class SqlQueryComparator {
 	 * Konstruktor für einen SQLComparator, wenn es lediglich einen Lösungsquery
 	 * gibt.
 	 * 
-	 * @param userQuery
-	 * @param solutionQuery
-	 * @param executer
-	 *            Angebundener SQLExecuter zur Ausführung der Queries
+	 * @param userQuery Query des Studenten
+	 * @param solutionQuery Lösungs-Query
+	 * @param executer Referenz auf einen SQLExecuter
 	 */
 	public SqlQueryComparator(SqlQuery userQuery, SqlQuery solutionQuery,
 			SqlExecuter executer) {
@@ -83,9 +82,9 @@ public class SqlQueryComparator {
 	/**
 	 * Konstruktor für einen SQLComparator, wenn es mehrere Lösungsqueries gibt.
 	 * 
-	 * @param userQuery
-	 * @param solutionQueries
-	 * @param executer
+	 * @param userQuery Query des Studenten
+	 * @param solutionQueries Liste von Lösungs-Queries
+	 * @param executer Referenz auf einen SQLExecuter
 	 */
 	public SqlQueryComparator(SqlQuery userQuery,
 			LinkedList<SqlQuery> solutionQueries, SqlExecuter executer) {
@@ -111,7 +110,7 @@ public class SqlQueryComparator {
 	/**
 	 * Interne Vergleichsfunktion für Teile eines Queries.
 	 * 
-	 * @return
+	 * @return Liste von Fehlern
 	 */
 	public LinkedList<Error> compare() {
 
@@ -321,7 +320,7 @@ public class SqlQueryComparator {
 	/**
 	 * Vergleich der Resultate von ausgeführten SQL-Queries.
 	 * 
-	 * @return
+	 * @return Gibt an, ob der dynamische Vergleich erfolgreich war oder nicht
 	 */
 	public boolean compareDynamical() {
 
@@ -373,7 +372,12 @@ public class SqlQueryComparator {
 	public SqlQuery getSolutionQuery() {
 		return solutionQuery;
 	}
-
+	
+	/**
+	 * Ermöglicht es allen Fehlern automatisch einen Prefix voranzustellen. Wird z.B. bei Subqueries genutzt.
+	 * 
+	 * @param msgPrefix Prefix für die Fehler
+	 */
 	public void setMsgPrefix(String msgPrefix) {
 		this.msgPrefix = msgPrefix;
 	}

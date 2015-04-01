@@ -51,7 +51,7 @@ public class SqlResult {
 			.getLogger(SqlResult.class);
 
 	/**
-	 * Konstruktor
+	 * Erzeugt ein SQLResult.
 	 * 
 	 * @param rawResult
 	 * @param resultMetaData

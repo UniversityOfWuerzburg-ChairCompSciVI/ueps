@@ -49,11 +49,22 @@ public class SqlQuery {
 	private SqlResult result;
 	private LinkedList<TableStructure> tables;
 	private SqlError error;
-
+	
+	/**
+	 * Erzeugt einen SQLQuery aus einem String.
+	 * 
+	 * @param sqlString Query als String
+	 */
 	public SqlQuery(String sqlString) {
 		plainContent = adjustPlainString(sqlString);
 	}
 
+	/**
+	 * Bereinigt den Eingabe-String des Queries.
+	 * 
+	 * @param plainContent
+	 * @return
+	 */
 	public static String adjustPlainString(String plainContent) {
 		// Im Folgenden werden einige Zeichenfolgen des Queries ersetzt, da
 		// diese zum Probleme beim genutzten SQL-Parser führen.
@@ -64,7 +75,13 @@ public class SqlQuery {
 		return plainContent;
 
 	}
-
+	
+	/**
+	 * Macht die Bereinigung des Strings rückgängig.
+	 * 
+	 * @param plainContent
+	 * @return
+	 */
 	public static String dejustPlainString(String plainContent) {
 
 		plainContent = plainContent.replaceAll("yearx", "year");
@@ -81,7 +98,14 @@ public class SqlQuery {
 	public SqlError getError() {
 		return error;
 	}
-
+	
+	/**
+	 * Gibt den geparsten Query als Visitor zurück.
+	 * 
+	 * @return RootVisitor
+	 * @throws ParserException
+	 * @throws StandardException
+	 */
 	public RootVisitor getParsedContent() throws ParserException,
 			StandardException {
 
@@ -132,6 +156,11 @@ public class SqlQuery {
 
 	}
 
+	/**
+	 * Findet alle relevanten Tabellen eines Queries.
+	 * 
+	 * @return
+	 */
 	public LinkedList<TableStructure> getRelevantTables() {
 
 		LinkedList<TableStructure> tmp = new LinkedList<TableStructure>();

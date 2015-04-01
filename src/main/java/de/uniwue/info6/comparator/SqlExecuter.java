@@ -66,9 +66,9 @@ public class SqlExecuter {
 	/**
 	 * Konstruktor für einen SQL-Executer für ein spezifisches Szenario.
 	 * 
-	 * @param connection
-	 * @param user
-	 * @param scenario
+	 * @param connection SQL-Connection
+	 * @param user Referenz auf den aktuellen Benutzer
+	 * @param scenario Refrenz auf das aktuelle Szenario
 	 */
 	public SqlExecuter(Connection connection, User user, Scenario scenario) {
 		this.connection = connection;
@@ -79,7 +79,7 @@ public class SqlExecuter {
 	/**
 	 * Führt einen SQL-Query aus.
 	 * 
-	 * @param query
+	 * @param query auszuführender Query
 	 */
 	public void execute(SqlQuery query) {
 
@@ -393,6 +393,12 @@ public class SqlExecuter {
 
 	}
 
+	/**
+	 * Findet alle in einem Query vorkommenden Tabellen.
+	 * 
+	 * @param tables Liste von Tabellen-Strukturen
+	 * @return Liste von Tabellen-Namen
+	 */
 	private LinkedList<String> tableParser(LinkedList<TableStructure> tables) {
 
 		LinkedList<String> tmpTables = new LinkedList<String>();

@@ -101,12 +101,12 @@ public class InitVariables implements ServletContextListener, Serializable {
     Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropBool.IMPORT_EXAMPLE_SCENARIO,      true);
     Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropBool.FORCE_RESET_DATABASE,         false);
     Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropBool.USE_MOODLE_LOGIN,             false);
-    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropBool.USE_FALLBACK_USER,            false);
+    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropBool.USE_FALLBACK_USER,            true);
     Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropBool.SHOWCASE_MODE,                false);
 
-    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropString.FALLBACK_USER_ID,           "user_1");
+    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropString.FALLBACK_USER_ID,           "admin_01");
     Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropString.FALLBACK_ENCRYPTED_CODE,    "d1ac3b14896c2faf640d1e00966fc065");
-    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropInteger.SESSION_TIMEOUT,           600);
+    Cfg.inst().setProp(PropertiesFile.MAIN_CONFIG, PropInteger.SESSION_TIMEOUT,           1600);
   }
 
   /**
@@ -212,6 +212,7 @@ public class InitVariables implements ServletContextListener, Serializable {
         );
     Cfg.inst(configFiles);
 
+    // TODO: debug-variablen loeschen
     if (Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG, PropBool.DEBUG_MODE) && new File("/home/foo/a/git0").exists()) {
       this.setDebugVariables();
     }

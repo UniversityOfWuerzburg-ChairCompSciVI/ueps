@@ -24,8 +24,7 @@
 <ui:composition template="/templates/errorpage.xhtml" xmlns="http://www.w3.org/1999/xhtml"
 xmlns:ui="http://java.sun.com/jsf/facelets">
   <ui:define name="header_text">
-    <script type="text/javascript">jQuery.ajaxSetup({ error: handleXhrError }); function
-    handleXhrError(xhr){}</script>
+    <script type="text/javascript">synctime=false;setTimeout("endAjaxStatus()", 1500);</script>
     <span class="error">You got a RuntimeException! There's a BUG somewhere!</span>
   </ui:define>
 </ui:composition>

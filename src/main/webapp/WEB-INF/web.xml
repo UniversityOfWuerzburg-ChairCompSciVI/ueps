@@ -76,13 +76,12 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns
   <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
   <param-value>server</param-value>
  </context-param>
+ <!-- ************************************************************************ -->
  <!-- WARNING: disables logout on session timeout, if used -->
- <!--
-    <context-param>
-      <param-name>javax.faces.PARTIAL_STATE_SAVING</param-name>
-        <param-value>false</param-value>
-        </context-param>
-      -->
+ <!-- <context-param>                                            -->
+ <!--  <param-name>javax.faces.PARTIAL_STATE_SAVING</param-name> -->
+ <!--  <param-value>false</param-value>                          -->
+ <!-- </context-param>                                           -->
  <!-- Map these files with JSF -->
  <servlet-mapping>
   <servlet-name>Faces Servlet</servlet-name>
@@ -116,10 +115,6 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns
  <error-page>
   <exception-type>javax.faces.application.ViewExpiredException</exception-type>
   <location>/errorpages/expired.xhtml?faces-redirect=true</location>
- </error-page>
- <error-page>
-  <exception-type>java.sql.SQLException</exception-type>
-  <location>/errorpages/database.xhtml</location>
  </error-page>
  <error-page>
   <exception-type>java.lang.RuntimeException</exception-type>

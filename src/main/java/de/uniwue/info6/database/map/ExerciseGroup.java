@@ -216,9 +216,4 @@ public class ExerciseGroup implements java.io.Serializable {
   public void setExerciseGroups(Set exerciseGroups) {
     this.exerciseGroups = exerciseGroups;
   }
-
-  // TODO:
-  public ExerciseGroup pull() {
-    return new ExerciseGroupDao().getById(getId());
-  }
 }

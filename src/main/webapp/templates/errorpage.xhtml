@@ -26,6 +26,7 @@ xmlns:h="http://java.sun.com/jsf/html" xmlns:ui="http://java.sun.com/jsf/facelet
 xmlns:fn="http://java.sun.com/jsp/jstl/functions" xmlns:of="http://omnifaces.org/functions">
  <ui:define name="content">
   <ui:insert name="errorContent">
+   <!-- ************************************************************************ -->
    <ul class='stacktrace'>
     <li>You can report suspected bugs at
     <a href='https://github.com/UniversityOfWuerzburg-ChairCompSciVI/ueps/issues'>
@@ -46,6 +47,7 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions" xmlns:of="http://omnifaces.org
       </pre>
     </li>
    </ul>
+   <!-- ************************************************************************ -->
   </ui:insert>
   <h:outputScript rendered="#{facesContext.partialViewContext.ajaxRequest}">scrollTo(0, 0);</h:outputScript>
  </ui:define>

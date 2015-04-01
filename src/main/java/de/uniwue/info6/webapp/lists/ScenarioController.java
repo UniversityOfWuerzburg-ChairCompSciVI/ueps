@@ -135,6 +135,19 @@ public class ScenarioController implements Serializable {
    *
    * @return
    */
+  public String getIntroductionTitle() {
+    if (isValidScenario()) {
+      return Cfg.inst().getText("AC.INTRO") + " - " + this.scenario.getName();
+    } else {
+      return "Info";
+    }
+  }
+
+  /**
+   *
+   *
+   * @return
+   */
   public String getIntroductionText() {
     boolean canBeAccessedByUser = false;
     if (scenario != null && user != null) {

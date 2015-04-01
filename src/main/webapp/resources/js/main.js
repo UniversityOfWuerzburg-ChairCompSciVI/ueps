@@ -1,27 +1,51 @@
-/** ------------------------------------------------------------ */
-var block = false;
-var synctime = true;
-var edit_url = "";
-
-function setEditUrl(url) {
-  this.edit_url = url;
-  jQuery( ".exercise_class" ).dblclick(function() {
-    window.location.href = url;
-  });
-}
-
-function hide_message_timeout(){
-  setTimeout(function() { jQuery('.ui-messages').fadeOut(500); }, 10000);
-}
-
+// ------------------------------------------------ //
+var enableSessionTimerSync = true;
+var tempBlockSessionTimerSync = false;
+// ------------------------------------------------ //
 jQuery(document).ready(function() {
+  // show session time in seconds
+  setTimeout("showSessionTimer()", 2000);
+  initCustomScrollbar();
+  initSmallGuiChanges();
+  initPulsatePlugin();
+  initInternetExplorerDetection();
+  patchContextMenu();
+});
+// ------------------------------------------------ //
+
+function initCustomScrollbar() {
   // http://manos.malihu.gr/jquery-custom-content-scroller
-  jQuery(".question-text-scrollpanel").mCustomScrollbar({theme:"minimal-dark", scrollInertia:500, autoExpandScrollbar:true });
+  jQuery(".question-text-scrollpanel")
+    .mCustomScrollbar(
+      {
+        theme:"minimal-dark",
+        scrollInertia:500,
+        autoExpandScrollbar:true
+      }
+    );
+}
 
+function initSmallGuiChanges() {
+  // The blur event occurs when the <select> field loses focus.
   jQuery("select").blur();
+}
 
+function patchContextMenu() {
+  'use strict';
+  try {
+    siteFunctions.patchContextMenuShow();
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+// ------------------------------------------------ //
+// -- session timer
+// ------------------------------------------------ //
+
+function initSessionTimer() {
+  showSessionTimer();
   var delay = parseInt(jQuery("[id*=sessionTime]").html());
-
   function countdown() {
     delay = parseInt(jQuery("[id*=sessionTime]").html());
     setTimeout(countdown, 1000);
@@ -34,28 +58,88 @@ jQuery(document).ready(function() {
     }
   }
   countdown();
-
-  jQuery(function() {
-    // jQuery('.dialog-fix').css("min-width", "800px");
-    // jQuery('.dialog-fix').css("min-height", "270px");
-    // jQuery('.dialog-fix').css("top", "69px !important");
-    // jQuery('.er_diagram_popup').css('top', '50px', 'important');
-    // jQuery('.dialog-fix2').css("width", "500px");
-    // dialog.jq.css("left",Math.max(0, ((jQuery(window).width() - jQuery(dialog).outerWidth()) / 2) + jQuery(window).scrollLeft()) + "px");
-  });
-
-
-});
-
-function closeAllDialog() {
-   for (var propertyName in PrimeFaces.widgets) {
-     if (PrimeFaces.widgets[propertyName] instanceof PrimeFaces.widget.Dialog ||
-         PrimeFaces.widgets[propertyName] instanceof PrimeFaces.widget.LightBox) {
-         PrimeFaces.widgets[propertyName].hide();
-     }
-   }
 }
 
+function showSessionTimer() {
+  jQuery("#session_timer").css({
+    display : "block"
+  });
+
+  jQuery("#session_timer").pulsate({
+     glow:   false,
+     reach:  5,
+     color:  '#DCE0FF',
+     repeat: 2
+  });
+}
+
+// ------------------------------------------------ //
+// -- pulsate timer
+// ------------------------------------------------ //
+
+function initPulsatePlugin() {
+  jQuery('.tree_description').pulsate({
+     glow:   false,
+     reach:  10,
+     color:  '#DCE0FF',
+     repeat: 3
+  });
+  jQuery('.admin_help_text').pulsate({
+     glow:   false,
+     reach:  10,
+     color:  '#FFE5E5',
+     repeat: 2
+  });
+}
+
+function pulsateButton() {
+  jQuery('#usertask\\:user_result_button').pulsate({
+     glow:   false,
+     reach:  10,
+     color: '#D3D8FF',
+     repeat: 2
+  });
+
+  jQuery('#usertask\\:result_button').pulsate({
+     glow:   false,
+     reach:  10,
+     color: '#D3D8FF',
+     repeat: 2
+  });
+
+  jQuery('#usertask\\:feedback_accordion').pulsate({
+     glow:   false,
+     reach:  10,
+     color: '#D3D8FF',
+     repeat: 2
+  });
+
+  jQuery('#saved_query_box').pulsate({
+     glow:   false,
+     reach:  10,
+     color: '#D3D8FF',
+     repeat: 2
+  });
+}
+
+// ------------------------------------------------ //
+// -- dialog view options
+// ------------------------------------------------ //
+
+// relevant table dialog
+function formatDialogRT(className) {
+  formatDialog(className, false, false, false);
+}
+
+// user result dialog
+function formatDialogUR(className) {
+  formatDialog(className, true, false, false);
+}
+
+// solution dialog
+function formatDialogR(className) {
+  formatDialog(className, false, true, false);
+}
 
 function formatDialog(className, user_result, solution_dialog, er_diagram) {
   // add custom scrollbar
@@ -109,6 +193,7 @@ function formatDialog(className, user_result, solution_dialog, er_diagram) {
   // ------------------------------------------------ //
   // -- Calculate height 
   // ------------------------------------------------ //
+
   var heightOffset = 105;
   var defaultHeight = 450;
   var height = 0; 
@@ -119,7 +204,8 @@ function formatDialog(className, user_result, solution_dialog, er_diagram) {
   }
   if (solution_dialog) {
     height = jQuery(dialogClassName + " .solution_table").height() 
-             + jQuery(dialogClassName + " .solution_carousel").height() + heightOffset - 30;
+             + jQuery(dialogClassName + " .solution_carousel").height() 
+             + heightOffset - 30;
   }
   var windowHeight = jQuery(window).height();
   var minHeight = 100;
@@ -141,11 +227,15 @@ function formatDialog(className, user_result, solution_dialog, er_diagram) {
   }
 
   jQuery(dialogClassName).css("min-height", minHeight + "px");
-  jQuery(dialogClassName + ' .mCSB_container').css("min-height", minHeight + "px");
-  jQuery(dialogContentClassName).css("max-height", (maxHeight - 32) + "px", "important");
+  jQuery(dialogClassName + ' .mCSB_container')
+    .css("min-height", minHeight + "px");
+  jQuery(dialogContentClassName)
+    .css("max-height", (maxHeight - 32) + "px", "important");
   jQuery(dialogContentClassName).css("min-height", (minHeight + 15) + "px");
-  jQuery(dialogContentClassName).css("height", defaultHeight + "px", 'important');
-  jQuery(dialogClassName).css("height", (defaultHeight + 37) + "px", 'important');
+  jQuery(dialogContentClassName)
+    .css("height", defaultHeight + "px", 'important');
+  jQuery(dialogClassName)
+    .css("height", (defaultHeight + 37) + "px", 'important');
   jQuery(dialogClassName).css("max-height", maxHeight + "px", "important");
 
   // ------------------------------------------------ //
@@ -158,59 +248,54 @@ function formatDialog(className, user_result, solution_dialog, er_diagram) {
   var pageOffsetLeft = jQuery('#content').offset().left;
   var pageOffsetTop = jQuery('#content').offset().top;
 
-  jQuery(dialogClassName).css("top", (pageOffsetTop + 30 + randomNumberTop) + "px", "important");
+  jQuery(dialogClassName).css(
+    "top", (pageOffsetTop + 30 + randomNumberTop) + "px", "important"
+  );
 
   if (user_result || solution_dialog) {
-    jQuery(dialogClassName).css("left", (pageOffsetLeft + 200 + randomNumberLeft) + "px", "important");
+    jQuery(dialogClassName).css(
+      "left", (pageOffsetLeft + 200 + randomNumberLeft) + "px", "important"
+    );
   }
   else {
-    jQuery(dialogClassName).css("left", (pageOffsetLeft + 30 + randomNumberLeft) + "px", "important");
-  }
-
-
-  // ------------------------------------------------ //
-  // -- 
-  // ------------------------------------------------ //
-
-  // jQuery('.' + className).resize(function() {
-    // var prevHeight = jQuery('.' + className).height();
-    // alert(jQuery('.' + className).offset().left);
-    // jQuery('.' + className).css("left", "613px", "important");
-    // jQuery('.' + className).offset({ left: 613 })
-  // });
-}
-
-jQuery.ajaxSetup({
-  error : handleXhrError,
-  success : handleSuccess
-});
-
-function handleXhrError(xhr) {
-  startAjaxStatus();
-  setTimeout("ajax_error_dialog.show()", 3000);
-}
-
-function handleSuccess(xhr) {
-  if (!block) {
-    blockUpdate();
-    syncSessionDisplay();
-    setTimeout("unblockUpdate()", 2000);
+    jQuery(dialogClassName).css(
+      "left", (pageOffsetLeft + 30 + randomNumberLeft) + "px", "important"
+    );
   }
 }
 
-function syncSessionDisplay() {
-  if (synctime) {
+function closeAllDialog() {
+   for (var propertyName in PrimeFaces.widgets) {
+     if (PrimeFaces.widgets[propertyName] instanceof PrimeFaces.widget.Dialog ||
+         PrimeFaces.widgets[propertyName] instanceof PrimeFaces.widget.LightBox) {
+         PrimeFaces.widgets[propertyName].hide();
+     }
+   }
+}
+
+// ------------------------------------------------ //
+// -- message/growl options
+// ------------------------------------------------ //
+
+function hideMessageTimeout(){
+  setTimeout(function() { jQuery('.ui-messages').fadeOut(500); }, 10000);
+}
+
+// ------------------------------------------------ //
+// -- ajax options
+// ------------------------------------------------ //
+
+function handleAjaxError() {
+  setTimeout("ajax_error_dialog.show()", 1000);
+}
+
+function handleAjaxSuccess() {
+  if (enableSessionTimerSync && !tempBlockSessionTimerSync) {
+    tempBlockSessionTimerSync = true;
     lazyload();
     lazyload_online();
+    setTimeout("tempBlockSessionTimerSync = false", 5000);
   }
-}
-
-function blockUpdate() {
-  block = true;
-}
-
-function unblockUpdate() {
-  block = false;
 }
 
 function startAjaxStatus() {
@@ -230,97 +315,115 @@ function endAjaxStatus() {
   });
 }
 
+// ------------------------------------------------ //
+
 function collapseIntroduction() {
   startAjaxStatus();
   intro.unselect(0);
 }
 
 function editLastDatatableRow() {
-  jQuery('.ui-datatable-tablewrapper tr').last().find('span.ui-icon-pencil')
-      .each(function() {
+  jQuery('.ui-datatable-tablewrapper tr')
+    .last().find('span.ui-icon-pencil').each(function() {
         jQuery(this).click()
-      });
+    });
 }
 
-jQuery(document).ready(function() {
+function expandTree() {
+  var treeExcludingRoot = jQuery(".ui-treenode-children").first();
+  jQuery(".ui-tree-toggler.ui-icon-triangle-1-e", treeExcludingRoot).click();
+}
 
-  if (detectIE()) {
+function collapseTree() {
+  var treeExcludingRoot = jQuery(".ui-treenode-children").first();
+  jQuery(".ui-tree-toggler.ui-icon-triangle-1-s", treeExcludingRoot).click();
+}
+
+// ------------------------------------------------ //
+// -- date picker localisation
+// ------------------------------------------------ //
+
+PrimeFaces.locales['de'] = {
+    closeText: 'Schließen',
+    prevText: 'Zurück',
+    nextText: 'Weiter',
+    monthNames: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 
+      'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
+    monthNamesShort: ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 
+      'Aug', 'Sep', 'Okt', 'Nov', 'Dez'],
+    dayNames: ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 
+      'Freitag', 'Samstag'],
+    dayNamesShort: ['Son', 'Mon', 'Die', 'Mit', 'Don', 'Fre', 'Sam'],
+    dayNamesMin: ['S', 'M', 'D', 'M ', 'D', 'F ', 'S'],
+    weekHeader: 'Woche',
+    firstDay: 1,
+    isRTL: false,
+    showMonthAfterYear: false,
+    yearSuffix: '',
+    timeOnlyTitle: 'Nur Zeit',
+    timeText: 'Zeit',
+    hourText: 'Stunde',
+    minuteText: 'Minute',
+    secondText: 'Sekunde',
+    currentText: 'Aktuelles Datum',
+    ampm: false,
+    month: 'Monat',
+    week: 'Woche',
+    day: 'Tag',
+    allDayText: 'Ganzer Tag'
+};
+
+
+// ------------------------------------------------ //
+// -- info dialogs
+// ------------------------------------------------ //
+
+function initInternetExplorerDetection() {
+  if (detectInternetExplorer()) {
     jQuery("#shitty_internet_explorer").css({
       display : "block"
     });
   }
+}
 
-  jQuery('.tree_description').pulsate({
-     glow:   false,
-     reach:  10,
-     color:  '#DCE0FF',
-     repeat: 3
-  });
+function detectInternetExplorer() {
+  var ua = window.navigator.userAgent;
+  var msie = ua.indexOf('MSIE ');
+  var trident = ua.indexOf('Trident/');
 
-  jQuery('.admin_help_text').pulsate({
-     glow:   false,
-     reach:  10,
-     color:  '#FFE5E5',
-     repeat: 2
-  });
+  if (msie > 0) {
+      // IE 10 or older => return version number
+      // return parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);
+  return true;
+  }
 
-//  jQuery('.unrated_tab').click(function() {
-//    startAjaxStatus();
-//    setTimeout("startAjaxStatus()", 500);
-//  });
-//  jQuery('.rated_tab').click(function() {
-//    startAjaxStatus();
-//    setTimeout("startAjaxStatus()", 500);
-//  });
+  if (trident > 0) {
+      // IE 11 (or newer) => return version number
+      var rv = ua.indexOf('rv:');
+      //return parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10);
+  return true;
+  }
 
-  jQuery( ".tree_doubleclick" ).dblclick(function() {
-    // this.parentNode.parentNode.firstChild.click();
-  });
+  // other browser
+  return false;
+}
 
-  jQuery( ".tree_doubleclick" ).click(function() {
-    // jQuery("#form\\:exerciseTree\\:0_0 .tree_doubleclick").trigger({
-    //   type: 'mousedown',
-    //   which: 3
-    // }).trigger({
-    //   type: 'mouseup',
-    //   which: 3
-    // });
-
-      // tableMenu.show();
-      // alert ('fuck');
-  });
-});
-
-
-function pulsateButton() {
-  jQuery('#usertask\\:user_result_button').pulsate({
-     glow:   false,
-     reach:  10,
-     color: '#D3D8FF',
-     repeat: 2
-  });
-
-  jQuery('#usertask\\:result_button').pulsate({
-     glow:   false,
-     reach:  10,
-     color: '#D3D8FF',
-     repeat: 2
-  });
-
-  jQuery('#usertask\\:feedback_accordion').pulsate({
-     glow:   false,
-     reach:  10,
-     color: '#D3D8FF',
-     repeat: 2
-  });
-
-  jQuery('#saved_query_box').pulsate({
-     glow:   false,
-     reach:  10,
-     color: '#D3D8FF',
-     repeat: 2
+function hideInternetExplorerMessage() {
+  jQuery("#internet_explorer_warning_message").css({
+    display : "none"
   });
 }
+
+function hideInfoMessage() {
+  jQuery("#info_screen").css({
+    display : "none"
+  });
+}
+
+// ------------------------------------------------ //
+// -- fix context menu updating problem
+// -- http://forum.primefaces.org/viewtopic.php?p=96677#p96677
+// ------------------------------------------------ //
 
 var siteFunctions = {
   // patch to fix a problem that the context menu disappears after update
@@ -346,175 +449,4 @@ var siteFunctions = {
   }
 };
 
-jQuery(document).ready(function() {
-  'use strict';
-  try {
-    siteFunctions.patchContextMenuShow();
-  } catch (e) {
-    console.error(e);
-  }
-});
-
-function expand_tree() {
-  var treeExcludingRoot = jQuery(".ui-treenode-children").first();
-  jQuery(".ui-tree-toggler.ui-icon-triangle-1-e", treeExcludingRoot).click();
-}
-
-function collapse_tree() {
-  var treeExcludingRoot = jQuery(".ui-treenode-children").first();
-  jQuery(".ui-tree-toggler.ui-icon-triangle-1-s", treeExcludingRoot).click();
-}
-
-
-// jQuery("#gif_image").waitUntilExists(function() {
-// });
-
-// jQuery(document).ready(function(){
-// jQuery('#gif_image').each(function(e){
-// var src = jQuery(e).attr('src');
-// alert(src);
-// jQuery(e).hover(function(){
-// jQuery(this).attr('src', src.replace('_dea.gif', '.gif'));
-// }, function(){
-// jQuery(this).attr('src', src);
-// });
-// });
-// });
-
-jQuery(document).ready(function() {
-  jQuery("#gif_image").hover(function() {
-    jQuery(this).attr("src", "/sql/resources/img/help.gif");
-  }, function() {
-    jQuery(this).attr("src", "/sql/resources/img/help_dea.gif");
-  });
-});
-
-
-
-
-PrimeFaces.locales['de'] = {
-    closeText: 'Schließen',
-    prevText: 'Zurück',
-    nextText: 'Weiter',
-    monthNames: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
-    monthNamesShort: ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'],
-    dayNames: ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'],
-    dayNamesShort: ['Son', 'Mon', 'Die', 'Mit', 'Don', 'Fre', 'Sam'],
-    dayNamesMin: ['S', 'M', 'D', 'M ', 'D', 'F ', 'S'],
-    weekHeader: 'Woche',
-    firstDay: 1,
-    isRTL: false,
-    showMonthAfterYear: false,
-    yearSuffix: '',
-    timeOnlyTitle: 'Nur Zeit',
-    timeText: 'Zeit',
-    hourText: 'Stunde',
-    minuteText: 'Minute',
-    secondText: 'Sekunde',
-    currentText: 'Aktuelles Datum',
-    ampm: false,
-    month: 'Monat',
-    week: 'Woche',
-    day: 'Tag',
-    allDayText: 'Ganzer Tag'
-};
-
-function detectIE() {
-    var ua = window.navigator.userAgent;
-    var msie = ua.indexOf('MSIE ');
-    var trident = ua.indexOf('Trident/');
-
-    if (msie > 0) {
-        // IE 10 or older => return version number
-        // return parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);
-    return true;
-    }
-
-    if (trident > 0) {
-        // IE 11 (or newer) => return version number
-        var rv = ua.indexOf('rv:');
-        //return parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10);
-    return true;
-    }
-
-    // other browser
-    return false;
-}
-
-function hideIEMessage() {
-  jQuery("#shitty_internet_explorer").css({
-    display : "none"
-  });
-}
-
-// var siteFunctions = {
-//     //patch to fix a problem that the context menu disappears after update
-//     //delay the show to occure after the update
-//     patchContextMenuShow: function() {
-//         'use strict';
-//         var protShow = PrimeFaces.widget.ContextMenu.prototype.show;
-//         siteFunctions.patchContextMenuShow.lastEvent = null;
-//         PrimeFaces.widget.ContextMenu.prototype.show = function(e) {
-//             var ret;
-//             if (e) {
-// //                console.log('saving last event');
-//                 siteFunctions.patchContextMenuShow.lastEvent = e;
-//                 siteFunctions.patchContextMenuShow.lastEventArg = arguments;
-//                 siteFunctions.patchContextMenuShow.lastEventContext = this;
-//             } else if (siteFunctions.patchContextMenuShow.lastEvent) {
-// //                console.log('executing last event');
-//                 ret = protShow.apply(siteFunctions.patchContextMenuShow.lastEventContext, siteFunctions.patchContextMenuShow.lastEventArg);
-// //                console.log('clearing last event');
-//                 siteFunctions.patchContextMenuShow.lastEvent = null;
-//             }
-//             return ret;
-//         };
-//     }
-// };
-
-// jQuery(document).ready(function() {
-//     'use strict';
-//     try {
-//         siteFunctions.patchContextMenuShow();
-//     } catch (e) {
-//         console.error(e);
-//     }
-// });
-
-// var currentEvent;
-// jQuery(document).ready(function() {
-//   PrimeFaces.widget.ContextMenu.prototype.show = function(e) {
-//      //hide other contextmenus if any
-//      jQuery(document.body).children('.ui-contextmenu:visible').hide();
-
-//      if(e) {
-//         currentEvent = e;
-//      }
-
-//      var win = jQuery(window),
-//      left = e.pageX,
-//      top = e.pageY,
-//      width = this.jq.outerWidth(),
-//      height = this.jq.outerHeight();
-
-//      //collision detection for window boundaries
-//      if((left + width) > (win.width())+ win.scrollLeft()) {
-//         left = left - width;
-//      }
-//      if((top + height ) > (win.height() + win.scrollTop())) {
-//         top = top - height;
-//      }
-
-//      if(this.cfg.beforeShow) {
-//         this.cfg.beforeShow.call(this);
-//      }
-
-//      this.jq.css({
-//         'left': left,
-//         'top': top,
-//         'z-index': ++PrimeFaces.zindex
-//      }).show();
-
-//      e.preventDefault();
-//   };
-// });
+// ------------------------------------------------ //

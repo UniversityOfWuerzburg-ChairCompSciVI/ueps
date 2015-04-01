@@ -31,6 +31,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.event.PhaseListener;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -82,7 +84,6 @@ public class AuthorizationListener implements PhaseListener, Serializable {
    * @see PhaseListener#beforePhase(PhaseEvent)
    */
   public void beforePhase(PhaseEvent event) {
-    //
   }
 
   /**

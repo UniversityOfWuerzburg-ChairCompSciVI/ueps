@@ -99,7 +99,7 @@ xsi:schemaLocation="http://ocpsoft.org/schema/rewrite-config-prettyfaces http://
 
   <url-mapping>
     <pattern value="/starterror" />
-    <view-id value="/errorpages/error_page.xhtml" />
+    <view-id value="/errorpages/startup_error.xhtml" />
   </url-mapping>
 
   <url-mapping>

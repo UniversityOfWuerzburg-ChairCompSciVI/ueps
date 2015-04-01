@@ -30,24 +30,27 @@ xmlns:p="http://primefaces.org/ui">
  <body>
   <ui:composition>
    <h:dataTable>
+    <!-- ************************************************************************ -->
     <h:column>
      <f:facet name="header">
       <h:form>
        <p:remoteCommand name="lazyload_online" update="studentsOnline"></p:remoteCommand>
        <span id="online_counter">
-        <h:outputText value="ONLINE:" />
+        <h:outputText value="#{txt['ONLINE_COUNTER']}" />
         <h:outputText id="studentsOnline" value="#{sessionListener.getTotalActiveSession()}" />
        </span>
       </h:form>
      </f:facet>
     </h:column>
+    <!-- ************************************************************************ -->
     <h:column>
      <f:facet name="header">
       <h:form>
-       <p:remoteCommand name="lazyload" update="sessionTime" action="#{userSession.updateSessionTime()}">
+       <p:remoteCommand name="lazyload" update="sessionTime"
+           action="#{userSession.updateSessionTime()}">
        </p:remoteCommand>
        <span id="session_timer">
-        <h:outputText value="SESSION:" />
+        <h:outputText value="#{txt['SESSION_COUNTER']}" />
         <h:outputText id="sessionTime" value="#{userSession.sessionTime + 30}" />
         <h:outputText value="s" />
        </span>
@@ -55,9 +58,11 @@ xmlns:p="http://primefaces.org/ui">
      </f:facet>
     </h:column>
    </h:dataTable>
-   <span style="float:left;">
+   <!-- ************************************************************************ -->
+   <span id="server_time">
     <p:clock pattern="HH:mm:ss" mode="server" />
    </span>
+   <!-- ************************************************************************ -->
   </ui:composition>
  </body>
 </html>

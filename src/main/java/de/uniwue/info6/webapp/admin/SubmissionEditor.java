@@ -46,9 +46,6 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
-
-
-
 import de.uniwue.info6.comparator.LevenshteinDistance;
 import de.uniwue.info6.comparator.SqlExecuter;
 import de.uniwue.info6.comparator.SqlQuery;
@@ -72,7 +69,6 @@ import de.uniwue.info6.misc.properties.Cfg;
 import de.uniwue.info6.parser.errors.Error;
 import de.uniwue.info6.parser.errors.SqlError;
 import de.uniwue.info6.webapp.lists.UserFeedback;
-import de.uniwue.info6.webapp.session.SessionBean;
 import de.uniwue.info6.webapp.session.SessionObject;
 
 /**
@@ -115,6 +111,7 @@ public class SubmissionEditor implements Serializable {
   private SqlExecuter executer;
 
   private String newComment;
+  private UserRights rights;
 
   /**
    *
@@ -132,6 +129,7 @@ public class SubmissionEditor implements Serializable {
     solutionDao = new SolutionQueryDao();
     userEntryDao = new UserEntryDao();
     userResultDao = new UserResultDao();
+    rights = new UserRights().initialize();
 
     try {
       Map<String, String> requestParams = ec.getRequestParameterMap();
@@ -357,148 +355,153 @@ public class SubmissionEditor implements Serializable {
     msg = syntaxCheck();
     Connection connection = null;
 
-    try {
-      connection = connectionPool.getConnection(scenario);
+    if (rights.hasEditingRight(user, exercise)) {
+      try {
+        connection = connectionPool.getConnection(scenario);
 
-      if (msg != null && msg.getSummary() != null
-          && !msg.getSummary().isEmpty()) {
-        message = msg.getSummary();
-        sev = FacesMessage.SEVERITY_ERROR;
-      } else {
-        newQuery.setStatus((byte) 2); // 0 initial, 1 user used, 2 user
-        // unused
-
-        boolean saved = solutionDao.insertNewInstance(newQuery);
-
-        if (saved) {
-
-          solutions.add(newQuery);
-          setCorrespondingSolution(newQuery);
-
-          minDistToCorresponding = 0;
-
-          sev = FacesMessage.SEVERITY_INFO;
-          message = Cfg.inst().getProp(DEF_LANGUAGE,
-                                       "SAVED.SOLUTION_SUCCESS")
-                    + ".";
-
-        } else {
-
+        if (msg != null && msg.getSummary() != null
+            && !msg.getSummary().isEmpty()) {
+          message = msg.getSummary();
           sev = FacesMessage.SEVERITY_ERROR;
-          message = Cfg.inst().getProp(DEF_LANGUAGE,
-                                       "SAVED.SOLUTION_FAIL")
-                    + ".";
+        } else {
+          newQuery.setStatus((byte) 2); // 0 initial, 1 user used, 2 user
+          // unused
 
-        }
+          boolean saved = solutionDao.insertNewInstance(newQuery);
 
-        // START
-        if (saved && !saved) {
+          if (saved) {
 
-          List<UserEntry> userEntries = userEntryDao
-                                        .getLastUserEntryForAllUsers(exercise);
+            solutions.add(newQuery);
+            setCorrespondingSolution(newQuery);
 
-          if (userEntries != null) {
+            minDistToCorresponding = 0;
 
-            List<SolutionQuery> solutionsOrig = exerciseDao
-                                                .getSolutions(exercise);
-            LinkedList<SqlQuery> solutions = new LinkedList<SqlQuery>();
+            sev = FacesMessage.SEVERITY_INFO;
+            message = Cfg.inst().getProp(DEF_LANGUAGE,
+                                         "SAVED.SOLUTION_SUCCESS")
+                      + ".";
 
-            for (SolutionQuery tmp : solutionsOrig) {
-              solutions.add(new SqlQuery(tmp.getQuery()));
-            }
+          } else {
 
-            for (UserEntry userEntry : userEntries) {
+            sev = FacesMessage.SEVERITY_ERROR;
+            message = Cfg.inst().getProp(DEF_LANGUAGE,
+                                         "SAVED.SOLUTION_FAIL")
+                      + ".";
+          }
 
-              UserResult userResult = userResultDao
-                                      .getLastUserResultFromEntry(userEntry);
+          // START
+          if (saved && !saved) {
 
-              if (userResult != null
-                  && userResult.getUser() == null) {
+            List<UserEntry> userEntries = userEntryDao
+                                          .getLastUserEntryForAllUsers(exercise);
 
-                SqlQuery userQuery = new SqlQuery(
-                  userEntry.getUserQuery());
+            if (userEntries != null) {
 
-                connectionPool.resetTables(scenario, user);
+              List<SolutionQuery> solutionsOrig = exerciseDao
+                                                  .getSolutions(exercise);
+              LinkedList<SqlQuery> solutions = new LinkedList<SqlQuery>();
 
-                SqlExecuter executer = new SqlExecuter(
-                  connection, user, scenario);
+              for (SolutionQuery tmp : solutionsOrig) {
+                solutions.add(new SqlQuery(tmp.getQuery()));
+              }
 
-                SqlQueryComparator comparator = new SqlQueryComparator(
-                  userQuery, solutions, executer);
+              for (UserEntry userEntry : userEntries) {
 
-                // get user feedback
-                LinkedList<Error> errors = comparator.compare();
-                ArrayList<UserFeedback> feedbackList = null;
+                UserResult userResult = userResultDao
+                                        .getLastUserResultFromEntry(userEntry);
 
-                boolean userEntrySuccess = false;
+                if (userResult != null
+                    && userResult.getUser() == null) {
 
-                String feedbackSummary = "";
+                  SqlQuery userQuery = new SqlQuery(
+                    userEntry.getUserQuery());
 
-                if (errors != null) {
+                  connectionPool.resetTables(scenario, user);
 
-                  feedbackList = new ArrayList<UserFeedback>();
+                  SqlExecuter executer = new SqlExecuter(
+                    connection, user, scenario);
 
-                  for (Error er : errors) {
-                    feedbackList.add(new UserFeedback(er,
-                                                      user));
+                  SqlQueryComparator comparator = new SqlQueryComparator(
+                    userQuery, solutions, executer);
+
+                  // get user feedback
+                  LinkedList<Error> errors = comparator.compare();
+                  ArrayList<UserFeedback> feedbackList = null;
+
+                  boolean userEntrySuccess = false;
+
+                  String feedbackSummary = "";
+
+                  if (errors != null) {
+
+                    feedbackList = new ArrayList<UserFeedback>();
+
+                    for (Error er : errors) {
+                      feedbackList.add(new UserFeedback(er,
+                                                        user));
+                    }
+
                   }
 
-                }
+                  for (UserFeedback fb : feedbackList) {
 
-                for (UserFeedback fb : feedbackList) {
+                    if (fb.isMainError()) {
+                      userEntrySuccess = fb.isCorrect();
+                    } else {
+                      feedbackSummary += fb.getTitle() + ": "
+                                         + fb.getFeedback() + "<br/>";
+                    }
 
-                  if (fb.isMainError()) {
-                    userEntrySuccess = fb.isCorrect();
+                  }
+
+                  if (userEntrySuccess) {
+                    userResult.setUser(user);
+                    userResult
+                    .setCredits(exercise.getCredits());
+                    userResult.setLastModified(new Date());
+                    userResult.setComment(feedbackSummary);
                   } else {
-                    feedbackSummary += fb.getTitle() + ": "
-                                       + fb.getFeedback() + "<br/>";
+                    userResult.setUser(user);
+                    userResult.setCredits((byte) 0);
+                    userResult.setLastModified(new Date());
+                    userResult.setComment(null);
                   }
 
+                  int index = solutions.indexOf(comparator
+                                                .getSolutionQuery());
+                  if (index < solutions.size()) {
+                    userResult.setSolutionQuery(solutionsOrig
+                                                .get(index));
+                  }
+                  userResultDao.updateInstance(userResult);
                 }
-
-                if (userEntrySuccess) {
-                  userResult.setUser(user);
-                  userResult
-                  .setCredits(exercise.getCredits());
-                  userResult.setLastModified(new Date());
-                  userResult.setComment(feedbackSummary);
-                } else {
-                  userResult.setUser(user);
-                  userResult.setCredits((byte) 0);
-                  userResult.setLastModified(new Date());
-                  userResult.setComment(null);
-                }
-
-                int index = solutions.indexOf(comparator
-                                              .getSolutionQuery());
-                if (index < solutions.size()) {
-                  userResult.setSolutionQuery(solutionsOrig
-                                              .get(index));
-                }
-                userResultDao.updateInstance(userResult);
               }
             }
           }
+
+          newQuery.setStatus((byte) 1); // 0 initial, 1 user used, 2 user
+          // unused
+          solutionDao.updateInstance(newQuery);
+          userResult = userResultDao
+                       .getLastUserResultFromEntry(userEntry);
+
         }
 
-        newQuery.setStatus((byte) 1); // 0 initial, 1 user used, 2 user
-        // unused
-        solutionDao.updateInstance(newQuery);
-        userResult = userResultDao
-                     .getLastUserResultFromEntry(userEntry);
-
-      }
-
-    } catch (Exception e) {
-      LOGGER.error("ERROR ADDING NEW SOLUTION QUERY", e);
-    } finally {
-      if (connection != null) {
-        try {
-          connection.close();
-        } catch (SQLException e) {
-          e.printStackTrace();
+      } catch (Exception e) {
+        LOGGER.error("ERROR ADDING NEW SOLUTION QUERY", e);
+      } finally {
+        if (connection != null) {
+          try {
+            connection.close();
+          } catch (SQLException e) {
+            e.printStackTrace();
+          }
         }
       }
+    } else {
+      // TODO:
+      sev = FacesMessage.SEVERITY_ERROR;
+      message = Cfg.inst().getText("Keine Editier-Rechte");
     }
 
     // END
@@ -566,7 +569,6 @@ public class SubmissionEditor implements Serializable {
   }
 
   public boolean userHasRights() {
-    UserRights rights = new UserRights().initialize();
     return rights.hasRatingRight(user, exercise);
   }
 

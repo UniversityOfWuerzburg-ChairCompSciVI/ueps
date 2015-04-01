@@ -33,6 +33,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
+import javax.faces.application.FacesMessage.Severity;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -61,7 +62,6 @@ import de.uniwue.info6.misc.FileTransfer;
 import de.uniwue.info6.misc.properties.Cfg;
 import de.uniwue.info6.misc.properties.PropBool;
 import de.uniwue.info6.misc.properties.PropertiesFile;
-import de.uniwue.info6.webapp.session.SessionBean;
 import de.uniwue.info6.webapp.session.SessionObject;
 
 /**
@@ -149,11 +149,13 @@ public class AdminTreeBean implements Serializable {
                 node1.setExpanded(true);
               }
               List<ExerciseGroup> groups = exgroupDao.findByScenario(scenario);
-              for (ExerciseGroup group : groups) {
-                TreeNode node2 = new DefaultTreeNode(new ExerciseNode(group), node1);
-                List<Exercise> exercises = exerciseDao.findByExGroup(group);
-                for (Exercise ex : exercises) {
-                  new DefaultTreeNode(new ExerciseNode(ex), node2);
+              if (groups != null) {
+                for (ExerciseGroup group : groups) {
+                  TreeNode node2 = new DefaultTreeNode(new ExerciseNode(group), node1);
+                  List<Exercise> exercises = exerciseDao.findByExGroup(group);
+                  for (Exercise ex : exercises) {
+                    new DefaultTreeNode(new ExerciseNode(ex), node2);
+                  }
                 }
               }
             }
@@ -411,6 +413,10 @@ public class AdminTreeBean implements Serializable {
           copyGroup(true);
         }
       }
+    } else {
+      Severity sev = FacesMessage.SEVERITY_ERROR;
+      FacesMessage message1 = new FacesMessage(sev, Cfg.inst().getText("EX.SERVER_MESSAGE"), Cfg.inst().getText("SHOWCASE_ERROR"));
+      FacesContext.getCurrentInstance().addMessage(null, message1);
     }
   }
 
@@ -464,10 +470,18 @@ public class AdminTreeBean implements Serializable {
           }
           hideSelectedNode(selectedNode);
           updateSelectedNode();
+
+          Severity sev = FacesMessage.SEVERITY_INFO;
+          FacesMessage message1 = new FacesMessage(sev, Cfg.inst().getText("EX.SERVER_MESSAGE"), "Knoten gelöscht");
+          FacesContext.getCurrentInstance().addMessage(null, message1);
         }
       } catch (Exception e) {
         LOGGER.error("FAILED UPDATING SCENARIOS IN ADMIN TREEBEAN", e);
       }
+    } else {
+      Severity sev = FacesMessage.SEVERITY_ERROR;
+      FacesMessage message1 = new FacesMessage(sev, Cfg.inst().getText("EX.SERVER_MESSAGE"), Cfg.inst().getText("SHOWCASE_ERROR"));
+      FacesContext.getCurrentInstance().addMessage(null, message1);
     }
   }
 
@@ -503,6 +517,10 @@ public class AdminTreeBean implements Serializable {
       } catch (Exception e) {
         LOGGER.error("FAILED DUPLICATING NODE IN ADMIN TREEBEAN", e);
       }
+    } else {
+      Severity sev = FacesMessage.SEVERITY_ERROR;
+      FacesMessage message1 = new FacesMessage(sev, Cfg.inst().getText("EX.SERVER_MESSAGE"), Cfg.inst().getText("SHOWCASE_ERROR"));
+      FacesContext.getCurrentInstance().addMessage(null, message1);
     }
   }
 
@@ -680,7 +698,7 @@ public class AdminTreeBean implements Serializable {
       if (exerciseNode.isScenario()) {
         return rights.hasEditingRight(user, exerciseNode.getScenario());
       } else if (exerciseNode.isExerciseGroup()) {
-        return rights.checkIfExerciseGroupCanBeEdited(exerciseNode.getGroup());
+        return rights.hasEditingRight(user, exerciseNode.getGroup());
       } else if (exerciseNode.isExercise()) {
         return rights.hasEditingRight(user, exerciseNode.getExercise().getExerciseGroup());
       }
@@ -713,18 +731,18 @@ public class AdminTreeBean implements Serializable {
     if (exerciseNode != null && !exerciseNode.isRootNode()) {
       if (exerciseNode.isScenario()) {
         if (rights.isAdmin()) {
-          return rights.checkIfScenarioCanBeEdited(exerciseNode.getScenario());
+          return rights.canBeDeleted(exerciseNode.getScenario());
         }
       } else if (exerciseNode.isExerciseGroup()) {
         final ExerciseGroup exerciseGroup = exerciseNode.getGroup();
         if (rights.hasEditingRight(user, exerciseGroup)) {
-          return rights.checkIfExerciseGroupCanBeEdited(exerciseGroup);
+          return rights.canBeDeleted(exerciseGroup);
         }
       } else if (exerciseNode.isExercise()) {
         final Exercise exercise = exerciseNode.getExercise();
         final ExerciseGroup exerciseGroup = exercise.getExerciseGroup();
         if (rights.hasEditingRight(user, exerciseGroup)) {
-          return rights.checkIfExerciseCanBeEdited(exerciseNode.getExercise());
+          return rights.canBeDeleted(exerciseNode.getExercise());
         }
       } else {
         return true;

@@ -26,15 +26,16 @@ xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/htm
 xmlns:p="http://primefaces.org/ui">
  <ui:define name="header_text">
   <span class="error">#{txt['SESSION.ERRORTITLE']}</span>
-  <script type="text/javascript">synctime=false; jQuery.ajaxSetup({ error: handleXhrError }); function
-  handleXhrError(xhr){}; setTimeout("endAjaxStatus()", 1500);</script>
+  <script type="text/javascript">synctime=false;setTimeout("endAjaxStatus()", 1500);</script>
  </ui:define>
  <ui:define name="content">
-  <p:outputPanel style="color:red;font-size:22px !important;margin-top:50px;text-align:center">
+  <!-- ************************************************************************ -->
+  <p:outputPanel id="session_expired_panel">
   #{txt['SESSION.ERRORLINE']}</p:outputPanel>
   <p id="session_expired_button">
    <p:commandButton onclick="window.location='#{config['MOODLE_BASE_URL']}'"
    value="#{config['MOODLE_BASE_URL']}" />
   </p>
+  <!-- ************************************************************************ -->
  </ui:define>
 </ui:composition>

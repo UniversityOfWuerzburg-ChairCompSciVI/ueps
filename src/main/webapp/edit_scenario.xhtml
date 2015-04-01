@@ -418,7 +418,7 @@ actionListener="#{edit_sc.resetImageFile}">
      <h:panelGrid style="display:inline-table" columns="7" styleClass="admin_buttons">
       <p:commandButton value="#{txt['SAVE']}" styleClass="save_button" process="@all"
       update="admin_grid mod_time" actionListener="#{edit_sc.save}" icon="ui-icon-disk"
-      onclick="disableCloseConfirmationForever();window.scrollTo(0, 0);" oncomplete="hide_message_timeout()" />
+      onclick="disableCloseConfirmationForever();window.scrollTo(0, 0);" oncomplete="hideMessageTimeout()" />
       <p:commandButton value="#{txt['EDIT_SC.CANCEL']}" ajax="false" action="admin" icon="ui-icon-trash" />
      </h:panelGrid>
     </h:form>

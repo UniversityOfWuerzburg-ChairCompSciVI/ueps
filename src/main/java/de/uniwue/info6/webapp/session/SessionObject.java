@@ -31,6 +31,7 @@ import static de.uniwue.info6.misc.properties.PropertiesFile.MAIN_CONFIG;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
@@ -39,8 +40,10 @@ import de.uniwue.info6.database.jdbc.ConnectionManager;
 import de.uniwue.info6.database.map.ExerciseGroup;
 import de.uniwue.info6.database.map.Scenario;
 import de.uniwue.info6.database.map.User;
+import de.uniwue.info6.database.map.UserRight;
 import de.uniwue.info6.database.map.daos.ScenarioDao;
 import de.uniwue.info6.database.map.daos.UserDao;
+import de.uniwue.info6.database.map.daos.UserRightDao;
 import de.uniwue.info6.misc.Crypt;
 import de.uniwue.info6.misc.properties.Cfg;
 import de.uniwue.info6.webapp.admin.UserRights;
@@ -59,6 +62,7 @@ public class SessionObject  implements Serializable {
 
   public final static String DEMO_STUDENT = "demo_student";
   public final static String DEMO_ADMIN = "demo_admin";
+  public final static String DEMO_LECTURER = "demo_lecturer";
 
   private String userID, encryptedCode, scenarioID, userIP, secretPhrase;
   private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(SessionObject.class);
@@ -66,8 +70,10 @@ public class SessionObject  implements Serializable {
   private HttpSession session;
   private Scenario scenario;
   private ExerciseGroup exerciseGroup;
-  private boolean validCredentials, showInternetExplorerWarning;
+  private boolean validCredentials, showInternetExplorerWarning, showInfoMessage;
   private UserDao userDao;
+  private UserRightDao userRightDao;
+  private ScenarioDao scenarioDao;
   private UserRights userRights;
   private boolean useMoodleLogin;
 
@@ -104,7 +110,10 @@ public class SessionObject  implements Serializable {
     this.user = null;
     this.scenario = null;
     this.showInternetExplorerWarning = true;
+    this.showInfoMessage = true;
     this.userDao = new UserDao();
+    this.userRightDao = new UserRightDao();
+    this.scenarioDao = new ScenarioDao();
     this.userRights = new UserRights().initialize();
     this.secretPhrase = Cfg.inst().getProp(MAIN_CONFIG, SECRET_PHRASE);
     this.validCredentials = checkCredentials();
@@ -177,12 +186,30 @@ public class SessionObject  implements Serializable {
       if (this.user == null) {
         final User newUser = new User(userID, new Date());
         final boolean showCaseMode = Cfg.inst().getProp(MAIN_CONFIG, SHOWCASE_MODE);
-        if (showCaseMode && userID.startsWith(DEMO_ADMIN)) {
-          newUser.setIsAdmin(true);
-        } else {
-          newUser.setIsAdmin(false);
+
+        User exampleAdmin = null;
+
+        if (showCaseMode) {
+          if (userID.startsWith(DEMO_ADMIN)) {
+            newUser.setIsAdmin(true);
+          } else if (userID.startsWith(DEMO_LECTURER)) {
+            newUser.setIsLecturer(true);
+            final User adminUser = new User();
+            adminUser.setIsAdmin(true);
+            final List<User> admins = userDao.findByExample(adminUser);
+
+            if (admins != null && !admins.isEmpty()) {
+              exampleAdmin = admins.get(0);
+            }
+          }
         }
         userDao.insertNewInstance(newUser);
+
+        if (exampleAdmin != null) {
+          final Scenario firstScenario = this.scenarioDao.getById(1);
+          final UserRight lecturerRight = new UserRight(newUser, exampleAdmin, firstScenario, true, true, true);
+          this.userRightDao.insertNewInstance(lecturerRight);
+        }
       }
 
       // try again
@@ -350,6 +377,20 @@ public class SessionObject  implements Serializable {
   }
 
   /**
+   * @return the validCredentials
+   */
+  public boolean isValidCredentials() {
+    return validCredentials;
+  }
+
+  /**
+   * @param validCredentials the validCredentials to set
+   */
+  public void setValidCredentials(boolean validCredentials) {
+    this.validCredentials = validCredentials;
+  }
+
+  /**
    * @param validCredentials
    *          the validCredentials to set
    */
@@ -358,10 +399,32 @@ public class SessionObject  implements Serializable {
   }
 
   /**
-   * @return the showIEError
+   * @return the showInternetExplorerWarning
    */
-  public Boolean getShowInternetExplorerWarning() {
+  public boolean showInternetExplorerWarning() {
     return showInternetExplorerWarning;
+  }
+
+  /**
+   * @param showInternetExplorerWarning the showInternetExplorerWarning to set
+   */
+  public void setShowInternetExplorerWarning(
+    boolean showInternetExplorerWarning) {
+    this.showInternetExplorerWarning = showInternetExplorerWarning;
+  }
+
+  /**
+   * @return the showInfoMessage
+   */
+  public boolean showInfoMessage() {
+    return showInfoMessage;
+  }
+
+  /**
+   * @param showInfoMessage the showInfoMessage to set
+   */
+  public void setShowInfoMessage(boolean showInfoMessage) {
+    this.showInfoMessage = showInfoMessage;
   }
 
   /**

@@ -37,7 +37,6 @@ import javax.faces.application.FacesMessage.Severity;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ValueChangeEvent;
 
 import de.uniwue.info6.database.map.Scenario;
 import de.uniwue.info6.database.map.User;
@@ -46,6 +45,8 @@ import de.uniwue.info6.database.map.daos.ScenarioDao;
 import de.uniwue.info6.database.map.daos.UserDao;
 import de.uniwue.info6.database.map.daos.UserRightDao;
 import de.uniwue.info6.misc.properties.Cfg;
+import de.uniwue.info6.misc.properties.PropBool;
+import de.uniwue.info6.misc.properties.PropertiesFile;
 import de.uniwue.info6.webapp.admin.UserRights;
 import de.uniwue.info6.webapp.session.SessionObject;
 
@@ -99,6 +100,7 @@ public class UserRightsBean implements Serializable {
   private String userStatus;
   private String userStatusClass;
   private User userToSave;
+  private boolean showCaseMode;
 
   // ------------------------------------------------ //
 
@@ -116,7 +118,7 @@ public class UserRightsBean implements Serializable {
     this.scenarioDao = new ScenarioDao();
     this.userDao = new UserDao();
     this.userRights = new UserRights().initialize();
-
+    this.showCaseMode = Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG, PropBool.SHOWCASE_MODE);
 
     if (userRights.isAdmin(loggedInUser)) {
       this.rights = userRightDao.findAll();
@@ -340,37 +342,78 @@ public class UserRightsBean implements Serializable {
     FacesMessage msg = null;
     boolean error = false;
 
-    // ------------------------------------------------ //
-    // delete all rights given by the lecturer
-    UserRight example = new UserRight();
-    example.setCreatedByUser(this.selectedLecturer);
-    List<UserRight> givenRights = this.userRightDao.findByExample(example);
-    for (UserRight right : givenRights) {
-      this.rights.remove(right);
-      this.userRightDao.deleteInstance(right);
-    }
-    // ------------------------------------------------ //
-
     if (this.selectedLecturer != null) {
-      this.selectedLecturer.setIsLecturer(false);
+      final boolean showCaseMode =
+        Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG, PropBool.SHOWCASE_MODE) &&
+        (this.selectedLecturer.getId().equals(Cfg.DEMO_LECTURER + "1") ||
+         this.selectedLecturer.getId().equals(Cfg.DEMO_LECTURER + "2"));
 
-      if (userDao.updateInstance(this.selectedLecturer)) {
-        sev = FacesMessage.SEVERITY_INFO;
-        message = Cfg.inst().getProp(DEF_LANGUAGE, "RIGHTS.LECTURER_REMOVED");
+      if (!showCaseMode) {
+        // ------------------------------------------------ //
+        // delete all rights given by the lecturer
+        UserRight example = new UserRight();
+        example.setCreatedByUser(this.selectedLecturer);
+        List<UserRight> givenRights = this.userRightDao.findByExample(example);
+        for (UserRight right : givenRights) {
+          this.rights.remove(right);
+          this.userRightDao.deleteInstance(right);
+        }
+
+        example.setCreatedByUser(null);
+        example.setUser(this.selectedLecturer);
+        givenRights = this.userRightDao.findByExample(example);
+        for (UserRight right : givenRights) {
+          this.rights.remove(right);
+          this.userRightDao.deleteInstance(right);
+        }
+        // ------------------------------------------------ //
+
+        this.selectedLecturer.setIsLecturer(false);
+
+        if (userDao.updateInstance(this.selectedLecturer)) {
+          sev = FacesMessage.SEVERITY_INFO;
+          message = Cfg.inst().getProp(DEF_LANGUAGE, "RIGHTS.LECTURER_REMOVED");
+        } else {
+          error = true;
+        }
+        this.lecturerList = userRights.getLecturers();
+
+        if (error) {
+          message = Cfg.inst().getProp(DEF_LANGUAGE, "ERROR");
+          sev = FacesMessage.SEVERITY_ERROR;
+        }
+
       } else {
-        error = true;
+        sev = FacesMessage.SEVERITY_ERROR;
+        message = Cfg.inst().getText("SHOWCASE_ERROR_2");
       }
-      this.lecturerList = userRights.getLecturers();
+
+      msg = new FacesMessage(sev, message, null);
+      FacesContext.getCurrentInstance().addMessage(null, msg);
     }
+  }
+
+  /**
+   * @return
+   *
+   *
+   */
+  private boolean showCaseModeError() {
+    return showCaseModeError(this.selectedRight);
+  }
 
 
-    if (error) {
-      message = Cfg.inst().getProp(DEF_LANGUAGE, "ERROR");
-      sev = FacesMessage.SEVERITY_ERROR;
+  /**
+   *
+   *
+   * @param rightToModify
+   * @return
+   */
+  private boolean showCaseModeError(UserRight selectedRight) {
+    if (selectedRight != null) {
+      return this.showCaseMode && selectedRight.getId() < 4;
     }
-
-    msg = new FacesMessage(sev, message, null);
-    FacesContext.getCurrentInstance().addMessage(null, msg);
+    return false;
   }
 
   /**
@@ -381,25 +424,18 @@ public class UserRightsBean implements Serializable {
     String message = null;
     Severity sev = null;
     FacesMessage msg = null;
-    boolean error = false;
 
     if (selectedRight != null) {
-      if (userRightDao.deleteInstance(selectedRight)) {
+      if (showCaseModeError()) {
+        sev = FacesMessage.SEVERITY_ERROR;
+        message = Cfg.inst().getText("SHOWCASE_ERROR_2");
+      } else if (userRightDao.deleteInstance(selectedRight)) {
         rights.remove(selectedRight);
         selectedRight = null;
 
         sev = FacesMessage.SEVERITY_INFO;
         message = Cfg.inst().getProp(DEF_LANGUAGE, "RIGHTS.RIGHTS_REMOVED");
-      } else {
-        error = true;
       }
-    } else {
-      error = true;
-    }
-
-    if (error) {
-      message = Cfg.inst().getProp(DEF_LANGUAGE, "ERROR");
-      sev = FacesMessage.SEVERITY_ERROR;
     }
     msg = new FacesMessage(sev, message, null);
     FacesContext.getCurrentInstance().addMessage(null, msg);
@@ -503,8 +539,10 @@ public class UserRightsBean implements Serializable {
       message = Cfg.inst().getProp(DEF_LANGUAGE, "RIGHTS.USER_NOT_FOUND");
     }
 
-    msg = new FacesMessage(sev, message, details);
-    FacesContext.getCurrentInstance().addMessage(null, msg);
+    if (sev != null && message != null) {
+      msg = new FacesMessage(sev, message, details);
+      FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
 
   }
 
@@ -524,7 +562,6 @@ public class UserRightsBean implements Serializable {
 
       if (userRights.isAdmin(userToInsert)) {
         sev = FacesMessage.SEVERITY_ERROR;
-        // message = Cfg.inst().getProp(DEF_LANGUAGE, "SAVED.FAIL") + ".";
         message = "Nutzer besitzt bereits Admin-Rechte";
       }
 
@@ -549,8 +586,10 @@ public class UserRightsBean implements Serializable {
       message = Cfg.inst().getProp(DEF_LANGUAGE, "SAVED.FAIL") + ".";
     }
 
-    msg = new FacesMessage(sev, message, details);
-    FacesContext.getCurrentInstance().addMessage(null, msg);
+    if (sev != null && message != null) {
+      msg = new FacesMessage(sev, message, details);
+      FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
   }
 
 
@@ -560,14 +599,29 @@ public class UserRightsBean implements Serializable {
    * @param rightToModify
    */
   public void toggleGroupEditingRight(UserRight rightToModify) {
-    if (rightToModify != null && !userRights.isAdmin(rightToModify.getUser()) && !userRights.isLecturer(rightToModify.getUser())) {
-      boolean newValue = !rightToModify.getHasGroupEditingRights();
-      rightToModify.setHasGroupEditingRights(newValue);
-
-      if (!newValue) {
-        rightToModify.setHasScenarioEditingRights(false);
+    if (rightToModify != null) {
+      String message = null;
+      String details = null;
+      Severity sev = null;
+      FacesMessage msg = null;
+      if (showCaseModeError(rightToModify)) {
+        sev = FacesMessage.SEVERITY_ERROR;
+        message = Cfg.inst().getText("SHOWCASE_ERROR_2");
+      } else {
+        if (!userRights.isAdmin(rightToModify.getUser())
+            && !userRights.isLecturer(rightToModify.getUser())) {
+          boolean newValue = !rightToModify.getHasGroupEditingRights();
+          rightToModify.setHasGroupEditingRights(newValue);
+          if (!newValue) {
+            rightToModify.setHasScenarioEditingRights(false);
+          }
+          userRightDao.updateInstance(rightToModify);
+        }
       }
-      userRightDao.updateInstance(rightToModify);
+      if (sev != null && message != null) {
+        msg = new FacesMessage(sev, message, details);
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+      }
     }
   }
 
@@ -577,9 +631,23 @@ public class UserRightsBean implements Serializable {
    * @param rightToModify
    */
   public void toggleAssertRight(UserRight rightToModify) {
-    if (rightToModify != null && !userRights.isAdmin(rightToModify.getUser()) && !userRights.isLecturer(rightToModify.getUser())) {
-      rightToModify.setHasRatingRights(!rightToModify.getHasRatingRights());
-      userRightDao.updateInstance(rightToModify);
+    if (rightToModify != null) {
+      String message = null;
+      String details = null;
+      Severity sev = null;
+      FacesMessage msg = null;
+      if (showCaseModeError(rightToModify)) {
+        sev = FacesMessage.SEVERITY_ERROR;
+        message = Cfg.inst().getText("SHOWCASE_ERROR_2");
+      } else if (!userRights.isAdmin(rightToModify.getUser())
+                 && !userRights.isLecturer(rightToModify.getUser())) {
+        rightToModify.setHasRatingRights(!rightToModify.getHasRatingRights());
+        userRightDao.updateInstance(rightToModify);
+      }
+      if (sev != null && message != null) {
+        msg = new FacesMessage(sev, message, details);
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+      }
     }
   }
 
@@ -590,14 +658,25 @@ public class UserRightsBean implements Serializable {
    */
   public void toggleScenarioEditingRight(UserRight rightToModify) {
     if (rightToModify != null) {
-      boolean newValue = !rightToModify.getHasScenarioEditingRights();
-      rightToModify.setHasScenarioEditingRights(newValue);
-
-      if (newValue) {
-        rightToModify.setHasGroupEditingRights(true);
+      String message = null;
+      String details = null;
+      Severity sev = null;
+      FacesMessage msg = null;
+      if (showCaseModeError(rightToModify)) {
+        sev = FacesMessage.SEVERITY_ERROR;
+        message = Cfg.inst().getText("SHOWCASE_ERROR_2");
+      } else {
+        boolean newValue = !rightToModify.getHasScenarioEditingRights();
+        rightToModify.setHasScenarioEditingRights(newValue);
+        if (newValue) {
+          rightToModify.setHasGroupEditingRights(true);
+        }
+        userRightDao.updateInstance(rightToModify);
       }
-
-      userRightDao.updateInstance(rightToModify);
+      if (sev != null && message != null) {
+        msg = new FacesMessage(sev, message, details);
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+      }
     }
   }
 
@@ -607,16 +686,28 @@ public class UserRightsBean implements Serializable {
    * @param what
    */
   public void toggleSelectedRight(UserRight selectedRight, String what) {
-
-    if (what.equals("edit")) {
-      selectedRight.setHasGroupEditingRights(!selectedRight.getHasGroupEditingRights());
-    } else if (what.equals("assert")) {
-      selectedRight.setHasRatingRights(!selectedRight.getHasRatingRights());
+    if (selectedRight != null) {
+      String message = null;
+      String details = null;
+      Severity sev = null;
+      FacesMessage msg = null;
+      if (showCaseModeError(selectedRight)) {
+        sev = FacesMessage.SEVERITY_ERROR;
+        message = Cfg.inst().getText("SHOWCASE_ERROR_2");
+      } else {
+        if (what.equals("edit")) {
+          selectedRight.setHasGroupEditingRights(!selectedRight.getHasGroupEditingRights());
+        } else if (what.equals("assert")) {
+          selectedRight.setHasRatingRights(!selectedRight.getHasRatingRights());
+        }
+        userRightDao.updateInstance(selectedRight);
+        selectedRight = null;
+      }
+      if (sev != null && message != null) {
+        msg = new FacesMessage(sev, message, details);
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+      }
     }
-
-    userRightDao.updateInstance(selectedRight);
-    selectedRight = null;
-
   }
 
   public String getUserId() {

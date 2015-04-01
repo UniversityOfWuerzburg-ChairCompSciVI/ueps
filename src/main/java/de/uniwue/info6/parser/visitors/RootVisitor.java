@@ -13,9 +13,9 @@ package de.uniwue.info6.parser.visitors;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -46,281 +46,282 @@ import de.uniwue.info6.parser.structures.TableStructure;
 
 /**
  * Root visitor, delegates node to an according visitor.
- * 
+ *
  * @author Christian
- * 
+ *
  */
 public class RootVisitor implements Visitor {
 
-	private String mainKeyWord;
-	private LinkedList<OrderColumnStructure> orderBys = new LinkedList<OrderColumnStructure>();
-	private LinkedList<ColumnStructure> columns = new LinkedList<ColumnStructure>();
-	private LinkedList<TableStructure> tables = new LinkedList<TableStructure>();
-	private LinkedList<ColumnStructure> groupBys = new LinkedList<ColumnStructure>();
-	private LinkedList<ColumnStructure> targetColumns = new LinkedList<ColumnStructure>();
-	private LinkedList<ColumnStructure> valueColumns = new LinkedList<ColumnStructure>();
-	private Structure whereConditions;
-	private Structure havingConditions;
-	private int firstFetch;
-	private int numFetch;
-	private boolean hasSelect = false;
+  private String mainKeyWord;
+  private LinkedList<OrderColumnStructure> orderBys = new LinkedList<OrderColumnStructure>();
+  private LinkedList<ColumnStructure> columns = new LinkedList<ColumnStructure>();
+  private LinkedList<TableStructure> tables = new LinkedList<TableStructure>();
+  private LinkedList<ColumnStructure> groupBys = new LinkedList<ColumnStructure>();
+  private LinkedList<ColumnStructure> targetColumns = new LinkedList<ColumnStructure>();
+  private LinkedList<ColumnStructure> valueColumns = new LinkedList<ColumnStructure>();
+  private Structure whereConditions;
+  private Structure havingConditions;
+  private int firstFetch;
+  private int numFetch;
+  private boolean hasSelect = false;
 
-	/**
-	 * Main visit function, delegates node to an according sub visit function.
-	 * 
-	 * @param node
-	 * @throws StandardException
-	 * @see com.akiban.sql.parser.Visitor#visit(com.akiban.sql.parser.Visitable)
-	 */
-	@Override
-	public Visitable visit(Visitable node) throws StandardException {
+  /**
+   * Main visit function, delegates node to an according sub visit function.
+   *
+   * @param node
+   * @throws StandardException
+   * @see com.akiban.sql.parser.Visitor#visit(com.akiban.sql.parser.Visitable)
+   */
+  @Override
+  public Visitable visit(Visitable node) throws StandardException {
 
-		switch (((QueryTreeNode) node).getNodeType()) {
-		case NodeTypes.CURSOR_NODE:
+    switch (((QueryTreeNode) node).getNodeType()) {
+    case NodeTypes.CURSOR_NODE:
 
-			if (((CursorNode) node).getFetchFirstClause() != null) { // limit
-																		// (offset,
-																		// fetch
-																		// first)
-				LimitClauseVisitor lvisitor = new LimitClauseVisitor();
-				((CursorNode) node).getFetchFirstClause().accept(lvisitor);
+      if (((CursorNode) node).getFetchFirstClause() != null) { // limit
+        // (offset,
+        // fetch
+        // first)
+        LimitClauseVisitor lvisitor = new LimitClauseVisitor();
+        ((CursorNode) node).getFetchFirstClause().accept(lvisitor);
 
-				firstFetch = lvisitor.getOffset();
-			}
+        firstFetch = lvisitor.getOffset();
+      }
 
-			if (((CursorNode) node).getOffsetClause() != null) { // limit
-																	// (offset,
-																	// fetch
-																	// first)
-				LimitClauseVisitor lvisitor = new LimitClauseVisitor();
-				((CursorNode) node).getOffsetClause().accept(lvisitor);
+      if (((CursorNode) node).getOffsetClause() != null) { // limit
+        // (offset,
+        // fetch
+        // first)
+        LimitClauseVisitor lvisitor = new LimitClauseVisitor();
+        ((CursorNode) node).getOffsetClause().accept(lvisitor);
 
-				numFetch = lvisitor.getOffset();
-			}
+        numFetch = lvisitor.getOffset();
+      }
 
-			break;
-		case NodeTypes.SELECT_NODE:
-			visit((SelectNode) node);
-			break;
-		case NodeTypes.DELETE_NODE: // next child is select node
-			visit((DeleteNode) node);
-			break;
-		case NodeTypes.UPDATE_NODE: // next child is select node
-			visit((UpdateNode) node);
-			break;
-		case NodeTypes.INSERT_NODE:
-			visit((InsertNode) node);
-			break;
-		case NodeTypes.ORDER_BY_LIST:
-			visit((OrderByList) node);
-			break;
-		}
+      break;
+    case NodeTypes.SELECT_NODE:
+      visit((SelectNode) node);
+      break;
+    case NodeTypes.DELETE_NODE: // next child is select node
+      visit((DeleteNode) node);
+      break;
+    case NodeTypes.UPDATE_NODE: // next child is select node
+      visit((UpdateNode) node);
+      break;
+    case NodeTypes.INSERT_NODE:
+      visit((InsertNode) node);
+      break;
+    case NodeTypes.ORDER_BY_LIST:
+      visit((OrderByList) node);
+      break;
+    }
 
-		return node;
+    return node;
 
-	}
+  }
 
-	/**
-	 * Select node.
-	 * 
-	 * @param node
-	 * @throws StandardException
-	 */
-	public void visit(SelectNode node) throws StandardException {
-		
-		if(hasSelect){
-			return;
-		} else {
-			hasSelect = true;
-		}
-		
-		setMainKeyWord("SELECT");
+  /**
+   * Select node.
+   *
+   * @param node
+   * @throws StandardException
+   */
+  public void visit(SelectNode node) throws StandardException {
 
-		SelectVisitor svisitor = new SelectVisitor(mainKeyWord);
-		node.accept(svisitor);
+    if (hasSelect) {
+      return;
+    } else {
+      hasSelect = true;
+    }
 
-		tables = svisitor.getTables();
-		columns = svisitor.getColumns();
-		whereConditions = svisitor.getWhereConditions();
-		havingConditions = svisitor.getHavingConditions();
-		groupBys = svisitor.getGroupBys();
+    setMainKeyWord("SELECT");
 
-	}
+    SelectVisitor svisitor = new SelectVisitor(mainKeyWord);
+    node.accept(svisitor);
 
-	/**
-	 * Delete node.
-	 * 
-	 * @param node
-	 * @throws StandardException
-	 */
-	public void visit(DeleteNode node) throws StandardException {
-		setMainKeyWord("DELETE");
-	}
+    tables = svisitor.getTables();
+    columns = svisitor.getColumns();
+    whereConditions = svisitor.getWhereConditions();
+    havingConditions = svisitor.getHavingConditions();
+    groupBys = svisitor.getGroupBys();
 
-	/**
-	 * Insert node.
-	 * 
-	 * @param node
-	 * @throws StandardException
-	 */
-	public void visit(InsertNode node) throws StandardException {
+  }
 
-		setMainKeyWord("INSERT");
+  /**
+   * Delete node.
+   *
+   * @param node
+   * @throws StandardException
+   */
+  public void visit(DeleteNode node) throws StandardException {
+    setMainKeyWord("DELETE");
+  }
 
-		InsertVisitor ivisitor = new InsertVisitor();
-		node.accept(ivisitor);
+  /**
+   * Insert node.
+   *
+   * @param node
+   * @throws StandardException
+   */
+  public void visit(InsertNode node) throws StandardException {
 
-		tables.add(ivisitor.getTable());
-		targetColumns = ivisitor.getTargetColumns();
-		valueColumns = ivisitor.getValueColumns();
+    setMainKeyWord("INSERT");
 
-	}
+    InsertVisitor ivisitor = new InsertVisitor();
+    node.accept(ivisitor);
 
-	/**
-	 * Update node.
-	 * 
-	 * @param node
-	 * @throws StandardException
-	 */
-	public void visit(UpdateNode node) throws StandardException {
-		setMainKeyWord("UPDATE");
-	}
+    tables.add(ivisitor.getTable());
+    targetColumns = ivisitor.getTargetColumns();
+    valueColumns = ivisitor.getValueColumns();
 
-	/**
-	 * Sub visit function for 'order by' list.
-	 * 
-	 * @param node
-	 * @throws StandardException
-	 */
-	public void visit(OrderByList node) throws StandardException {
+  }
 
-		OrderByListVisitor ovisitor = new OrderByListVisitor();
-		node.accept(ovisitor);
+  /**
+   * Update node.
+   *
+   * @param node
+   * @throws StandardException
+   */
+  public void visit(UpdateNode node) throws StandardException {
+    setMainKeyWord("UPDATE");
+  }
 
-		orderBys.addAll(ovisitor.getOrderBys());
+  /**
+   * Sub visit function for 'order by' list.
+   *
+   * @param node
+   * @throws StandardException
+   */
+  public void visit(OrderByList node) throws StandardException {
 
-	}
+    OrderByListVisitor ovisitor = new OrderByListVisitor();
+    node.accept(ovisitor);
 
-	/**
-	 * @return first fetch
-	 */
-	public int getFirstFetch() {
-		return firstFetch;
-	}
+    orderBys.addAll(ovisitor.getOrderBys());
 
-	/**
-	 * @return num fetch
-	 */
-	public int getNumFetch() {
-		return numFetch;
-	}
+  }
 
-	/**
-	 * @return main keyword
-	 */
-	public String getMainKeyWord() {
-		return mainKeyWord;
-	}
+  /**
+   * @return first fetch
+   */
+  public int getFirstFetch() {
+    return firstFetch;
+  }
 
-	/**
-	 * @return columns
-	 */
-	public LinkedList<ColumnStructure> getColumns() {
-		return columns.size() == 0 ? null : columns;
-	}
-	
-	public LinkedList<ColumnStructure> getTargetColumns() {
-		return targetColumns.size() == 0 ? null : targetColumns;
-	}
-	
-	public LinkedList<ColumnStructure> getValueColumns() {
-		return valueColumns.size() == 0 ? null : valueColumns;
-	}
+  /**
+   * @return num fetch
+   */
+  public int getNumFetch() {
+    return numFetch;
+  }
 
-	/**
-	 * @return tables
-	 */
-	public LinkedList<TableStructure> getTables() {
-		return tables.size() == 0 ? null : tables;
-	}
+  /**
+   * @return main keyword
+   */
+  public String getMainKeyWord() {
+    return mainKeyWord;
+  }
 
-	/**
-	 * @return 'group by' list
-	 */
-	public LinkedList<ColumnStructure> getGroupBys() {
-		return groupBys.size() == 0 ? null : groupBys;
-	}
+  /**
+   * @return columns
+   */
+  public LinkedList<ColumnStructure> getColumns() {
+    return columns.size() == 0 ? null : columns;
+  }
 
-	/**
-	 * @return where conditions
-	 */
-	public Structure getWhereConditions() {
-		return whereConditions;
-	}
+  public LinkedList<ColumnStructure> getTargetColumns() {
+    return targetColumns.size() == 0 ? null : targetColumns;
+  }
 
-	/**
-	 * @return having conditions
-	 */
-	public Structure getHavingConditions() {
-		return havingConditions;
-	}
+  public LinkedList<ColumnStructure> getValueColumns() {
+    return valueColumns.size() == 0 ? null : valueColumns;
+  }
 
-	/**
-	 * @param keyword
-	 */
-	private void setMainKeyWord(String keyword) {
+  /**
+   * @return tables
+   */
+  public LinkedList<TableStructure> getTables() {
+    return tables.size() == 0 ? null : tables;
+  }
 
-		if (mainKeyWord == null)
-			mainKeyWord = keyword;
+  /**
+   * @return 'group by' list
+   */
+  public LinkedList<ColumnStructure> getGroupBys() {
+    return groupBys.size() == 0 ? null : groupBys;
+  }
 
-	}
+  /**
+   * @return where conditions
+   */
+  public Structure getWhereConditions() {
+    return whereConditions;
+  }
 
-	/**
-	 * @return 'order by' list
-	 */
-	public LinkedList<OrderColumnStructure> getOrderBys() {
-		return orderBys;
-	}
+  /**
+   * @return having conditions
+   */
+  public Structure getHavingConditions() {
+    return havingConditions;
+  }
 
-	/* (non-Javadoc)
-	 * @see com.akiban.sql.parser.Visitor#visitChildrenFirst(com.akiban.sql.parser.Visitable)
-	 */
-	@Override
-	public boolean visitChildrenFirst(Visitable node) {
-		return false;
-	}
+  /**
+   * @param keyword
+   */
+  private void setMainKeyWord(String keyword) {
 
-	/* (non-Javadoc)
-	 * @see com.akiban.sql.parser.Visitor#stopTraversal()
-	 */
-	@Override
-	public boolean stopTraversal() {
-		return false;
-	}
+    if (mainKeyWord == null)
+      mainKeyWord = keyword;
 
-	/* (non-Javadoc)
-	 * @see com.akiban.sql.parser.Visitor#skipChildren(com.akiban.sql.parser.Visitable)
-	 */
-	@Override
-	public boolean skipChildren(Visitable node) throws StandardException {
-		return false;
-	}
+  }
 
-	/*
-	 * (non-Javadoc)	 * 
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString() {
-		return mainKeyWord
-				+ (columns.size() > 0 ? " " + columns.toString() + " " : "") 
-				+ (targetColumns.size() > 0 ? " ("+ targetColumns.toString() + ") " : "")
-				+ (valueColumns.size() > 0 ? "VALUES ("+ valueColumns.toString() + ") " : "")
-				+ (tables.size() > 0 ? " FROM " + tables.toString() : "")
-				+ (whereConditions != null ? " WHERE "+ whereConditions.toString() : "")
-				+ (groupBys.size() > 0 ? " GROUP BY " + groupBys.toString() : "")
-				+ (havingConditions != null ? " HAVING " + havingConditions.toString() : "")
-				+ (orderBys.size() > 0 ? " ORDER BY " + orderBys.toString() : "")
-				+ " LIMIT (" + numFetch + ", " + firstFetch + ")";
-	}
+  /**
+   * @return 'order by' list
+   */
+  public LinkedList<OrderColumnStructure> getOrderBys() {
+    return orderBys;
+  }
+
+  /* (non-Javadoc)
+   * @see com.akiban.sql.parser.Visitor#visitChildrenFirst(com.akiban.sql.parser.Visitable)
+   */
+  @Override
+  public boolean visitChildrenFirst(Visitable node) {
+    return false;
+  }
+
+  /* (non-Javadoc)
+   * @see com.akiban.sql.parser.Visitor#stopTraversal()
+   */
+  @Override
+  public boolean stopTraversal() {
+    return false;
+  }
+
+  /* (non-Javadoc)
+   * @see com.akiban.sql.parser.Visitor#skipChildren(com.akiban.sql.parser.Visitable)
+   */
+  @Override
+  public boolean skipChildren(Visitable node) throws StandardException {
+    return false;
+  }
+
+  /*
+   * (non-Javadoc)   *
+   * @see java.lang.Object#toString()
+   */
+  public String toString() {
+    return mainKeyWord
+           + (columns.size() > 0 ? " " + columns.toString() + " " : "")
+           + (targetColumns.size() > 0 ? " (" + targetColumns.toString() + ") " : "")
+           + (valueColumns.size() > 0 ? "VALUES (" + valueColumns.toString() + ") " : "")
+           + (tables.size() > 0 ? " FROM " + tables.toString() : "")
+           + (whereConditions != null ? " WHERE " + whereConditions.toString() : "")
+           + (groupBys.size() > 0 ? " GROUP BY " + groupBys.toString() : "")
+           + (havingConditions != null ? " HAVING " + havingConditions.toString() : "")
+           + (orderBys.size() > 0 ? " ORDER BY " + orderBys.toString() : "")
+           + " LIMIT (" + numFetch + ", " + firstFetch + ")";
+  }
 
 }
+

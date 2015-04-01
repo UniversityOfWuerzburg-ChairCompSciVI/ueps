@@ -22,124 +22,98 @@
   limitations under the License.
   #L%
   -->
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-xmlns:f="http://java.sun.com/jsf/core"
-xmlns:h="http://java.sun.com/jsf/html"
-xmlns:ui="http://java.sun.com/jsf/facelets"
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html" xmlns:ui="http://java.sun.com/jsf/facelets"
 xmlns:p="http://primefaces.org/ui">
  <META HTTP-EQUIV="refresh" CONTENT="15" />
  <h:body>
   <!-- main template defining header, footer and content -->
   <ui:composition template="/templates/common/commonLayout.xhtml">
    <ui:define name="header_text">
-     <span>#{scenarioController.isValidScenario() ? txt['HEADER.DEFAULT'] : ''}</span>
+    <span>#{scenarioController.isValidScenario() ? txt['HEADER.DEFAULT'] : ''}</span>
    </ui:define>
    <ui:define name="content">
     <!-- tooltips -->
     <script type="text/javascript">
     <!-- -->
-    function show_tooltip() {
+    function show_tooltip() { 
     <!-- -->
-    jQuery(function() {
+    jQuery(function() { 
     <!-- -->
-    jQuery( ".toggler_empty div" ).tipsy({fallback:
-    "#{txt['TOOLTIP.SOLUTION1']}", gravity: 'n' });
+    jQuery( ".toggler_empty div" ).tipsy({fallback: "#{txt['TOOLTIP.SOLUTION1']}", gravity: 'n' }); 
     <!-- -->
-    jQuery( ".toggler_correct div" ).tipsy({fallback:
-    "#{txt['TOOLTIP.SOLUTION2']}", gravity: 'n' });
+    jQuery( ".toggler_correct div" ).tipsy({fallback: "#{txt['TOOLTIP.SOLUTION2']}", gravity: 'n' }); 
     <!-- -->
-    jQuery( ".toggler_false div" ).tipsy({fallback:
-    "#{txt['TOOLTIP.SOLUTION3']}", gravity: 'n' });
+    jQuery( ".toggler_false div" ).tipsy({fallback: "#{txt['TOOLTIP.SOLUTION3']}", gravity: 'n' }); 
     <!-- -->
-    jQuery( ".toggler_info div" ).tipsy({fallback:
-    "#{txt['TOOLTIP.SOLUTION4']}", gravity: 'n' });
+    jQuery( ".toggler_info div" ).tipsy({fallback: "#{txt['TOOLTIP.SOLUTION4']}", gravity: 'n' }); 
     <!-- -->
-    jQuery( ".user_entry_text" ).tipsy({fallback:
-    "#{txt['TOOLTIP.SOLUTION_LINK']}" });
+    jQuery( ".user_entry_text" ).tipsy({fallback: "#{txt['TOOLTIP.SOLUTION_LINK']}" }); 
     <!-- -->
-    jQuery( ".filtered_exercises" ).tipsy({fallback:
-    "#{txt['TOOLTIP.FILTER']}", gravity: 'n' });
+    jQuery( ".filtered_exercises" ).tipsy({fallback: "#{txt['TOOLTIP.FILTER']}", gravity: 'n' }); 
     <!-- -->
-    jQuery( ".selected_exercises" ).tipsy({fallback:
-    "#{txt['TOOLTIP.SHIFT']}", gravity: 'n' });
+    jQuery( ".selected_exercises" ).tipsy({fallback: "#{txt['TOOLTIP.SHIFT']}", gravity: 'n' }); 
     <!-- -->
-    }); }
+    }); } 
     <!-- --></script>
     <!-- -->
     <style type="text/css">
     <!-- -->
-    .toggler_empty div { background:
-    url(#{resource['img/ex-empty.png']}) !important; }
+    .toggler_empty div { background: url(#{resource['img/ex-empty.png']}) !important; } 
     <!-- -->
-    .toggler_correct div { background:
-    url(#{resource['img/ex-correct.png']}) !important; }
+    .toggler_correct div { background: url(#{resource['img/ex-correct.png']}) !important; } 
     <!-- -->
-    .toggler_false div { background:
-    url(#{resource['img/ex-false.png']}) !important; }
+    .toggler_false div { background: url(#{resource['img/ex-false.png']}) !important; } 
     <!-- -->
-    .toggler_info div { background: url(#{resource['img/ex-info.png']})
-    !important; }
+    .toggler_info div { background: url(#{resource['img/ex-info.png']}) !important; } 
     <!-- --></style>
-
     <!-- ######################################################################### -->
     <!-- box for scenario introduction text -->
     <!-- dynamic means tabs are being loaded through ajax -->
     <!-- ######################################################################### -->
-    <p:accordionPanel activeIndex="0" widgetVar="intro" global="true"
-        dynamic="false" cache="false" collapsible="true">
+    <p:accordionPanel activeIndex="0" widgetVar="intro" global="true" dynamic="false" cache="false"
+    collapsible="true">
      <!-- first tab: introduction-text -->
-     <p:tab title="#{scenarioController.isValidScenario() ? txt['AC.INTRO'] : 'Info'}">
-      <h:outputText value="#{scenarioController.getIntroductionText()}"
-      escape="false" styleClass="intoduction_text" />
+     <p:tab title="#{scenarioController.getIntroductionTitle()}">
+      <h:outputText value="#{scenarioController.getIntroductionText()}" escape="false"
+      styleClass="intoduction_text" />
      </p:tab>
     </p:accordionPanel>
     <!-- ######################################################################### -->
     <!-- accordion for exercise-groups -->
     <!-- activeIndex="-1" := accordion is closed by default -->
     <!-- ######################################################################### -->
-    <p:accordionPanel activeIndex="-1" dynamic="true" cache="false"
-    multiple="false" global="true"
-    value="#{exGroupController.exGroups}" var="exerciseGroup"
-    styleClass="exercise_group_acc">
+    <p:accordionPanel activeIndex="-1" dynamic="true" cache="false" multiple="false" global="true"
+    value="#{exGroupController.exGroups}" var="exerciseGroup" styleClass="exercise_group_acc">
      <!-- close introduction accordion on click -->
-     <p:ajax event="tabChange" global="true"
-     listener="#{overview.groupChangeEvent}"
-     onstart="collapseIntroduction()" immediate="true"
-     oncomplete="show_tooltip()" />
+     <p:ajax event="tabChange" global="true" listener="#{overview.groupChangeEvent}"
+     onstart="collapseIntroduction()" immediate="true" oncomplete="show_tooltip()" />
      <!-- one exercise-group tab with title -->
      <p:tab title="#{overview.getGroupName(exerciseGroup)}"
-   titleStyleClass="#{exerciseGroup.isRated ? 'rated_tab' : 'unrated_tab'}"
-     global="true"
+     titleStyleClass="#{exerciseGroup.isRated ? 'rated_tab' : 'unrated_tab'}" global="true"
      disabled="#{overview.disableGroup(exerciseGroup)}">
-      <h:panelGrid columns="2" cellpadding="10"
-      rendered="#{overview.showGroup(exerciseGroup)}">
+      <h:panelGrid columns="2" cellpadding="10" rendered="#{overview.showGroup(exerciseGroup)}">
        <h:form id="form">
         <!-- description for rated exercise -->
-        <p:outputPanel deferred="true"
-        rendered="#{exerciseGroup.isRated}">
+        <p:outputPanel deferred="true" rendered="#{exerciseGroup.isRated}">
          <h3>
           <span>#{txt['EX.RATED_DATE']}:</span>
           <span style="color:#{overview.showResults(exerciseGroup) ? 'red' : 'green'}">
           #{overview.getEndDate(exerciseGroup)}</span>
          </h3>
          <p:outputPanel rendered="#{overview.hideResults(exerciseGroup)}" escape="false">
-          <h:outputText value="#{overview.getRatedAndRunningDescription(exerciseGroup)}"
-          escape="false" />
-          </p:outputPanel>
+          <h:outputText value="#{overview.getRatedAndRunningDescription(exerciseGroup)}" escape="false" />
+         </p:outputPanel>
          <h3>
-          <p:outputPanel rendered="#{overview.showResults(exerciseGroup)}">
-          #{txt['EX.RESULT_CREDITS']}:
-          <span style="color:green">
-          #{overview.getAchievedPoints(exerciseGroup)} /
+          <p:outputPanel rendered="#{overview.showResults(exerciseGroup)}">#{txt['EX.RESULT_CREDITS']}: 
+          <span style="color:green">#{overview.getAchievedPoints(exerciseGroup)} /
           #{overview.getMaxPoints(exerciseGroup)} -
           #{overview.getScoreInPercent(exerciseGroup)}</span></p:outputPanel>
          </h3>
          <p:outputPanel rendered="#{overview.showResults(exerciseGroup)}">
-          <h:outputText value="#{overview.getRatedAndClosedDescription()}"
-          escape="false" />
+          <h:outputText value="#{overview.getRatedAndClosedDescription()}" escape="false" />
          </p:outputPanel>
          <br />
         </p:outputPanel>
@@ -148,42 +122,32 @@ xmlns:p="http://primefaces.org/ui">
         <!-- rowKey := default key for sorting -->
         <!-- 'gr' := TableBean.java  -->
         <!-- ######################################################################### -->
-        <p:dataTable var="exercise" dynamic="false" cache="true"
-        sortMode="multiple"
-        value="#{overview.getExercisesFromGroup(exerciseGroup)}"
-        filterEvent="enter" rowKey="#{exercise.id}" paginator="true"
-        paginatorAlwaysVisible="false" rows="10"
-        resizableColumns="false" emptyMessage="#{txt['EX.NOTFOUND']}"
-        id="exerciseTable" widgetVar="e" selectionMode="multiple"
-        selection="#{overview.selectedExercises}"
-        filteredValue="#{overview.filteredExercises}"
+        <p:dataTable var="exercise" dynamic="false" cache="true" sortMode="multiple"
+        value="#{overview.getExercisesFromGroup(exerciseGroup)}" filterEvent="enter" rowKey="#{exercise.id}"
+        paginator="true" paginatorAlwaysVisible="false" rows="10" resizableColumns="false"
+        emptyMessage="#{txt['EX.NOTFOUND']}" id="exerciseTable" widgetVar="e" selectionMode="multiple"
+        selection="#{overview.selectedExercises}" filteredValue="#{overview.filteredExercises}"
         rowIndexVar="rowIndex" rowStyleClass="">
          <!-- actionlisteners-->
          <p:ajax event="page" oncomplete="show_tooltip()" />
          <p:ajax event="rowToggle" oncomplete="show_tooltip()" />
          <p:ajax event="rowUnselect" update="selected_exercises" />
-         <p:ajax event="rowSelect" oncomplete="show_tooltip();"
-         update="selected_exercises" />
-         <p:ajax event="filter" update="filtered_exercises"
-         oncomplete="e.unselectAllRows();" />
+         <p:ajax event="rowSelect" oncomplete="show_tooltip();" update="selected_exercises" />
+         <p:ajax event="filter" update="filtered_exercises" oncomplete="e.unselectAllRows();" />
          <!-- -->
-         <p:column width="7%" styleClass="ex_id"
-         headerText="#{txt['EX.COL1']}" sortBy="id"
-         filterMatchMode="exact" filterBy="id">
-         #{exercise.id}</p:column>
+         <p:column width="7%" styleClass="ex_id" headerText="#{txt['EX.COL1']}" sortBy="id"
+         filterMatchMode="exact" filterBy="id">#{exercise.id}</p:column>
          <!-- TODO: user tags spaeter hinzufuegen -->
          <!-- -->
-         <p:column headerText="#{txt['EX.COL2']}" sortBy="question"
-         styleClass="wrapColumn ex_question" filterBy="question"
-         filterMatchMode="contains">#{overview.normalizeQuestion(exercise)}</p:column>
+         <p:column headerText="#{txt['EX.COL2']}" sortBy="question" styleClass="wrapColumn ex_question"
+         filterBy="question" filterMatchMode="contains">#{overview.normalizeQuestion(exercise)}</p:column>
          <!-- -->
          <p:column width="11%" headerText="#{txt['EX.COL3']}"
-         styleClass="#{overview.getTogglerStyle(exercise)} ex_points toggler_icon"
-         sortBy="credits" filterMatchMode="exact" filterBy="credits">
+         styleClass="#{overview.getTogglerStyle(exercise)} ex_points toggler_icon" sortBy="credits"
+         filterMatchMode="exact" filterBy="credits">
           <p:rowToggler rendered="#{overview.renderToggler(exercise)}" />
           <span style="#{overview.renderToggler(exercise) ? 'margin-left:16px' : ''}">
-          #{overview.showResults(exerciseGroup) ?
-          overview.getResultPoints(exercise).concat(' /') :
+          #{overview.showResults(exerciseGroup) ? overview.getResultPoints(exercise).concat(' /') :
           ''}</span>
           <span>#{exercise.credits}</span>
          </p:column>
@@ -197,70 +161,50 @@ xmlns:p="http://primefaces.org/ui">
          <!-- extra expandable table for user solution -->
          <!-- ######################################################################### -->
          <p:rowExpansion>
-          <p:panelGrid id="task_grid"
-          styleClass="user_entry_table ui-widget-content grid">
-           <p:row style="border-bottom:none"
-           rendered="#{overview.getLastUserEntryString(exercise) != null}">
-
+          <p:panelGrid id="task_grid" styleClass="user_entry_table ui-widget-content grid">
+           <p:row style="border-bottom:none" rendered="#{overview.getLastUserEntryString(exercise) != null}">
             <p:column style="border:none;">
-             <h:outputText class="boldPoints"
-             value="#{txt['QUE.LAST']}:" />
+             <h:outputText class="boldPoints" value="#{txt['QUE.LAST']}:" />
             </p:column>
             <p:column style="border:none;">
              <h:outputText value="#{overview.getLastUserEntryString(exercise)}" />
             </p:column>
             <p:column style="border:none;">
-             <p:commandLink styleClass="user_entry_text"
-             icon="ui-icon-triangle-1-e"
-             action="#{moveTo.exerciseModuleWithEntry(exercise)}"
-             ajax="false" onclick="startAjaxStatus()"
+             <p:commandLink styleClass="user_entry_text" icon="ui-icon-triangle-1-e"
+             action="#{moveTo.exerciseModuleWithEntry(exercise)}" ajax="false" onclick="startAjaxStatus()"
              style="float:right;padding:0px"
              value="#{overview.entriesCanBeEdited(exerciseGroup) ? txt['TOGGLER.EDIT'] : txt['TOGGLER.TEST']}" />
             </p:column>
            </p:row>
-           <p:row style="border:none"
-           rendered="#{overview.getSolutionText(exercise) != null}">
+           <p:row style="border:none" rendered="#{overview.getSolutionText(exercise) != null}">
             <p:column style="border:none;">
-             <h:outputText class="boldPoints"
-             value="#{txt['TOGGLER.RESULT']}:" />
+             <h:outputText class="boldPoints" value="#{txt['TOGGLER.RESULT']}:" />
             </p:column>
             <p:column style="border:none;">
-             <h:outputText escape="false"
-             value="#{overview.getSolutionText(exercise)}" />
+             <h:outputText escape="false" value="#{overview.getSolutionText(exercise)}" />
             </p:column>
             <p:column style="border:none;">
-             <p:commandLink styleClass="user_entry_text"
-             icon="ui-icon-triangle-1-e"
-             action="#{moveTo.exerciseModuleWithSolution(exercise)}"
-             ajax="false" onclick="startAjaxStatus()"
-             style="float:right;padding:0px"
-             value="#{txt['TOGGLER.TEST']}" />
+             <p:commandLink styleClass="user_entry_text" icon="ui-icon-triangle-1-e"
+             action="#{moveTo.exerciseModuleWithSolution(exercise)}" ajax="false" onclick="startAjaxStatus()"
+             style="float:right;padding:0px" value="#{txt['TOGGLER.TEST']}" />
             </p:column>
            </p:row>
-
-           <p:row style="border:none"
-           rendered="#{overview.getLastUserEntryTime(exercise) != null}">
+           <p:row style="border:none" rendered="#{overview.getLastUserEntryTime(exercise) != null}">
             <p:column style="border:none;">
-             <h:outputText class="boldPoints"
-             value="#{txt['TOGGLER.TIME']}:" />
+             <h:outputText class="boldPoints" value="#{txt['TOGGLER.TIME']}:" />
             </p:column>
             <p:column colspan="2" style="border:none;">
              <h:outputText value="#{overview.getLastUserEntryTime(exercise)}" />
             </p:column>
            </p:row>
-
-           <p:row style="border:none"
-           rendered="#{overview.getLastUserEntryErrorText(exercise) != null}">
+           <p:row style="border:none" rendered="#{overview.getLastUserEntryErrorText(exercise) != null}">
             <p:column style="border:none;">
-             <h:outputText class="boldPoints"
-             value="#{txt['TOGGLER.DESC']}:" />
+             <h:outputText class="boldPoints" value="#{txt['TOGGLER.DESC']}:" />
             </p:column>
             <p:column colspan="2" style="border:none;">
-             <h:outputText escape="false"
-             value="#{overview.getLastUserEntryErrorText(exercise)}" />
+             <h:outputText escape="false" value="#{overview.getLastUserEntryErrorText(exercise)}" />
             </p:column>
            </p:row>
-
           </p:panelGrid>
          </p:rowExpansion>
          <!-- ######################################################################### -->
@@ -268,37 +212,30 @@ xmlns:p="http://primefaces.org/ui">
          <!-- ######################################################################### -->
          <f:facet name="footer">
           <!-- TODO: button to show help dialog -->
-          <p:commandButton rendered="false" ajax="false"
-          icon="ui-icon-help" id="result_button"
+          <p:commandButton rendered="false" ajax="false" icon="ui-icon-help" id="result_button"
           onclick="result_table_widget.show();return false;" />
           <!-- help dialog -->
-          <p:commandButton value="#{txt['QUE.GOTO_LIST']}"
-          id="filtered_exercises" styleClass="filtered_exercises"
-          icon="ui-icon-arrowreturnthick-1-e" ajax="false"
+          <p:commandButton value="#{txt['QUE.GOTO_LIST']}" id="filtered_exercises"
+          styleClass="filtered_exercises" icon="ui-icon-arrowreturnthick-1-e" ajax="false"
           action="#{moveTo.exerciseModule(overview.getViewedExercises(exerciseGroup))}"
           onclick="startAjaxStatus()" />
           <p:commandButton styleClass="selected_exercises"
           disabled="#{overview.selectionSize(exerciseGroup) eq 0}"
           value="#{overview.selectionSize(exerciseGroup) eq 1 ?
-      txt['AC.SEL_SING']:txt['AC.SEL_PLUR']} [#{overview.selectionSize(exerciseGroup)}]"
-          id="selected_exercises" icon="ui-icon-arrowreturnthick-1-e"
-          ajax="false"
-          action="#{moveTo.exerciseModule(overview.getSelectedExercises())}"
-          onclick="startAjaxStatus()" />
+          txt['AC.SEL_SING']:txt['AC.SEL_PLUR']} [#{overview.selectionSize(exerciseGroup)}]"
+          id="selected_exercises" icon="ui-icon-arrowreturnthick-1-e" ajax="false"
+          action="#{moveTo.exerciseModule(overview.getSelectedExercises())}" onclick="startAjaxStatus()" />
          </f:facet>
         </p:dataTable>
        </h:form>
       </h:panelGrid>
      </p:tab>
     </p:accordionPanel>
-    <p:dialog header="#{txt['EX.HELP']}" position="center,top"
-    showEffect="scale" hideEffect="scale" maximizable="true"
-    minimizable="true" widgetVar="result_table_widget">
-     <h:outputText id="result_table"
-     value="#{txt['DEBUG.NOT_IMPLEMENTED']}" />
+    <p:dialog header="#{txt['EX.HELP']}" position="center,top" showEffect="scale" hideEffect="scale"
+    maximizable="true" minimizable="true" widgetVar="result_table_widget">
+     <h:outputText id="result_table" value="#{txt['DEBUG.NOT_IMPLEMENTED']}" />
     </p:dialog>
    </ui:define>
   </ui:composition>
  </h:body>
 </html>
-

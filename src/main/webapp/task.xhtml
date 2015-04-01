@@ -36,22 +36,19 @@ xmlns:p="http://primefaces.org/ui">
     <span>#{txt['HEADER.TASK_HEADER']}</span>
    </ui:define>
    <ui:define name="content">
-
-     <!-- ************************************************************************ -->
-     <h:panelGroup id="session_expired_button" rendered="#{not e.userHasRights}">
-       <p id="session_expired_button">
-       <h:graphicImage class="multi-pass-required" value="/resources/img/#{config['IMG.MULTIPASS']}" />
-       <br />
-       <span class="multi-pass-required-text">#{txt['SESSION.PERMISSION_DETAILS']}</span>
-       </p>
-     </h:panelGroup>
     <!-- ************************************************************************ -->
-
+    <h:panelGroup id="session_expired_button" rendered="#{not e.userHasRights}">
+     <p id="session_expired_button">
+      <h:graphicImage class="multi-pass-required" value="/resources/img/#{config['IMG.MULTIPASS']}" />
+      <br />
+      <span class="multi-pass-required-text">#{txt['SESSION.PERMISSION_DETAILS']}</span>
+     </p>
+    </h:panelGroup>
+    <!-- ************************************************************************ -->
     <!-- -->
-    <script type="text/javascript">
-    function context_tooltip() {
+    <script type="text/javascript">function context_tooltip() { 
     <!-- -->
-    jQuery(".tipsy").remove();
+    jQuery(".tipsy").remove(); 
     <!-- -->
     jQuery(function() { 
     <!-- -->
@@ -61,9 +58,9 @@ xmlns:p="http://primefaces.org/ui">
     <!-- -->
     }); 
     <!-- -->
-    }
+    } 
     <!-- -->
-    jQuery(document).ready(function() { context_tooltip(); });
+    jQuery(document).ready(function() { context_tooltip(); }); 
     <!-- -->
     function mysql_tooltip() { 
     <!-- -->
@@ -74,151 +71,115 @@ xmlns:p="http://primefaces.org/ui">
     <h:form id="usertask" rendered="#{e.userHasRights}">
      <p:growl id="messages" showDetail="true" life="8000" />
      <p:panelGrid id="task_grid">
-      <!-- ##################################### -->
+      <!-- ************************************************************************ -->
       <!-- title for excercise-id and input-Field -->
       <!-- e := ExerciseController.class -->
-      <!-- ##################################### -->
+      <!-- ************************************************************************ -->
       <p:row>
-       <p:column colspan="1" style="text-align:center;border-right:none;">
+       <p:column colspan="1" styleClass="question_title">
         <h:outputText value="#{txt['QUE']}: #{e.getExercise().getId()}" styleClass="boldPoints" />
        </p:column>
-       <p:column colspan="1" style="text-align:center;border-left:none">
+       <p:column colspan="1" styleClass="user_input_title">
         <h:outputText value="#{txt['QUE.INPUT']}:" styleClass="boldPoints" />
        </p:column>
       </p:row>
       <p:row>
-       <!-- ##################################### -->
+       <!-- ************************************************************************ -->
        <!-- question-box -->
-       <!-- ##################################### -->
-       <p:column rowspan="1" colspan="1"
-       style="font-size:16px;text-align:center;border:1px dashed gray !important;width:428px">
-        <p:scrollPanel mode="native" styleClass="question-text-scrollpanel"
-            style="max-height:180px;border:none;padding-right:10px;padding-left:10px;">
+       <!-- ************************************************************************ -->
+       <p:column rowspan="1" colspan="1" styleClass="question_box">
+        <p:scrollPanel mode="native" styleClass="question-text-scrollpanel">
          <p>
           <h:outputText escape="false" value="#{e.getExercise().getQuestion()}" styleClass="boldPoints" />
          </p>
          <!-- difficulty level -->
          <p>
-          <h:outputText value="(#{txt['QUE.CREDITS']}: "
-          style="font-weight:bold;color:#004188;font-size:13px" />
-          <h:outputText value="#{e.getExercise().getCredits()})"
-          style="font-weight:bold;color:#004188;font-size:13px" />
+          <h:outputText value="(#{txt['QUE.CREDITS']}: " styleClass="question_box_credits" />
+          <h:outputText value="#{e.getExercise().getCredits()})" styleClass="question_box_credits" />
          </p>
          <!-- debug, showing correct result  -->
          <p>
-          <h:outputText value="#{txt['QUE.CORRECT_QUERY']}: " style="font-size:13px;color:grey"
-          styleClass="boldPoints" rendered="#{e.adminSolutionVisible()}" />
+          <h:outputText value="#{txt['QUE.CORRECT_QUERY_2']}: " styleClass="question_box_solution_title"
+          rendered="#{e.adminSolutionVisible()}" />
           <br />
           <h:outputText escape="false" rendered="#{e.adminSolutionVisible()}" value="#{e.getResultStrings()}"
-          style="font-size:13px;color:white" />
+          styleClass="question_box_solution" />
          </p>
         </p:scrollPanel>
        </p:column>
-       <!-- ##################################### -->
+       <!-- ************************************************************************ -->
        <!-- input field and get-feedback-button -->
        <!-- minQueryLength="2" queryDelay="500" multiple="true"-->
-       <!-- ##################################### -->
-       <p:column colspan="1" style="border:1px dashed gray !important; padding: 10px;">
+       <!-- ************************************************************************ -->
+       <p:column colspan="1" styleClass="user_input_box">
         <p:inputTextarea value="#{e.userString}" id="userInputArea" rows="7" cols="35"></p:inputTextarea>
         <p:commandButton immediate="false" id="get_feedback" oncomplete="mysql_tooltip();pulsateButton();"
         icon="ui-icon-circle-triangle-e" style="width:100%;" value="#{txt['QUE.VALIDATE']}"
-        update="feedback_box feedback result_panel result_table user_result_table
+        update="feedback result_panel result_table user_result_table
                 refLinks solution_carousel user_result_widget result_table_widget
         messages" onclick="startAjaxStatus()" />
        </p:column>
       </p:row>
       <p:row>
-       <!-- ##################################### -->
+       <!-- ************************************************************************ -->
        <!-- feedback-box -->
-       <!-- ##################################### -->
-       <p:column styleClass="feedback_column" colspan="1" style="vertical-align:top">
+       <!-- ************************************************************************ -->
+       <p:column styleClass="feedback_column" colspan="1">
         <h:panelGroup id="feedback">
          <p:accordionPanel activeIndex="-1" id="feedback_accordion" rendered="#{e.feedbackVisible}"
          styleClass="#{e.isSolutionCorrect() ? 'result_correct' : 'result_error'} feedback_box"
          widgetVar="intro" global="true" dynamic="false" cache="false" collapsible="true">
           <!-- first tab: introduction-text -->
           <p:tab title="#{e.isSolutionCorrect() ? txt['QUE.CORRECT'] : txt['QUE.NOT_CORRECT']}">
-           <p:dataList styleClass="feedback_box" style="text-align:justify" value="#{e.feedbackList}"
-           var="userFeedback" itemType="disc">
+           <p:dataList styleClass="feedback_box" value="#{e.feedbackList}" var="userFeedback"
+           itemType="disc">
             <h:outputText class="boldPoints" value="#{userFeedback.title}: " />
             <h:outputText class="#{userFeedback.hasOriginalFeedback() ? 'originalText' : ''}"
             value="#{userFeedback.feedback}" />
             <br />
-            <h:outputText style="font-size:13px;color:grey" rendered="#{userFeedback.hasOriginalFeedback()}"
+            <h:outputText styleClass="feedback_box_original" rendered="#{userFeedback.hasOriginalFeedback()}"
             value="(#{txt['QUE.ORIGINAL_ERROR']}: '#{userFeedback.originalFeedback})'" />
            </p:dataList>
           </p:tab>
          </p:accordionPanel>
         </h:panelGroup>
        </p:column>
-       <!-- ##################################### -->
+       <!-- ************************************************************************ -->
        <!-- feedback-buttons -->
-       <!-- ##################################### -->
-       <p:column styleClass="feedback_buttons_column" style="text-align:center; vertical-align:top">
+       <!-- ************************************************************************ -->
+       <p:column styleClass="feedback_buttons_column">
         <h:panelGroup id="result_panel">
          <p:commandButton value="#{txt['QUE.CORRECT_QUERY']}" icon="ui-icon-circle-zoomin"
-         style="#{e.userResultVisible ? 'width:50%' : 'width:100%' };
-                background-color:#EDEFFF !important;
-                margin-top:-10px;position:relative;top:13px" id="result_button" rendered="#{e.resultVisible}"
-         styleClass="result_button" onclick="result_table_widget.show();formatDialog('solution_result_table_popup', false, true, false);return false;" />
+         styleClass="#{e.userResultVisible ? 'result_button_half' : 'result_button_full' } result_button"
+         id="result_button" rendered="#{e.resultVisible}"
+         onclick="result_table_widget.show();formatDialogR('solution_result_table_popup');return false;" />
          <p:commandButton value="#{txt['QUE.USER_QUERY']}" icon="ui-icon-circle-zoomin"
-         style="#{e.resultVisible ? 'width:49%' : 'width:100%' };
-                background-color:#EDEFFF !important; margin-top:-10px;position:relative;top:13px"
-                id="user_result_button" rendered="#{e.userResultVisible}" styleClass="user_result_button"
-                onclick="user_result_widget.show();formatDialog('user_result_table_popup', true, false, false);return false;" />
+         styleClass="#{e.resultVisible ? 'user_result_button_half' : 'user_result_button_full' } user_result_button"
+         id="user_result_button" rendered="#{e.userResultVisible}"
+         onclick="user_result_widget.show();formatDialogUR('user_result_table_popup');return false;" />
         </h:panelGroup>
        </p:column>
       </p:row>
       <p:row>
-       <!-- ##################################### -->
+       <!-- ************************************************************************ -->
        <!-- relevant table buttons -->
-       <!-- ##################################### -->
-       <p:column colspan="2" style="padding-bottom:0px">
+       <!-- ************************************************************************ -->
+       <p:column colspan="2" styleClass="relevant_tables_column">
         <h:outputText value="#{txt['QUE.TABLES']} " class="boldPoints" />
         <h:outputText value="(#{txt['QUE.RESULT_DETAILS']}):" />
         <p:dataList var="table" value="#{e.availableTables}" emptyMessage="#{e.getSQLError()}"
         styleClass="relevant_tables_list" id="relevant_tables_list">
          <p:commandButton styleClass="table_button" ajax="false" value="#{table}"
-             onclick="relevent_tables_dialog_wid_#{table}.show();formatDialog('relevant_table_popup_#{table}', false, false, false);return false;" /> 
+         onclick="relevent_tables_dialog_wid_#{table}.show();formatDialogRT('relevant_table_popup_#{table}');return false;" />
         </p:dataList>
         <p:dataList var="table" emptyMessage="" value="#{e.availableTables}" rowIndexVar="rowIndex"
         styleClass="relevant_tables_list">
-
-        <p:dialog closeOnEscape="true" styleClass="relevant_table_popup_#{table}" header="#{table}" 
-            showEffect="fade" hideEffect="fade" resizable="true"
-         widgetVar="relevent_tables_dialog_wid_#{table}" appendTo="@(body)" minWidth="150" minHeight="150">
-
-          <!-- <script type="text/javascript">                                                                                       -->
-          <!-- [> <]                                                                                                                 -->
-          <!-- function filter_tooltip() {                                                                                           -->
-          <!-- [> <]                                                                                                                 -->
-          <!-- jQuery(".tipsy").remove();                                                                                            -->
-          <!-- [> <]                                                                                                                 -->
-          <!-- jQuery( ".filter_textfield" ).tipsy({fallback: "#{txt['FILTER.DESCRIPTION']}", gravity: 's' });                       -->
-          <!-- [> <]                                                                                                                 -->
-          <!-- }                                                                                                                     -->
-          <!-- [> <]                                                                                                                 -->
-          <!-- filter_tooltip();</script>                                                                                            -->
-          <!-- [> ************************************************************************ <]                                        -->
-          <!-- <p:inputText placeholder=" Filter (z.B.: 'Spaltenname=Suchstring')" styleClass="filter_textfield" binding="#{input1}" -->
-          <!-- value="#{e.currentTableFilter[rowIndex]}" id="current_relevant_table_filter" immediate="true" modal="true"            -->
-          <!-- onkeypress="if (event.keyCode == 13) { jQuery('.button_wid_#{table}').click(); filter_tooltip(); return false; }" />  -->
-          <!-- [> <]                                                                                                                 -->
-          <!-- <p:commandButton styleClass="filter_textfield_button button_wid_#{table}" value="Filtern"                             -->
-          <!--     oncomplete="filter_tooltip();" update="@this,current_relevant_table"                                              -->
-          <!-- actionListener="#{e.setCurrentTable(table, rowIndex)}" />                                                             -->
-          <!-- [> <]                                                                                                                 -->
-          <!-- <p:commandButton styleClass="filter_textfield_button" value="Reset" oncomplete="filter_tooltip()"                     -->
-          <!-- actionListener="#{e.resetCurrentTable(table, rowIndex)}"                                                              -->
-          <!-- update="@this,current_relevant_table" />                                                                              -->
-          <!-- [> <]                                                                                                                 -->
-
-          <!-- <p:inputText value="" style="float:left" styleClass="test"></p:inputText> -->
-
-          <p onclick="relevent_tables_dialog_wid_#{table}.hide()" style="margin:5px 0px 3px 0px;">
-            <h:outputText value="Fenster schließen" style="font-size:11px;text-decoration:underlined;font-weight:bold;cursor:pointer;color:#969696;"/>
+         <p:dialog closeOnEscape="true" styleClass="relevant_table_popup_#{table}" header="#{table}"
+         showEffect="fade" hideEffect="fade" resizable="true" widgetVar="relevent_tables_dialog_wid_#{table}"
+         appendTo="@(body)" minWidth="150" minHeight="150">
+          <p onclick="relevent_tables_dialog_wid_#{table}.hide()" class="table_dialog_close_container_t">
+           <h:outputText value="#{txt['QUE.CLOSE_WINDOW']}" styleClass="table_dialog_close_text" />
           </p>
-
           <p:dataTable var="entry" paginatorAlwaysVisible="false" emptyMessage="#{txt['QUE.NO_ENTRIES']}"
           paginator="true" rows="10" value="#{e.tableValues.get(table)}" pageLinks="5"
           id="current_relevant_table" style="margin:10px" widgetVar="relevent_table_wid_#{table}">
@@ -226,53 +187,39 @@ xmlns:p="http://primefaces.org/ui">
            columnIndexVar="colIndex">
            <f:facet name="header">#{column}</f:facet>#{entry.getValue(colIndex)}</p:columns>
           </p:dataTable>
-
-          <p onclick="relevent_tables_dialog_wid_#{table}.hide()" style="margin:3px 0px 15px 0px;">
-            <h:outputText value="Fenster schließen" style="font-size:11px;text-decoration:underlined;font-weight:bold;cursor:pointer;color:#969696;"/>
+          <p onclick="relevent_tables_dialog_wid_#{table}.hide()" class="table_dialog_close_container_b">
+           <h:outputText value="#{txt['QUE.CLOSE_WINDOW']}" styleClass="table_dialog_close_text" />
           </p>
-
-          <!-- ************************************************************************ -->
-
          </p:dialog>
         </p:dataList>
        </p:column>
       </p:row>
-      <!-- ##################################### -->
+      <!-- ************************************************************************ -->
       <!-- mysql ref-link buttons -->
-      <!-- ##################################### -->
+      <!-- ************************************************************************ -->
       <p:row>
        <p:column colspan="2" style="padding-top:0px">
         <p:dataList var="ref" value="#{e.refLinks}" id="refLinks" emptyMessage=""
         styleClass="relevant_tables_list">
          <p:commandButton onclick="window.open('#{ref.url}');return false"
-         styleClass="table_button custom_mysql" ajax="false" value="#{ref.name}"
-         style="position:relative;top:-12px;float:left; background-color: #DB9D9D !important" />
+         styleClass="table_button custom_mysql_button" ajax="false" value="#{ref.name}" />
         </p:dataList>
+        <!-- mysql documentation button -->
         <p:commandButton styleClass="mysql_help_button table_button"
-        style="background-color:#D7DBFF !important;position:relative;left:-6px;top:-12px;margin-left:6px"
         onclick="window.open('#{e.mainRefLink}');return false" value="#{txt['QUE.MYSQL']}" />
+        <!-- er diagram button -->
         <p:commandButton styleClass="dia_button table_button" disabled="false"
-        style="background-color:#D7DBFF !important;position:relative;left:-6px;top:-12px"
-        value="#{txt['QUE.DIA']}" onclick="db_diagram.show();formatDialog('er_diagram_popup', false, false, true)"
-        rendered="#{e.diagramImage != null}" />
-        <p:commandButton styleClass="table_button" disabled="false"
-        style="background-color:#D7DBFF !important;position:relative;left:-6px;top:-12px"
-        value="Alle Fenster schließen" onclick="closeAllDialog();return false"/>
+        onclick="db_diagram.show();formatDialog('er_diagram_popup', false, false, true)"
+        rendered="#{e.diagramImage != null}" value="#{txt['QUE.DIA']}" />
+        <!-- button to close all dialogs -->
+        <p:commandButton styleClass="table_button close_dialogs_button" disabled="false"
+        value="#{txt['QUE.CLOSE_ALL_WINDOW']}" onclick="closeAllDialog();return false" />
        </p:column>
       </p:row>
       <p:row>
-       <p:column style="vertical-align:top" id="feedback_box">
-        <p:outputPanel style="font-size:15px!important;font-weight:bold;
-                color:green;margin-left:11px;margin-bottom:5px" rendered="#{e.querySaved}">
-         <span id="saved_query_box" style="border:1px dashed gray !important;padding:10px 60px 10px 60px">
-         #{txt['QUE.QUERY_SAVED']}</span>
-        </p:outputPanel>
-       </p:column>
-      </p:row>
-      <p:row>
-       <!-- ##################################### -->
+       <!-- ************************************************************************ -->
        <!-- navigation-buttons -->
-       <!-- ##################################### -->
+       <!-- ************************************************************************ -->
        <p:column colspan="2">
         <h:commandButton rendered="#{moveTo.deadEndPrevious(e.getExercise())}"
         action="#{moveTo.previousExercise(e.getExercise())}" onclick="startAjaxStatus()"
@@ -283,69 +230,72 @@ xmlns:p="http://primefaces.org/ui">
        </p:column>
       </p:row>
      </p:panelGrid>
-     <!-- ##################################### -->
+     <!-- ************************************************************************ -->
      <!-- hidden table dialogs -->
-     <!-- ##################################### -->
+     <!-- ************************************************************************ -->
      <!-- diagram -->
      <p:dialog closeOnEscape="true" appendTo="@(body)" header="#{txt['QUE.DIA']}" showEffect="fade"
      hideEffect="fade" widgetVar="db_diagram" styleClass="er_diagram_popup" resizable="true" width="900"
-     height="500" minWidth="400" minHeight="400" onShow="context_tooltip()" position="center top" >
+     height="500" minWidth="400" minHeight="400" onShow="context_tooltip()" position="center top">
       <p onclick="db_diagram.hide()" style="margin:10px 0px 3px 0px;">
-        <h:outputText value="Fenster schließen" style="font-size:11px;text-decoration:underlined;font-weight:bold;cursor:pointer;color:#969696;"/>
+       <h:outputText value="#{txt['QUE.CLOSE_WINDOW']}" styleClass="table_dialog_close_text" />
       </p>
       <h:outputLink value="#{e.diagramImage}" target="_blank" onclick="db_diagram.hide()">
-        <h:outputText value="Dieses Bild in einem neuen Tab öffnen." style="float:left;text-decoration:underline;font-weight:bold; position:relative; top:-19px; left:20px" />
+        <h:outputText value="#{txt['QUE.NEW_TAB']}"
+       style="float:left;text-decoration:underline;font-weight:bold; position:relative; top:-19px; left:20px" />
       </h:outputLink>
-      <br/>
-      <h:graphicImage class="er-diagram longtap" value="#{e.diagramImage}"  style="margin:-20px 5px 20px 5px; padding:20px"/>
+      <br />
+      <h:graphicImage class="er-diagram longtap" value="#{e.diagramImage}"
+      style="margin:-20px 5px 20px 5px; padding:20px" />
       <p onclick="db_diagram.hide()" style="margin:-10px 0px 23px 0px;">
-        <h:outputText value="Fenster schließen" style="font-size:11px;text-decoration:underlined;font-weight:bold;cursor:pointer;color:#969696;"/>
+       <h:outputText value="#{txt['QUE.CLOSE_WINDOW']}" styleClass="table_dialog_close_text" />
       </p>
      </p:dialog>
      <!-- ************************************************************************ -->
      <!-- correct solution table -->
      <p:dialog rendered="#{e.showResults()}" closeOnEscape="true" header="#{txt['QUE.CORRECT_QUERY']}"
-     showEffect="fade" hideEffect="fade" widgetVar="result_table_widget"
-     id="result_table_widget" styleClass="relevant_table_popup solution_result_table_popup" appendTo="@(body)" minWidth="150" minHeight="150">
-        <p onclick="result_table_widget.hide()" style="margin:5px 0px 3px 0px;">
-          <h:outputText value="Fenster schließen" style="font-size:11px;text-decoration:underlined;font-weight:bold;cursor:pointer;color:#969696;"/>
-        </p>
-        <p:dataTable var="sol" emptyMessage="#{txt['QUE.NO_ENTRIES']}" paginator="true" rows="1"
-        value="#{e.solutions}" paginatorAlwaysVisible="false" paginatorPosition="top" id="solution_carousel"
-        first="#{e.usedSolutionIndex}" styleClass="solution_carousel">
-         <p:column>#{sol.getQuery()}</p:column>
-        </p:dataTable>
-        <p:dataTable var="entry" id="result_table" style="margin-top:5px"
-        emptyMessage="#{txt['QUE.NO_ENTRIES']}" paginator="true" rows="10"
-        value="#{e.solutionQueryValues}" paginatorAlwaysVisible="false"
-        filteredValue="#{e.filteredSolutionQueryValues}" styleClass="solution_table">
-         <p:columns styleClass="relevant_table_data" value="#{e.solutionQueryMColumns}" var="column"
-         columnIndexVar="colIndex" sortFunction="#{e.sortByModel}">
-         <f:facet name="header">#{column.header}</f:facet>#{entry[column.indexVariable]}</p:columns>
-        </p:dataTable>
-        <p onclick="result_table_widget.hide()" style="margin:3px 0px 5px 0px;">
-          <h:outputText value="Fenster schließen" style="font-size:11px;text-decoration:underlined;font-weight:bold;cursor:pointer;color:#969696;"/>
-        </p>
+     showEffect="fade" hideEffect="fade" widgetVar="result_table_widget" id="result_table_widget"
+     styleClass="relevant_table_popup solution_result_table_popup" appendTo="@(body)" minWidth="150"
+     minHeight="150">
+      <p onclick="result_table_widget.hide()" style="margin:5px 0px 3px 0px;">
+       <h:outputText value="#{txt['QUE.CLOSE_WINDOW']}" styleClass="table_dialog_close_text" />
+      </p>
+      <p:dataTable var="sol" emptyMessage="#{txt['QUE.NO_ENTRIES']}" paginator="true" rows="1" pageLinks="5"
+      value="#{e.solutions}" paginatorAlwaysVisible="false" paginatorPosition="top" id="solution_carousel"
+      first="#{e.usedSolutionIndex}" styleClass="solution_carousel">
+       <p:column>#{sol.getQuery()}</p:column>
+      </p:dataTable>
+      <p:dataTable var="entry" id="result_table" style="margin-top:5px" pageLinks="5"
+      emptyMessage="#{txt['QUE.NO_ENTRIES']}" paginator="true" rows="10" value="#{e.solutionQueryValues}"
+      paginatorAlwaysVisible="false" filteredValue="#{e.filteredSolutionQueryValues}"
+      styleClass="solution_table">
+       <p:columns styleClass="relevant_table_data" value="#{e.solutionQueryMColumns}" var="column"
+       columnIndexVar="colIndex" sortFunction="#{e.sortByModel}">
+       <f:facet name="header">#{column.header}</f:facet>#{entry[column.indexVariable]}</p:columns>
+      </p:dataTable>
+      <p onclick="result_table_widget.hide()" style="margin:3px 0px 5px 0px;">
+       <h:outputText value="#{txt['QUE.CLOSE_WINDOW']}" styleClass="table_dialog_close_text" />
+      </p>
      </p:dialog>
      <!-- ************************************************************************ -->
-     <p:dialog closeOnEscape="true" header="#{txt['QUE.USER_QUERY']}" showEffect="fade"
-     hideEffect="fade" widgetVar='user_result_widget' id="user_result_widget"
-     styleClass="relevant_table_popup user_result_table_popup" appendTo="@(body)" minWidth="150" minHeight="150">
+     <p:dialog closeOnEscape="true" header="#{txt['QUE.USER_QUERY']}" showEffect="fade" hideEffect="fade"
+     widgetVar='user_result_widget' id="user_result_widget"
+     styleClass="relevant_table_popup user_result_table_popup" appendTo="@(body)" minWidth="150"
+     minHeight="150">
       <p onclick="user_result_widget.hide()" style="margin:5px 0px 3px 0px;">
-        <h:outputText value="Fenster schließen" style="font-size:11px;text-decoration:underlined;font-weight:bold;cursor:pointer;color:#969696;"/>
+       <h:outputText value="#{txt['QUE.CLOSE_WINDOW']}" styleClass="table_dialog_close_text" />
       </p>
-      <p:dataTable id="user_result_table" var="entry"
-      emptyMessage="#{txt['QUE.NO_ENTRIES']}" paginator="true" rows="10"
-      value="#{e.userQueryValues}" paginatorAlwaysVisible="false"
+      <p:dataTable id="user_result_table" var="entry" pageLinks="5" emptyMessage="#{txt['QUE.NO_ENTRIES']}"
+      paginator="true" rows="10" value="#{e.userQueryValues}" paginatorAlwaysVisible="false"
       filteredValue="#{e.filteredUserQueryValues}">
        <p:columns styleClass="relevant_table_data" filterMatchMode="exact" sortFunction="#{e.sortByModel}"
        value="#{e.userQueryMColumns}" var="column" columnIndexVar="colIndex">
        <f:facet name="header">#{column.header}</f:facet>#{entry[column.indexVariable]}</p:columns>
       </p:dataTable>
       <p onclick="user_result_widget.hide()" style="margin:3px 0px 5px 0px;">
-        <h:outputText value="Fenster schließen" style="font-size:11px;text-decoration:underlined;font-weight:bold;cursor:pointer;color:#969696;"/>
+       <h:outputText value="#{txt['QUE.CLOSE_WINDOW']}" styleClass="table_dialog_close_text" />
       </p>
-      <p/>
+      <p />
      </p:dialog>
      <!-- ************************************************************************ -->
     </h:form>

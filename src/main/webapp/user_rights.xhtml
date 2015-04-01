@@ -226,7 +226,7 @@ xmlns:p="http://primefaces.org/ui">
       </h:panelGrid>
       <p:commandButton id="insertBut" value="#{txt['RIGHTS.INSERT']}" update="rights"
       actionListener="#{rights_bean.insertScenarioRights}" disabled="#{rights_bean.disableSave}"
-      oncomplete="dlg.hide(); context_tooltip(); hide_message_timeout()" />
+      oncomplete="dlg.hide(); context_tooltip(); hideMessageTimeout()" />
      </p:dialog>
      <!-- ######################################################################### -->
      <p:dialog header="#{txt['RIGHTS.INSERT_LECTURER']}" widgetVar="instr" resizable="false">
@@ -238,19 +238,21 @@ xmlns:p="http://primefaces.org/ui">
       </h:panelGrid>
       <p:commandButton id="insertBut2" value="#{txt['RIGHTS.INSERT']}" update="lecturerList rights"
       actionListener="#{rights_bean.insertLecturer}"
-      oncomplete="instr.hide(); context_tooltip(); hide_message_timeout()" />
+      oncomplete="instr.hide(); context_tooltip(); hideMessageTimeout()" />
      </p:dialog>
      <!-- ######################################################################### -->
      <!-- delete lecturer user dialog -->
      <!-- ######################################################################### -->
      <p:dialog widgetVar="deleteInstr" resizable="false">
       <br />
-      <h:outputLabel style="display:block;min-width:120px;font-weight:bold;"
+      <h:outputLabel style="display:block;min-width:120px;font-weight:bold; padding:10px 10px 0px 10px"
       value="#{txt['RIGHTS.DELETE_LECTURER']}" />
+      <h:outputLabel style="display:block;min-width:120px;font-weight:bold; padding:10px 10px 0px 10px"
+      value="#{txt['RIGHTS.DELETE_LECTURER_DESC']}" />
       <br />
       <p:commandButton id="deleteButton" value="#{txt['DELETE']}" update="lecturerList rights"
       style="margin:5px" onclick="deleteInstr.hide(); context_tooltip()"
-      actionListener="#{rights_bean.deleteSelectedLecturer}" oncomplete="hide_message_timeout()" />
+      actionListener="#{rights_bean.deleteSelectedLecturer}" oncomplete="hideMessageTimeout()" />
       <p:commandButton id="cancelButton" value="#{txt['CANCEL']}" style="margin:5px"
       onclick="deleteInstr.hide(); context_tooltip()" />
      </p:dialog>
@@ -264,7 +266,7 @@ xmlns:p="http://primefaces.org/ui">
       <br />
       <p:commandButton id="deleteButton2" value="#{txt['DELETE']}"
       actionListener="#{rights_bean.deleteSelectedRight}" update="rights" style="margin:5px"
-      onclick="deleteRight.hide(); context_tooltip();" oncomplete="hide_message_timeout()" />
+      onclick="deleteRight.hide(); context_tooltip();" oncomplete="hideMessageTimeout()" />
       <p:commandButton id="cancelButton2" value="#{txt['CANCEL']}" style="margin:5px"
       onclick="deleteRight.hide(); context_tooltip()" />
      </p:dialog>

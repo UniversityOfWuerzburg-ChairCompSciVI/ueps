@@ -54,7 +54,12 @@ public class Cfg {
 
   public static final String
   RESOURCE_PATH           = "scn",
-  SLAVE_DB_PREFIX         = "ueps_slave_";
+  SLAVE_DB_PREFIX         = "ueps_slave_",
+  DEMO_LECTURER           = "dozent_0",
+  DEMO_ADMIN              = "admin_0",
+  DEMO_STUDENT            = "student_0";
+
+
 
   /**
    * Let's test some shit!

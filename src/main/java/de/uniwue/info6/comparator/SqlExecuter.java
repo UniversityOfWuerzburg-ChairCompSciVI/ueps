@@ -46,422 +46,396 @@ import de.uniwue.info6.parser.structures.TableStructure;
 import de.uniwue.info6.parser.visitors.RootVisitor;
 import de.uniwue.info6.webapp.session.SessionListener;
 
-/* Howto create restricted user
-
- GRANT USAGE ON *.* TO 'restricted_user'@'localhost' IDENTIFIED BY 'passwort' WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;
- GRANT SELECT , INSERT , UPDATE , DELETE , CREATE , DROP, ALTER, LOCK TABLES ON  `dev\_ex` . * TO  'restricted_user'@'localhost';
-
- *
- *
- */
 /**
  * Kapselt SQL-Connection und ermöglicht die Ausführung von SQL-Befehlen auf
  * temporäre Tabelle. Verhindert non-secure Queries. 99% Sicherheit ist
  * allerdings nur mit der Einrichtung eines restricted Users gegeben.
- *
+ * 
  * @author Christian
- *
+ * 
  */
 public class SqlExecuter {
 
-  private Connection connection;
-  private User user;
-  private Scenario scenario;
-
-  private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory
-      .getLogger(SqlExecuter.class);
-
-  /**
-   *
-   *
-   * @param connection
-   * @param user
-   * @param scenario
-   */
-  public SqlExecuter(Connection connection, User user, Scenario scenario) {
-    this.connection = connection;
-    this.user = user;
-    this.scenario = scenario;
-  }
-
-  /**
-   *
-   *
-   * @param query
-   */
-  public void execute(SqlQuery query) {
-
-    double startTime = System.nanoTime();
-
-    if (query.getError() != null || query.getResult() != null) {
-      LOGGER.warn("Query has already been executed");
-      return;
-    }
-
-    if (query.getPlainContent() == null
-        || query.getPlainContent().equals("")) {
-      query.setError(new SqlError(Cfg.inst().getProp(DEF_LANGUAGE,
-                                  "EXECUTER.SQL_ERROR"), System
-                                  .getProperty("EXECUTER.EMPTY_QUERY"), Cfg.inst().getProp(
-                                    DEF_LANGUAGE, "EXECUTER.EMPTY_QUERY"), user.getId()));
-      return;
-    }
-
-    // TODO: fehleranfaellig, sollte man nachbessern
-    if (query.getPlainContent().toLowerCase().contains("drop")
-        || query.getPlainContent().toLowerCase().contains("truncate")
-        || query.getPlainContent().toLowerCase().contains("create")
-        || query.getPlainContent().toLowerCase()
-        .contains("alter table")
-        || (!query.getPlainContent().toLowerCase().contains("update") && query
-            .getPlainContent().toLowerCase().contains("set"))) { // restricted
-      // user
-      // hat
-      // drop,
-      // truncate
-      // und
-      // alter
-      // rechte
-
-      query.setError(new SqlError(Cfg.inst().getProp(DEF_LANGUAGE,
-                                  "EXECUTER.SQL_ERROR"), System
-                                  .getProperty("EXECUTER.SECURITY_ISSUE"), Cfg.inst()
-                                  .getProp(DEF_LANGUAGE, "EXECUTER.SECURITY_ISSUE"), user
-                                  .getId()));
-      return;
-
-    }
-
-    ResultSet result = null;
-    Statement statement = null;
-    ResultSetMetaData resultMetaData = null;
-
-    RootVisitor parsedContent = null;
-
-    boolean byPassParser = false;
-
-    String queryText = SqlQuery.dejustPlainString(query.getPlainContent());
-
-    try {
-      parsedContent = query.getParsedContent();
-
-      if (parsedContent.getMainKeyWord().equals("UPDATE")
-          || parsedContent.getMainKeyWord().equals("DELETE")
-          || parsedContent.getMainKeyWord().equals("INSERT")
-          || parsedContent.getMainKeyWord().equals("SELECT")) {
-
-        // TODO: getTables() returns only lowercase table names
-        LinkedList<String> tables = tableParser(parsedContent.getTables());
-
-        // ------------------------------------------------ //
-        // q&d fix for lowercase name problem
-        // ------------------------------------------------ //
-        final ConnectionManager pool = ConnectionManager.instance();
-        final ArrayList<String> poolTables = pool.getScenarioTableNames(scenario);
-        for (final String table : poolTables) {
-          if (tables.contains(table.toLowerCase())) {
-            tables.remove(table.toLowerCase());
-            tables.add(table);
-          }
-        }
-        // ------------------------------------------------ //
+	private Connection connection;
+	private User user;
+	private Scenario scenario;
+
+	private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory
+			.getLogger(SqlExecuter.class);
+
+	/**
+	 * Konstruktor für einen SQL-Executer für ein spezifisches Szenario.
+	 * 
+	 * @param connection SQL-Connection
+	 * @param user Referenz auf den aktuellen Benutzer
+	 * @param scenario Refrenz auf das aktuelle Szenario
+	 */
+	public SqlExecuter(Connection connection, User user, Scenario scenario) {
+		this.connection = connection;
+		this.user = user;
+		this.scenario = scenario;
+	}
+
+	/**
+	 * Führt einen SQL-Query aus.
+	 * 
+	 * @param query auszuführender Query
+	 */
+	public void execute(SqlQuery query) {
+
+		double startTime = System.nanoTime();
+
+		if (query.getError() != null || query.getResult() != null) {
+			LOGGER.warn("Query has already been executed");
+			return;
+		}
+
+		if (query.getPlainContent() == null
+				|| query.getPlainContent().equals("")) {
+			query.setError(new SqlError(Cfg.inst().getProp(DEF_LANGUAGE,
+					"EXECUTER.SQL_ERROR"), System
+					.getProperty("EXECUTER.EMPTY_QUERY"), Cfg.inst().getProp(
+					DEF_LANGUAGE, "EXECUTER.EMPTY_QUERY"), user.getId()));
+			return;
+		}
+
+		if (query.getPlainContent().toLowerCase().contains("drop")
+				|| query.getPlainContent().toLowerCase().contains("truncate")
+				|| query.getPlainContent().toLowerCase().contains("create")
+				|| query.getPlainContent().toLowerCase()
+						.contains("alter table")
+				|| (!query.getPlainContent().toLowerCase().contains("update") && query
+						.getPlainContent().toLowerCase().contains("set"))) { // restricted
+																				// user
+																				// hat
+																				// drop,
+																				// truncate
+																				// und
+																				// alter
+																				// rechte
+
+			query.setError(new SqlError(Cfg.inst().getProp(DEF_LANGUAGE,
+					"EXECUTER.SQL_ERROR"), System
+					.getProperty("EXECUTER.SECURITY_ISSUE"), Cfg.inst()
+					.getProp(DEF_LANGUAGE, "EXECUTER.SECURITY_ISSUE"), user
+					.getId()));
+			return;
+
+		}
+
+		ResultSet result = null;
+		Statement statement = null;
+		ResultSetMetaData resultMetaData = null;
+
+		RootVisitor parsedContent = null;
 
-        for (String tab : tables) {
+		boolean byPassParser = false;
 
-          // System.out.println(queryText + " -  " + tab);
-          Pattern p = Pattern.compile("([^\\.\\s]([\\s]*))" + tab + "([\\.\\s\\,\\;\\)\\`]|$)");
-          Matcher m = p.matcher(queryText); // get a matcher object
+		String queryText = SqlQuery.dejustPlainString(query.getPlainContent());
 
-          String tmpQuery = queryText;
+		try {
+			parsedContent = query.getParsedContent();
 
-          // ------------------------------------------------ //
-          while (m.find()) {
+			if (parsedContent.getMainKeyWord().equals("UPDATE")
+					|| parsedContent.getMainKeyWord().equals("DELETE")
+					|| parsedContent.getMainKeyWord().equals("INSERT")
+					|| parsedContent.getMainKeyWord().equals("SELECT")) {
 
-            String tmp = queryText.substring(m.start(), m.end());
-            String newTmp = tmp.replaceAll(tab, user.getId() + "_" + tab);
+				LinkedList<String> tables = tableParser(parsedContent
+						.getTables());
 
-            try {
-              tmpQuery = tmpQuery.replace(tmp, newTmp);
-            } catch (Exception e) {
-              LOGGER.warn("TABLE REPLACE ISSUE ", e);
-            }
+				for (String tab : tables) {
 
-          }
-          // ------------------------------------------------ //
+					Pattern p = Pattern.compile("([^\\.\\s]([\\s]*))" + tab
+							+ "([\\.\\s\\,\\;\\)\\`]|$)");
+					Matcher m = p.matcher(queryText); // get a matcher object
 
-          queryText = tmpQuery;
+					String tmpQuery = queryText;
 
-        }
+					while (m.find()) {
 
-      } else {
-        query.setError(new SqlError(Cfg.inst().getProp(DEF_LANGUAGE,
-                                    "EXECUTER.SQL_ERROR"), System
-                                    .getProperty("EXECUTER.SECURITY_ISSUE"), Cfg.inst()
-                                    .getProp(DEF_LANGUAGE, "EXECUTER.SECURITY_ISSUE"), user
-                                    .getId()));
-        return;
-      }
+						String tmp = queryText.substring(m.start(), m.end());
+						String newTmp = tmp.replaceAll(tab, user.getId() + "_"
+								+ tab);
 
-    } catch (Exception e) {
+						try {
+							tmpQuery = tmpQuery.replace(tmp, newTmp);
+						} catch (Exception e) {
+							LOGGER.warn("TABLE REPLACE ISSUE ", e);
+						}
 
-      if (!queryText.contains("&&") && queryText.contains("&")
-          || !queryText.contains("||") && queryText.contains("|")) {
+					}
 
-        // if somebody tries to use | or & to escape a query, we stop
-        // him
-        query.setError(new SqlError(Cfg.inst().getProp(DEF_LANGUAGE,
-                                    "EXECUTER.SQL_ERROR"), System
-                                    .getProperty("EXECUTER.SECURITY_ISSUE"), Cfg.inst()
-                                    .getProp(DEF_LANGUAGE, "EXECUTER.SECURITY_ISSUE"), user
-                                    .getId()));
-        return;
+					queryText = tmpQuery;
 
-      }
+				}
 
-      try { // provoke a sql error //TODO blind Tabellen ersetzen
+			} else {
+				query.setError(new SqlError(Cfg.inst().getProp(DEF_LANGUAGE,
+						"EXECUTER.SQL_ERROR"), System
+						.getProperty("EXECUTER.SECURITY_ISSUE"), Cfg.inst()
+						.getProp(DEF_LANGUAGE, "EXECUTER.SECURITY_ISSUE"), user
+						.getId()));
+				return;
+			}
 
-        LOGGER.warn("PARSER HAS BEEN KILLED ", e);
+		} catch (Exception e) {
 
-        ConnectionManager pool = ConnectionManager.instance();
+			if (!queryText.contains("&&") && queryText.contains("&")
+					|| !queryText.contains("||") && queryText.contains("|")) {
 
-        ArrayList<String> tables = pool.getScenarioTableNames(scenario);
+				// if somebody tries to use | or & to escape a query, we stop
+				// him
+				query.setError(new SqlError(Cfg.inst().getProp(DEF_LANGUAGE,
+						"EXECUTER.SQL_ERROR"), System
+						.getProperty("EXECUTER.SECURITY_ISSUE"), Cfg.inst()
+						.getProp(DEF_LANGUAGE, "EXECUTER.SECURITY_ISSUE"), user
+						.getId()));
+				return;
 
-        for (String tab : tables) {
+			}
 
-          Pattern p = Pattern.compile("([^\\.\\s]([\\s]*))" + tab
-                                      + "([\\.\\s\\,\\;\\)\\(\\`]|$)");
-          Matcher m = p.matcher(queryText); // get a matcher object
+			try { // provoke a sql error
 
-          String tmpQuery = queryText;
+				LOGGER.warn("PARSER HAS BEEN KILLED ", e);
 
-          while (m.find()) {
+				ConnectionManager pool = ConnectionManager.instance();
 
-            String tmp = queryText.substring(m.start(), m.end());
-            String newTmp = tmp.replaceAll(tab, user.getId() + "_"
-                                           + tab);
+				ArrayList<String> tables = pool.getScenarioTableNames(scenario);
 
-            try {
-              tmpQuery = tmpQuery.replace(tmp, newTmp);
-            } catch (Exception e2) {
-              LOGGER.warn("TABLE REPLACE ISSUE ", e2);
-            }
+				for (String tab : tables) {
 
-          }
+					Pattern p = Pattern.compile("([^\\.\\s]([\\s]*))" + tab
+							+ "([\\.\\s\\,\\;\\)\\(\\`]|$)");
+					Matcher m = p.matcher(queryText); // get a matcher object
 
-          queryText = tmpQuery;
+					String tmpQuery = queryText;
 
-        }
+					while (m.find()) {
 
-        statement = connection.createStatement();
+						String tmp = queryText.substring(m.start(), m.end());
+						String newTmp = tmp.replaceAll(tab, user.getId() + "_"
+								+ tab);
 
-        if (queryText.toLowerCase().contains("select")) {
-          statement.executeQuery(queryText);
-        } else {
-          statement.executeUpdate(queryText);
-        }
+						try {
+							tmpQuery = tmpQuery.replace(tmp, newTmp);
+						} catch (Exception e2) {
+							LOGGER.warn("TABLE REPLACE ISSUE ", e2);
+						}
 
-        pool.resetTables(scenario, user);
+					}
 
-      } catch (Exception e2) {
-        query.setError(new SqlError(Cfg.inst().getProp(DEF_LANGUAGE,
-                                    "EXECUTER.SQL_ERROR"), e2.getMessage(),
-                                    e2.getMessage(), user.getId()));
-        return;
+					queryText = tmpQuery;
 
-      } finally {
+				}
 
-        try {
+				statement = connection.createStatement();
 
-          if (result != null)
-            result.close();
+				if (queryText.toLowerCase().contains("select")) {
+					statement.executeQuery(queryText);
+				} else {
+					statement.executeUpdate(queryText);
+				}
 
-          if (statement != null)
-            statement.close();
+				pool.resetTables(scenario, user);
 
-        } catch (SQLException ex) {
-          ex.printStackTrace();
-        }
+			} catch (Exception e2) {
+				query.setError(new SqlError(Cfg.inst().getProp(DEF_LANGUAGE,
+						"EXECUTER.SQL_ERROR"), e2.getMessage(),
+						e2.getMessage(), user.getId()));
+				return;
 
-      }
+			} finally {
 
-      // to make sure that the executer will stop here
-      // query.setError(new SqlError(Cfg.inst().getProp(DEF_LANGUAGE,
-      // "EXECUTER.SQL_ERROR"), System
-      // .getProperty("EXECUTER.CANNOT_PARSE"),
-      // Cfg.inst().getProp(DEF_LANGUAGE, "SQL.EXECUTER.CANNOT_PARSE"),
-      // user.getId()));
-      // return;
-      LOGGER.warn("Query cannot be parsed but executed: " + queryText);
-      byPassParser = true; // query cannot be parsed, but work suprisingly
+				try {
 
-    }
+					if (result != null)
+						result.close();
 
-    if (parsedContent != null || byPassParser) {
+					if (statement != null)
+						statement.close();
 
-      try {
+				} catch (SQLException ex) {
+					ex.printStackTrace();
+				}
 
-        statement = connection.createStatement();
-        statement.setQueryTimeout(20);
+			}
 
-        if ((byPassParser && (queryText.toLowerCase()
-                              .contains("select")))
-            || (parsedContent != null && parsedContent
-                .getMainKeyWord().equals("SELECT"))) {
-          result = statement.executeQuery(queryText);
-          resultMetaData = result.getMetaData();
+			LOGGER.warn("Query cannot be parsed but executed: " + queryText);
+			byPassParser = true; // query cannot be parsed, but work
+									// surprisingly
 
-        } else {
-          statement.executeUpdate(queryText);
-        }
+		}
 
-      } catch (Exception e) {
-        query.setError(new SqlError(Cfg.inst().getProp(DEF_LANGUAGE,
-                                    "EXECUTER.SQL_ERROR"), e.getMessage(), e.getMessage(),
-                                    user.getId()));
-        return;
-      }
+		if (parsedContent != null || byPassParser) {
 
-      if ((byPassParser && !(queryText.toLowerCase().contains("select")))
-          || (parsedContent != null && !parsedContent
-              .getMainKeyWord().equals("SELECT"))) {
+			try {
 
-        try {
+				statement = connection.createStatement();
+				statement.setQueryTimeout(5);
 
-          if (result != null)
-            result.close();
+				if ((byPassParser && (queryText.toLowerCase()
+						.contains("select")))
+						|| (parsedContent != null && parsedContent
+								.getMainKeyWord().equals("SELECT"))) {
+					result = statement.executeQuery(queryText);
+					resultMetaData = result.getMetaData();
 
-          if (statement != null)
-            statement.close();
+				} else {
+					statement.executeUpdate(queryText);
 
-        } catch (SQLException ex) {
-          ex.printStackTrace();
-        }
+				}
 
-        try {
+			} catch (Exception e) {
+				query.setError(new SqlError(Cfg.inst().getProp(DEF_LANGUAGE,
+						"EXECUTER.SQL_ERROR"), e.getMessage(), e.getMessage(),
+						user.getId()));
+				return;
+			}
 
-          statement = connection.createStatement();
+			if ((byPassParser && !(queryText.toLowerCase().contains("select")))
+					|| (parsedContent != null && !parsedContent
+							.getMainKeyWord().equals("SELECT"))) {
 
-          if (byPassParser || parsedContent == null) {
+				try {
 
-            ConnectionManager pool = ConnectionManager.instance();
-            ArrayList<String> tables = pool
-                                       .getScenarioTableNames(scenario);
-            String tmp2 = "";
+					if (result != null)
+						result.close();
 
-            for (String tab : tables) { // q&d fix
-              if (queryText.toLowerCase().contains(
-                    tab.toLowerCase()))
-                tmp2 = "SELECT * FROM " + user.getId() + "_"
-                       + tab;
-            }
+					if (statement != null)
+						statement.close();
 
-            queryText = tmp2;
+				} catch (SQLException ex) {
+					ex.printStackTrace();
+				}
 
-          } else {
+				try {
 
-            for (TableStructure table : parsedContent.getTables()) {
-              queryText = "SELECT * FROM " + user.getId() + "_"
-                          + table.getValue();
-            }
+					statement = connection.createStatement();
 
-          }
+					if (byPassParser || parsedContent == null) {
 
-          result = statement.executeQuery(queryText);
-          resultMetaData = result.getMetaData();
+						ConnectionManager pool = ConnectionManager.instance();
+						ArrayList<String> tables = pool
+								.getScenarioTableNames(scenario);
+						String tmp2 = "";
 
-          ConnectionManager pool = ConnectionManager.instance();
-          pool.resetTables(scenario, user);
+						for (String tab : tables) { // q&d fix
+							if (queryText.toLowerCase().contains(
+									tab.toLowerCase()))
+								tmp2 = "SELECT * FROM " + user.getId() + "_"
+										+ tab;
+						}
 
-        } catch (Exception e) {
-          query.setError(new SqlError(Cfg.inst().getProp(
-                                        DEF_LANGUAGE, "EXECUTER.SQL_ERROR"),
-                                      e.getMessage(), e.getMessage(), user.getId()));
+						queryText = tmp2;
 
-          try {
-            return;
-          } finally {
-            try {
+					} else {
 
-              if (result != null)
-                result.close();
+						for (TableStructure table : parsedContent.getTables()) {
+							queryText = "SELECT * FROM " + user.getId() + "_"
+									+ table.getValue();
+						}
 
-              if (statement != null)
-                statement.close();
+					}
 
-            } catch (SQLException ex) {
-              ex.printStackTrace();
-            }
-          }
-        }
-      }
+					result = statement.executeQuery(queryText);
+					resultMetaData = result.getMetaData();
 
-      SqlResult tmpResult = new SqlResult(result, resultMetaData);
-      query.setResult(tmpResult);
+					ConnectionManager pool = ConnectionManager.instance();
+					pool.resetTables(scenario, user);
 
-    }
+				} catch (Exception e) {
+					query.setError(new SqlError(Cfg.inst().getProp(
+							DEF_LANGUAGE, "EXECUTER.SQL_ERROR"),
+							e.getMessage(), e.getMessage(), user.getId()));
 
-    try {
+					try {
+						return;
+					} finally {
+						try {
 
-      if (result != null)
-        result.close();
+							if (result != null)
+								result.close();
 
-      if (statement != null)
-        statement.close();
+							if (statement != null)
+								statement.close();
 
-    } catch (SQLException ex) {
-      ex.printStackTrace();
-    }
+						} catch (SQLException ex) {
+							ex.printStackTrace();
+						}
+					}
+				}
+			}
 
-    double endTime = System.nanoTime();
+			SqlResult tmpResult = new SqlResult(result, resultMetaData);
+			query.setResult(tmpResult);
 
-    String statsString = "executer_exec\t"
-                         + ((endTime - startTime) / 1000000);
+		}
 
-    SessionListener.setExecuterStat(statsString);
+		try {
 
-  }
+			if (result != null)
+				result.close();
 
-  private LinkedList<String> tableParser(LinkedList<TableStructure> tables) {
+			if (statement != null)
+				statement.close();
 
-    LinkedList<String> tmpTables = new LinkedList<String>();
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
 
-    // System.out.println("in: " + tables);
+		double endTime = System.nanoTime();
 
-    for (TableStructure table : tables) {
+		String statsString = "executer_exec\t"
+				+ ((endTime - startTime) / 1000000);
 
-      if (table instanceof JoinTableStructure) {
+		SessionListener.setExecuterStat(statsString);
 
-        LinkedList<TableStructure> tmp1 = new LinkedList<TableStructure>();
-        tmp1.add(((JoinTableStructure) table).getLeftTable());
+	}
 
-        LinkedList<TableStructure> tmp2 = new LinkedList<TableStructure>();
-        tmp2.add(((JoinTableStructure) table).getRightTable());
+	/**
+	 * Findet alle in einem Query vorkommenden Tabellen.
+	 * 
+	 * @param tables Liste von Tabellen-Strukturen
+	 * @return Liste von Tabellen-Namen
+	 */
+	private LinkedList<String> tableParser(LinkedList<TableStructure> tables) {
 
-        LinkedList<String> tablesNew = tableParser(tmp1);
-        tablesNew.addAll(tableParser(tmp2));
+		LinkedList<String> tmpTables = new LinkedList<String>();
 
-        for (String tab : tablesNew) {
+		for (TableStructure table : tables) {
 
-          if (!tmpTables.contains(tab)) {
-            tmpTables.add(tab);
-          }
+			if (table instanceof JoinTableStructure) {
 
-        }
+				LinkedList<TableStructure> tmp1 = new LinkedList<TableStructure>();
+				tmp1.add(((JoinTableStructure) table).getLeftTable());
 
-      } else {
+				LinkedList<TableStructure> tmp2 = new LinkedList<TableStructure>();
+				tmp2.add(((JoinTableStructure) table).getRightTable());
 
-        if (!tmpTables.contains(table.toString())) {
-          tmpTables.add(table.getValue());
-        }
+				LinkedList<String> tablesNew = tableParser(tmp1);
+				tablesNew.addAll(tableParser(tmp2));
 
-      }
+				for (String tab : tablesNew) {
 
-    }
+					if (!tmpTables.contains(tab)) {
+						tmpTables.add(tab);
+					}
 
-    // System.out.println("out: " + tmpTables);
+				}
 
-    return tmpTables;
+			} else {
 
-  }
+				if (!tmpTables.contains(table.toString())) {
+					tmpTables.add(table.getValue());
+				}
+
+			}
+
+		}
+
+		return tmpTables;
+
+	}
 
 }

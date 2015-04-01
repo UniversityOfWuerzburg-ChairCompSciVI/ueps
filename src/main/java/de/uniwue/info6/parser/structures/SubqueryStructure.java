@@ -24,7 +24,6 @@ package de.uniwue.info6.parser.structures;
  * #L%
  */
 
-
 import java.util.LinkedList;
 
 import de.uniwue.info6.comparator.SqlQueryComparator;

@@ -24,7 +24,6 @@ package de.uniwue.info6.comparator;
  * #L%
  */
 
-
 /**
  * Taken from http://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#Java
  */
@@ -35,6 +34,7 @@ public class LevenshteinDistance {
   }
 
   public static int computeLevenshteinDistance(CharSequence str1, CharSequence str2) {
+	  
     int[][] distance = new int[str1.length() + 1][str2.length() + 1];
 
     for (int i = 0; i <= str1.length(); i++)
@@ -48,6 +48,7 @@ public class LevenshteinDistance {
             + ((str1.charAt(i - 1) == str2.charAt(j - 1)) ? 0 : 1));
 
     return distance[str1.length()][str2.length()];
+    
   }
 
 }

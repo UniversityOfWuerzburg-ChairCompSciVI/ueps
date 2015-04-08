@@ -131,6 +131,16 @@ public class ScenarioDao extends DaoTools<Scenario> {
     }
   }
 
+  /**
+   *
+   *
+   * @param scenario
+   * @return
+   */
+  public Scenario pull(Scenario scenario) {
+    return this.getById(scenario.getId());
+  }
+
   // ******************************************************************
   // generated methods of hibernate
   // ******************************************************************

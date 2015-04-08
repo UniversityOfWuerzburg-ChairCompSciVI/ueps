@@ -24,12 +24,11 @@ package de.uniwue.info6.database.map.daos;
  * #L%
  */
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.view.ViewScoped;
-
-
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -82,9 +81,18 @@ public class UserRightDao extends DaoTools<UserRight> {
    * @return
    */
   public List<UserRight> getByCreator(User user) {
-    UserRight example = new UserRight();
+    final UserRight example = new UserRight();
     example.setCreatedByUser(user);
-    List<UserRight> rights = findByExample(example);
+    final List<UserRight> rights = findByExample(example);
+    final List<UserRight> rightsToRemove = new ArrayList<UserRight>();
+
+    for (final UserRight right : rights) {
+      if (right.getUser().getId().equals(user.getId())) {
+        rightsToRemove.add(right);
+      }
+    }
+    rights.removeAll(rightsToRemove);
+
     return rights;
   }
 

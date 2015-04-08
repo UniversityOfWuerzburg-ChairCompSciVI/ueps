@@ -24,8 +24,8 @@ package de.uniwue.info6.webapp.admin;
  * #L%
  */
 
-import static de.uniwue.info6.misc.properties.PropBool.DEBUG_MODE;
 import static de.uniwue.info6.misc.properties.PropBool.CREATE_EXAMPLE_EXERCISE;
+import static de.uniwue.info6.misc.properties.PropBool.DEBUG_MODE;
 import static de.uniwue.info6.misc.properties.PropBool.SHOWCASE_MODE;
 import static de.uniwue.info6.misc.properties.PropString.MASTER_DBHOST;
 import static de.uniwue.info6.misc.properties.PropString.MASTER_DBPORT;
@@ -63,10 +63,12 @@ import de.uniwue.info6.database.map.ExerciseGroup;
 import de.uniwue.info6.database.map.Scenario;
 import de.uniwue.info6.database.map.SolutionQuery;
 import de.uniwue.info6.database.map.User;
+import de.uniwue.info6.database.map.UserRight;
 import de.uniwue.info6.database.map.daos.ExerciseDao;
 import de.uniwue.info6.database.map.daos.ExerciseGroupDao;
 import de.uniwue.info6.database.map.daos.ScenarioDao;
 import de.uniwue.info6.database.map.daos.SolutionQueryDao;
+import de.uniwue.info6.database.map.daos.UserRightDao;
 import de.uniwue.info6.misc.DateFormatTools;
 import de.uniwue.info6.misc.FileTransfer;
 import de.uniwue.info6.misc.Password;
@@ -91,8 +93,6 @@ public class AdminEditScenario implements Serializable {
 
   private static final String SCENARIO_PARAM = "scenario";
   private static final String EMPTY_FIELD = "---";
-
-  private static final boolean renderDatabaseFieldsForNonAdmins = false;
 
   private static String scriptSystemPath = Cfg.inst().getProp(MAIN_CONFIG, SCENARIO_RESOURCES_PATH);
 
@@ -127,7 +127,7 @@ public class AdminEditScenario implements Serializable {
   private boolean userHasRights;
   private UserRights rights;
   private boolean databaseChanged;
-  private boolean isAdmin;
+  private boolean isAdmin, isLecturer;
   private boolean debugMode;
 
   // ------------------------------------------------ //
@@ -135,6 +135,7 @@ public class AdminEditScenario implements Serializable {
   private ExerciseDao exerciseDao;
   private ExerciseGroupDao exerciseGroupDao;
   private SolutionQueryDao solutionQueryDao;
+  private UserRightDao userRightsDao;
   // ------------------------------------------------ //
 
   /**
@@ -143,7 +144,7 @@ public class AdminEditScenario implements Serializable {
    * @return
    */
   public boolean renderDBFields() {
-    if (isAdmin || renderDatabaseFieldsForNonAdmins) {
+    if (isAdmin || isLecturer) {
       return true;
     }
     return false;
@@ -209,6 +210,7 @@ public class AdminEditScenario implements Serializable {
     ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
     scenarioDao = new ScenarioDao();
     exerciseDao = new ExerciseDao();
+    userRightsDao = new UserRightDao();
     exerciseGroupDao = new ExerciseGroupDao();
     solutionQueryDao = new SolutionQueryDao();
     Map<String, String> requestParams = ec.getRequestParameterMap();
@@ -221,6 +223,7 @@ public class AdminEditScenario implements Serializable {
 
     if (user != null) {
       this.isAdmin = rights.isAdmin(user);
+      this.isLecturer = rights.isLecturer(user);
     }
 
     if (!requestParams.isEmpty()) {
@@ -232,7 +235,7 @@ public class AdminEditScenario implements Serializable {
           scenario = scenarioDao.getById(id);
 
           if (scenario == null) {
-            if (rights.isAdmin(user)) {
+            if (rights.isAdmin(user) || rights.isLecturer(user)) {
               userHasRights = true;
             }
           } else {
@@ -281,7 +284,7 @@ public class AdminEditScenario implements Serializable {
           }
         }
       } catch (NumberFormatException e) {
-        if (rights.isAdmin(user)) {
+        if (rights.isAdmin(user) || rights.isLecturer(user)) {
           userHasRights = true;
         }
       } catch (Exception e) {
@@ -636,16 +639,11 @@ public class AdminEditScenario implements Serializable {
               scenarioDao.insertNewInstanceP(tempScenario);
             }
 
-            List<Scenario> tempScenarios = scenarioDao.findByExample(tempScenario);
-            Scenario temp = null;
-            if (tempScenarios != null && !tempScenarios.isEmpty()) {
-              temp = tempScenarios.get(0);
-            }
+            connectionPool.updateScenarios();
 
-            if (temp != null) {
-              tempScenario = temp;
+            if (tempScenario.getId() != null) {
               LOGGER.info("going to copy: \n" + imageFile + "\n" + scriptFile);
-              if (!uploader.copy(scriptFile, imageFile, String.valueOf(temp.getId()))) {
+              if (!uploader.copy(scriptFile, imageFile, String.valueOf(tempScenario.getId()))) {
                 message = Cfg.inst().getProp(DEF_LANGUAGE, "EDIT_SC.COPY_ERROR");
                 sev = FacesMessage.SEVERITY_ERROR;
               }
@@ -655,34 +653,42 @@ public class AdminEditScenario implements Serializable {
               sev = FacesMessage.SEVERITY_ERROR;
             }
 
-            connectionPool.updateScenarios();
-
             // ------------------------------------------------ //
-            try {
-              final boolean generateExampleExercise = Cfg.inst().getProp(MAIN_CONFIG, CREATE_EXAMPLE_EXERCISE);
-              if (generateExampleExercise && tempScenario.getId() != null) {
-                final Random random = new Random();
-                final ExerciseGroup testGroup = new ExerciseGroup();
-                testGroup.setName("Test Übungsblatt - " + random.nextInt(100000) + " (lösch mich)");
-                testGroup.setIsRated(false);
-                testGroup.setScenario(tempScenario);
-                exerciseGroupDao.insertNewInstanceP(testGroup);
-                final ArrayList<String> tables = connectionPool.getScenarioTableNames(tempScenario);
-                if (testGroup.getId() != null && tables != null && !tables.isEmpty()) {
-                  final Exercise testExercise = new Exercise();
-                  testExercise.setExerciseGroup(testGroup);
-                  testExercise.setQuestion("Test Übungsaufgabe - " + random.nextInt(100000) +  " (lösch mich)");
-                  testExercise.setCredits((byte) 1);
-                  this.exerciseDao.insertNewInstanceP(testExercise);
-                  final SolutionQuery solutionQuery = new SolutionQuery();
-                  solutionQuery.setExercise(testExercise);
-                  solutionQuery.setQuery("SELECT * FROM " + tables.get(0));
-                  this.solutionQueryDao.insertNewInstanceP(solutionQuery);
+            if (tempScenario.getId() != null) {
+              try {
+
+                if (this.rights.isLecturer(user)) {
+                  final UserRight rightsToSave = new UserRight(user, user, tempScenario, true, true, true);
+                  this.userRightsDao.insertNewInstance(rightsToSave);
                 }
+
+                final boolean generateExampleExercise = Cfg.inst().getProp(MAIN_CONFIG, CREATE_EXAMPLE_EXERCISE);
+                if (generateExampleExercise && tempScenario.getId() != null) {
+                  final Random random = new Random();
+                  final ExerciseGroup testGroup = new ExerciseGroup();
+                  testGroup.setName("Test Übungsblatt - " + random.nextInt(100000) + " (lösch mich)");
+                  testGroup.setIsRated(false);
+                  testGroup.setScenario(tempScenario);
+                  exerciseGroupDao.insertNewInstanceP(testGroup);
+                  final ArrayList<String> tables = connectionPool.getScenarioTableNames(tempScenario);
+                  if (testGroup.getId() != null && tables != null && !tables.isEmpty()) {
+                    final Exercise testExercise = new Exercise();
+                    testExercise.setExerciseGroup(testGroup);
+                    testExercise.setQuestion("Test Übungsaufgabe - " + random.nextInt(100000) +  " (lösch mich)");
+                    testExercise.setCredits((byte) 1);
+                    this.exerciseDao.insertNewInstanceP(testExercise);
+                    final SolutionQuery solutionQuery = new SolutionQuery();
+                    solutionQuery.setExercise(testExercise);
+                    solutionQuery.setQuery("SELECT * FROM " + tables.get(0));
+                    this.solutionQueryDao.insertNewInstanceP(solutionQuery);
+                  }
+                }
+              } catch (Exception e) {
+                LOGGER.info("CAN NOT GENERATE EXAMPLE SCENARIO", e);
               }
-            } catch (Exception e) {
-              LOGGER.info("CAN NOT GENERATE EXAMPLE SCENARIO", e);
             }
+
+
             // ------------------------------------------------ //
           }
         } else {

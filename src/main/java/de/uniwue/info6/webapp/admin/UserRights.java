@@ -424,8 +424,9 @@ public class UserRights implements Serializable {
       if (isAdmin(user)) {
         return true;
       }
-      List<UserRight> rights = userRightDao.getByUser(user);
 
+      // ------------------------------------------------ //
+      List<UserRight> rights = userRightDao.getByUser(user);
       if (rights != null) {
         for (UserRight right : rights) {
           Scenario sc = right.getScenario();
@@ -436,6 +437,7 @@ public class UserRights implements Serializable {
           }
         }
       }
+      // ------------------------------------------------ //
     }
     return false;
   }
@@ -745,14 +747,15 @@ public class UserRights implements Serializable {
     UserRight example = new UserRight();
     example.setUser(user);
     List<UserRight> lecturerRights = this.userRightDao.findByExample(example);
-    List<Scenario> scenarios = new ArrayList<Scenario>();
+    List<Scenario> scs = new ArrayList<Scenario>();
     for (UserRight r : lecturerRights) {
       Scenario sc = r.getScenario();
-      if (!scenarios.contains(sc)) {
-        scenarios.add(scenarioDao.getById(sc.getId()));
+      sc = scenarioDao.pull(sc);
+      if (!scs.contains(sc)) {
+        scs.add(scenarioDao.getById(sc.getId()));
       }
     }
-    return scenarios;
+    return scs;
   }
 
   // ------------------------------------------------ //

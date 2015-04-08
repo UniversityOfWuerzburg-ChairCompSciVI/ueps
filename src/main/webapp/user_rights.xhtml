@@ -110,7 +110,7 @@ xmlns:p="http://primefaces.org/ui">
        <p:commandButton update="rights" action="#{rights_bean.toggleScenarioEditingRight(right)}"
        icon="#{right.hasScenarioEditingRights ? 'ui-icon-circle-check' : 'ui-icon-circle-close'}"
        styleClass="#{right.hasScenarioEditingRights ? 'remove_right_button' : 'give_right_button'} "
-       oncomplete="context_tooltip()" />
+       oncomplete="context_tooltip()" disabled="#{rights_bean.disableToggleButtons(right)}"/>
       </p:column>
       <!-- ######################################################################### -->
       <p:column headerText="#{txt['RIGHTS.CAN_EDIT_GROUPS']}" sortBy="#{right.hasGroupEditingRights}"

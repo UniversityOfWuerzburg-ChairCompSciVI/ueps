@@ -658,7 +658,8 @@ public class AdminTreeBean implements Serializable {
    * @return
    */
   public boolean renderExportMenu() {
-    if (exerciseNode != null && exerciseNode.isScenario()) {
+    if (exerciseNode != null && exerciseNode.isScenario()
+        && (rights.isAdmin(user) || rights.isLecturer(user))) {
       return true;
     }
     return false;
@@ -776,7 +777,7 @@ public class AdminTreeBean implements Serializable {
   public boolean renderAddMenu() {
     if (exerciseNode != null) {
       if (exerciseNode.isRootNode()) {
-        if (rights.isAdmin(user)) {
+        if (rights.isAdmin(user) || rights.isLecturer(user)) {
           return true;
         }
       } else if (!exerciseNode.isExercise()) {

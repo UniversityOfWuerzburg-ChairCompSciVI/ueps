@@ -4,12 +4,13 @@ var tempBlockSessionTimerSync = false;
 // ------------------------------------------------ //
 jQuery(document).ready(function() {
   // show session time in seconds
-  setTimeout("showSessionTimer()", 2000);
+  setTimeout("showSessionTimer()", 10000);
   initCustomScrollbar();
   initSmallGuiChanges();
   initPulsatePlugin();
   initInternetExplorerDetection();
   patchContextMenu();
+  initSessionTimer();
 });
 // ------------------------------------------------ //
 

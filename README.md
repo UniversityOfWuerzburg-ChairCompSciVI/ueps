@@ -451,8 +451,7 @@ Ein Beispiel zum herunterladen: [Amazon-Szenario][export1]
 -
 
 #### Rollen und Rechte
-Um den Zugriff auf die Funktionen von ÜPS zu kontrollieren, wurden drei 
-verschiedene Rollen eingeführt: **Student**, **Dozent** und **Admin**.
+Um den Zugriff auf die Funktionen von ÜPS zu kontrollieren, wurden drei verschiedene Rollen eingeführt: **Student**, **Dozent** und **Admin**.
 
 
 Der **Admin** verfügt über umfassende Rechte im ganzen System:

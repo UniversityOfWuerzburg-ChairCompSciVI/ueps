@@ -536,7 +536,8 @@ public class AuthorizationFilter implements Filter, Serializable {
                   }
                 } catch (NumberFormatException e) {
                   if (scID[0].trim().equals(NEW_SCENARIO_PAR)) {
-                    editPermissionError = !rights.isAdmin(user);
+                    // !(rights.isAdmin(user) || rights.isLecturer(user))
+                    editPermissionError = !rights.isAdmin(user) && !rights.isLecturer(user);
                   }
                 }
               }
@@ -599,7 +600,9 @@ public class AuthorizationFilter implements Filter, Serializable {
 
               // ------------------------------------------------ //
 
-              // System.out.println(editPermissionError + " " + editSubmissionError + " " + editUserRightsError + " " + viewingRightsError);
+              // System.out.println(editPermissionError + " " + editSubmissionError
+              // + " " + editUserRightsError + " " + viewingRightsError);
+
               if (editPermissionError || editSubmissionError || editUserRightsError || viewingRightsError) {
                 throwPermissionError(res, req);
               }

@@ -336,6 +336,7 @@ public class ConnectionTools extends Thread {
                       user);
                   exc.setUserString(solution);
                   System.err.println("INFO (ueps): Adding test user entry: " + solution);
+                  Thread.sleep(5000);
                 } catch (Exception e) {
                 } finally {
                 }
@@ -391,7 +392,7 @@ public class ConnectionTools extends Thread {
 
       Scenario scenario = new ScenarioDao().getById(1);
       if (scenario != null && admin1 != null) {
-        UserRight right = new UserRight(lecturer1, admin1, scenario, true, true, false);
+        UserRight right = new UserRight(lecturer1, admin1, scenario, true, true, true);
         userRightDao.insertNewInstance(right);
       }
     }

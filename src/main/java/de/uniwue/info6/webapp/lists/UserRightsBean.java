@@ -317,7 +317,8 @@ public class UserRightsBean implements Serializable {
           }
           this.canAssert = true;
           this.canEditGroups = true;
-          this.disableEditScenario = false;
+          this.canEditScenario = true;
+          this.disableEditScenario = true;
         } else {
           this.userStatus = Cfg.inst().getProp(DEF_LANGUAGE, "RIGHTS.STUDENT");
           this.disableSave = false;

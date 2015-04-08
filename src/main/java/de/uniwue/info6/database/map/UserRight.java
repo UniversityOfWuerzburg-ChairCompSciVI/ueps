@@ -150,8 +150,4 @@ public class UserRight implements java.io.Serializable {
   public void setHasScenarioEditingRights(Boolean hasScenarioEditingRights) {
     this.hasScenarioEditingRights = hasScenarioEditingRights;
   }
-
-  public UserRight pull() {
-    return new UserRightDao().getById(getId());
-  }
 }

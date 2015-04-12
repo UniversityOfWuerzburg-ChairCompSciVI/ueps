@@ -74,6 +74,8 @@ import de.uniwue.info6.misc.FileTransfer;
 import de.uniwue.info6.misc.Password;
 import de.uniwue.info6.misc.StringTools;
 import de.uniwue.info6.misc.properties.Cfg;
+import de.uniwue.info6.misc.properties.PropInteger;
+import de.uniwue.info6.misc.properties.PropertiesFile;
 import de.uniwue.info6.webapp.session.SessionObject;
 
 /**
@@ -269,13 +271,13 @@ public class AdminEditScenario implements Serializable {
               }
 
               if (scriptPath != null && !scriptPath.isEmpty()) {
-                File absPath = getSourceFile(scriptPath);
+                File absPath = getSourceFile(scriptPath, false);
                 scriptFile = absPath;
                 scriptStream = uploader.getFileToDownload(absPath);
               }
 
               if (imagePath != null) {
-                File absPath = getSourceFile(imagePath);
+                File absPath = getSourceFile(imagePath, false);
                 imageFile = absPath;
                 imageStream = uploader.getFileToDownload(absPath);
               }
@@ -307,9 +309,10 @@ public class AdminEditScenario implements Serializable {
    * @param fileName
    * @return
    */
-  public File getSourceFile(String fileName) {
+  public File getSourceFile(String fileName, boolean origin) {
+    String scenarioID = origin ? "0" : scenario.getId().toString();
     File file = new File(scriptSystemPath + File.separator + Cfg.RESOURCE_PATH + File.separator
-                         + scenario.getId() + File.separator + fileName);
+                         + scenarioID + File.separator + fileName);
     return file;
   }
 
@@ -340,7 +343,7 @@ public class AdminEditScenario implements Serializable {
    *
    */
   public void resetScriptFile() {
-    File absPath = getSourceFile(scriptPath);
+    File absPath = getSourceFile(scriptPath, false);
     scriptStream = uploader.getFileToDownload(absPath);
   }
 
@@ -349,7 +352,7 @@ public class AdminEditScenario implements Serializable {
    *
    */
   public void resetImageFile() {
-    File absPath = getSourceFile(imagePath);
+    File absPath = getSourceFile(imagePath, false);
     imageStream = uploader.getFileToDownload(absPath);
   }
 
@@ -524,19 +527,63 @@ public class AdminEditScenario implements Serializable {
         }
       }
 
+      // ------------------------------------------------ //
+      File scriptFile = null;
       if (scriptPath != null) {
+        scriptFile = getSourceFile(scriptPath, true);
         if (!scriptPath.trim().toLowerCase().endsWith(".sql")) {
           message = Cfg.inst().getProp(DEF_LANGUAGE, "EDIT_SC.FALSE_ENDING") + ": \".sql\"!";
           sev = FacesMessage.SEVERITY_ERROR;
         }
+
+        Integer maxFileSize = Cfg.inst().getProp(
+                                PropertiesFile.MAIN_CONFIG, PropInteger.MAX_SQL_SCRIPT_SIZE);
+        final Integer maxFileSizeStudent = Cfg.inst().getProp(
+                                             PropertiesFile.MAIN_CONFIG, PropInteger.MAX_SQL_SCRIPT_SIZE_STUDENT);
+
+        if (maxFileSize != null || (maxFileSizeStudent != null && !isAdmin && !isLecturer)) {
+          if (maxFileSizeStudent != null) {
+            maxFileSize = maxFileSizeStudent;
+          }
+          if (scriptFile.exists() && scriptFile.isFile() && scriptFile.canRead()) {
+            if (!validSize(maxFileSize, scriptFile)) {
+              // TODO:
+              message = "Die maximale Größe für das SQL-Skript ist " + maxFileSize + "KB<br>"
+                        + "(Festgelegt in der 'config.properties')";
+              sev = FacesMessage.SEVERITY_ERROR;
+            }
+          } else {
+            message = "Unerwarteter Fehler, das SQL-Skript konnte intern nicht gefunden werden<br>" + scriptFile;
+            sev = FacesMessage.SEVERITY_ERROR;
+          }
+        }
       }
+      // ------------------------------------------------ //
 
       if (imagePath != null) {
+        final File imageFile = getSourceFile(imagePath, true);
         String img = imagePath.trim().toLowerCase();
-        if (!img.endsWith(".jpg") && !img.endsWith(".jpeg") && !img.endsWith(".gif")
-            && !img.endsWith(".png")) {
+
+        if (!img.endsWith(".jpg") && !img.endsWith(".jpeg") && !img.endsWith(".png")) {
           message = Cfg.inst().getProp(DEF_LANGUAGE, "EDIT_SC.NO_DIAGRAM");
           sev = FacesMessage.SEVERITY_ERROR;
+        }
+
+        final Integer maxFileSize = Cfg.inst().getProp(
+                                      PropertiesFile.MAIN_CONFIG, PropInteger.MAX_ER_DIAGRAM_SIZE);
+
+        if (maxFileSize != null) {
+          if (imageFile.exists() && imageFile.isFile() && imageFile.canRead()) {
+            if (!validSize(maxFileSize, imageFile)) {
+              // TODO:
+              message = "Die maximale Größe für das ER-Diagramm ist " + maxFileSize + "KB<br>"
+                        + "(Festgelegt in der 'config.properties')";
+              sev = FacesMessage.SEVERITY_ERROR;
+            }
+          } else {
+            message = "Unerwarteter Fehler, das ER-Diagramm konnte intern nicht gefunden werden<br>" + imageFile;
+            sev = FacesMessage.SEVERITY_ERROR;
+          }
         }
       }
 
@@ -736,6 +783,24 @@ public class AdminEditScenario implements Serializable {
 
     msg = new FacesMessage(sev, message, details);
     FacesContext.getCurrentInstance().addMessage(null, msg);
+  }
+
+
+  /**
+   *
+   *
+   * @param maxSizeInKB
+   * @return
+   */
+  private boolean validSize(final int maxSizeInKB, final File file) {
+    try {
+      long fileSizeInKB = file.length() / 1024;
+      if (fileSizeInKB < maxSizeInKB)
+        return true;
+    } catch (NumberFormatException e) {
+      e.printStackTrace();
+    }
+    return false;
   }
 
   /**

@@ -88,11 +88,14 @@ public class ExerciseController implements Serializable {
    *
    */
   private static final long serialVersionUID = 1L;
-  private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(ExerciseController.class);
+  private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory
+      .getLogger(ExerciseController.class);
 
   @SuppressWarnings("unused")
   private static final String error = "ERROR: Scenario not found!", exerciseParam = "exercise";
   private static final String RESOURCE_PATH_IMAGES = "scn_images";
+
+  private static final long timeIntervalBetweenInput = 5000;
 
   private SessionObject ac;
   private Scenario scenario;
@@ -121,7 +124,8 @@ public class ExerciseController implements Serializable {
 
   private boolean resultVisible, userResultVisible, feedbackVisible;
   private boolean syntaxError;
-  private boolean tempBlock;
+
+  private long lastEntryTime = 0;
 
   private ArrayList<String> availableTables;
 
@@ -350,11 +354,11 @@ public class ExerciseController implements Serializable {
         solutions = exerciseDao.getSolutions(exercise);
 
         if (exerciseGroup != null) {
-          try {
-            this.connectionPool.resetTables(scenario, user);
-          } catch (Exception e) {
-            LOGGER.error("COULD NOT RESET TABLES", e);
-          }
+          // try {
+          // this.connectionPool.resetTables(scenario, user);
+          // } catch (Exception e) {
+          // LOGGER.error("COULD NOT RESET TABLES", e);
+          // }
 
           // TODO: replace with a new table-field in exercisegroup
           if (exerciseGroup.getDescription() == null
@@ -376,7 +380,6 @@ public class ExerciseController implements Serializable {
           if (debug) {
             userHasRights = true;
           }
-
 
           diagramImage = scenario.getImagePath();
           if (diagramImage != null) {
@@ -407,7 +410,6 @@ public class ExerciseController implements Serializable {
               }
               solutionQueries.add(sqlQuery);
             }
-
 
             UserEntry entry = userEntryDao.getLastUserEntry(exercise, user);
 
@@ -474,8 +476,7 @@ public class ExerciseController implements Serializable {
                         tableValues.put(table, el);
                       }
 
-                      this.tableValuesOriginal = new HashMap<String, List<TableEntry>>(
-                        tableValues);
+                      this.tableValuesOriginal = new HashMap<String, List<TableEntry>>(tableValues);
                       currentTableFilter = new String[tableValues.size() + 2];
                     }
                   } catch (Exception e) {
@@ -556,36 +557,49 @@ public class ExerciseController implements Serializable {
    * @return
    */
   public boolean adminSolutionVisible() {
-    Boolean prop = Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG,
-                                      PropBool.SHOW_SOL_TO_PRIVELEGED);
+    Boolean prop = Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG, PropBool.SHOW_SOL_TO_PRIVELEGED);
     if (prop && hasEditingRights()) {
       return true;
     }
     return false;
   }
 
-
   /**
    *
    *
    */
   public void compareResults() {
-    boolean sameString =
-      (
-        this.lastUserString != null
-        && this.userString != null
-        && this.lastUserString.equals(this.userString)
-      );
+    boolean sameString = (this.lastUserString != null && this.userString != null && this.lastUserString
+                          .equals(this.userString));
 
     if (sameString || scenario == null || user == null) {
       return;
     }
 
+    FacesMessage message1 = null;
+
+    long timeSinceLastEntry = System.currentTimeMillis() - lastEntryTime;
+
+    if (timeSinceLastEntry < timeIntervalBetweenInput) {
+      Severity sev = FacesMessage.SEVERITY_INFO;
+      // TODO: Text
+      String msg = "Sie müssen "
+                   + Math.floor((timeIntervalBetweenInput - timeSinceLastEntry) / 1000)
+                   + " Sekunden bis zur nächsten Abgabe warten.";
+      message1 = new FacesMessage(sev, Cfg.inst().getText("EX.SERVER_MESSAGE"), msg);
+      FacesContext.getCurrentInstance().addMessage(null, message1);
+      return;
+    }
+
     this.lastUserString = this.userString;
     try {
-      this.tempBlock = true;
+      try {
+        this.connectionPool.resetTables(scenario, user);
+      } catch (Exception e) {
+        LOGGER.error("COULD NOT RESET TABLES", e);
+      }
+
       long starttime = System.currentTimeMillis();
-      FacesMessage message1 = null;
 
       Connection connection = null;
       try {
@@ -640,8 +654,9 @@ public class ExerciseController implements Serializable {
 
         if (usedSolutionQuery == null || usedSolutionQuery.getResult() == null) {
           ArrayList<UserFeedback> newFeedbackList = new ArrayList<UserFeedback>();
-          newFeedbackList.add(new UserFeedback(Cfg.inst().getProp(DEF_LANGUAGE, "QUE.UNEXPECTED_ERROR"),
-                                               Cfg.inst().getProp(DEF_LANGUAGE, "QUE.UNEXPECTED_ERROR2"), user));
+          newFeedbackList.add(new UserFeedback(Cfg.inst().getProp(DEF_LANGUAGE,
+                                               "QUE.UNEXPECTED_ERROR"), Cfg.inst().getProp(DEF_LANGUAGE, "QUE.UNEXPECTED_ERROR2"),
+                                               user));
           newFeedbackList.addAll(feedbackList);
           feedbackList = newFeedbackList;
           this.feedbackVisible = true;
@@ -708,12 +723,8 @@ public class ExerciseController implements Serializable {
 
           String msg = null;
 
-          if (
-            !userString.trim().isEmpty() &&
-            (
-              !isRated() || userRights.entriesCanBeEdited(exerciseGroup)
-            )
-          ) {
+          if (!userString.trim().isEmpty()
+              && (!isRated() || userRights.entriesCanBeEdited(exerciseGroup))) {
 
             entry = userEntryDao.getLastEntry(exercise, user);
             msg = Cfg.inst().getText("EX.SAVED_SUCCESSFUL");
@@ -726,7 +737,8 @@ public class ExerciseController implements Serializable {
             }
 
             if (Cfg.inst().getProp(PropertiesFile.MAIN_CONFIG, PropBool.ONLY_SAVE_LAST_USER_QUERY)) {
-              // String msg = Cfg.inst().getProp(DEF_LANGUAGE, "ASSERTION.FILTER5");
+              // String msg = Cfg.inst().getProp(DEF_LANGUAGE,
+              // "ASSERTION.FILTER5");
               // TODO:
               if (entry != null) {
                 entry.setUserQuery(userString);
@@ -753,7 +765,6 @@ public class ExerciseController implements Serializable {
               userEntryAvailable = userEntryDao.insertNewInstance(entry);
             }
 
-
             if (result == null && userEntryAvailable) {
               result = new UserResult(entry, reachedCredits, new Date());
               result.setSolutionQuery(usedQuery);
@@ -761,7 +772,6 @@ public class ExerciseController implements Serializable {
               userResultDao.insertNewInstance(result);
             }
           }
-
 
           if (isRated() && !debug) {
             if (!userRights.entriesCanBeEdited(exerciseGroup)) {
@@ -774,7 +784,6 @@ public class ExerciseController implements Serializable {
               message1 = new FacesMessage(sev, Cfg.inst().getText("EX.SERVER_MESSAGE"), msg);
             }
           }
-
 
           if (feedbackVisible) {
             refLinks = comparator.getRefLinks();
@@ -834,13 +843,15 @@ public class ExerciseController implements Serializable {
 
           if (userEntrySuccess) {
             feedbackList.clear();
-            UserFeedback feedback = new UserFeedback(Cfg.inst().getProp(DEF_LANGUAGE, "COMPARATOR.DYN_RESULT"),
-                Cfg.inst().getProp(DEF_LANGUAGE, "COMPARATOR.DYN_RESULT.SUC"), user);
+            UserFeedback feedback = new UserFeedback(Cfg.inst().getProp(DEF_LANGUAGE,
+                "COMPARATOR.DYN_RESULT"), Cfg.inst().getProp(DEF_LANGUAGE,
+                    "COMPARATOR.DYN_RESULT.SUC"), user);
             feedback.setSuccess(true);
             feedback.setMainError(true);
             feedbackList.add(feedback);
           }
 
+          this.lastEntryTime = System.currentTimeMillis();
         }
 
       } catch (SQLException e) {
@@ -916,6 +927,9 @@ public class ExerciseController implements Serializable {
     String solString = "";
     for (SolutionQuery sol : solutions) {
       solString += sol.getQuery() + "<br/><br/>";
+    }
+    if (solString.length() > 20) {
+      solString = StringTools.removeLastCharacters(solString, 10);
     }
     return solString;
   }

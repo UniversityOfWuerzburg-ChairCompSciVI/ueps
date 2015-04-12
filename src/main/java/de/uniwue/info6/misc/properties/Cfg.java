@@ -294,7 +294,7 @@ public class Cfg {
    * @param intProperty
    * @return
    */
-  public int getProp(PropertiesFile file, PropInteger intProperty) {
+  public Integer getProp(PropertiesFile file, PropInteger intProperty) {
     String propFilePath = properties.get(file);
     Properties prop = getPropertiesFromFile(propFilePath);
     if (intProperty != null) {
@@ -304,10 +304,10 @@ public class Cfg {
           try {
             return Integer.parseInt(par.trim());
           } catch (NumberFormatException e) {
-            return -1;
+            return null;
           }
         } else {
-          return -1;
+          return null;
         }
     }
     LOG.error("Can't find Property: \n\"" + intProperty.name() + "\"\nin properties-file:\n\""

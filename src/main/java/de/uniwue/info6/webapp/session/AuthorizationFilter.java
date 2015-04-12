@@ -343,6 +343,7 @@ public class AuthorizationFilter implements Filter, Serializable {
    *
    * @return
    */
+  // TODO: Funktion vom ConnectionManager nehmen
   private boolean[] checkDBExists() {
     Connection connection = null;
     Statement statement = null;
@@ -352,8 +353,6 @@ public class AuthorizationFilter implements Filter, Serializable {
 
     try {
       String dbUser = "", dbPass = "", dbName = "", url = "";
-      // SessionFactoryImpl sessionFactoryImpl = (SessionFactoryImpl) new ScenarioDao()
-      //                                         .getSessionFactory();
       SessionFactoryImpl sessionFactoryImpl = (SessionFactoryImpl) HibernateUtil.getSessionFactory();
       Properties props = sessionFactoryImpl.getProperties();
 

@@ -302,7 +302,7 @@ xmlns:p="http://primefaces.org/ui">
         <p:commandLink id="script_download" style="text-decoration:none; color:green"
         value="[#{txt['EDIT_SC.DOWNLOAD']}]" ajax="false" onclick="disableCloseConfirmation();
         PrimeFaces.monitorDownload(start, stop)" disabled="#{edit_sc.scriptPath == null}"
-actionListener="#{edit_sc.resetScriptFile}">
+        actionListener="#{edit_sc.resetScriptFile}">
          <p:fileDownload value="#{edit_sc.scriptStream}" />
         </p:commandLink>
         <h:outputText value="&#160;" />
@@ -345,7 +345,7 @@ actionListener="#{edit_sc.resetScriptFile}">
         <p:commandLink id="image_download" style="text-decoration:none; color:green"
         value="[#{txt['EDIT_SC.DOWNLOAD']}]" ajax="false" onclick="disableCloseConfirmation();
                 PrimeFaces.monitorDownload(start, stop)" disabled="#{edit_sc.imagePath == null}"
-actionListener="#{edit_sc.resetImageFile}">
+        actionListener="#{edit_sc.resetImageFile}">
          <p:fileDownload value="#{edit_sc.imageStream}" />
         </p:commandLink>
         <!-- ##################################### -->

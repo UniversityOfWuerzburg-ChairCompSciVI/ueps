@@ -176,7 +176,8 @@ xmlns:p="http://primefaces.org/ui">
         styleClass="relevant_tables_list">
          <p:dialog closeOnEscape="true" styleClass="relevant_table_popup_#{table}" header="#{table}"
          showEffect="fade" hideEffect="fade" resizable="true" widgetVar="relevent_tables_dialog_wid_#{table}"
-         appendTo="@(body)" minWidth="150" minHeight="150">
+         appendTo="@(body)" minWidth="150" minHeight="150"
+         onShow="fixDialogJumpingOnResize('relevent_tables_dialog_wid_#{table}')">
           <p onclick="relevent_tables_dialog_wid_#{table}.hide()" class="table_dialog_close_container_t">
            <h:outputText value="#{txt['QUE.CLOSE_WINDOW']}" styleClass="table_dialog_close_text" />
           </p>
@@ -236,17 +237,18 @@ xmlns:p="http://primefaces.org/ui">
      <!-- diagram -->
      <p:dialog closeOnEscape="true" appendTo="@(body)" header="#{txt['QUE.DIA']}" showEffect="fade"
      hideEffect="fade" widgetVar="db_diagram" styleClass="er_diagram_popup" resizable="true" width="900"
-     height="500" minWidth="400" minHeight="400" onShow="context_tooltip()" position="center top">
+     height="500" minWidth="200" minHeight="200"
+     onShow="fixDialogJumpingOnResize('db_diagram');context_tooltip();" position="center top">
       <p onclick="db_diagram.hide()" style="margin:10px 0px 3px 0px;">
        <h:outputText value="#{txt['QUE.CLOSE_WINDOW']}" styleClass="table_dialog_close_text" />
       </p>
       <h:outputLink value="#{e.diagramImage}" target="_blank" onclick="db_diagram.hide()">
-        <h:outputText value="#{txt['QUE.NEW_TAB']}"
+       <h:outputText value="#{txt['QUE.NEW_TAB']}"
        style="float:left;text-decoration:underline;font-weight:bold; position:relative; top:-19px; left:20px" />
       </h:outputLink>
       <br />
       <h:graphicImage class="er-diagram longtap" value="#{e.diagramImage}"
-      style="margin:-20px 5px 20px 5px; padding:20px" />
+      style="margin:-20px 5px 20px 5px; padding:40px" />
       <p onclick="db_diagram.hide()" style="margin:-10px 0px 23px 0px;">
        <h:outputText value="#{txt['QUE.CLOSE_WINDOW']}" styleClass="table_dialog_close_text" />
       </p>
@@ -256,7 +258,7 @@ xmlns:p="http://primefaces.org/ui">
      <p:dialog rendered="#{e.showResults()}" closeOnEscape="true" header="#{txt['QUE.CORRECT_QUERY']}"
      showEffect="fade" hideEffect="fade" widgetVar="result_table_widget" id="result_table_widget"
      styleClass="relevant_table_popup solution_result_table_popup" appendTo="@(body)" minWidth="150"
-     minHeight="150">
+     minHeight="150" onShow="fixDialogJumpingOnResize('result_table_widget');">
       <p onclick="result_table_widget.hide()" style="margin:5px 0px 3px 0px;">
        <h:outputText value="#{txt['QUE.CLOSE_WINDOW']}" styleClass="table_dialog_close_text" />
       </p>
@@ -281,7 +283,7 @@ xmlns:p="http://primefaces.org/ui">
      <p:dialog closeOnEscape="true" header="#{txt['QUE.USER_QUERY']}" showEffect="fade" hideEffect="fade"
      widgetVar='user_result_widget' id="user_result_widget"
      styleClass="relevant_table_popup user_result_table_popup" appendTo="@(body)" minWidth="150"
-     minHeight="150">
+     minHeight="150" onShow="fixDialogJumpingOnResize('user_result_widget')">
       <p onclick="user_result_widget.hide()" style="margin:5px 0px 3px 0px;">
        <h:outputText value="#{txt['QUE.CLOSE_WINDOW']}" styleClass="table_dialog_close_text" />
       </p>

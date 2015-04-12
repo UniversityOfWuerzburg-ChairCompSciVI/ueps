@@ -22,8 +22,6 @@
  * #L%
  */
 
-html, body {position: relative !important}
-
 /* main colors {{{ */
 
 .maincolor{
@@ -323,6 +321,16 @@ html, body {position: relative !important}
  * -------------------------------------------------------------
  */
 
+#usertask\:user_result_table,
+#usertask\:result_table,
+#usertask\:solution_carousel {
+  padding:0px 10px 0px 10px;
+}
+
+#usertask\:get_feedback {
+  margin-top:3px;
+}
+
 #usertask\:feedback_accordion .ui-accordion-content {
   overflow-y:hidden;
 }
@@ -595,10 +603,15 @@ span.intoduction_text {
 }
 
 #usertask\:userInputArea {
-  padding: 20px 20px 10px 20px !important;
+  padding: 17px 20px 10px 20px !important;
   width: 312px !important;
   max-height: 140px;
   overflow-y: auto;
+
+  background-color: #fff  !important;
+  background-size: 100% 1.2em !important;
+  background-image: linear-gradient(#eee .05em, transparent .05em) !important;
+  behavior: url(/pie/PIE.htc) !important;
 }
 
 .ui-autocomplete-panel {
@@ -820,14 +833,11 @@ html {
 .roundcorners2{
   border-radius: 10px;
   box-shadow:
-  0px 8px 19px rgba(0, 0, 0, 0.3),
-  0px 13px 19px rgba(0, 0, 0, 0.2);
+  0px 3px 19px rgba(0, 0, 0, 0.3);
   -moz-box-shadow:
-  0px 8px 19px rgba(0, 0, 0, 0.3),
-  0px 13px 19px rgba(0, 0, 0, 0.2);
+  0px 3px 19px rgba(0, 0, 0, 0.3);
   -webkit-box-shadow:
-  0px 8px 19px rgba(0, 0, 0, 0.3),
-  0px 13px 19px rgba(0, 0, 0, 0.2);
+  0px 3px 19px rgba(0, 0, 0, 0.3);
 }
 
 a.link {
@@ -1011,31 +1021,44 @@ img.open_task {
   top:2px;
 }
 
+.serverTimeText {
+  font-size: 12px !important;
+  color:#969696;
+}
 
 .ui-clock {
-  font-weight: bold !important;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+  font: bold 12px'trebuchet ms', arial, sans-serif !important;
   background: none !important;
   color:#969696;
   border: none;
-  position:relative;
-  padding-left:0px;
-  float: left;
-  font-size: 12px !important;
-  top: 7px;
-  right:-15px;
+  padding:0px !important;
+  text-shadow:inherit !important;
 }
 
 #session_timer {
-  position:relative;
-  top: 1px;
   font-size: 12px !important;
   color: #969696;
   display:none;
 }
 
-#online_counter{
+.sessionTime {
+  display:none;
+}
+
+.sessionTimeDivider {
+  display:none;
+}
+
+.footerDivider {
+  font-size: 12px !important;
+  color: #969696;
+  font-weight: bold;
   position:relative;
-  top: 1px;
+  top:-1px;
+}
+
+#online_counter{
   font-size: 12px !important;
   color: #969696;
 }

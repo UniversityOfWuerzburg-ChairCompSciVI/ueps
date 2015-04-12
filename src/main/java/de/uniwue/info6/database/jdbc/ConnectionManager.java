@@ -633,6 +633,83 @@ public class ConnectionManager implements Serializable {
     }
   }
 
+
+  /**
+   *
+   *
+   * @param connection
+   * @param dbName
+   */
+  public void createDatabase(final Connection connection, final String dbName) {
+    String createStatement = "CREATE DATABASE IF NOT EXISTS `" + dbName + "`";
+    Statement statement = null;
+    try {
+      if (connection != null) {
+        statement = connection.createStatement();
+        statement.execute(createStatement);
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      if (statement != null) {
+        try {
+          statement.close();
+        } catch (SQLException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+  }
+
+  /**
+   *
+   *
+   * @param dbUser
+   * @param dbPass
+   * @param dbName
+   * @param url
+   * @return
+   */
+  public boolean[] checkIfDBExists(final Connection connection, final String dbName) {
+    Statement statement = null;
+    ResultSet resultSet = null;
+    boolean catalogExists = false;
+    boolean tableExists = false;
+
+    try {
+      Class.forName("org.mariadb.jdbc.Driver"); // Register JDBC Driver
+
+      resultSet = connection.getMetaData().getCatalogs();
+      while (resultSet.next()) {
+        String databaseName = resultSet.getString(1);
+        if (databaseName.equalsIgnoreCase(dbName)) {
+          catalogExists = true;
+          break;
+        }
+      }
+
+      connection.setCatalog(dbName);
+      ResultSet rs = connection.getMetaData().getTables(null, null, "%", null);
+      while (rs.next()) {
+        tableExists = true;
+      }
+    } catch (Exception e) {
+      return new boolean[] { false, false };
+    } finally {
+      try {
+        if (resultSet != null) {
+          resultSet.close();
+        }
+        if (statement != null) {
+          statement.close();
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+    return new boolean[] { catalogExists, tableExists };
+  }
+
   /**
    *
    *
@@ -699,6 +776,12 @@ public class ConnectionManager implements Serializable {
         try {
           ComboPooledDataSource pool = pools.get(scenario);
           connection = pool.getConnection();
+
+          boolean[] dbExists = checkIfDBExists(connection, scenario.getDbName());
+          if (!dbExists[0]) {
+            this.createDatabase(connection, scenario.getDbName());
+          }
+
           connection.setCatalog(scenario.getDbName());
         } catch (Exception exception) {
           errors.put(scenario, exception.getMessage());
@@ -869,6 +952,7 @@ public class ConnectionManager implements Serializable {
       Connection connection = null;
       Statement statement = null;
       try {
+        connection = this.getConnection(scenario);
 
         List<String> changedTables = checkSumChanged(scenario, user);
         List<String> temp = getScenarioTableNames(scenario);
@@ -887,7 +971,6 @@ public class ConnectionManager implements Serializable {
             }
           }
 
-          connection = this.getConnection(scenario);
           if (connection != null) {
 
             // ------------------------------------------------ //

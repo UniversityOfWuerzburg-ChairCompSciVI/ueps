@@ -34,10 +34,13 @@ xmlns:p="http://primefaces.org/ui">
     <h:column>
      <f:facet name="header">
       <h:form>
-       <p:remoteCommand name="lazyload_online" update="studentsOnline"></p:remoteCommand>
-       <span id="online_counter">
-        <h:outputText value="#{txt['ONLINE_COUNTER']}" />
-        <h:outputText id="studentsOnline" value="#{sessionListener.getTotalActiveSession()}" />
+       <p:remoteCommand name="lazyload" update="sessionTime"
+           action="#{userSession.updateSessionTime()}">
+       </p:remoteCommand>
+       <span id="session_timer">
+        <h:outputText id="sessionTime" class="sessionTime" value="#{userSession.sessionTime + 30}" />
+        <h:outputText value="#{txt['SESSION_COUNTER']}" />
+        <h:outputText id="readableSessionTime" value="" />
        </span>
       </h:form>
      </f:facet>
@@ -46,23 +49,30 @@ xmlns:p="http://primefaces.org/ui">
     <h:column>
      <f:facet name="header">
       <h:form>
-       <p:remoteCommand name="lazyload" update="sessionTime"
-           action="#{userSession.updateSessionTime()}">
-       </p:remoteCommand>
-       <span id="session_timer">
-        <h:outputText value="#{txt['SESSION_COUNTER']}" />
-        <h:outputText id="sessionTime" value="#{userSession.sessionTime + 30}" />
-        <h:outputText value="s" />
+       <span>
+        <h:outputText value=" | " class="sessionTimeDivider footerDivider"/>
+        <!-- TODO: Text -->
+        <h:outputText value="Serverzeit: " class="serverTimeText"/>
+        <p:clock pattern="HH:mm:ss dd.MM.yyyy" mode="server"/>
+        <h:outputText value=" | " class="footerDivider" />
        </span>
       </h:form>
      </f:facet>
     </h:column>
+    <!-- ************************************************************************ -->
+    <h:column>
+     <f:facet name="header">
+      <h:form>
+       <p:remoteCommand name="lazyload_online" update="studentsOnline"></p:remoteCommand>
+       <span id="online_counter">
+        <h:outputText value="#{txt['ONLINE_COUNTER']} " />
+        <h:outputText id="studentsOnline" value="#{sessionListener.getTotalActiveSession()}" />
+       </span>
+      </h:form>
+     </f:facet>
+    </h:column>
+    <!-- ************************************************************************ -->
    </h:dataTable>
-   <!-- ************************************************************************ -->
-   <span id="server_time">
-    <p:clock pattern="HH:mm:ss" mode="server" />
-   </span>
-   <!-- ************************************************************************ -->
   </ui:composition>
  </body>
 </html>

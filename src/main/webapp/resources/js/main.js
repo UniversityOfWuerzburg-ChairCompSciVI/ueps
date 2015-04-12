@@ -3,8 +3,6 @@ var enableSessionTimerSync = true;
 var tempBlockSessionTimerSync = false;
 // ------------------------------------------------ //
 jQuery(document).ready(function() {
-  // show session time in seconds
-  setTimeout("showSessionTimer()", 10000);
   initCustomScrollbar();
   initSmallGuiChanges();
   initPulsatePlugin();
@@ -44,34 +42,79 @@ function patchContextMenu() {
 // -- session timer
 // ------------------------------------------------ //
 
-function initSessionTimer() {
-  showSessionTimer();
-  var delay = parseInt(jQuery("[id*=sessionTime]").html());
-  function countdown() {
-    delay = parseInt(jQuery("[id*=sessionTime]").html());
-    setTimeout(countdown, 1000);
+var delay = parseInt(jQuery("[id*=sessionTime]").html());
 
-    delay--;
-    if (delay < 0) {
-      delay = 0;
-    } else {
-      jQuery('[id*=sessionTime]').html(delay);
-    }
-  }
-  countdown();
+function initSessionTimer() {
+  // show session time in seconds
+  setTimeout(showSessionTimer, 25000);
+  sessionCountdown();
 }
 
 function showSessionTimer() {
-  jQuery("#session_timer").css({
-    display : "block"
-  });
+  if (!isErrorPage()) {
+    jQuery(".sessionTimeDivider").css({
+      display : "inherit"
+    });
 
-  jQuery("#session_timer").pulsate({
-     glow:   false,
-     reach:  5,
-     color:  '#DCE0FF',
-     repeat: 2
-  });
+    jQuery("#session_timer").css({
+      display : "inherit"
+    });
+
+    jQuery("#session_timer").pulsate({
+       glow:   false,
+       reach:  5,
+       color:  '#DCE0FF',
+       repeat: 1
+    });
+  }
+}
+
+function isErrorPage() {
+  var loc = window.location.href;
+  if (
+         loc.indexOf("/logout") >= 0
+      || loc.indexOf("/404")    >= 0
+      || loc.indexOf("/error")  >= 0
+    ) {
+    return true;
+  }
+  return false;
+}
+
+function sessionCountdown() {
+  delay = parseInt(jQuery("[id*=sessionTime]").html());
+  setTimeout(sessionCountdown, 1000);
+  delay--;
+
+  try {
+    if (delay < 50) {
+      jQuery("#session_timer").pulsate({
+         glow:   false,
+         reach:  5,
+         color:  '#B60000',
+         repeat: 1
+      });
+    }
+  } catch (e) {
+    console.error(e);
+  }
+
+  if (delay < 0) {
+    if (delay < -30 && !isErrorPage()) {
+      document.location.href="/ueps";
+    }
+
+
+  } else {
+    var minutes = Math.floor(delay / 60);
+    var seconds = delay - minutes * 60;
+    var hours   = Math.floor(delay / 3600);
+
+    var readableTime = " " + (hours > 0 ? hours + "h" : "") 
+      + minutes + " min " + (seconds < 10 ? "0" : "") + seconds + " sec";
+    jQuery('[id*=readableSessionTime]').html(readableTime);
+  }
+  jQuery('[id*=sessionTime]').html(delay);
 }
 
 // ------------------------------------------------ //
@@ -167,7 +210,7 @@ function formatDialog(className, user_result, solution_dialog, er_diagram) {
   }
   var windowWidth = jQuery(window).width();
   var minWidth = 100;
-  var maxWidth = windowWidth - 100;
+  var maxWidth = windowWidth - 10;
 
   if (width < minWidth + 100) {
     width = minWidth + 100;
@@ -210,7 +253,7 @@ function formatDialog(className, user_result, solution_dialog, er_diagram) {
   }
   var windowHeight = jQuery(window).height();
   var minHeight = 100;
-  var maxHeight = windowHeight - 100;
+  var maxHeight = windowHeight - 10;
 
 
   if (height < minHeight) {
@@ -287,7 +330,7 @@ function hideMessageTimeout(){
 // ------------------------------------------------ //
 
 function handleAjaxError() {
-  setTimeout("ajax_error_dialog.show()", 1000);
+  setTimeout("ajax_error_dialog.show()", 10000);
 }
 
 function handleAjaxSuccess() {
@@ -451,3 +494,31 @@ var siteFunctions = {
 };
 
 // ------------------------------------------------ //
+// -- 
+// ------------------------------------------------ //
+
+function fixDialogJumpingOnResize(widgetName) {
+  try {
+    var dialogDiv = jQuery(PrimeFaces.widgets[widgetName].jqId);
+    var inlineStyle = dialogDiv.attr('style');
+
+    if (inlineStyle.indexOf("position") < 0) {
+      // the main point of this function, 
+      // change position from 'fixed' to 'absolute'
+      inlineStyle = inlineStyle + ';position: absolute!important';
+      dialogDiv.attr('style', inlineStyle);
+    }
+
+    dialogDiv.pulsate({
+         glow:   false,
+         reach:  30,
+         color: '#EDEFFF',
+         repeat: 1
+      });
+
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+
